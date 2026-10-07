@@ -1,0 +1,10 @@
+node_modules/
+.cache/
+.build/
+*.log
+.DS_Store
+.vite/
+coverage/
+# テスト用フィクスチャの出力は追跡しない
+system/fixtures/**/output/
+system/fixtures/**/reviews/
