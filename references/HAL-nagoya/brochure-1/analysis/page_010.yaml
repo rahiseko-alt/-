@@ -1,0 +1,31 @@
+# page_010.jpg の解析（Phase 4）。見開き（ノンブル 17〜18）。就職実績の一覧表（氏名・就職先）
+# 寸法は判型に対する比率（W = 片ページ幅、H = ページ高さ）。実寸は不明
+grid:
+  left: { columns: 5, column_width: "約 16% W", x_start: "7% W", table_top: "約 8% H" }
+  right: { columns: 5, column_width: "約 16% W", x_start: "ノドから 6% W", table_top: "約 7% H" }
+  rows: "各列 約 90 行（行高 約 1% H）"
+margins: { top: "約 5% H（柱と見出し）", bottom: "約 5% H", inside: "約 5% W", outside: "約 3% W" }
+gutter: "表の列間 約 1.5% W"
+photo_ratios: []
+heading_hierarchy:
+  - { level: running_head, desc: "柱タブ＋章番号 02＋章名", size: "約 2% H" }
+  - { level: h2, desc: "（年度）卒業生の実績（見出し 1 行）白ゴシック太", size: "約 3% H" }
+  - { level: table_head, desc: "列見出し 2 項目（氏名・企業名）紺地に白", size: "約 0.9% H" }
+  - { level: table_body, desc: "氏名・企業名 極小", size: "約 0.7% H" }
+  - { level: footnote, desc: "時点・対象の注記（右下、白）", size: "約 0.9% H" }
+colors: { base: "ロイヤルブルー〜紺 約 35%", table: "白 約 65%（1 行おきに淡い灰色の帯）", header: "紺", text: "黒（表内）／白（見出し・注記）" }
+rules: "1 行おきの淡い灰色の帯（罫線なしのゼブラ）。表の外枠なし"
+cards: "白い表ブロック（角は直角）を 10 本並べる"
+density: "極高（約 900 行。最も文字が多いページ）"
+page_type: data
+eye_flow: "左上の見出し → 左の列から順に縦読み（一覧として眺める用途。読ませるより量で見せる）"
+background: "青地にファセット（左ページ外側の白斜線、右ページは濃紺の多角形）。表の外側の帯だけが見える"
+image_crop: null
+rhythm: "章 02 の最後。カードの声（page_009）の直後に網羅的な表で量を示し、章 03（page_011）の暗い祝祭感へ切り替える"
+notes: >-
+  元画像は印刷物の撮影で 90° 回転（時計回り 90° で正位置）。1 枚に見開き 2 ページ（ノンブル 17・18）。寸法は判型比。
+  72dpi では表の文字は判読できず、構造（列数・行数・ゼブラ）のみ解析した。
+  Layer 1: 青ファセット背景（生成。表の下に隠れる部分が大半なので簡素でよい）。
+  Layer 2: 表（CSS grid / table、column-count 10 で流し込み、ゼブラは nth-child）、見出し帯。
+  Layer 3: 見出し、表の全セル（facts/results.yaml の就職先一覧から生成。人数で行数が変わる）、注記（as_of・source）、ノンブル。
+  氏名・企業名は流用禁止。自社に同等データがなければこの見開きは作らない（TODO として人間に確認）。
