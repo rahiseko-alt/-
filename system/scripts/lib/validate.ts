@@ -367,7 +367,8 @@ function checkHardcodedFacts(root: string, company: CompanyData | null, s: Check
  * 日本語の文章がパスの直後に続いても、そこから先は照合の対象に残す。
  */
 export function maskReferencePaths(text: string): string {
-  return text.replace(/references\/[A-Za-z0-9_.\/-]+/g, (m) => ' '.repeat(m.length));
+  // references/<source>/... と、その補正画像の置き場所 .cache/ref-prep/<source>/...（npm run ref:prep）
+  return text.replace(/(?:references|\.cache\/ref-prep)\/[A-Za-z0-9_.\/-]+/g, (m) => ' '.repeat(m.length));
 }
 
 function checkForbiddenTerms(root: string, sources: Array<{ dir: string; source: ReferenceSource }>, s: CheckSection): void {
