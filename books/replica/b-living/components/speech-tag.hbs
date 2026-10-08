@@ -1,0 +1,13 @@
+{{!--
+  speech-tag: 黄色の吹き出しタグ（角丸の矩形＋左下の尻尾。Layer 2 の SVG + Layer 3 の語）
+  この BOOK 専用（完コピ検証）。feature-card がカードの左上の角をまたぐ位置に置く（位置は page.css の .fcard--<mod> .stag）
+  パラメータ:
+    text  必須  タグの語（短い見出し語。5 字前後）
+  形: 31.8 × 16.6mm の角丸（半径 1.45mm）＋尻尾（下辺の左寄り、先端は下 2.9mm）。輪郭は 0.3mm の濃い線
+--}}
+<div class="stag">
+  <svg class="stag__shape" viewBox="0 0 31.8 19.5" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M1.6 0.15 H30.2 Q31.65 0.15 31.65 1.6 V15 Q31.65 16.45 30.2 16.45 H11.5 L11 19.35 L7.6 16.45 H1.6 Q0.15 16.45 0.15 15 V1.6 Q0.15 0.15 1.6 0.15 Z"/>
+  </svg>
+  <span class="stag__text">{{text}}</span>
+</div>

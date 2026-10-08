@@ -1,0 +1,46 @@
+# BOOK の設定（npm run new:book で 2026-10-08 に作成）
+# - 判型・塗り足し・解像度: system/rules/output.md ／ 命名: system/rules/naming.md
+# - パスはすべてリポジトリルート相対（先頭スラッシュなし・"/" 区切り）
+# id は books/ からの相対パス（ディレクトリと一致させる）
+id: replica/c-admissions
+title: "完コピ検証 C 募集要項 日程表"
+# kind: brochure | admissions | flyer | poster | guide | event | other
+kind: admissions
+description: "Phase 5 完コピ検証: 見開きをまたぐ一覧表の右ページ（入れ子の日程表・流れ図・【 】ラベルの段落）の構造を再現する。文字はすべてダミー。印刷用ではない"
+format:
+  # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
+  # 参考資料の実寸は不明。表紙（単ページの撮影画像）の実測の縦横比 0.704 から A4 縦とした（見開きの写真は背の湾曲で横が縮んで写る）
+  size: A4
+  # orientation: portrait | landscape
+  orientation: portrait
+  bleed_mm: 3                   # 塗り足し（片側）
+  safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
+  # 参考ページの実測（補正画像 1414×2000px、1mm = 6.73px）: 注記行の上端 26.4mm、表の上端 31.0mm・下端 274.2mm、
+  # 表の右端（小口側の外枠）193.2mm、入れ子の表・段落の左端 3.2〜3.5mm（ノドの折り目から）
+  # 表の横罫はノドの折り目（x = 0）まで伸ばす（見開きの左ページの表と行をつなぐ。page.css の .adm-table）
+  margins_mm: { top: 26, bottom: 22.8, inside: 3, outside: 16.6 }   # 版面のマージン（inside = ノド、outside = 小口）
+  columns: 12                   # 段組の段数
+  gutter_mm: 4                  # 段間
+  # left（左綴じ）: 1 ページ目が右ページ（ノド = 左、小口 = 右）になる。参考は見開きの右ページ（奇数ノンブル）
+  binding: left                 # left（左綴じ）| right（右綴じ）| none（一枚もの: チラシ・ポスター）
+# 共通 CSS（shared/layouts/README.md）。後ろほど優先。ページ固有のスタイルは pages/<pageId>/page.css に書く
+styles:
+  - shared/layouts/grid.css
+  - shared/layouts/typography.css
+  - shared/layouts/components.css
+# CSS 変数の上書き（例: "--color-accent": "#d9a21b"、"--fs-body": "9pt"）。色は原則 company-data/brand/colors/colors.yaml の値を使う
+theme: {}
+# ページの並び順（ページ ID は識別子。並べ替えても ID は付け直さない）。追加は npm run new:page -- --book replica/c-admissions --after <pageId>
+pages:
+  - page_001
+output:
+  png_dpi: 150                  # 完コピ検証専用（比較用。印刷には使わない）。自社版で印刷するときは 350 に戻す
+  preview_dpi: 150              # 作業確認用の目安（npm run render -- --dpi 150 --out /tmp/<確認用>。output/ には置かない）
+notes: |
+  - Phase 5（完コピ検証）の BOOK（印刷・配布しない）。参考 references/kokusai-igaku-gijutsu/admissions/page_005.jpg
+    （見開きの写真）の右ページだけを再現する。比較は references/kokusai-igaku-gijutsu/admissions/prep/page_005-r.yaml
+    （回転・右ページの切り出し・台形補正の指定）で行う
+  - 見開きをまたぐ表の右ページ。行の高さは page.css の --adm-row-*（mm）に持たせ、左ページを作るときも同じ値を使う
+  - 文字はすべてダミー（参考と同じ文字数・改行位置）、数字は 0、ノンブルは page.number。写真・生成背景は使わない（Layer 1 なし）
+  - 参考の色は page.css 冒頭の --rep-* 変数にまとめた（Phase 8 でブランドカラーへ置き換える）
+  - output.png_dpi は 150（比較用）。経過と次の作業は reviews/page_001/review.md

@@ -1,0 +1,15 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "募集要項 表紙（完コピ検証）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: cover
+# Layer 1（BASE VISUAL）: 使わない（白地。色面・ドット・罫線はすべて単色で Layer 2）
+status: review             # draft | review | approved
+notes: |
+  完コピ検証（Phase 5）3 ラウンド済み（books/replica/b-adm-cover/reviews/page_001/review.md）。参考の表紙を .trim 基準の mm で実測し、全要素を絶対配置。
+  グリッド: 2 段相当（左: 色面パネル x 9.8–89.6mm、右: 目次 x 108.4–190.7mm、間 18.8mm）。book.yaml の margins は要素の外端の実測（上 8.5・下 16.5・左 9.8・右 19.2mm）。.grid は使っていない。
+  Layer 2: 色面パネル・濃色タブ（天に塗り足し）・正方形ドット（SVG pattern、10 列固定、ピッチ 6.99×8mm・一辺 3.37mm）・白の点線（以上 page.html の SVG。viewBox = ページの mm 座標）、
+  目次の見出しバー・群見出しの下罫と V 字（books/replica/b-adm-cover/components/toc-group.hbs）・● と点線リーダー（toc-item.hbs）・告知帯・告知枠（HTML/CSS。文章量で高さが伸びる）。
+  Layer 3: すべてダミーテキスト（字数・改行位置・行の長さを参考に合わせた。年度・ページ番号は 0）。認定表記だけ最小 6.5pt を守るため参考（約 6pt）より字数が少ない。
+  プレースホルダ: エンブレム・エンブレム小・校名ロゴタイプ・法人名（logo-slot.hbs。正式データ待ちの無地の面）。
+  表紙タイトルは 700（参考の字画の太さの実測から。900 は重すぎた）。色は page.css 冒頭の --rep-*（撮影画像からの推定値）。Phase 8 でブランドカラーへ置き換える。

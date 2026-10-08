@@ -1,0 +1,8 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "学科紹介（完コピ検証）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: course
+# Layer 1（BASE VISUAL）: 全面背景はなし（参考は白地）。写真は page.html の photo-frame（プレースホルダ）
+status: draft              # draft | review | approved
+notes: ""

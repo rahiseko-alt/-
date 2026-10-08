@@ -1,0 +1,17 @@
+{{!--
+  wrap-text: 縦棒見出し + 写真を回り込む本文（写真は段の右に float。本文の高さは固定しない）
+  引数: title（必須。見出し）, body（必須。本文 1 段落）,
+        photo（任意。company-data/photos の写真 ID。省略すると photo-frame のプレースホルダ = Layer 1 待ち）
+  - 写真は「先頭から N 行（--wrap-lines、既定 5 行）は全幅、その後の行が写真を回り込む」位置に置く。
+    幅 0 の float（.wrap-text__body::before、高さ = N 行分）を先に置き、写真の float を clear: right でその下に積む。
+    本文が増減しても写真の位置は「N 行目の下」のまま、回り込む行数だけが変わる（shape-outside は使わない。矩形の回り込み）
+  - 写真の寸法・余白は page.css の --wrap-photo-w / --wrap-photo-ratio / --wrap-photo-gap / --wrap-photo-top
+  使い方: {{> book/wrap-text title="見出しダミー" body="ダミーテキスト…"}}
+--}}
+<section class="wrap-text">
+  {{> book/bar-heading title=title}}
+  <div class="wrap-text__body">
+    <div class="wrap-text__photo">{{#if photo}}{{> photo-frame id=photo}}{{else}}{{> photo-frame}}{{/if}}</div>
+    <p class="wrap-text__p">{{body}}</p>
+  </div>
+</section>

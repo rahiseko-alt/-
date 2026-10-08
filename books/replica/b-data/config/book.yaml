@@ -1,0 +1,34 @@
+# BOOK の設定（npm run new:book で 2026-10-08 に作成）
+# - 判型・塗り足し・解像度: system/rules/output.md ／ 命名: system/rules/naming.md
+# - パスはすべてリポジトリルート相対（先頭スラッシュなし・"/" 区切り）
+# id は books/ からの相対パス（ディレクトリと一致させる）
+id: replica/b-data
+title: "完コピ検証 B データページ"
+# kind: brochure | admissions | flyer | poster | guide | event | other
+kind: brochure
+description: ""
+format:
+  # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
+  size: A4
+  # orientation: portrait | landscape
+  orientation: portrait
+  bleed_mm: 3                   # 塗り足し（片側）
+  safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
+  margins_mm: { top: 15, bottom: 15, inside: 18, outside: 15 }   # 版面のマージン（inside = ノド、outside = 小口）
+  columns: 12                   # 段組の段数
+  gutter_mm: 4                  # 段間
+  binding: left                 # left（左綴じ）| right（右綴じ）| none（一枚もの: チラシ・ポスター）
+# 共通 CSS（shared/layouts/README.md）。後ろほど優先。ページ固有のスタイルは pages/<pageId>/page.css に書く
+styles:
+  - shared/layouts/grid.css
+  - shared/layouts/typography.css
+  - shared/layouts/components.css
+# CSS 変数の上書き（例: "--color-accent": "#d9a21b"、"--fs-body": "9pt"）。色は原則 company-data/brand/colors/colors.yaml の値を使う
+theme: {}
+# ページの並び順（ページ ID は識別子。並べ替えても ID は付け直さない）。追加は npm run new:page -- --book replica/b-data --after <pageId>
+pages:
+  - page_001
+output:
+  png_dpi: 350                  # 印刷用 PNG の解像度（npm run render の既定）
+  preview_dpi: 150              # 作業確認用の目安（npm run render -- --dpi 150 --out /tmp/<確認用>。output/ には置かない）
+notes: ""

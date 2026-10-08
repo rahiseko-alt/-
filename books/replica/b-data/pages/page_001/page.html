@@ -1,0 +1,45 @@
+{{!--
+  page_001「表紙」（雛形から 2026-10-08 に作成）
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : page.yaml の background（books/replica/b-data/backgrounds/page_001.png と同名の .prompt.yaml）
+    Layer 2 STRUCTURE   : 色面・枠・罫線・パネル（このファイルの要素 + page.css）。文章量で大きさが変わる枠は画像にしない
+    Layer 3 CONTENT     : 見出し・本文・数字・ページ番号。事実（学校名・数字・連絡先など）は必ず {{facts...}} で参照する
+
+  - 座標は .trim（仕上がり線の左上が原点、mm）。仕上がり線まで届く面は .bleed-top などで塗り足しまで伸ばす
+  - 厳格モード: 存在しないキーを参照するとエラー。任意項目は {{#if ...}} で囲む
+  - "TODO" を含む仮テキストが残っていると npm run render -- --release が失敗する（入稿前に置き換える）
+  - 確認: npm run dev → /preview/replica/b-data/page_001?guides=1
+--}}
+
+{{!-- Layer 2: 上部の色面（上・左・右は塗り足しまで伸ばす） --}}
+<div class="band bleed-top bleed-left bleed-right" aria-hidden="true"></div>
+
+{{!-- Layer 3: 見出し（学校名は company-data の正本から） --}}
+<header class="head">
+  <p class="head__school">{{facts.school.name}}</p>
+  <h1 class="head__title">{{page.title}}</h1>
+</header>
+
+<div class="body">
+  {{!-- Layer 3: リード文（仮テキスト） --}}
+  <p class="lead">TODO: リード文を入力する</p>
+
+  {{!-- Layer 2 + 3: パネル（枠と色面は CSS、文字は HTML。文章量に合わせて枠が伸びる） --}}
+  <div class="cards">
+    <section class="card">
+      <h2 class="card__title">TODO: 見出しテキスト</h2>
+      <p class="card__text">TODO: 本文テキストを入力する。学校名・数字・連絡先などの事実は直接書かず、company-data の値を参照する。</p>
+    </section>
+    <section class="card">
+      <h2 class="card__title">TODO: 見出しテキスト</h2>
+      <p class="card__text">TODO: 本文テキストを入力する。</p>
+    </section>
+  </div>
+</div>
+
+{{!-- Layer 3: ノンブル（ページ番号は book.yaml の pages の並び順から自動で決まる） --}}
+<footer class="page-folio" data-side="{{page.side}}">
+  <span class="page-folio__number num">{{page.number}}</span>
+  <span class="page-folio__school">{{facts.school.name}}</span>
+</footer>

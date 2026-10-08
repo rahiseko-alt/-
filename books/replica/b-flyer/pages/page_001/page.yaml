@@ -1,0 +1,8 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "イベント告知（完コピ検証）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: other
+# Layer 1（BASE VISUAL）: 全面背景はなし（参考は白地）。写真・切り抜きの人物・イラストは page.html のプレースホルダ
+status: draft              # draft | review | approved
+notes: ""

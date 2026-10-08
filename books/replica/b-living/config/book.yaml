@@ -1,0 +1,43 @@
+# BOOK の設定（npm run new:book で 2026-10-08 に作成）
+# - 判型・塗り足し・解像度: system/rules/output.md ／ 命名: system/rules/naming.md
+# - パスはすべてリポジトリルート相対（先頭スラッシュなし・"/" 区切り）
+# id は books/ からの相対パス（ディレクトリと一致させる）
+id: replica/b-living
+title: "完コピ検証 B 生活ガイド カード構成"
+# kind: brochure | admissions | flyer | poster | guide | event | other
+kind: guide
+description: "Phase 5 完コピ検証: 生活ガイド冊子の見開きの右ページ（統計の大きな数字＋吹き出しタグ付きの特徴カード 2 枚＋英字タブ付きの下段 2 段のカード）を再現する。文字はすべてダミー、写真はプレースホルダ"
+format:
+  # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
+  size: A4
+  # orientation: portrait | landscape
+  orientation: portrait
+  bleed_mm: 3                   # 塗り足し（片側）
+  safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
+  margins_mm: { top: 10, bottom: 19, inside: 14.2, outside: 20 }   # 参考ページの実測（要素の外端: 上 10・下 19・ノド側 14.2・小口側 20mm）。ページ内の要素は page.css で mm の絶対配置
+  columns: 2                    # 下段のカード 2 枚（各 84.55mm）。上の特徴カードは 1 段（版面幅）
+  gutter_mm: 6.7                # 下段 2 段の段間（実測）
+  binding: left                 # left（左綴じ）: page_001 = 右ページ（参考も見開きの右ページ。ノンブルは右下）
+# 共通 CSS（shared/layouts/README.md）。後ろほど優先。ページ固有のスタイルは pages/<pageId>/page.css に書く
+styles:
+  - shared/layouts/grid.css
+  - shared/layouts/typography.css
+  - shared/layouts/components.css
+# CSS 変数の上書き（例: "--color-accent": "#d9a21b"、"--fs-body": "9pt"）。色は原則 company-data/brand/colors/colors.yaml の値を使う
+theme: {}
+# ページの並び順（ページ ID は識別子。並べ替えても ID は付け直さない）。追加は npm run new:page -- --book replica/b-living --after <pageId>
+pages:
+  - page_001
+output:
+  png_dpi: 150                  # この完コピ検証 BOOK だけ 150（比較用。印刷用の BOOK は 350 のまま）
+  preview_dpi: 150              # 作業確認用の目安（npm run render -- --dpi 150 --out /tmp/<確認用>。output/ には置かない）
+notes: |
+  完コピ検証（Phase 5）用の 1 ページ BOOK。参考: references/nagoya-iryo-hisho-it/guide-living/page_002.jpg（見開きの撮影画像）の右ページ
+  （比較は references/nagoya-iryo-hisho-it/guide-living/prep/page_002-r.yaml で正立・単ページ・台形補正した画像と行う）。
+  右ページを選んだ理由: 吹き出しタグがカードの角をまたぐ特徴カード 2 枚、英字タブ付きの下段 2 段のカード、ピル・アイコンの格子・統計のラベル（下向きの三角）・
+  バッジ・スマートフォンの枠がそろい、カード型レイアウトの部品を最も多く含むため（左ページの波線の下線・雲形のバッジは含まない）。
+  【要確認: 実寸】物理サイズは不明。参考は撮影画像で、紙の端から測った片ページの縦横比は 約 0.695 だが、ページ内の正円（右下のカードの黄色の円）が
+  横 0.97 倍の楕円に写っており、撮影時の横方向の縮みと判断した。補正後の縦横比は 約 0.716 で、A4（0.7071）・B5（0.7082）・A5（0.7048）の差は
+  縦横比では区別できない。本文の字面（版面に対して 約 0.8〜0.85%）が A4 なら 7pt 前後で冊子の本文として自然、A5 なら 5pt 前後で小さすぎるため A4 縦とした。
+  参考ページは見開きの右ページ（ノンブルは右下）。左綴じなので page_001 も右ページになる（ノド = 左）。要素はすべて .trim 基準の mm で絶対配置。
+  Layer 1: 画像生成ツールがないため、写真 5 点とアプリの画面はプレースホルダ（photo-frame）。全面背景の生成は不要（上部の薄グレーの帯・カード・ピルはすべて単色で Layer 2）

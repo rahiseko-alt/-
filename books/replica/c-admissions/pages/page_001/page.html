@@ -1,0 +1,130 @@
+{{!--
+  page_001「入試一覧表（右ページ）」— Phase 5 完コピ検証（見開きをまたぐ表の右ページ）
+  参考: references/kokusai-igaku-gijutsu/admissions/page_005.jpg（補正指定 references/kokusai-igaku-gijutsu/admissions/prep/page_005-r.yaml）
+  解析: references/kokusai-igaku-gijutsu/admissions/analysis/page_005.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（白地のみ。写真・生成背景を使わない）
+    Layer 2 STRUCTURE   : 表の罫（外枠・見出し行・行の区切りの太さの差）、入れ子の日程表・流れ図の罫、流れ図の矢印（components/adm-arrow.hbs の SVG）
+    Layer 3 CONTENT     : 注記・表の見出し・日程・流れ図の文字・【 】ラベルの段落・ノンブル
+
+  - 文字はすべてダミー（参考と同じ文字数・改行位置）。数字は 0。参考資料の文字は書き写していない
+  - 表は 1 列（見出し行＋4 行）の CSS Grid。行の高さは page.css の --adm-row-*（mm）。見開きの左ページを作るときも同じ変数を使う
+  - 行の中は通常のフロー（入れ子の表 → 【 】ラベルの段落）。文字が増えると行が伸びる（あふれない）。対処は page.css 冒頭のコメント
+  - 色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーの変数に置き換える）。赤は注意・条件の段落だけ
+--}}
+
+{{!-- Layer 3: 表の上の注記（1 行） --}}
+<p class="adm-note">注）<span class="adm-red">ダミー文字列ダミー文字列ダミー文字、「ダミー文字列ダミー文字列ダ」</span>（00ダミー）がダミー文。</p>
+
+{{!-- Layer 2 + 3: 一覧表（右ページ分。横罫はノドの折り目まで伸ばし、左ページの表と行をつなぐ） --}}
+<div class="adm-table">
+
+  {{!-- 見出し行（上下が太罫） --}}
+  <div class="adm-head">
+    <p class="adm-head__title">見出しダ・ミー文・字列ダミー・テキスト（ダミー文）</p>
+    <p class="adm-head__note">注）ダミー文字列ダミー文字列。</p>
+  </div>
+
+  {{!-- 第 1 行: 日程表（4 行 × 4 列）＋ラベルの段落 --}}
+  <section class="adm-row adm-row--1">
+    <table class="adm-sched adm-sched--a">
+      <colgroup><col class="adm-sched__c1"><col class="adm-sched__c2"><col class="adm-sched__c3"><col></colgroup>
+      <thead>
+        <tr><th></th><th>ダミー文字列<span class="adm-red">（※ダミー文字列）</span></th><th>ダミー</th><th>ダミー文字</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>第0次</th><td>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr><th>第0次</th><td>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr><th>第0次</th><td>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr><th>第0次</th><td>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+      </tbody>
+    </table>
+    <div class="adm-items">
+      <div class="adm-item"><span class="adm-item__label">【ダミー一】</span><p class="adm-item__text">〈ダミー文字列ダ〉ダミー文、ダミー0:00ダミー文字列ダミ、ダミー文字列ダミー文字。<br>〈ダミー文〉ダミ（000文）0:00〜0:00、ダミ00:00〜　（注）ダミー文字列ダ 0:00〜0:00</p></div>
+      <div class="adm-item"><span class="adm-item__label">【ダミー二】</span><p class="adm-item__text">〈ダミー文字列ダ〉ダミ、ダミー文字列ダミー文字列ダミー文字列ダミー文。<br>〈ダミー文〉ダミ（000文）、ダミ、ダミー文字列ダミー文字列ダミー文字列ダミー文。</p></div>
+      <div class="adm-item"><span class="adm-item__label">【ダミー三】</span><p class="adm-item__text">◎ダミー文字列：ダミー文①＋②＋③計00名　◎ダミー文字列：ダミー文①＋②＋③計00名</p></div>
+      <div class="adm-item adm-red"><span class="adm-item__label adm-item__label--spaced">【<span>ダミー</span>】</span><p class="adm-item__text">第0次ダミーはダミー文字列ダミー文（00:00〜00:00）をダミー文。ダミー文字は00月0日（0）ダミー<br>ダミー文字列ダミ。</p></div>
+    </div>
+  </section>
+
+  {{!-- 第 2 行: 流れ図（見出し＋2 行 × 3 列、列の境界に矢印）＋ラベルの段落 --}}
+  <section class="adm-row adm-row--2">
+    <table class="adm-flow">
+      <colgroup><col class="adm-flow__c1"><col class="adm-flow__c2"><col></colgroup>
+      <thead>
+        <tr><th>ダミ・ダミー文</th><th>ダミ・ダミ</th><th>ダミー文・ダミ</th></tr>
+      </thead>
+      <tbody>
+        <tr class="adm-flow__a">
+          <td>【ダミー文字列ダミー文字】<br>＋　【ダミー文字列ダ】<br>0000年0月0日（0）〜ダミ</td>
+          <td>{{> book/adm-arrow}}①ダミー文字列ダミー文字列、ダミー文字列ダミ、<br><span class="adm-indent">ダミー文字列ダミ</span><br>②ダミー0ダミー文字列ダミ（000文）ダミ　ダミ</td>
+          <td>{{> book/adm-arrow}}【ダミー文・ダミー文字列ダ】<br>ダミ0ダミー文</td>
+        </tr>
+        <tr class="adm-flow__b">
+          <td>【ダミー文字列ダ】<br>0000年0月 0 日（0）〜<br>0000年0月00日（0）</td>
+          <td>{{> book/adm-arrow}}ダミー文字列ダミー文字</td>
+          <td>{{> book/adm-arrow}}【ダミー文字列ダ】<br>ダミー文字0ダミー文<br><span class="adm-red">ダミー、0000年00月0日（0）〜</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="adm-items adm-items--gap">
+      <div class="adm-item"><span class="adm-item__label">【ダミー四】</span><p class="adm-item__text">ダミー文字列ダミー文字。（ダミー文字列ダミー文字列、ダミー文字列ダミー文字列ダミ。）</p></div>
+      <div class="adm-item"><span class="adm-item__label">【ダミー三】</span><p class="adm-item__text">◎ダミー文字列　ダミー文①＋②＋③計00名　◎ダミー文字列：ダミー文①＋②＋③計00名</p></div>
+      <div class="adm-item adm-red"><span class="adm-item__label adm-item__label--spaced">【<span>ダミー</span>】</span><p class="adm-item__text">ダミー文字列ダミー文は0000年00月00日（0）にダミー文字。ダミー文字は00月0日（0）ダミー<br>ダミー文字列ダミ。ダミー文字列ダミー文字列ダミー文字、ダミー文字列ダミー文。<br>ダミー文字列ダミー文字列ダミー文字列ダミー文字。</p></div>
+    </div>
+  </section>
+
+  {{!-- 第 3 行: 流れ図（第 2 行と同じ構成）＋ラベルの段落 --}}
+  <section class="adm-row adm-row--3">
+    <table class="adm-flow">
+      <colgroup><col class="adm-flow__c1"><col class="adm-flow__c2"><col></colgroup>
+      <thead>
+        <tr><th>ダミ・ダミー文</th><th>ダミ・ダミ</th><th>ダミー文・ダミ</th></tr>
+      </thead>
+      <tbody>
+        <tr class="adm-flow__a">
+          <td>【ダミー文字列ダミー文字】<br>＋　【ダミー文字列ダ】<br>0000年0月0日（0）〜ダミ</td>
+          <td>{{> book/adm-arrow}}①ダミー文字列ダミー文字列、ダミー文字列ダミ、<br><span class="adm-indent">ダミー文字列ダミ</span><br>②ダミー0ダミー文字列ダミ（000文）ダミ　ダミ</td>
+          <td>{{> book/adm-arrow}}【ダミー文・ダミー文字列ダ】<br>ダミ0ダミー文</td>
+        </tr>
+        <tr class="adm-flow__b">
+          <td>【ダミー文字列ダ】<br>0000年0月 0 日（0）〜<br>0000年0月00日（0）</td>
+          <td>{{> book/adm-arrow}}ダミー文字列ダミー文字</td>
+          <td>{{> book/adm-arrow}}【ダミー文字列ダ】<br>ダミー文字0ダミー文</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="adm-items adm-items--gap">
+      <div class="adm-item"><span class="adm-item__label">【ダミー四】</span><p class="adm-item__text">ダミー文字列ダミー文字。（ダミー文字列ダミー文字列、ダミー文字列ダミー文字列ダミ。）</p></div>
+      <div class="adm-item"><span class="adm-item__label">【ダミー三】</span><p class="adm-item__text">◎ダミー文字列　ダミー文①＋②＋③計00名　◎ダミー文字列　ダミー文①＋②＋③計00名</p></div>
+    </div>
+  </section>
+
+  {{!-- 第 4 行: 日程表（5 行 × 3 列。区分と受付期間は同じ列）＋ラベルの段落 --}}
+  <section class="adm-row adm-row--4">
+    <table class="adm-sched adm-sched--b">
+      <colgroup><col class="adm-sched__c1"><col class="adm-sched__c2"><col></colgroup>
+      <thead>
+        <tr><th>ダミー文字列<span class="adm-red">（※ダミー文字列）</span></th><th>ダミー</th><th>ダミー文字</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="adm-sched__kind">第0次</span>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr><td><span class="adm-sched__kind">第0次</span>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr><td><span class="adm-sched__kind">第0次</span>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr><td><span class="adm-sched__kind">第0次</span>0000年00月00日（0）〜00月00日（0）</td><td>0000年00月00日（0）</td><td>0000年00月00日（0）</td></tr>
+        <tr class="adm-sched__last"><td><span class="adm-sched__kind adm-spread">ダミ</span>0000年00月00日（0）〜00月00日（0）</td><td><span class="adm-spread adm-spread--wide">ダミー文</span></td><td>ダミー文字0ダミー</td></tr>
+      </tbody>
+    </table>
+    <div class="adm-items adm-items--gap">
+      <div class="adm-item"><span class="adm-item__label">【ダミー一】</span><p class="adm-item__text">ダミ（000文）0:00〜0:00、ダミー文字列00:00〜00:00、ダミ00:00〜　（注）ダミー文字列ダ 0:00〜0:00</p></div>
+      <div class="adm-item"><span class="adm-item__label">【ダミー二】</span><p class="adm-item__text">ダミ（000文）、ダミー文字列、ダミ、ダミー文字列ダミー文字列ダミー文字列ダミー文。</p></div>
+      <div class="adm-item"><span class="adm-item__label">【ダミー三】</span><p class="adm-item__text">◎ダミー文字列：0名　◎ダミー文字列：0名</p></div>
+      <div class="adm-item adm-red"><span class="adm-item__label adm-item__label--spaced">【<span>ダミー</span>】</span><p class="adm-item__text">第0次ダミはダミー文字列ダミー文（00:00〜00:00）をダミー文。ダミー文字は00月0日（0）ダミー文<br>ダミー文字列ダ。</p></div>
+      <div class="adm-item adm-red"><span class="adm-item__label" aria-hidden="true"></span><p class="adm-item__text">ダミー文字列ダミー文字列ダミー文字、ダミー文字列ダミー文。ダミー文字列ダミー文字列ダミー文字列ダミ<br>ダミー。</p></div>
+    </div>
+  </section>
+</div>
+
+{{!-- Layer 3: ノンブル（ページ下中央。「-n-」形式。番号は book.yaml の pages の並び順） --}}
+<p class="adm-folio">-{{page.number}}-</p>

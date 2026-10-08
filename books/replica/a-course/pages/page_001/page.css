@@ -1,0 +1,570 @@
+/*
+ * page_001 学科紹介（右ページ）— Phase 5 完コピ検証（compose が @scope でこのページだけに限定する）
+ * - 寸法は mm、文字サイズは pt。位置は参考の補正画像（1960×2000px、1mm = 6.73px）からの実測
+ * - 版面: 左 = ノド 6.7mm（var(--margin-left)）、右 = 小口 19.6mm（var(--margin-right)）。帯見出し・講師段・写真・ステップ表は版面の左右端にそろう
+ * - 段組: ステップ表は book.yaml の 4 段（--columns / --gutter 0.8mm）。講師段は 5 段（--lect-*。段の幅 41.5mm、ピッチ 55.5mm、間に縦罫）
+ */
+
+/* ---- 参考ページの色（Phase 8 でブランドカラーに置き換える） ---- */
+:scope {
+  --rep-navy: #31356f;          /* 帯見出しの地 */
+  --rep-navy-deep: #2a2c58;     /* 講師キャプションの地（行ごとのマーカー） */
+  --rep-navy-tint: #9a9ad6;     /* 帯見出しの二重かぎ括弧 */
+  --rep-ink: #1c1b2c;           /* 見出しの黒（わずかに紺） */
+  --rep-text: #2b2a30;          /* 本文・リスト */
+  --rep-sub: #55545a;           /* 肩書・欧文の小さな行 */
+  --rep-emph: #383b80;          /* ステップ表の区分見出し（紺） */
+  --rep-rule: #a3a3a3;          /* 講師段の縦罫・ピックアップの横罫 */
+  --rep-shade: #e9e9ec;         /* 中段のグラデーションの上端 */
+  --rep-paper: #ffffff;
+
+  /* ステップ表: 矢羽根（年次が進むほど濃い）と淡色パネル（上 → 下のグラデーション） */
+  --rep-step-1: #a4a4c8;
+  --rep-step-2: #7c7db5;
+  --rep-step-3: #575ba1;
+  --rep-step-4: #393b80;
+  --rep-step-edge: #d6d6ec;     /* 矢羽根の縁の明るい線 */
+  --rep-panel-1-top: #fdfdfe;  --rep-panel-1-bottom: #f5f5f8;
+  --rep-panel-2-top: #fcfcfd;  --rep-panel-2-bottom: #f3f3f7;
+  --rep-panel-3-top: #fbfbfc;  --rep-panel-3-bottom: #eeedf4;
+  --rep-panel-4-top: #ecebf6;  --rep-panel-4-bottom: #e6e4f1;
+
+  /* プレースホルダの灰色（参考の各写真・ロゴの平均の明るさ。Layer 1 生成待ち） */
+  --ph-lect-1: #3a3a3a;
+  --ph-lect-2: #8c8c8c;
+  --ph-lect-3: #a8a8a8;
+  --ph-lect-4: #a5a5a5;
+  --ph-lect-5: #8c8c8c;
+  --ph-pick-1: #5c5c5c;
+  --ph-pick-2: #818181;
+  --ph-logo: #b4b4b4;
+
+  /* 講師段（5 段） */
+  --lect-x0: var(--margin-left);
+  --lect-pitch: 55.5mm;
+  --lect-w: 41.5mm;
+}
+
+/* =========================================================
+ * Layer 2: 中段の淡いグラデーションの面（ピックアップの上端から下へ消える）
+ * ========================================================= */
+.rep-shade {
+  position: absolute;
+  top: 113.4mm;
+  height: 14mm;
+  background: linear-gradient(180deg, var(--rep-shade) 0%, rgb(233 233 236 / 0.45) 45%, rgb(255 255 255 / 0) 100%);
+}
+
+/* =========================================================
+ * Layer 2 + 3: 帯見出し（左下・右上を面取りした濃色帯、白抜き）
+ * ========================================================= */
+.rep-band {
+  position: absolute;
+  top: 13.4mm;
+  left: var(--margin-left);
+  width: 139.7mm;
+  height: 8.3mm;
+  display: flex;
+  align-items: center;
+  padding: 0 0 1mm 4.9mm;
+  background: var(--rep-navy);
+  clip-path: polygon(0 0, calc(100% - 2.3mm) 0, 100% 2.3mm, 100% 100%, 2.2mm 100%, 0 calc(100% - 1.8mm));
+  color: var(--rep-paper);
+  font-size: 14pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.rep-band__br {
+  color: var(--rep-navy-tint);
+}
+
+/* =========================================================
+ * 講師段（components/lecturer-card.hbs）
+ * ========================================================= */
+.rep-lects {
+  position: absolute;
+  inset: 0;
+}
+
+.lect {
+  position: absolute;
+  top: 0;
+  left: calc(var(--lect-x0) + var(--lect-i) * var(--lect-pitch));
+  width: var(--lect-w);
+  height: 105mm;
+  --lect-i: 0;
+}
+
+.lect--1 { --lect-i: 0; --ph-bg: var(--ph-lect-1); --photo-h: 34mm; }
+.lect--2 { --lect-i: 1; --ph-bg: var(--ph-lect-2); --photo-h: 37mm; }
+.lect--3 { --lect-i: 2; --ph-bg: var(--ph-lect-3); }
+.lect--4 { --lect-i: 3; --ph-bg: var(--ph-lect-4); --photo-h: 37mm; }
+.lect--5 { --lect-i: 4; --ph-bg: var(--ph-lect-5); --photo-h: 35.5mm; }
+
+/* 段の間の縦罫（写真の上端から氏名の下まで。段の左端から 7mm 左） */
+.lect + .lect::before {
+  content: '';
+  position: absolute;
+  top: 25.8mm;
+  left: -7mm;
+  width: 0.25mm;
+  height: 77.2mm;
+  background: var(--rep-rule);
+}
+
+/* Layer 1（プレースホルダ）: バストアップ写真 */
+.lect__photo {
+  position: absolute;
+  top: 26mm;
+  left: 4.2mm;
+  width: 33mm;
+  height: var(--photo-h, 35.5mm);
+}
+
+/* 切り抜き人物（段 3）: 矩形の枠ではなく、頭と肩の輪郭で抜いた素材を置く場所 */
+.lect--cutout .lect__photo {
+  top: 27.5mm;
+  left: 4.8mm;
+  width: 28mm;
+  height: 34mm;
+}
+
+.lect--cutout .photo-frame__placeholder {
+  border-radius: 12mm 12mm 0 0 / 14mm 14mm 0 0;
+}
+
+.lect__photo .photo-frame,
+.rep-ph .photo-frame {
+  height: 100%;
+}
+
+.lect__photo .photo-frame__placeholder,
+.rep-ph .photo-frame__placeholder {
+  min-height: 0;
+  border: 0;
+  background: var(--ph-bg, #9a9a9a);
+  font-size: 6.5pt;
+  color: rgb(255 255 255 / 0.85);
+}
+
+/* Layer 2 + 3: マーカー状のキャプション（行ごとに濃色地。写真の下端に重なる） */
+.lect__cap {
+  position: absolute;
+  top: 57.5mm;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55mm;
+}
+
+.lect__cap-line {
+  display: block;
+  padding: 0 0.6mm;
+  background: var(--rep-navy-deep);
+  color: var(--rep-paper);
+  font-size: 8.2pt;
+  font-weight: 700;
+  line-height: 3.8mm;
+  white-space: nowrap;
+}
+
+/* ロゴ枠（正式なロゴデータがないため面だけ。大きさは参考の各ロゴの外接矩形） */
+.lect__logo {
+  position: absolute;
+  left: calc(20.5mm - var(--logo-w) / 2);
+  top: var(--logo-y);
+  width: var(--logo-w);
+  height: var(--logo-h);
+  background: var(--ph-logo);
+}
+
+.lect--1 .lect__logo { --logo-w: 9.5mm;  --logo-h: 13mm;  --logo-y: 67.5mm; }
+.lect--2 .lect__logo { --logo-w: 31mm;   --logo-h: 3.5mm; --logo-y: 72.8mm; }
+.lect--3 .lect__logo { --logo-w: 29mm;   --logo-h: 5.7mm; --logo-y: 74.6mm; }
+.lect--4 .lect__logo { --logo-w: 15mm;   --logo-h: 11.5mm; --logo-y: 69.5mm; }
+.lect--5 .lect__logo { --logo-w: 32.5mm; --logo-h: 4.5mm; --logo-y: 73.1mm; }
+
+/* Layer 3: 所属・肩書・氏名（所属 1 行の段は 83.85mm、2 行の段は 84.65mm から） */
+.lect__info {
+  position: absolute;
+  top: 83.85mm;
+  left: 0;
+  width: 100%;
+  color: var(--rep-ink);
+}
+
+.lect--3 .lect__info,
+.lect--4 .lect__info,
+.lect--5 .lect__info {
+  top: 84.65mm;
+}
+
+.lect__info p {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.lect__org {
+  font-size: 8.2pt;
+  font-weight: 700;
+  line-height: 3.35mm;
+}
+
+/* 欧文の社名は和文より大きく組まれている（参考の字面に合わせる） */
+.lect--3 .lect__org {
+  font-size: 9.3pt;
+  font-weight: 500;
+}
+
+.lect--5 .lect__org + .lect__org {
+  font-size: 9.6pt;
+  font-weight: 500;
+}
+
+.lect__role {
+  font-size: 6.5pt;          /* 参考は約 5.8pt。最小サイズ 6.5pt を守る（review.md【要確認】） */
+  font-weight: 500;
+  line-height: 2.8mm;
+  color: var(--rep-sub);
+}
+
+.lect__org + .lect__role {
+  margin-top: 0.2mm;
+}
+
+.lect__name {
+  margin-top: 0.44mm;
+  font-family: var(--font-serif);
+  font-size: 12.5pt;
+  font-weight: 400;
+  line-height: 5mm;
+  letter-spacing: 0.04em;
+}
+
+/* =========================================================
+ * Layer 2 + 3: ピックアップ授業
+ * ========================================================= */
+/* 吹き出し状のタグ（細い線枠＋右下の影、下辺に尾） */
+.rep-tag {
+  position: absolute;
+  top: 120.7mm;
+  left: 6.8mm;
+  width: 22.8mm;
+  height: 5.2mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.3mm solid var(--rep-ink);
+  border-radius: 0.6mm;
+  background: var(--rep-paper);
+  box-shadow: 0.35mm 0.35mm 0 var(--rep-ink);
+  color: var(--rep-ink);
+  font-size: 8.5pt;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.rep-tag::after {
+  content: '';
+  position: absolute;
+  left: 10.6mm;
+  bottom: -1.25mm;
+  width: 1.9mm;
+  height: 1.9mm;
+  border-right: 0.3mm solid var(--rep-ink);
+  border-bottom: 0.3mm solid var(--rep-ink);
+  background: var(--rep-paper);
+  transform: rotate(45deg) skew(8deg, 8deg);
+}
+
+.rep-pick__title {
+  position: absolute;
+  top: 130.1mm;
+  left: 6.7mm;
+  color: var(--rep-ink);
+  font-size: 13pt;
+  font-weight: 700;
+  line-height: 5.5mm;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* 見出し下の細い罫（本文欄の左端から写真の左端まで） */
+.rep-pick__rule {
+  position: absolute;
+  top: 139.25mm;
+  left: var(--margin-left);
+  width: 82.4mm;
+  height: 0.3mm;
+  border: 0;
+  background: var(--rep-rule);
+}
+
+/* 本文（5 行。1 行 28 字） */
+.rep-pick__body {
+  position: absolute;
+  top: 142.4mm;
+  left: 6.9mm;
+  width: 74.8mm;
+  color: var(--rep-text);
+  font-size: 7pt;
+  font-weight: 500;
+  line-height: 3.56mm;
+  letter-spacing: 0.075em;
+}
+
+/* Layer 1（プレースホルダ）: 作品写真 2 枚 */
+.rep-ph {
+  position: absolute;
+}
+
+.rep-ph--pick1 {
+  top: 120.8mm;
+  left: 89.1mm;
+  width: 59.6mm;
+  height: 40.1mm;
+  --ph-bg: var(--ph-pick-1);
+}
+
+.rep-ph--pick2 {
+  top: 121.5mm;
+  left: 153mm;
+  right: var(--margin-right);
+  height: 45.3mm;
+  --ph-bg: var(--ph-pick-2);
+}
+
+/* =========================================================
+ * Layer 2 + 3: ステップ表
+ * ========================================================= */
+.rep-steps__title {
+  position: absolute;
+  top: 167.5mm;
+  left: 10.2mm;
+  color: var(--rep-ink);
+  font-size: 15.5pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* 行頭の右向き三角 */
+.rep-steps__mark {
+  position: absolute;
+  top: 2.1mm;
+  left: -3.6mm;
+  width: 1.6mm;
+  height: 2.8mm;
+  background: var(--rep-ink);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+/* 表全体: 版面の左右いっぱい・4 段（段間 0.8mm の白） */
+.rep-steps {
+  position: absolute;
+  top: 176.2mm;
+  left: var(--margin-left);
+  right: var(--margin-right);
+  height: 107.6mm;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+.rep-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  --step: var(--rep-step-1);
+  --panel-top: var(--rep-panel-1-top);
+  --panel-bottom: var(--rep-panel-1-bottom);
+}
+
+.rep-step--1 { z-index: 4; }
+.rep-step--2 { z-index: 3; --step: var(--rep-step-2); --panel-top: var(--rep-panel-2-top); --panel-bottom: var(--rep-panel-2-bottom); }
+.rep-step--3 { z-index: 2; --step: var(--rep-step-3); --panel-top: var(--rep-panel-3-top); --panel-bottom: var(--rep-panel-3-bottom); }
+.rep-step--4 { z-index: 1; --step: var(--rep-step-4); --panel-top: var(--rep-panel-4-top); --panel-bottom: var(--rep-panel-4-bottom); }
+
+/* 矢羽根（段の左右の白い隙間の中央から、右へ 5.9mm 突き出す。次の段の上に重ねる） */
+.rep-step__head {
+  position: relative;
+  flex: none;
+  height: 10.8mm;
+  margin: 0 calc(-5.9mm - var(--gutter) / 2) 0 calc(var(--gutter) / -2);
+  padding-right: 5.9mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rep-step-edge);
+  clip-path: polygon(0 0, calc(100% - 5.9mm) 0, 100% 50%, calc(100% - 5.9mm) 100%, 0 100%);
+  color: var(--rep-paper);
+  font-size: 11.5pt;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  isolation: isolate;
+}
+
+/* 地の色（縁の明るい線 0.45mm を残して内側を塗る） */
+.rep-step__head::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--step);
+  clip-path: polygon(0 0, calc(100% - 6.4mm) 0, calc(100% - 0.5mm) 50%, calc(100% - 6.4mm) 100%, 0 100%);
+}
+
+/* 最後の段は矢羽根なし（版面の右端で止める） */
+.rep-step--4 .rep-step__head {
+  margin-right: 0;
+  padding-right: 0;
+  clip-path: none;
+  background: var(--step);
+}
+
+.rep-step--4 .rep-step__head::before {
+  display: none;
+}
+
+.rep-step__panel {
+  flex: 1 1 auto;
+  padding: 1.7mm 3.2mm 0;
+  background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+}
+
+/* 専攻名と説明（1〜3 段は同じ高さを取り、下のリストの開始位置をそろえる） */
+.rep-step__intro {
+  min-height: 19.6mm;
+}
+
+.rep-step__major {
+  color: var(--rep-ink);
+  font-size: 7.3pt;
+  font-weight: 700;
+  line-height: 4.4mm;
+  letter-spacing: 0;
+  font-feature-settings: normal;
+}
+
+.rep-step__desc {
+  width: 58.6mm;
+  margin-top: 0.3mm;
+  color: var(--rep-text);
+  font-size: 6.9pt;
+  font-weight: 500;
+  line-height: 3.75mm;
+}
+
+/* 区分見出し（紺） */
+.rep-step__group {
+  margin-top: 3mm;
+  color: var(--rep-emph);
+  font-size: 7.1pt;
+  font-weight: 700;
+  line-height: 4.02mm;
+  letter-spacing: 0;
+  font-feature-settings: normal;
+}
+
+/* 3 段目は項目が多く、区分の間を詰めている */
+.rep-step--3 .rep-step__list + .rep-step__group {
+  margin-top: 0.5mm;
+}
+
+/* 箇条書き（黒丸 1.6mm、行送り 4.02mm。2 行目は文字の頭にそろえる） */
+.rep-step__list li {
+  position: relative;
+  padding-left: 2.8mm;
+  color: var(--rep-text);
+  font-size: 7.1pt;
+  font-weight: 500;
+  line-height: 4.02mm;
+  white-space: nowrap;
+}
+
+.rep-step__list li::before,
+.rep-step__list li > span + span::before {
+  content: '';
+  position: absolute;
+  top: 1.35mm;
+  left: 0;
+  width: 1.6mm;
+  height: 1.6mm;
+  border-radius: 50%;
+  background: var(--rep-text);
+}
+
+/* 1 行に 2 項目並ぶ行（2 つ目の黒丸は前の項目から 3mm あける） */
+.rep-step__list li > span + span {
+  position: relative;
+  margin-left: 3mm;
+  padding-left: 2.8mm;
+}
+
+/* =========================================================
+ * Layer 3: 注記・柱・ノンブル
+ * ========================================================= */
+.rep-note {
+  position: absolute;
+  top: 285.6mm;
+  left: var(--margin-left);
+  color: var(--rep-text);
+  font-size: 6.5pt;           /* 参考は約 5.7pt。最小サイズ 6.5pt を守り文字数を減らした（review.md【要確認】） */
+  font-weight: 500;
+  line-height: 3.2mm;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* 柱: 横組みを 90° 右に回した向き（上から下へ読む）。参考より 0.8mm 内側（安全領域 5mm の内側） */
+.rep-running {
+  position: absolute;
+  top: 13.4mm;
+  left: 281.6mm;
+  width: 4.4mm;
+  writing-mode: vertical-rl;
+  text-orientation: sideways;
+  color: var(--rep-text);
+  font-size: 8.4pt;
+  font-weight: 700;
+  line-height: 4.4mm;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.rep-running__key {
+  color: var(--rep-ink);
+  font-size: 12pt;
+  font-weight: 900;
+}
+
+/* 柱の二重の右向き三角（縦組みでは下向き） */
+.rep-running__arrow {
+  display: inline-block;
+  width: 2.2mm;
+  height: 3.2mm;
+  margin: 0 1.2mm;
+  background: var(--rep-ink);
+  clip-path: polygon(0 0, 50% 50%, 0 100%, 50% 100%, 100% 50%, 50% 0);
+  clip-path: polygon(0 0, 45% 50%, 0 100%, 0 100%, 0 0, 50% 0, 95% 50%, 50% 100%, 50% 0);
+}
+
+/* ノンブル（小口 = 右下。参考より 1.1mm 上: 安全領域 5mm の内側） */
+.rep-folio {
+  position: absolute;
+  top: 289.05mm;
+  right: 10.3mm;
+  color: var(--rep-ink);
+  font-size: 9pt;
+  font-weight: 700;
+  line-height: 1;
+}

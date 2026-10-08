@@ -1,0 +1,484 @@
+/*
+ * page_001 専用のスタイル（compose が @scope でこのページだけに限定する）
+ * 完コピ検証: 参考ページ（補正後の比較画像）から実測した値。寸法は .trim 基準の mm、文字は pt
+ * グリッド: 片ページ 6 段（段 27.8mm・段間 3.9mm）。小口側 17mm 〜 ノド側 203.3mm（book.yaml の margins_mm / columns / gutter_mm）
+ * 色は参考ページの推定値を --rep-* に置く（撮影画像からの推定で、写真の白飛びぶん少し濃くした。Phase 8 でブランドカラー var(--color-*) に置き換える）
+ */
+
+:scope {
+  /* 地・面 */
+  --rep-ground: #e9efe8;        /* 外周の帯（淡い緑灰） */
+  --rep-panel: #ffffff;         /* 角丸の白パネル */
+  --rep-cream-top: #fffffa;     /* 情報ボックス・授業カードの淡色面（上 → 下のグラデーション） */
+  --rep-cream-bottom: #fbf8df;
+  /* 学科色（イエローグリーン） */
+  --rep-green: #6e8a27;         /* タブ・ピル・箇条書きの点 */
+  --rep-green-deep: #4f6526;    /* コース名 */
+  /* 文字 */
+  --rep-label-ink: #5f6650;     /* 小見出しラベル */
+  --rep-sub-ink: #545944;       /* サブコピー */
+  --rep-ink: #4f4d49;           /* 情報ボックスの本文 */
+  --rep-list-ink: #4d4d41;      /* 職種リスト */
+  --rep-head-ink: #66682a;      /* セクション見出し */
+  --rep-head-em-fill: #f1f3e6;  /* 見出しの強調 2 字（淡い塗り＋濃い縁取り） */
+  --rep-head-em-line: #7a815f;
+  --rep-card-title: #646d4e;    /* 授業カードの見出し */
+  --rep-card-sub: #7d8858;      /* 授業カードの小見出し */
+  --rep-card-ink: #53514d;      /* 授業カードの本文 */
+  /* 部品 */
+  --rep-icon-disc: #fbf7cd;     /* アイコンの淡黄の円 */
+  --rep-fly-a: #f3e66c;         /* 線画の蝶（黄） */
+  --rep-fly-b: #d4abd0;         /* 線画の蝶（薄紫） */
+  --rep-fly-line: #4b4a2c;
+  --rep-badge-fill: #faf6c6;    /* 円バッジ（淡黄） */
+  --rep-badge-line: #a4a37f;
+  --rep-badge-ink: #5b6023;
+  --rep-string: #8c9673;        /* ピルの紐飾り */
+  --rep-pill-yellow: #fbf59c;   /* 職種リストのピル */
+  --rep-pill-yellow-line: #aaa964;
+  --rep-pill-yellow-ink: #6a6d16;
+  --rep-marker: #f5ee94;        /* セクション見出しのマーカー */
+  --rep-folio: #c95b80;         /* ノンブルのハート */
+  --rep-folio-ring: #e9b9c9;
+  /* プレースホルダ（Layer 1 の写真待ち） */
+  --rep-photo: #c9ccc4;
+}
+
+/* ---------- Layer 2: 外周の帯と白パネル ---------- */
+
+.ground {
+  background: var(--rep-ground);
+}
+
+/* 白パネル: 小口側に 7mm、天地に 4.3mm の帯を残す。ノド側は仕上がり線まで（上の角だけ角丸でノド側を閉じる） */
+.panel {
+  position: absolute;
+  left: 7mm;
+  top: 4.3mm;
+  right: 0;
+  bottom: 4.3mm;
+  background: var(--rep-panel);
+  border-radius: 4mm 5mm 0 4mm;
+}
+
+/* ---------- 天のタブ＋小見出しラベル ---------- */
+
+.tab {
+  position: absolute;
+  left: 17mm;
+  top: -3mm;                    /* 天の塗り足しから下がる */
+  width: 7.7mm;
+  height: 14.6mm;               /* 下端 11.6mm */
+  background: var(--rep-green);
+  border-radius: 0 0 3.85mm 3.85mm;
+}
+
+.tab__ring {
+  position: absolute;
+  left: 1.75mm;
+  top: 8.75mm;                  /* 中心 (20.85, 7.85) */
+  width: 4.2mm;
+  height: 4.2mm;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rep-panel);
+}
+
+.tab__heart {
+  width: 1.9mm;
+  height: 1.7mm;
+  fill: var(--rep-green);
+}
+
+.label {
+  position: absolute;
+  left: 26.5mm;
+  top: 5.3mm;
+  margin: 0;
+  font-size: 10.5pt;
+  font-weight: 700;
+  line-height: 5mm;
+  letter-spacing: 0.125em;
+  white-space: nowrap;
+  color: var(--rep-label-ink);
+}
+
+/* ---------- サブコピー・アイコン・コース名 ---------- */
+
+.subcopy {
+  position: absolute;
+  left: 41.8mm;
+  top: 17mm;
+  margin: 0;
+  font-size: 11.6pt;
+  font-weight: 700;
+  line-height: 5.5mm;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  color: var(--rep-sub-ink);
+  transform: rotate(-1.1deg);   /* 参考は小口側を軸にわずかに右上がり（ページの反りを差し引いた推定） */
+  transform-origin: 0 50%;
+}
+
+.icon {
+  position: absolute;
+  left: 16.9mm;
+  top: 19.2mm;                  /* 円の中心 (26.8, 29.1)、直径 19.8mm */
+  width: 19.8mm;
+  height: 19.8mm;
+  overflow: visible;
+}
+
+.icon__disc { fill: var(--rep-icon-disc); }
+.icon__wing { stroke: var(--rep-fly-line); stroke-width: 0.32; stroke-linejoin: round; }
+.icon__fly--a .icon__wing { fill: var(--rep-fly-a); }
+.icon__fly--b .icon__wing { fill: var(--rep-fly-b); }
+.icon__line { fill: none; stroke: var(--rep-fly-line); stroke-width: 0.3; stroke-linecap: round; }
+.icon__dot { fill: var(--rep-fly-line); }
+
+.course-name {
+  position: absolute;
+  left: 40.6mm;
+  top: 23.3mm;
+  margin: 0;
+  font-size: 40pt;
+  font-weight: 900;
+  line-height: 16mm;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--rep-green-deep);
+}
+
+/* ---------- 円バッジ ---------- */
+
+.badge {
+  position: absolute;
+  left: 166.6mm;
+  top: 3.5mm;                   /* 中心 (185.1, 22.0)、直径 37mm（参考の写真では紙の反りで 約 1.7mm 上に写る） */
+  width: 37mm;
+  height: 37mm;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  border: 0.5mm solid var(--rep-badge-line);
+  border-radius: 50%;
+  background: var(--rep-badge-fill);
+}
+
+.badge__text {
+  margin: 0;
+  font-size: 9pt;
+  font-weight: 700;
+  line-height: 4.5mm;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--rep-badge-ink);
+  transform: translateY(-0.8mm) rotate(6.5deg);
+}
+
+/* ---------- 大写真（Layer 1 待ち）と情報ボックス ---------- */
+
+.hero {
+  position: absolute;
+  left: 17mm;
+  top: 43mm;
+  right: -3mm;                  /* ノド側の塗り足しまで */
+  height: 117mm;                /* 下端 160mm */
+}
+
+.hero .photo-frame {
+  width: 100%;
+  height: 100%;
+}
+
+.hero .photo-frame__placeholder {
+  border-radius: 4mm 0 0 0;     /* 小口側の上角だけ角丸 */
+}
+
+.info {
+  position: absolute;
+  left: 17mm;
+  top: 160mm;
+  right: -3mm;
+  height: 33mm;                 /* 下端 193mm */
+  background: linear-gradient(to bottom, var(--rep-cream-top), var(--rep-cream-bottom));
+}
+
+/* 学ぶことのピル（紐飾り × は小口側からピルの下へ潜る） */
+.string {
+  position: absolute;
+  left: 19.6mm;
+  top: 165.4mm;
+  width: 6mm;
+  height: 6mm;
+  overflow: visible;
+}
+
+.string path {
+  fill: none;
+  stroke: var(--rep-string);
+  stroke-width: 0.45;
+  stroke-linecap: round;
+}
+
+.pill-learn {
+  position: absolute;
+  left: 23.9mm;
+  top: 165.4mm;
+  width: 39mm;
+  height: 5.7mm;
+  box-sizing: border-box;
+  margin: 0;
+  padding-left: 5.2mm;
+  border-radius: 1.3mm;
+  background: var(--rep-green);
+  font-size: 9.5pt;
+  font-weight: 700;
+  line-height: 5.7mm;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.pill-learn__pin {
+  position: absolute;
+  left: 2mm;
+  top: 2.3mm;
+  width: 1.1mm;
+  height: 1.1mm;
+  box-sizing: border-box;
+  border: 0.25mm solid #fff;
+  border-radius: 50%;
+}
+
+.learn-text {
+  position: absolute;
+  left: 23.9mm;
+  top: 172.3mm;
+  width: 112mm;
+  margin: 0;
+  font-size: 8pt;
+  font-weight: 500;
+  line-height: 4.7mm;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+/* 職種リストのピル（参考はわずかに右下がり） */
+.pill-jobs {
+  position: absolute;
+  left: 145.5mm;
+  top: 163.6mm;
+  width: 58.2mm;
+  height: 6.1mm;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0.4mm solid var(--rep-pill-yellow-line);
+  border-radius: 1.6mm;
+  background: var(--rep-pill-yellow);
+  font-size: 9pt;
+  font-weight: 700;
+  padding-left: 2.2mm;
+  line-height: 5.3mm;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: var(--rep-pill-yellow-ink);
+  transform: rotate(1deg);
+}
+
+.jobs {
+  position: absolute;
+  left: 145.8mm;
+  top: 171.3mm;
+  width: 58mm;
+  height: 15mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jobs__item {
+  position: absolute;
+  padding-left: 3.85mm;
+  font-size: 8pt;
+  font-weight: 500;
+  line-height: 4.7mm;
+  white-space: nowrap;
+  color: var(--rep-list-ink);
+}
+
+.jobs__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.29mm;
+  width: 2.45mm;
+  height: 2.45mm;
+  border-radius: 50%;
+  background: var(--rep-green);
+}
+
+.jobs__item--wide {
+  width: 58mm;
+}
+
+/* 参考の注記は 約 5.8pt。社内基準の最小 6.5pt（typography-ja.md §3）に合わせて字数を減らした */
+.jobs__note {
+  margin-left: 0.3mm;
+  font-size: 6.5pt;
+  letter-spacing: -0.02em;
+}
+
+.jobs__etc {
+  position: absolute;
+  left: 49.4mm;
+  top: 0;
+}
+
+/* ---------- セクション見出し ---------- */
+
+.marker {
+  position: absolute;
+  left: 17.3mm;
+  top: 200.6mm;
+  width: 46.8mm;
+  height: 3.8mm;
+  background: linear-gradient(to bottom, transparent, var(--rep-marker) 60%, transparent);
+}
+
+.section-head {
+  position: absolute;
+  left: 17.2mm;
+  top: 197.45mm;
+  margin: 0;
+  font-size: 12pt;
+  font-weight: 700;
+  line-height: 6mm;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  color: var(--rep-head-ink);
+  font-feature-settings: normal;
+}
+
+.section-head__em {
+  margin-left: 1.1mm;
+  font-size: 17pt;
+  letter-spacing: 0;
+  color: var(--rep-head-em-fill);
+  -webkit-text-stroke: 0.5mm var(--rep-head-em-line);
+  paint-order: stroke fill;
+}
+
+/* ---------- 授業カード（book/class-card） ---------- */
+
+.class-row {
+  position: absolute;
+  left: 17mm;
+  top: 208mm;
+  width: 186.3mm;
+  height: 75.5mm;               /* 下端 283.5mm */
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: 3.9mm;
+  --photo-h: 38.7mm;
+}
+
+.class-card {
+  grid-column: span var(--span, 2);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.class-card__photo {
+  flex: none;
+  height: var(--photo-h);
+}
+
+.class-card__photo .photo-frame {
+  width: 100%;
+  height: 100%;
+}
+
+.class-card__photo .photo-frame__placeholder {
+  border-radius: 1.2mm 1.2mm 0 0;
+}
+
+.class-card__body {
+  flex: 1 1 auto;
+  padding: 3.37mm 2.7mm 0 3.3mm;
+  background: linear-gradient(to bottom, var(--rep-cream-top), var(--rep-cream-bottom));
+}
+
+.class-card__title {
+  margin: 0;
+  font-size: 11.6pt;
+  font-weight: 500;
+  line-height: 5mm;
+  text-align: center;
+  color: var(--rep-card-title);
+}
+
+.class-card__sub {
+  margin: 3.77mm 0 0;
+  font-size: 8pt;
+  font-weight: 500;
+  line-height: 4mm;
+  text-align: center;
+  color: var(--rep-card-sub);
+}
+
+.class-card__text {
+  margin: 0.58mm 0 0;
+  font-size: 7.2pt;
+  font-weight: 500;
+  line-height: 4.27mm;
+  color: var(--rep-card-ink);
+}
+
+/* 写真のプレースホルダ（Layer 1 の自社写真待ち。中間調の灰色で面の重さだけ合わせる） */
+.photo-frame__placeholder {
+  min-height: 0;
+  background: var(--rep-photo);
+  border: none;
+  font-size: 6.5pt;
+  color: #8a8e86;
+}
+
+/* ---------- ノンブル（地の小口側。白い円＋点線のリング＋ハート） ---------- */
+
+.folio {
+  position: absolute;
+  top: 288.35mm;                /* 中心 (12.3, 291.0) */
+  width: 5.3mm;
+  height: 5.3mm;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  border: 0.25mm dotted var(--rep-folio-ring);
+  border-radius: 50%;
+  background: var(--rep-panel);
+}
+
+.folio[data-side='left'] { left: 9.65mm; }
+.folio[data-side='right'] { right: 9.65mm; }
+
+.folio__heart {
+  position: absolute;
+  left: 0.45mm;
+  top: 0.65mm;
+  width: 3.9mm;
+  height: 3.5mm;
+  fill: var(--rep-folio);
+}
+
+.folio__number {
+  position: relative;
+  margin-top: -0.3mm;
+  font-size: 7pt;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}

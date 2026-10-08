@@ -1,0 +1,950 @@
+/*
+ * page_001 専用のスタイル（compose が @scope でこのページだけに限定する）
+ * 完コピ検証: 参考ページ（補正後の比較画像）から実測した値。寸法は .trim 基準の mm、文字は pt
+ * 色は参考ページの推定値を --rep-* に置く（撮影画像からの推定。Phase 8 でブランドカラー var(--color-*) に置き換える）
+ */
+
+:scope {
+  /* 地・面 */
+  --rep-white: #ffffff;
+  --rep-band: #f6f6f5;          /* 上部の薄グレーの帯（統計ブロックの地） */
+  --rep-card-line: #d4d4d2;     /* 特徴カードの極薄の枠 */
+  --rep-panel: #edecea;         /* 付帯パネル・下段カードの地（薄グレー） */
+  --rep-rule: #b9b9b9;          /* 点線の縦罫・パネル内の区切り */
+  /* 色（役割） */
+  --rep-pink: #c25e77;          /* 統計の数字 */
+  --rep-pill-pink: #c8566e;     /* ピンクのピル */
+  --rep-red: #bb4a63;           /* 赤いバッジ */
+  --rep-blue: #5a92d2;          /* 青いピル */
+  --rep-tile: #4f86c6;          /* 設備アイコンの地 */
+  --rep-yellow: #f1d24c;        /* 吹き出しタグ */
+  --rep-yellow-disc: #e8c047;   /* パネルの円形イラストの地 */
+  --rep-charcoal: #3a3a3a;      /* 英字タブ・ピル見出し・統計ラベルの枠と三角 */
+  --rep-grey-pill: #adadb0;     /* 灰色のピル */
+  --rep-black: #141414;         /* 無線 LAN のバッジ・スマートフォンの枠 */
+  --rep-tag-line: #3d3a30;      /* 吹き出しタグの輪郭 */
+  --rep-tag-shadow: rgba(170, 145, 70, 0.45);   /* 吹き出しタグの影 */
+  --rep-red-line: #933a4f;      /* 赤いバッジのふち */
+  --rep-art: #4a3a1c;           /* 黄色の円の線画 */
+  /* 文字 */
+  --rep-ink: #262626;           /* 見出し */
+  --rep-ink-body: #353535;      /* 本文 */
+  --rep-ink-note: #6a6a6a;      /* 注記・ノンブル */
+  /* プレースホルダ（Layer 1 の写真待ち。中間調の灰色で面の重さだけ合わせる） */
+  --rep-photo: #b9bdc3;
+  --rep-screen: #e3e5e8;
+}
+
+/* 共通: 文字は左揃え・改行位置は <br> で固定（参考と同じ行数） */
+p, h2, li {
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.icon-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* 線画アイコン（<use> で呼ぶ symbol）: 線の指定は呼び出し側の svg から継承させる */
+.tile svg,
+.wifi-badge__icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+
+/* 写真のプレースホルダ */
+.photo-frame__placeholder {
+  min-height: 0;
+  background: var(--rep-photo);
+  border: none;
+  border-radius: 1.2mm;
+  font-size: 6.5pt;
+  color: #858b93;
+}
+
+/* ---------- Layer 2: 上部の薄グレーの帯 ---------- */
+
+.top-band {
+  position: absolute;
+  height: calc(52mm + var(--bleed));
+  background: var(--rep-band);
+}
+
+/* ---------- 統計ブロック ---------- */
+
+.stat-icon {
+  position: absolute;
+  left: 16.6mm;
+  top: 9.4mm;
+  width: 13.65mm;
+  height: 10.5mm;
+  overflow: visible;
+}
+
+.stat-icon__stars path {
+  fill: none;
+  stroke: var(--rep-ink);
+  stroke-width: 0.3;
+  stroke-linejoin: round;
+}
+
+.stat-icon__thumb {
+  fill: none;
+  stroke: var(--rep-ink);
+  stroke-width: 0.45;
+  stroke-linejoin: round;
+}
+
+.stat-title {
+  position: absolute;
+  left: 32.9mm;
+  top: 15.5mm;
+  font-size: 12.5pt;
+  font-weight: 500;
+  line-height: 5mm;
+  letter-spacing: 0.05em;
+  font-feature-settings: normal;   /* 参考の見出しはベタ組み（palt なし） */
+  color: var(--rep-ink);
+}
+
+.stat-copy {
+  position: absolute;
+  left: 16.8mm;
+  top: 22.5mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 4.25mm;
+  color: var(--rep-ink-body);
+}
+
+.stat-note {
+  position: absolute;
+  left: 16.8mm;
+  top: 45.4mm;
+  font-size: 6.5pt;
+  line-height: 3mm;
+  color: var(--rep-ink-note);
+}
+
+.stat-rule {
+  position: absolute;
+  left: 65.4mm;
+  top: 13.5mm;
+  height: 34.3mm;
+  border-left: 0.25mm dashed var(--rep-rule);
+}
+
+/* ラベル: 白地・黒枠のピル＋下向きの黒い三角 */
+.stat-label {
+  position: absolute;
+  top: 16.2mm;
+  width: 34.3mm;
+  height: 7.7mm;
+  box-sizing: border-box;
+  border: 0.35mm solid var(--rep-charcoal);
+  border-radius: 3.85mm;
+  background: var(--rep-white);
+  display: grid;
+  place-items: center;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  color: var(--rep-ink);
+}
+
+.stat-label::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 1.9mm);
+  top: 100%;
+  width: 3.8mm;
+  height: 3.9mm;
+  background: var(--rep-charcoal);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.stat-label--1 { left: 71mm; }
+.stat-label--2 { left: 107.8mm; }
+.stat-label--3 { left: 144.4mm; }
+
+/* 大きな数字（参考は字幅の狭い数字書体。Noto Sans JP を横 84% に縮めて近づける） */
+.stat-num {
+  position: absolute;
+  top: 26.25mm;
+  font-family: var(--font-number);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--rep-pink);
+  transform: scaleX(0.84);
+  transform-origin: left top;
+}
+
+.stat-num__int {
+  font-size: 56pt;
+  letter-spacing: -0.02em;
+}
+
+.stat-num__dec {
+  font-size: 30pt;
+  letter-spacing: -0.07em;
+}
+
+.stat-num--1 { left: 73.5mm; }
+.stat-num--2 { left: 109.9mm; }
+.stat-num--3 { left: 148mm; }
+
+.stat-source {
+  position: absolute;
+  right: 29.5mm;
+  top: 46.2mm;
+  font-size: 6.5pt;
+  line-height: 3mm;
+  color: var(--rep-ink-note);
+}
+
+/* ---------- Layer 2 + 3: 特徴カード（book/feature-card） ---------- */
+
+.fcard {
+  position: absolute;
+  left: 15.1mm;
+  width: 174.5mm;
+  box-sizing: border-box;
+  padding: var(--pad-t) 0 var(--pad-b) 4.6mm;
+  background: var(--rep-white);
+  outline: 0.2mm solid var(--rep-card-line);
+  outline-offset: -0.2mm;
+}
+
+.fcard--a { top: 60mm; --pad-t: 3.8mm; --pad-b: 4mm; --tag-t: -0.85mm; }
+.fcard--b { top: 137.4mm; --pad-t: 4.2mm; --pad-b: 3.8mm; --tag-t: -4.15mm; }
+
+.fcard__photo {
+  width: 81.6mm;
+}
+
+.fcard__photo .photo-frame {
+  display: block;
+}
+
+/* 吹き出しタグ（book/speech-tag）: カードの左上の角をまたぐ */
+.stag {
+  position: absolute;
+  left: -3.2mm;
+  top: var(--tag-t);
+  width: 31.8mm;
+  height: 19.5mm;
+}
+
+.stag__shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(-0.35mm 0.4mm 0.2mm var(--rep-tag-shadow));   /* 左下への淡い影 */
+}
+
+.stag__shape path {
+  fill: var(--rep-yellow);
+  stroke: var(--rep-tag-line);
+  stroke-width: 0.3;
+  stroke-linejoin: round;
+}
+
+.stag__text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 31.8mm;
+  height: 16.6mm;
+  display: grid;
+  place-items: center;
+  font-size: 13pt;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--rep-ink);
+}
+
+/* カードの見出し（2 行）と本文（2 行） */
+.fcard__title {
+  position: absolute;
+  left: 92.9mm;
+  top: var(--title-t);
+  font-size: 13pt;
+  font-weight: 500;
+  line-height: var(--title-lh);
+  letter-spacing: var(--title-ls);
+  font-feature-settings: normal;   /* 参考の見出しはベタ組み（palt なし） */
+  color: var(--rep-ink);
+}
+
+.fcard__text {
+  position: absolute;
+  left: 92.9mm;
+  top: var(--text-t);
+  font-size: var(--text-fs);
+  font-weight: 500;
+  line-height: var(--text-lh);
+  color: var(--rep-ink-body);
+}
+
+.fcard--a { --title-t: 3.3mm; --title-lh: 7mm; --title-ls: 0.005em; --text-t: 18.7mm; --text-fs: 7pt; --text-lh: 4.2mm; }
+.fcard--b { --title-t: 3.7mm; --title-lh: 7.2mm; --title-ls: 0.02em; --text-t: 19.45mm; --text-fs: 6.7pt; --text-lh: 4.1mm; }
+
+/* 付帯パネル（薄グレーの角丸） */
+.fpanel {
+  position: absolute;
+  left: 92.5mm;
+  background: var(--rep-panel);
+  border-radius: 1.2mm;
+}
+
+.fpanel--a { top: 31.6mm; width: 77.3mm; height: 35.4mm; }
+.fpanel--b { top: 30.5mm; width: 77.4mm; height: 20.7mm; }
+
+/* チャコールのピル見出し（白抜き・太字） */
+.pill-head {
+  position: absolute;
+  height: 4.1mm;
+  box-sizing: border-box;
+  padding-left: 1mm;
+  border-radius: 2.05mm;
+  background: var(--rep-charcoal);
+  display: flex;
+  align-items: center;
+  font-size: 7pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rep-white);
+}
+
+.pill-head__dot {
+  font-size: 7pt;
+  margin-right: 0.2em;
+}
+
+.pill-head--a1 { left: 4.3mm; top: 2.2mm; width: 29.4mm; }
+.pill-head--a2 { left: 43.1mm; top: 2.2mm; width: 29.6mm; }
+.pill-head--b { left: 4.4mm; top: 2.6mm; width: 68mm; height: 4mm; }
+
+.fpanel__divider {
+  position: absolute;
+  left: 38.6mm;
+  top: 3mm;
+  height: 30.4mm;
+  border-left: 0.25mm dashed var(--rep-rule);
+}
+
+/* 設備アイコンの格子（青い角丸＋白の線画＋白抜きの語） */
+.tiles {
+  position: absolute;
+  top: 7.8mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 8.8mm);
+  grid-auto-rows: 7.5mm;
+  column-gap: 1.55mm;
+  row-gap: 1.5mm;
+}
+
+.tiles--l { left: 4.1mm; }
+.tiles--r { left: 43mm; }
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 0.5mm;
+  box-sizing: border-box;
+  border-radius: 1.1mm;
+  background: var(--rep-tile);
+  color: var(--rep-white);
+}
+
+.tile svg {
+  width: 4.2mm;
+  height: 4.2mm;
+}
+
+.tile span {
+  margin-top: -0.1mm;
+  font-size: 7pt;
+  font-weight: 700;
+  line-height: 2.6mm;
+  letter-spacing: -0.06em;
+}
+
+.fpanel__note {
+  position: absolute;
+  right: 3.9mm;
+  top: 31.5mm;
+  font-size: 6.5pt;
+  line-height: 3mm;
+  color: var(--rep-ink-note);
+}
+
+/* ピル（ピンク・青の白抜き） */
+.pill {
+  position: absolute;
+  height: 3.7mm;
+  border-radius: 1.85mm;
+  display: grid;
+  place-items: center;
+  font-size: 7pt;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--rep-white);
+}
+
+.pill--pink { background: var(--rep-pill-pink); }
+.pill--blue { background: var(--rep-blue); }
+.pill--b1 { left: 4.6mm; top: 8.1mm; width: 18.9mm; }
+.pill--b2 { left: 24.5mm; top: 8.1mm; width: 18.9mm; }
+.pill--b3 { left: 44.7mm; top: 8.1mm; width: 18.9mm; }
+.pill--b4 { left: 4.6mm; top: 13.8mm; width: 59mm; height: 3.8mm; }
+
+/* 写真の上の無線 LAN のバッジ */
+.wifi-badge {
+  position: absolute;
+  left: 75.2mm;
+  top: 6.4mm;
+  width: 8.7mm;
+  height: 8.6mm;
+  border-radius: 1mm;
+  background: var(--rep-black);
+  color: var(--rep-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wifi-badge__icon {
+  width: 5.2mm;
+  height: 5.2mm;
+  margin-top: 0.3mm;
+}
+
+.wifi-badge__icon {
+  stroke-width: 1;
+}
+
+.wifi-badge__text {
+  margin-top: -0.6mm;
+  font-size: 7pt;
+  font-weight: 700;
+  line-height: 2.6mm;
+  letter-spacing: -0.04em;
+}
+
+/* 写真の下端の半透明の帯と、その上の注記・電話 */
+.photo-strip {
+  position: absolute;
+  left: 4.6mm;
+  top: 57.6mm;
+  width: 81.6mm;
+  height: 8.8mm;
+  border-radius: 0 0 1.2mm 1.2mm;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.photo-strip__text {
+  position: absolute;
+  left: 7.8mm;
+  top: 58.9mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 3mm;
+  color: var(--rep-ink-body);
+}
+
+.photo-strip__icon {
+  position: absolute;
+  left: 52.4mm;
+  top: 59.4mm;
+  width: 6.2mm;
+  height: 6.2mm;
+}
+
+.photo-strip__icon circle {
+  fill: none;
+  stroke: var(--rep-ink);
+  stroke-width: 0.6;
+}
+
+.photo-strip__icon path {
+  fill: var(--rep-ink);
+}
+
+.photo-strip__tel {
+  position: absolute;
+  left: 59.4mm;
+  top: 60.4mm;
+  font-family: var(--font-number);
+  font-size: 10pt;
+  font-weight: 500;
+  line-height: 4mm;
+  color: var(--rep-ink);
+}
+
+/* 赤いバッジ（カードの右上の角をまたぐ） */
+.red-badge {
+  position: absolute;
+  left: 142.8mm;
+  top: -1mm;
+  width: 34.7mm;
+  height: 15.7mm;
+  box-sizing: border-box;
+  border: 0.25mm solid var(--rep-red-line);
+  border-radius: 1.2mm;
+  background: var(--rep-red);
+  color: var(--rep-white);
+}
+
+.red-badge__icon {
+  position: absolute;
+  left: 2.65mm;
+  top: 2.65mm;
+  width: 4.4mm;
+  height: 3.5mm;
+}
+
+.red-badge__icon rect {
+  fill: var(--rep-white);
+}
+
+.red-badge__handle {
+  fill: none;
+  stroke: var(--rep-white);
+  stroke-width: 0.9;
+}
+
+.red-badge__band {
+  stroke: var(--rep-red);
+  stroke-width: 0.6;
+}
+
+.red-badge__title {
+  position: absolute;
+  left: 8.65mm;
+  top: 1.85mm;
+  font-size: 12pt;
+  font-weight: 500;
+  line-height: 5mm;
+}
+
+.red-badge__text {
+  position: absolute;
+  left: 2.75mm;
+  top: 6.7mm;
+  font-size: 7pt;
+  font-weight: 500;
+  line-height: 3.4mm;
+}
+
+/* ---------- Layer 2 + 3: 下段のカード（book/tab-card） ---------- */
+
+.tcard {
+  position: absolute;
+  top: 200.1mm;
+  height: 77.8mm;
+  background: var(--rep-panel);
+  border-radius: 1mm;
+}
+
+.tcard--l { left: 14.2mm; width: 84.5mm; --tab-l: -4.1mm; --tab-w: 35.3mm; --tab-t: -6.95mm; }
+.tcard--r { left: 105.45mm; width: 84.55mm; --tab-l: -5.25mm; --tab-w: 35.1mm; --tab-t: -6.45mm; }
+
+/* 英字タブ（チャコールのピル＋下向きの小さな尖り） */
+.tcard__tab {
+  position: absolute;
+  left: var(--tab-l);
+  top: var(--tab-t);
+  width: var(--tab-w);
+  height: 6.7mm;
+  border-radius: 3.35mm;
+  background: var(--rep-charcoal);
+  display: grid;
+  place-items: center;
+}
+
+.tcard__tab::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 0.9mm);
+  top: 100%;
+  width: 1.8mm;
+  height: 2.4mm;
+  background: var(--rep-charcoal);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* 参考は字幅の狭い欧文書体。Noto Sans JP を横 80% に縮めて近づける */
+.tcard__tab-text {
+  font-family: var(--font-heading);
+  font-size: 11pt;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--rep-white);
+  transform: scaleX(0.8);
+}
+
+.tcard__title {
+  position: absolute;
+  font-weight: 500;
+  font-feature-settings: normal;   /* 参考の見出しはベタ組み（palt なし） */
+  color: var(--rep-ink);
+}
+
+.tcard__title--l {
+  left: 0;
+  width: 82.8mm;
+  top: 4.1mm;
+  font-size: 12pt;
+  line-height: 5mm;
+  text-align: center;
+}
+
+.tcard__text--l {
+  position: absolute;
+  left: 0;
+  width: 83mm;
+  top: 10.75mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 4.3mm;
+  text-align: center;
+  color: var(--rep-ink-body);
+}
+
+/* 写真（左下のカード）と、写真の左下の暗いラベル */
+.tphoto {
+  position: absolute;
+  left: 3.2mm;
+}
+
+.tphoto .photo-frame {
+  display: block;
+}
+
+.tphoto .photo-frame__placeholder {
+  border-radius: 1mm;
+}
+
+.tphoto--wide { top: 22mm; width: 78.1mm; }
+.tphoto--small { top: 50.6mm; width: 37.1mm; }
+
+.tphoto__label {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3.6mm;
+  padding: 0 0.8mm;
+  border-radius: 0 1mm 0 1mm;
+  background: rgba(30, 30, 30, 0.72);
+  font-size: 7pt;
+  font-weight: 500;
+  line-height: 3.6mm;
+  color: var(--rep-white);
+}
+
+/* 白いパネル（動画の案内: 2 行の文＋再生アイコン＋QR） */
+.video-box {
+  position: absolute;
+  left: 41.4mm;
+  top: 50.6mm;
+  width: 39.9mm;
+  height: 24.2mm;
+  border-radius: 1mm;
+  background: var(--rep-white);
+}
+
+.video-box__text {
+  position: absolute;
+  left: 0;
+  top: 2.35mm;
+  width: 100%;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 3.1mm;
+  text-align: center;
+  color: var(--rep-ink-body);
+}
+
+/* 汎用の再生アイコン（参考は動画サービスのロゴ。ロゴは使わない） */
+.video-box__play {
+  position: absolute;
+  left: 7.95mm;
+  top: 12.65mm;
+  width: 7.4mm;
+  height: 7.4mm;
+}
+
+.video-box__play circle {
+  fill: var(--rep-charcoal);
+}
+
+.video-box__play path {
+  fill: var(--rep-white);
+}
+
+.video-box__qr {
+  position: absolute;
+  left: 20.85mm;
+  top: 8.25mm;
+  line-height: 0;
+}
+
+/* 右下のカード */
+.tcard__title--r {
+  left: 4.75mm;
+  top: 5.15mm;
+  font-size: 13.5pt;
+  line-height: 5.5mm;
+}
+
+.tcard__sub {
+  position: absolute;
+  left: 4.75mm;
+  top: 12mm;
+  font-size: 7.7pt;
+  font-weight: 500;
+  line-height: 4mm;
+  color: var(--rep-ink);
+}
+
+.qr-guide__slashes {
+  position: absolute;
+  left: 62mm;
+  top: 3mm;
+  width: 22mm;
+  height: 7mm;
+  overflow: visible;
+}
+
+.qr-guide__slashes path {
+  fill: none;
+  stroke: var(--rep-ink-body);
+  stroke-width: 0.2;
+}
+
+.qr-guide__text {
+  position: absolute;
+  left: 62.95mm;
+  top: 4mm;
+  width: 20mm;
+  font-size: 6.5pt;
+  font-weight: 700;
+  line-height: 2.6mm;
+  text-align: center;
+  color: var(--rep-ink-body);
+}
+
+.app-qr {
+  position: absolute;
+  left: 65.05mm;
+  top: 10.7mm;
+  line-height: 0;
+}
+
+.app-kicker {
+  position: absolute;
+  left: 4.75mm;
+  top: 20.6mm;
+  font-size: 8.2pt;
+  font-weight: 500;
+  line-height: 4mm;
+  color: var(--rep-ink);
+}
+
+/* アプリのロゴは素材待ち（灰色の破線の枠。参考のロゴは使わない） */
+.app-logo {
+  position: absolute;
+  left: 27.95mm;
+  top: 17.7mm;
+  width: 7.6mm;
+  height: 8.5mm;
+  box-sizing: border-box;
+  border: 0.2mm dashed #8d939c;
+  border-radius: 1mm;
+  background: var(--rep-screen);
+}
+
+.app-name {
+  position: absolute;
+  left: 37.15mm;
+  top: 19.26mm;
+  font-family: var(--font-heading);
+  font-size: 18pt;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: var(--rep-ink);
+}
+
+.app-name__ruby {
+  position: absolute;
+  left: 8.5mm;
+  top: -2.06mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 2.6mm;
+  letter-spacing: 0.65em;
+}
+
+/* スマートフォンの枠（下端は切れる） */
+.phone {
+  position: absolute;
+  left: 2.85mm;
+  top: 27.6mm;
+  width: 26.6mm;
+  height: 44.9mm;
+  border-radius: 4.6mm 4.6mm 0 0;
+  background: var(--rep-black);
+}
+
+.phone__camera {
+  position: absolute;
+  left: 8.8mm;
+  top: 2.7mm;
+  width: 1mm;
+  height: 1mm;
+  border-radius: 50%;
+  background: #d8d8d8;
+}
+
+.phone__speaker {
+  position: absolute;
+  left: 11.2mm;
+  top: 3mm;
+  width: 3.5mm;
+  height: 0.45mm;
+  border-radius: 0.25mm;
+  background: #d8d8d8;
+}
+
+.phone__screen {
+  position: absolute;
+  left: 1.6mm;
+  right: 1.5mm;
+  top: 6.5mm;
+  bottom: 0;
+  background: var(--rep-screen);
+}
+
+.phone__screen .photo-frame__placeholder {
+  border-radius: 0;
+  background: var(--rep-screen);
+}
+
+/* 灰色のピル 2 本 */
+.grey-pill {
+  position: absolute;
+  left: 32.05mm;
+  width: 49.2mm;
+  border-radius: 2.3mm;
+  background: var(--rep-grey-pill);
+  display: grid;
+  place-items: center;
+  font-size: 6.5pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rep-ink);
+}
+
+.grey-pill--1 { top: 28.4mm; height: 4.4mm; }
+.grey-pill--2 { top: 34.4mm; height: 4.6mm; }
+
+/* 白いパネル（見出し＋リスト＋黄色の円） */
+.app-panel {
+  position: absolute;
+  left: 32.05mm;
+  top: 40.8mm;
+  width: 49.5mm;
+  height: 30mm;
+  border-radius: 2mm;
+  background: var(--rep-white);
+}
+
+.app-panel__title {
+  position: absolute;
+  left: 2.9mm;
+  top: 2.4mm;
+  font-size: 9pt;
+  font-weight: 500;
+  line-height: 4mm;
+  letter-spacing: 0.04em;
+  color: var(--rep-ink);
+}
+
+.app-panel__list {
+  position: absolute;
+  left: 3mm;
+  top: 6mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 3.2mm;
+  color: var(--rep-ink-body);
+}
+
+.app-panel__list li::before {
+  content: '●';
+}
+
+.app-panel__circle {
+  position: absolute;
+  left: 27.8mm;
+  top: 7.6mm;
+  width: 20mm;
+  height: 20mm;
+}
+
+.app-panel__disc {
+  fill: var(--rep-yellow-disc);
+}
+
+.app-panel__art rect,
+.app-panel__art path {
+  fill: none;
+  stroke: var(--rep-art);
+  stroke-width: 0.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tcard__note {
+  position: absolute;
+  right: 3.6mm;
+  top: 73.4mm;
+  font-size: 6.5pt;
+  line-height: 3mm;
+  color: var(--rep-ink-note);
+}
+
+/* ---------- Layer 3: ノンブル（小口側の下） ---------- */
+
+.folio-num {
+  position: absolute;
+  right: 10.4mm;
+  top: 285.4mm;
+  font-family: var(--font-number);
+  font-size: 6.5pt;
+  line-height: 3mm;
+  color: var(--rep-ink-note);
+}

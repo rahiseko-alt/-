@@ -1,0 +1,22 @@
+{{!--
+  toc-group: 目次の 1 群（群見出し＋V 字の切り欠きのある下罫＋項目の並び）
+  この BOOK 専用（完コピ検証）。募集要項・パンフレットの目次に再利用できるので shared/components/ への移動候補（review.md「次にやること」）
+  パラメータ:
+    mod    必須  縦位置を決める page.css の修飾子（.toc-group--<mod>）
+    title  必須  群見出し（主色の大きい文字）
+    note   任意  群見出しの後ろに続く小さい補足（黒）
+  項目はブロックで渡す（{{> book/toc-item text="…" pno="0"}} を並べる）:
+    {{#> book/toc-group mod="g1" title="…" note="…"}}
+      {{> book/toc-item text="…" pno="0"}}
+    {{/book/toc-group}}
+--}}
+<section class="toc-group toc-group--{{mod}}">
+  <h2 class="toc-group__title">{{title}}{{#if note}}<span class="toc-group__note">{{note}}</span>{{/if}}</h2>
+  {{!-- Layer 2: 下罫。左寄りに下向きの V 字（吹き出しの口）。viewBox は mm（幅 = 目次の幅） --}}
+  <svg class="toc-group__rule" viewBox="0 0 81.9 2.8" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="0,0.2 7.27,0.2 8.6,2.45 9.86,0.2 81.9,0.2"/>
+  </svg>
+  <ul class="toc-group__items">
+    {{> @partial-block}}
+  </ul>
+</section>

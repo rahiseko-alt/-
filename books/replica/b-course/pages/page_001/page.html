@@ -1,0 +1,99 @@
+{{!--
+  page_001「コース紹介（完コピ検証）」— Phase 5 完コピ検証
+
+  参考（レイアウト）: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml（見開きの左ページを補正したもの）
+  解析: references/nagoya-iryo-hisho-it/brochure-1/analysis/page_016.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、大写真・授業写真 3 点はプレースホルダ。地・帯・面は単色かグラデーションなので Layer 2）
+    Layer 2 STRUCTURE   : 外周の帯（地色）、角丸の白パネル、天から下がるタブ、アイコンの円と線画（SVG）、円バッジ、
+                          大写真の枠（小口側の上角だけ角丸）、情報ボックスの淡色面（ノドまで）、ピル 2 種と紐飾り、箇条書きの点、
+                          見出しのマーカー、授業カード（book/class-card）、ノンブルのハート
+    Layer 3 CONTENT     : すべてダミーテキスト（参考資料の文字・コース名・職種名・授業名・数値は書き写さない）。ノンブルは page.number
+
+  座標は .trim 基準の mm（実測値。page.css に集約）。6 段グリッド（段 27.8mm・段間 3.9mm、小口側 17mm から）。
+  色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーへ置き換える）
+--}}
+
+{{!-- Layer 2: 外周の帯（地色。塗り足しまで）と角丸の白パネル --}}
+<div class="ground bleed" aria-hidden="true"></div>
+<div class="panel" aria-hidden="true"></div>
+
+{{!-- Layer 2 + 3: 天から下がるタブ＋小見出しラベル --}}
+<div class="tab" aria-hidden="true">
+  <span class="tab__ring">
+    <svg class="tab__heart" viewBox="0 0 10 9"><path d="M5 8.6 C2.2 6.6 0.3 4.9 0.3 2.8 C0.3 1.3 1.4 0.3 2.7 0.3 C3.7 0.3 4.5 0.9 5 1.7 C5.5 0.9 6.3 0.3 7.3 0.3 C8.6 0.3 9.7 1.3 9.7 2.8 C9.7 4.9 7.8 6.6 5 8.6 Z"/></svg>
+  </span>
+</div>
+<p class="label heading">見出しダミーの0・0ダミーラベル</p>
+
+{{!-- Layer 3: サブコピー（参考は小口側を軸にわずかに右上がり） --}}
+<p class="subcopy heading">ダミーテキストのサブコピーを文字数どおりに入れたダミー！</p>
+
+{{!-- Layer 2: アイコンの淡色の円と線画（蝶 2 匹。単純な線画なので SVG） --}}
+<svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
+  <circle class="icon__disc" cx="10" cy="10" r="9.9"/>
+  <g class="icon__fly icon__fly--a" transform="translate(12.7 7.0) rotate(-18) scale(1.15)">
+    <path class="icon__wing" d="M0 0 C-1.2 -2.8 -3.9 -3.4 -3.9 -1.6 C-3.9 -0.4 -2.2 0.2 0 0 Z"/>
+    <path class="icon__wing" d="M0 0 C1.2 -2.8 3.9 -3.4 3.9 -1.6 C3.9 -0.4 2.2 0.2 0 0 Z"/>
+    <path class="icon__wing" d="M0 0 C-2.2 0.2 -3.6 1.4 -3 2.6 C-2.4 3.6 -0.8 2.4 0 0 Z"/>
+    <path class="icon__wing" d="M0 0 C2.2 0.2 3.6 1.4 3 2.6 C2.4 3.6 0.8 2.4 0 0 Z"/>
+    <path class="icon__line" d="M0 -0.6 L0 1.6 M0 -0.6 L-0.7 -2.6 M0 -0.6 L0.7 -2.6"/>
+    <circle class="icon__dot" cx="-2.6" cy="-1.6" r="0.28"/><circle class="icon__dot" cx="2.6" cy="-1.6" r="0.28"/>
+    <circle class="icon__dot" cx="-2" cy="1.8" r="0.25"/><circle class="icon__dot" cx="2" cy="1.8" r="0.25"/>
+  </g>
+  <g class="icon__fly icon__fly--b" transform="translate(7.4 13.9) rotate(-14) scale(0.72)">
+    <path class="icon__wing" d="M0 0 C-1.2 -2.8 -3.9 -3.4 -3.9 -1.6 C-3.9 -0.4 -2.2 0.2 0 0 Z"/>
+    <path class="icon__wing" d="M0 0 C1.2 -2.8 3.9 -3.4 3.9 -1.6 C3.9 -0.4 2.2 0.2 0 0 Z"/>
+    <path class="icon__wing" d="M0 0 C-2.2 0.2 -3.6 1.4 -3 2.6 C-2.4 3.6 -0.8 2.4 0 0 Z"/>
+    <path class="icon__wing" d="M0 0 C2.2 0.2 3.6 1.4 3 2.6 C2.4 3.6 0.8 2.4 0 0 Z"/>
+    <path class="icon__line" d="M0 -0.6 L0 1.6 M0 -0.6 L-0.7 -2.6 M0 -0.6 L0.7 -2.6"/>
+    <circle class="icon__dot" cx="-2.6" cy="-1.6" r="0.3"/><circle class="icon__dot" cx="2.6" cy="-1.6" r="0.3"/>
+  </g>
+</svg>
+
+{{!-- Layer 3: コース名（参考は太い丸ゴシック。Noto Sans JP で近似） --}}
+<h1 class="course-name">大見出しダミー</h1>
+
+{{!-- Layer 2 + 3: 円バッジ（要約 5 行。文字は少し右に傾ける） --}}
+<div class="badge">
+  <p class="badge__text heading">ダミーの文字・<br>バッジの要約を<br>ここに入れる<br>ダミーテキスト文<br>行長そろえる</p>
+</div>
+
+{{!-- Layer 1（写真待ち）+ Layer 2: 大写真の枠（ノド側・塗り足しまで裁ち落とし。小口側の上角だけ角丸） --}}
+<div class="hero">{{> photo-frame}}</div>
+
+{{!-- Layer 2: 情報ボックスの淡色面（写真の下辺に接してノドまで） --}}
+<div class="info" aria-hidden="true"></div>
+
+{{!-- Layer 2 + 3: 学ぶことのピル（紐飾り付き）と本文 --}}
+<svg class="string" viewBox="0 0 6 6" aria-hidden="true"><path d="M0.3 0.4 L5.6 5.4 M0.3 5.6 L4.8 1.3"/></svg>
+<p class="pill-learn heading"><span class="pill-learn__pin" aria-hidden="true"></span>ラベルダミーですか？</p>
+<p class="learn-text">ここにダミーテキストが入ります。文字数と行数は参考ページの本文とそろえてあり、<br>実際の文章は自社の正本データから作成し、このダミーテキストと差し替えます。</p>
+
+{{!-- Layer 2 + 3: 職種リストのピルと 2 列の箇条書き --}}
+<p class="pill-jobs heading">ラベルダミー</p>
+<ul class="jobs">
+  <li class="jobs__item" style="left: 0; top: 0">ダミー</li>
+  <li class="jobs__item" style="left: 29.45mm; top: 0">ダミー職種</li>
+  <li class="jobs__item" style="left: 0; top: 4.7mm">職種ダミー</li>
+  <li class="jobs__item" style="left: 29.45mm; top: 4.7mm">ダミー職種</li>
+  <li class="jobs__item jobs__item--wide" style="left: 0; top: 9.6mm">ダミーの職種名称<span class="jobs__note">（注記ダミー文字）</span><span class="jobs__etc">ほか</span></li>
+</ul>
+
+{{!-- Layer 2 + 3: セクション見出し（最後の 2 字だけ大きく、黄色のマーカー） --}}
+<div class="marker" aria-hidden="true"></div>
+<h2 class="section-head">ここにはダミーの<span class="section-head__em">強調</span></h2>
+
+{{!-- Layer 1（写真待ち）+ Layer 2 + 3: 授業カード 3 枚（各 2 段） --}}
+<div class="class-row">
+  {{> book/class-card title="授業名ダミー" sub="小見出しダミー" body="ここにダミーテキストが入ります。授業の内容を説明する本文で、文字数と行数を参考ページにそろえています。実際の文章は自社の正本資料から作成して差し替えます。" span=2}}
+  {{> book/class-card title="ダミー名" sub="小見出しのダミー文字" body="ここはダミーテキストです。授業の目的と学ぶ内容をここに書きます。文章の長さは参考ページの本文とおおよそ同じくらいにして、行数も合わせてあります。" span=2}}
+  {{> book/class-card title="授業名のダミー" sub="小見出しダミー文字" body="ダミーテキストです。この授業で身につく力をここに短く書いておきます。文字数と行数を参考ページにそろえています。" span=2}}
+</div>
+
+{{!-- Layer 2 + 3: ノンブル（白い円＋点線のリング＋ハートの中に数字。地の小口側） --}}
+<div class="folio" data-side="{{page.side}}">
+  <svg class="folio__heart" viewBox="0 0 10 9" aria-hidden="true"><path d="M5 8.6 C2.2 6.6 0.3 4.9 0.3 2.8 C0.3 1.3 1.4 0.3 2.7 0.3 C3.7 0.3 4.5 0.9 5 1.7 C5.5 0.9 6.3 0.3 7.3 0.3 C8.6 0.3 9.7 1.3 9.7 2.8 C9.7 4.9 7.8 6.6 5 8.6 Z"/></svg>
+  <span class="folio__number num">{{page.number}}</span>
+</div>

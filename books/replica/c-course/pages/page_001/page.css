@@ -1,0 +1,342 @@
+/*
+ * page_001: 完コピ検証（学科紹介の見開きの左ページ）
+ * 参考: references/kokusai-igaku-gijutsu/brochure/prep/page_006-l.yaml（比較用の補正指定）
+ * - 寸法は mm（.trim 基準）、文字サイズは pt
+ * - 参考の色は下の --rep-* に集約する。Phase 8 でブランドカラー（var(--color-*)）に置き換える
+ *   （対応の目安: dept → --color-primary（学科ごとの色）、text → --color-text、rule / folio → --color-muted）
+ * - 学科色は --rep-dept の 1 つだけ。縦棒・行頭記号・ラベル・学科名の「くすんだ学科色」は color-mix で --rep-dept から作るので、
+ *   同型の別学科のページ（深緑）は --rep-dept を差し替えるだけで色がそろう
+ */
+
+:scope {
+  /* ---- 学科色（ここだけ差し替える。参考の青: 帯見出しの実測 #2c6c9b。別学科の深緑は #366b54 前後） ---- */
+  --rep-dept: #2c6c9b;
+
+  /* ---- 学科色から作る色（参考の撮影画像の実測: 縦棒 #5b6c79・行頭記号 #405a6d・ラベル #3f4d5b・学科名 #2f343c 前後） ---- */
+  --rep-dept-bar: color-mix(in srgb, var(--rep-dept) 25%, #6a6e72);     /* セクション見出しの縦棒 */
+  --rep-dept-muted: color-mix(in srgb, var(--rep-dept) 45%, #4a4f55);   /* 丸い行頭記号・科目リストのラベル */
+  --rep-dept-name: color-mix(in srgb, var(--rep-dept) 15%, #2f3338);    /* 学科名のタブの文字（明朝） */
+
+  /* ---- 学科によらない色（撮影画像の実測。印刷の色そのものではない） ---- */
+  --rep-heading: #141316;       /* セクション見出し */
+  --rep-text: #2b2a2d;          /* 本文 */
+  --rep-list-text: #3a3e44;     /* 科目名 */
+  --rep-rule: #a9a9aa;          /* ラベル下の細罫 */
+  --rep-folio: #7b797c;         /* ノンブル */
+  --rep-white: #ffffff;
+
+  /* ---- 写真のプレースホルダ（参考の各写真の平均の明るさに合わせた無彩色。Layer 1 生成待ち） ---- */
+  --ph-header: #9c9c9c;
+  --ph-photo-1: #c6c6c6;
+  --ph-photo-2: #a4a4a4;
+
+  /* ---- グリッド（参考の実測。左ページ: 小口 = 左 15.3mm、ノド = 右 12.5mm） ---- */
+  --x-left: 15.3mm;             /* 版面の左端（小口側） */
+  --x-right: 197.5mm;           /* 版面の右端（ノド側） */
+  --sec1-x: 15.3mm;             /* 本文 1 段目 */
+  --sec1-w: 85.6mm;
+  --sec2-x: 112.8mm;            /* 本文 2 段目 */
+  --sec2-w: 84.9mm;
+  --sec-top: 91.1mm;            /* セクション見出しの縦棒の上端 */
+
+  /* ---- 文字 ---- */
+  --fs-dept: 17.5pt;            /* 学科名（明朝） */
+  --fs-sec: 13.3pt;             /* セクション見出し（字送り 5.25mm） */
+  --fs-body: 8.75pt;            /* 本文（漢字の字幅から推定。字間を大きく空けた組み。字送り 3.51mm = 1 行 24 字） */
+  --lh-body: 1.8326;            /* 行送り 5.657mm */
+  --ls-body: 0.423mm;
+  --fs-label: 10.5pt;           /* 科目リストのラベル */
+  --fs-band: 7.5pt;             /* 帯見出し（白抜き） */
+  --fs-item: 7.5pt;             /* 科目名 */
+  --fs-folio: 6.5pt;            /* ノンブル（最小サイズ） */
+}
+
+/* =========================================================
+ * Layer 1 + 2 + 3: 上部の裁ち落とし写真 + 学科名のタブ（book/dept-header）
+ * ========================================================= */
+.dept-header {
+  --dh-photo-h: 81mm;           /* 写真の下端（天から） */
+  --dh-notch-w: 65.2mm;         /* 切り欠きの右端（小口から） */
+  --dh-notch-top: 69.9mm;       /* 切り欠きの上端 */
+  position: absolute;
+  inset: 0;
+}
+
+/* 写真は天・小口・ノドの 3 方向に塗り足しまで（参考は見開きのノドで止めている） */
+.dept-header__photo {
+  position: absolute;
+  top: calc(var(--bleed) * -1);
+  left: calc(var(--bleed) * -1);
+  right: calc(var(--bleed) * -1);
+  height: calc(var(--dh-photo-h) + var(--bleed));
+}
+
+.dept-header__photo .photo-frame {
+  height: 100%;
+}
+
+.dept-header__photo .photo-frame__placeholder {
+  min-height: 0;
+  border: 0;
+  background: var(--ph-header);
+  font-size: 6.5pt;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Layer 2: 学科名のタブ（写真の左下を白い長方形で切り欠く。角丸なし。小口側は塗り足しまで） */
+.dept-header__notch {
+  position: absolute;
+  left: calc(var(--bleed) * -1);
+  top: var(--dh-notch-top);
+  width: calc(var(--dh-notch-w) + var(--bleed));
+  height: calc(var(--dh-photo-h) - var(--dh-notch-top) + 0.2mm);
+  background: var(--rep-white);
+}
+
+/* Layer 3: 学科名（明朝 Regular。字の下端を写真の下端にそろえる） */
+.dept-header__name {
+  position: absolute;
+  left: 15.1mm;
+  top: 75.1mm;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-dept);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.123em;
+  white-space: nowrap;
+  color: var(--rep-dept-name);
+  text-align: left;
+}
+
+/* =========================================================
+ * 本文 2 段（book/wrap-text）
+ * ========================================================= */
+.sec {
+  position: absolute;
+  top: var(--sec-top);
+}
+
+.sec--1 {
+  left: var(--sec1-x);
+  width: var(--sec1-w);
+  --ph-bg: var(--ph-photo-1);
+}
+
+.sec--2 {
+  left: var(--sec2-x);
+  width: var(--sec2-w);
+  --ph-bg: var(--ph-photo-2);
+}
+
+/* Layer 2 + 3: 縦棒付きのセクション見出し（book/bar-heading） */
+.bar-heading {
+  position: relative;
+  margin: 0;
+  padding-left: 4.25mm;
+  font-size: var(--fs-sec);
+  font-weight: 700;
+  line-height: 5.2mm;
+  letter-spacing: 0.105em;
+  font-feature-settings: normal;   /* 参考は字間を空けた等幅の字送り。ダミーのカナを palt で詰めない */
+  white-space: nowrap;
+  color: var(--rep-heading);
+}
+
+.bar-heading::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1mm;
+  height: 5.2mm;
+  background: var(--rep-dept-bar);
+}
+
+/* 写真を回り込む本文。高さは固定しない（本文量に応じて伸びる） */
+.wrap-text {
+  --wrap-lines: 5;              /* 先頭から全幅で組む行数（この下に写真を置く） */
+  --wrap-photo-w: 48.8mm;
+  --wrap-photo-ratio: 48.8 / 35.5;
+  --wrap-photo-gap: 4.2mm;      /* 回り込む行と写真の間（行 9 字が入る幅を残す） */
+  --wrap-photo-top: 3.1mm;      /* 6 行目の行の上端から写真の上端まで（+ 下の 0.1mm） */
+}
+
+.wrap-text__body {
+  margin-top: 4.52mm;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 500;
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  color: var(--rep-text);
+}
+
+/* 幅 0 の float で「先頭 N 行」の高さを取り、写真をその下に積む。
+   行の高さの端数の丸めで N 行目に写真が食い込まないよう 0.1mm だけ余分に取る */
+.wrap-text__body::before {
+  content: '';
+  float: right;
+  width: 0;
+  height: calc(var(--wrap-lines) * 1lh + 0.1mm);
+}
+
+.wrap-text__photo {
+  float: right;
+  clear: right;
+  width: var(--wrap-photo-w);
+  margin: var(--wrap-photo-top) 0 0 var(--wrap-photo-gap);
+}
+
+.wrap-text__photo .photo-frame {
+  aspect-ratio: var(--wrap-photo-ratio);
+}
+
+.wrap-text__photo .photo-frame__placeholder {
+  min-height: 0;
+  border: 0;
+  background: var(--ph-bg, #b0b0b0);
+  font-size: 6.5pt;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.wrap-text__p {
+  margin: 0;
+}
+
+/* =========================================================
+ * 科目リスト: ラベル + 細罫 + 帯見出し + 丸い行頭記号の箇条（book/band-list）
+ * ========================================================= */
+.list-label {
+  position: absolute;
+  left: var(--x-left);
+  top: 176.6mm;
+  margin: 0;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  font-feature-settings: normal;
+  color: var(--rep-dept-muted);
+}
+
+/* Layer 2: 版面幅の細罫 */
+.list-rule {
+  position: absolute;
+  left: var(--x-left);
+  width: calc(var(--x-right) - var(--x-left));
+  top: 182mm;
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.2mm solid var(--rep-rule);
+}
+
+.list-col {
+  position: absolute;
+  top: 187.15mm;
+}
+
+.list-col--left {
+  left: var(--x-left);
+  width: 88.2mm;
+}
+
+.list-col--right {
+  left: 111.5mm;
+  width: calc(var(--x-right) - 111.5mm);
+}
+
+/* Layer 2 + 3: 帯見出し（学科色の帯・白抜き中央揃え） */
+.band-list__band {
+  height: 4mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rep-dept);
+}
+
+.band-list__title {
+  font-size: var(--fs-band);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.09em;
+  color: var(--rep-white);
+}
+
+/* 箇条: 列優先（上から下、左の列から右の列へ）。行の高さ = 行送り */
+.band-list__items {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--bl-rows, 3), var(--bl-pitch));
+  grid-template-columns: var(--bl-cols);
+  margin: var(--bl-gap-top) 0 0 var(--bl-indent);
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-body);
+  font-size: var(--fs-item);
+  font-weight: 700;
+  color: var(--rep-list-text);
+}
+
+.band-list__items li {
+  position: relative;
+  padding-left: 3.2mm;
+  line-height: var(--bl-pitch);
+  letter-spacing: var(--bl-ls);
+  white-space: nowrap;
+}
+
+/* Layer 2: 丸い行頭記号（学科色をくすませた色） */
+.band-list__items li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1.75mm;
+  height: 1.75mm;
+  margin-top: -0.875mm;
+  border-radius: 50%;
+  background: var(--rep-dept-muted);
+}
+
+/* 左の段: 3 列（列の左端 = 帯の左端 + 0.35mm / 20.8mm / 52.7mm） */
+.band-list--3col {
+  --bl-pitch: 5.98mm;
+  --bl-cols: 20.45mm 31.9mm auto;
+  --bl-indent: 0.35mm;
+  --bl-gap-top: 2.43mm;
+  --bl-ls: 0.12em;
+}
+
+.band-list--second {
+  margin-top: 6.65mm;
+  --bl-gap-top: 3.45mm;
+}
+
+/* 右の段: 2 列（列の左端 = 帯の左端 + 0.3mm / 47.85mm） */
+.band-list--2col {
+  --bl-pitch: 5.723mm;
+  --bl-cols: 47.55mm auto;
+  --bl-indent: 0.3mm;
+  --bl-gap-top: 2.5mm;
+  --bl-ls: 0.06em;
+}
+
+/* =========================================================
+ * Layer 3: ノンブル（左下の小口寄り。明朝の数字）
+ * ========================================================= */
+.folio-num {
+  position: absolute;
+  left: 9.2mm;
+  top: 285.9mm;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-folio);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--rep-folio);
+  text-align: left;
+}

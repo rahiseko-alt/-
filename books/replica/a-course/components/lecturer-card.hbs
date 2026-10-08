@@ -1,0 +1,28 @@
+{{!--
+  lecturer-card: 講師カード（Phase 5 完コピ検証で作った BOOK 固有の部品。shared/components へ移す候補）
+  構成: 写真枠（Layer 1 のプレースホルダ）／写真の下端に重なる 1〜3 行のマーカー状キャプション（行ごとに濃色地・白抜き）／
+        ロゴ枠（正式なロゴデータがないためプレースホルダの面）／所属 1〜2 行・肩書 0〜2 行・氏名（明朝）
+  引数（すべて文字列。事実は呼び出し側から company-data の値を渡す。Phase 5 ではダミー）:
+    col   必須  段の番号（1〜5）。位置・写真の高さ・ロゴ枠の大きさは page.css の .lect--<col>
+    cap1  必須  キャプション 1 行目      cap2 / cap3  任意  2・3 行目
+    org1  必須  所属 1 行目              org2         任意  所属 2 行目
+    role1 任意  肩書 1 行目              role2        任意  肩書 2 行目
+    name  必須  氏名
+    cutout 任意 "1" で切り抜き写真の枠（矩形の写真ではなく人物の輪郭で抜く素材）
+--}}
+<section class="lect lect--{{col}}{{#if cutout}} lect--cutout{{/if}}">
+  <div class="lect__photo">{{> photo-frame}}</div>
+  <p class="lect__cap">
+    <span class="lect__cap-line">{{cap1}}</span>
+    {{#if cap2}}<span class="lect__cap-line">{{cap2}}</span>{{/if}}
+    {{#if cap3}}<span class="lect__cap-line">{{cap3}}</span>{{/if}}
+  </p>
+  <div class="lect__logo" aria-hidden="true"></div>
+  <div class="lect__info">
+    <p class="lect__org">{{org1}}</p>
+    {{#if org2}}<p class="lect__org">{{org2}}</p>{{/if}}
+    {{#if role1}}<p class="lect__role">{{role1}}</p>{{/if}}
+    {{#if role2}}<p class="lect__role">{{role2}}</p>{{/if}}
+    <p class="lect__name">{{name}}</p>
+  </div>
+</section>

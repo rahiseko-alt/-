@@ -1,0 +1,13 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "表紙"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: cover
+# Layer 1（BASE VISUAL）: 背景画像を置いたらコメントを外す。画像と同じベース名の .prompt.yaml も必須
+# background:
+#   image: books/replica/b-living/backgrounds/page_001.png
+#   fit: cover             # cover | contain
+#   position: center       # CSS の object-position
+#   opacity: 1
+status: draft              # draft | review | approved
+notes: ""

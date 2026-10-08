@@ -1,0 +1,11 @@
+{{!--
+  band-list: 学科色の帯見出し（白抜き・中央揃え）+ 丸い行頭記号の箇条（列優先で並ぶ）
+  引数: title（必須。帯見出しの文字）
+  中身: 部分ブロックで <li> を渡す（{{#> book/band-list title="..."}}<li>…</li>{{/book/band-list}}）
+  - 列数・行数・列幅は呼び出し側の要素に付けた CSS 変数で決める（page.css の .band-list: --bl-rows / --bl-cols / --bl-pitch）
+  - 項目が増えたら --bl-rows を増やす（帯と箇条は通常のフローなので、下の要素は自動で下がる）
+--}}
+<div class="band-list__band"><span class="band-list__title">{{title}}</span></div>
+<ul class="band-list__items">
+  {{> @partial-block}}
+</ul>

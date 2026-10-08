@@ -1,0 +1,8 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "入試一覧表（右ページ）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: data
+# Layer 1（BASE VISUAL）: なし。参考ページは白地のみ（罫・表・文字は Layer 2/3）
+status: draft              # draft | review | approved
+notes: "Phase 5 完コピ検証（作業中）"

@@ -1,0 +1,14 @@
+{{!--
+  logo-slot: ロゴ・エンブレム・ロゴタイプ・法人名の置き場所（無地のプレースホルダ）
+  この BOOK 専用（完コピ検証）。company-data/brand/logo に正式データがないため、参考と同じ大きさの無地の枠と対角線だけを描く。
+  参考資料のロゴの形（輪・図柄・文字）は描かない。正式データが入ったら <img src="{{asset brand.logo.<id>.file}}"> に置き換える
+  パラメータ:
+    mod    必須  位置・大きさを決める page.css の修飾子（.logo-slot--<mod>）
+    label  必須  何の置き場所か（読み上げ用の代替テキスト）
+    round  任意  true で円形（エンブレム用）
+--}}
+<div class="logo-slot logo-slot--{{mod}}{{#if round}} logo-slot--round{{/if}}" role="img" aria-label="{{label}}">
+  <svg class="logo-slot__cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0 L100 100 M100 0 L0 100" vector-effect="non-scaling-stroke"/>
+  </svg>
+</div>

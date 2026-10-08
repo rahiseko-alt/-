@@ -1,0 +1,8 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "コース紹介（完コピ検証）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: course
+# Layer 1（BASE VISUAL）: 全面背景は使わない（外周の帯・白パネル・淡色の面はすべて Layer 2）
+status: draft              # draft | review | approved
+notes: "作業中（Phase 5 完コピ検証）"

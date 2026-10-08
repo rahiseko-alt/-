@@ -1,0 +1,7 @@
+{{!--
+  toc-item: 目次の項目（● ＋ 項目名 ＋ 点線リーダー ＋ 右寄せのページ番号）。book/toc-group の中で使う
+  パラメータ:
+    text  必須  項目名
+    pno   必須  ページ番号（範囲は "0〜0" のように文字列で渡す。num はヘルパー名と衝突するので使わない）
+--}}
+<li class="toc-item"><span class="toc-item__text">{{text}}</span><span class="toc-item__leader" aria-hidden="true"></span><span class="toc-item__num num">{{pno}}</span></li>
