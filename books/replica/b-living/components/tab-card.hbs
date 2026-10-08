@@ -1,0 +1,14 @@
+{{!--
+  tab-card: 英字タブ付きのカード（Layer 2 の薄グレーの角丸の地・チャコールのタブ＋下向きの小さな尖り + Layer 3 の中身）
+  この BOOK 専用（完コピ検証）。下段 2 段のカードに使う
+  パラメータ:
+    mod  必須  位置・大きさ・タブの位置を決める page.css の修飾子（.tcard--<mod>）
+    tab  必須  タブの英字（大文字。白抜き・字間広め）
+  中身はブロックで渡す。カードは position: relative なので、中身はカード基準の mm で置く:
+    {{#> book/tab-card mod="l" tab="DUMMY"}} … {{/book/tab-card}}
+  タブはカードの上辺の外（左上の角の左へはみ出す）に置き、尖りがカードの地に重なる
+--}}
+<section class="tcard tcard--{{mod}}">
+  <div class="tcard__tab"><span class="tcard__tab-text">{{tab}}</span></div>
+  {{> @partial-block}}
+</section>

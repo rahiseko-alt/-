@@ -1,0 +1,9 @@
+# このBOOKが使う参考資料（docs/concept.md §5 ／ system/rules/references.md）
+# - 参考資料はコピーしない。references/<source>/<kind>/ 以下をリポジトリルート相対パスで指定する
+# - ページ単位の指定は「BOOK 側のページ ID」をキーにし、値に「参考資料側のページ画像」を書く
+# - 参考画像はページに直接貼らない（背景・{{asset}} に指定しない）。比較・目視・画像生成の参照入力に使う
+# - 参考ページは見開きの撮影画像なので、layout_reference には補正指定（prep/*.yaml）を書く（npm run compare が自動で補正する）
+references:
+  - references/nagoya-iryo-hisho-it/brochure-2/
+page_001:
+  layout_reference: [references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml]

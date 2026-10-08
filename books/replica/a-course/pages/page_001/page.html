@@ -1,0 +1,170 @@
+{{!--
+  page_001「学科紹介（右ページ）」— Phase 5 完コピ検証（見開きの右ページ）
+  参考: references/HAL-nagoya/brochure-2/page_001.jpg（補正指定 references/HAL-nagoya/brochure-2/prep/page_001-r.yaml）
+  解析: references/HAL-nagoya/brochure-2/analysis/page_001.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : 講師写真 4 枚・切り抜き人物 1 点・ピックアップの作品写真 2 枚 → すべて photo-frame のプレースホルダ（生成待ち）。
+                          全面背景なし（白地）
+    Layer 2 STRUCTURE   : 帯見出し（面取りの濃色帯）、講師段の縦罫、キャプションの濃色地、ロゴ枠、ピックアップのタグ（吹き出し）と罫、
+                          中段の淡いグラデーションの面、ステップ表（右向きの矢羽根 4 段＋淡色パネル 4 枚）、柱
+    Layer 3 CONTENT     : 見出し・キャプション・所属・肩書・氏名・本文・リスト・注記・柱・ノンブル
+
+  - 文字はすべてダミー（参考と同じ文字数・行数）。数字は 0。参考資料の文字・固有名詞は書き写していない
+  - 位置は .trim 基準の mm（参考の補正画像から実測）。講師段は 5 段（page.css の --lect-*）、ステップ表は book.yaml の 4 段（--columns / --gutter）
+  - 色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーに置き換える）
+--}}
+
+{{!-- Layer 2: 中段の淡いグラデーションの面（左右は塗り足しまで） --}}
+<div class="rep-shade bleed-left bleed-right" aria-hidden="true"></div>
+
+{{!-- Layer 2 + 3: 帯見出し（濃色の面取り帯・白抜き。二重かぎ括弧だけ淡色） --}}
+<h2 class="rep-band">ダミー文字列ダミー文字列ダミー文字<span class="rep-band__br">『</span>ダミー文字列ダ<span class="rep-band__br">』</span></h2>
+
+{{!-- Layer 1（写真）+ 2 + 3: 講師 5 段（段の間に縦罫。部品は components/lecturer-card.hbs） --}}
+<div class="rep-lects">
+  {{> book/lecturer-card col="1" cap1="ダミー文字列ダミ" cap2="ダミー文字列ダミー文字列" org1="ダミー文字列ダ" role1="Xxxxx Xxxxxxxx Xxxxx" role2="ダミー文字列ダミ" name="氏名 氏"}}
+  {{> book/lecturer-card col="2" cap1="ダミー文字列ダミー文字列ダミー" cap2="ダミー文字列ダミー文字列" org1="ダミー文字列ダミー" role1="ダミー文字列ダミー" role2="ダミー文字" name="氏名 氏名"}}
+  {{> book/lecturer-card col="3" cutout="1" cap1="ダミー文字列ダミ" cap2="ダミー文字列ダミー文" cap3="ダミー文字列ダミー文" org1="Xxxxxxx Xxxxxxxxxx" org2="Xxxxxダミー文" role1="ダミー文字列ダミー" name="氏名 氏名"}}
+  {{> book/lecturer-card col="4" cap1="ダミー文字列ダ" cap2="ダミー文字列ダミー文字列ダ" org1="ダミー文" org2="ダミー文字列ダミー文" role1="ダミー文字列ダミー文" name="氏名 氏名"}}
+  {{> book/lecturer-card col="5" cap1="ダミー文字列ダミー文" cap2="ダミー文字列ダミー文字列ダ?" org1="ダミー文" org2="XXXXXXXX" role1="XXダミXダミー" name="氏名 氏名"}}
+</div>
+
+{{!-- Layer 2 + 3: ピックアップ授業（吹き出しのタグ・見出し・罫・本文） --}}
+<p class="rep-tag">Xxxx xx! ダミ</p>
+<h3 class="rep-pick__title">「0XXXダミ」「ダミー文字列」</h3>
+<hr class="rep-pick__rule">
+<p class="rep-pick__body">ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー、ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミ。ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー、ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文。</p>
+
+{{!-- Layer 1: ピックアップの作品写真 2 枚（プレースホルダ） --}}
+<div class="rep-ph rep-ph--pick1">{{> photo-frame}}</div>
+<div class="rep-ph rep-ph--pick2">{{> photo-frame}}</div>
+
+{{!-- Layer 2 + 3: ステップ表の見出し（三角の行頭記号） --}}
+<h3 class="rep-steps__title"><span class="rep-steps__mark" aria-hidden="true"></span>XXXX→XXXダミー文字列ダミー文字列</h3>
+
+{{!-- Layer 2 + 3: ステップ表（右向きの矢羽根 4 段 ＋ 淡色パネル 4 枚。年次が進むほど濃い色） --}}
+<div class="rep-steps">
+  <section class="rep-step rep-step--1">
+    <p class="rep-step__head">0ダミ</p>
+    <div class="rep-step__panel">
+      <div class="rep-step__intro">
+        <h4 class="rep-step__major">XXダミ</h4>
+        <p class="rep-step__desc">ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー。</p>
+      </div>
+      <h5 class="rep-step__group">ダミ・ダミ</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文字列ダミー文字列<br>(Xxxxxxxxx・Xxxxxxxxxxx)</li>
+        <li>XXXX XXXXXX XXXXXダミ</li>
+        <li>0XXXダミーXxxxダミ</li>
+        <li>Xxxxx Xxxxxxxダミ</li>
+        <li>Xxxxxxxx Xxxダミ</li>
+        <li>0XXXダミー文字列ダミー</li>
+        <li>ダミー文字列ダミー文字</li>
+        <li><span>ダミー文</span><span>ダミ・ダミ</span></li>
+        <li>ダミー文字・ダミー</li>
+        <li>XXダミー文字列ダミー</li>
+        <li>X X X XXXXX XXXX(ダミー文)</li>
+      </ul>
+      <h5 class="rep-step__group">ダミー文</h5>
+      <ul class="rep-step__list">
+        <li><span>ダミー文字</span><span>ダミー文字列</span></li>
+        <li>ダミ・ダミー文字列ダミー文字</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="rep-step rep-step--2">
+    <p class="rep-step__head">0ダミ</p>
+    <div class="rep-step__panel">
+      <div class="rep-step__intro">
+        <h4 class="rep-step__major">ダミー文字列ダミー文・ダミー文字列</h4>
+        <p class="rep-step__desc">ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列。</p>
+      </div>
+      <h5 class="rep-step__group">ダミ・ダミ</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文字列ダミー文字列<br>(Xxxxxxxxxxx・Xxxxxxxxxダミ)</li>
+        <li>XXXダミー文字列ダ(Xxxxxダミ)</li>
+        <li>XXXダミー文(XxXxxxxx)</li>
+        <li>ダミー文字列ダミー文字列</li>
+        <li>ダミー文・ダミー文</li>
+      </ul>
+      <h5 class="rep-step__group">ダミ・ダミ</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文</li>
+        <li>ダミー文字列ダミー文字<br>(XXXX XXXXXX XXXXX)</li>
+        <li>ダミー文字列ダミー文</li>
+        <li><span>ダミ・ダミー文</span><span>ダミー文字</span></li>
+      </ul>
+      <h5 class="rep-step__group">ダミー文</h5>
+      <ul class="rep-step__list">
+        <li><span>ダミー文字</span><span>ダミー文</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="rep-step rep-step--3">
+    <p class="rep-step__head">0ダミ</p>
+    <div class="rep-step__panel">
+      <div class="rep-step__intro">
+        <h4 class="rep-step__major">ダミー文字列ダミー文・ダミー文字列</h4>
+        <p class="rep-step__desc">ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミ。</p>
+      </div>
+      <h5 class="rep-step__group">ダミ・ダミ</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文字列ダミー文字列・ダミ</li>
+        <li>ダミー文字列ダミー文字</li>
+        <li>XXXダミー文字・ダミー文字列</li>
+        <li>ダミー文字列ダミー文字列ダ</li>
+        <li>ダミー文字列ダミー文字列</li>
+        <li><span>XXダミー文</span><span>ダミー文字列ダミー</span></li>
+        <li><span>Xxxx0X</span><span>Xxxxx</span></li>
+        <li>ダミー／ダミー文字列</li>
+        <li>ダミー文字列(ダミー文字列／<br>ダミー文字列ダ／ダミー文字列ダミー文字列ダ)</li>
+        <li>ダミー文字列ダミー文字列ダ(ダミー文)</li>
+      </ul>
+      <h5 class="rep-step__group">ダミ・ダミ</h5>
+      <ul class="rep-step__list">
+        <li><span>ダミー文字列ダミー文字</span><span>ダミ・ダミー文</span></li>
+      </ul>
+      <h5 class="rep-step__group">ダミー文</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文字列ダミー文</li>
+        <li><span>ダミー文字列ダミ</span><span>ダミー文</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="rep-step rep-step--4">
+    <p class="rep-step__head">0ダミ</p>
+    <div class="rep-step__panel">
+      <div class="rep-step__intro">
+        <h4 class="rep-step__major">XXダミー文字列ダ／<br>ダミー文字列ダミー文</h4>
+        <p class="rep-step__desc">ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文。</p>
+      </div>
+      <h5 class="rep-step__group">ダミ・ダミ</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文字<br>(ダミー文字列ダミー文／ダミー文)</li>
+        <li>ダミー文字列ダ(ダミー文字列ダミー文)</li>
+        <li>XX・ダミー文字列・XX</li>
+        <li>ダミー文字列・ダミー文字列ダ</li>
+        <li>ダミー文字列ダミー文字</li>
+        <li>ダミー文字(ダミー文・ダミー)</li>
+      </ul>
+      <h5 class="rep-step__group">ダミー文</h5>
+      <ul class="rep-step__list">
+        <li>ダミー文</li>
+        <li>ダミー文字列ダミー文字列ダ</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+{{!-- Layer 3: 注記（参考は約 5.7pt。最小 6.5pt を守り、文字数を 60 → 52 字に減らした） --}}
+<p class="rep-note">※ダミー文字列ダミー文、ダミー文字列ダミー文字列ダミー文字列。ダミー文字列ダミー文字列ダミー文字列ダミ。</p>
+
+{{!-- Layer 3: 柱（小口側の縦帯。横組みを 90° 回した向き） --}}
+<p class="rep-running"><b class="rep-running__key">XX</b><span class="rep-running__arrow" aria-hidden="true"></span>XXダミ／XX・ダミー文・ダミー・0文字列ダ／ダミー文字列ダミー文・ダミー文字列ダ0・0</p>
+
+{{!-- Layer 3: ノンブル（ページ番号は book.yaml の pages の並び順から。小口側 = 右下） --}}
+<p class="rep-folio num">{{page.number}}</p>

@@ -1,0 +1,11 @@
+{{!--
+  dept-header: 天・小口・ノドまで裁ち落とす横長の写真 + 左下の白い切り欠き（学科名のタブ）+ 学科名
+  引数: name（必須。学科名。Phase 8 では company-data の学科名を渡す）,
+        photo（任意。company-data/photos の写真 ID。省略すると photo-frame のプレースホルダ = Layer 1 待ち）
+  スタイル: page.css の .dept-header（写真の高さ・切り欠きの寸法は --dh-* 変数）
+--}}
+<div class="dept-header">
+  <div class="dept-header__photo">{{#if photo}}{{> photo-frame id=photo}}{{else}}{{> photo-frame}}{{/if}}</div>
+  <div class="dept-header__notch" aria-hidden="true"></div>
+  <p class="dept-header__name">{{name}}</p>
+</div>

@@ -39,7 +39,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | Phase 2 | 環境をテンプレート化（会社・BOOK ごとに複製せず、このモノレポに BOOK と参考資料を追加していく） | 方針として適用中 |
 | Phase 3 | 参考資料投入（`references/` へ PDF とページ画像を格納） | **完了**（3 校・14 資料・157 ページ） |
 | Phase 4 | 参考資料解析（`analysis/*.yaml`） | **完了**（14 資料・157 ページ。候補一覧は references/README.md） |
-| Phase 5 | 完コピ検証（代表ページを 2 ラウンド以上比較・修正） | **作業中**（代表 3 ページを 3 ラウンドずつ比較・修正済み。Layer 1 の画像生成は未着手） |
+| Phase 5 | 完コピ検証（代表ページを 2 ラウンド以上比較・修正） | **作業中**（各資料の第一候補 12 ページを 3 ラウンドずつ比較・修正済み。Layer 1 の画像生成と【要確認】の判断が残り） |
 | Phase 6 | BASELINE 確定 | 未着手 |
 | Phase 7 | 保護機構（Filesystem Permission / PreToolUse Hook / Git 差分チェック） | 計画のみ・**未導入**（system/rules/protection.md） |
 | Phase 8 | 自社版への変換 | 未着手 |
@@ -47,7 +47,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 
 - `company-data/` は学校名（AIビジネス専門学校）以外すべて `"TODO: ..."` のプレースホルダ、ブランドカラーは仮の値（`status: provisional`）
 - `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`source.yaml` の `forbidden_terms` 記入済み。`analysis/` は全資料の解析済み（Phase 5 の候補は references/README.md と各 `book.yaml`）
-- `books/` は Phase 5 の完コピ検証用の `books/replica/`（`a-brochure`・`b-web-it`・`c-flyer` の 3 BOOK。文字はダミー、写真は枠のみ。状態は各 `review.md`）だけ。自社の BOOK はまだない
+- `books/` は Phase 5 の完コピ検証用の `books/replica/`（12 BOOK・各 1 ページ。一覧は references/README.md。文字はダミー、写真は枠のみ。状態と【要確認】は各 `review.md`）だけ。自社の BOOK はまだない
 - フェーズが進んだら、この表を同じコミットで更新する
 
 ## 4. ディレクトリマップ

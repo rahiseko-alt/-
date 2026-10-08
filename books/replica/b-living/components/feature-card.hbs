@@ -1,0 +1,19 @@
+{{!--
+  feature-card: 吹き出しタグ付きの特徴カード（Layer 2 の白地・細枠・写真枠・吹き出しタグ + Layer 3 の中身）
+  この BOOK 専用（完コピ検証）。他の BOOK でも使うことになったら shared/components/ への移動を検討する（review.md「次にやること」）
+  パラメータ:
+    mod    必須  位置・幅・タグの位置を決める page.css の修飾子（.fcard--<mod>）
+    tag    必須  吹き出しタグの語（book/speech-tag）
+    ratio  必須  写真枠の縦横比（例 "81.6 / 62.6"）。カードの高さ = 上の余白 + 写真の高さ + 下の余白（写真の比率を固定して高さを決める）
+  中身（見出し・本文・付帯パネル・写真に重ねるバッジ）はブロックで渡す。カードは position: relative なので、中身はカード基準の mm で置く:
+    {{#> book/feature-card mod="a" tag="ダミー項目" ratio="81.6 / 62.6"}}
+      <h2 class="fcard__title">…</h2>
+      <p class="fcard__text">…</p>
+    {{/book/feature-card}}
+  タグはカードの左上の角をまたぐ（負のオフセット）。写真は Layer 1 の素材待ちの間は photo-frame のプレースホルダ
+--}}
+<section class="fcard fcard--{{mod}}">
+  <div class="fcard__photo">{{> photo-frame ratio=ratio}}</div>
+  {{> @partial-block}}
+  {{> book/speech-tag text=tag}}
+</section>

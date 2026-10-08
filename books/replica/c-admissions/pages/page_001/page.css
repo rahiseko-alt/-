@@ -1,0 +1,281 @@
+/*
+ * page_001 入試一覧表（右ページ）— Phase 5 完コピ検証（compose が @scope でこのページだけに限定する）
+ * - 寸法は mm、文字サイズは pt。位置は参考の補正画像（1414×2000px、1mm = 6.73px）からの実測
+ * - 表は .trim の x = 0（ノドの折り目）から小口側の外枠まで。外枠の位置 = 210mm − var(--margin-right)
+ * - 行の高さは --adm-row-*（mm）。見開きの左ページを作るときも同じ値を使い、ノドをはさんで行の境界をそろえる
+ *
+ * 文字が増えたとき（あふれない仕組み）
+ * - 行は grid-template-rows の minmax(--adm-row-N, auto)。文字が増えて収まらない行はあふれずに伸びる（下の行が押し下がる）
+ * - 見開きの行をそろえたまま収めるには、まず --adm-fs-body / --adm-fs-cell を下げる。行送りは倍率なので文字と一緒に詰まる。
+ *   確認済み: 段落・流れ図のセルが 2 割増えても 8pt にすれば --adm-row-* を変えずに収まる（9.5pt のままだと行が伸びる）。
+ *   下限は 7pt（typography-ja.md の最小 6.5pt より上で止める）。それでも収まらないときは --adm-row-* を左右ページで同じだけ増減して配分し直す
+ * - 日程表の日付のセルは字間（letter-spacing）で参考の字幅に合わせている。日付の書式が変わったら字間を 0 に戻してから合わせ直す
+ */
+
+/* ---- 参考ページの色・寸法（色は Phase 8 でブランドカラーへ置き換える） ---- */
+:scope {
+  --rep-ink: #231f20;          /* スミ（文字・罫） */
+  --rep-red: #c0392b;          /* 赤（注意・条件）。撮影画像は退色して見えるため解析の推定値（book.yaml）を使う */
+  --rep-paper: #ffffff;
+
+  /* 表の位置と行の高さ（各行の箱の高さ。罫の中心どうしの距離とは 0.1〜0.2mm 違う） */
+  --adm-table-top: 30.8mm;     /* 上の外枠（太罫）の上端。中心 31.0mm */
+  --adm-row-head: 7.2mm;       /* 見出し行（下の太罫を含む） */
+  --adm-row-1: 61.55mm;        /* 第 1 行: 日程表＋段落 */
+  --adm-row-2: 60.8mm;         /* 第 2 行: 流れ図＋段落 */
+  --adm-row-3: 49.05mm;        /* 第 3 行: 流れ図＋段落 */
+  --adm-row-4: 64.2mm;         /* 第 4 行: 日程表＋段落 */
+
+  /* 罫の太さ: 外枠・見出し行 > 行の区切り = 入れ子の外枠 > 入れ子の内罫 */
+  --adm-rule-outer: 1.2pt;
+  --adm-rule-row: 0.6pt;
+  --adm-rule-sub: 0.6pt;
+  --adm-rule-sub-inner: 0.4pt;
+
+  /* 行の中身の左右（入れ子の表・段落の左端 3.2mm、右端 190.4mm） */
+  --adm-in-left: 3.2mm;
+  --adm-in-right: 190.4mm;
+
+  /* 文字（2 割増えたら 8pt、最小 7pt まで下げてよい。上のコメント） */
+  --adm-fs-body: 9.5pt;        /* 【 】ラベルの段落 */
+  --adm-fs-cell: 9.5pt;        /* 入れ子の表のセル */
+  --adm-label-w: 17.2mm;       /* 【 】ラベルの幅（後続行はこの幅だけ字下げ） */
+  --adm-fw-text: 500;          /* 本文・セルのウェイト（参考の書体は Noto Sans JP 400 より濃い。見出し行・ラベルは 700） */
+}
+
+.adm-red {
+  color: var(--rep-red);
+}
+
+/* ---- Layer 3: 表の上の注記（赤の部分は .adm-red） ---- */
+.adm-note {
+  position: absolute;
+  top: 26.8mm;
+  left: 4.6mm;
+  font-size: 9.65pt;
+  font-weight: var(--adm-fw-text);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-ink);
+  text-align: left;
+}
+
+/* ---- Layer 2: 一覧表（外枠は上・下・小口側。ノド側は左ページの表へ続くので縦罫なし） ---- */
+.adm-table {
+  position: absolute;
+  top: var(--adm-table-top);
+  left: 0;
+  width: calc(var(--trim-w) - var(--margin-right));
+  display: grid;
+  grid-template-rows:
+    var(--adm-row-head)
+    minmax(var(--adm-row-1), auto)
+    minmax(var(--adm-row-2), auto)
+    minmax(var(--adm-row-3), auto)
+    minmax(var(--adm-row-4), auto);
+  border-top: var(--adm-rule-outer) solid var(--rep-ink);
+  border-right: var(--adm-rule-outer) solid var(--rep-ink);
+  border-bottom: var(--adm-rule-outer) solid var(--rep-ink);
+  color: var(--rep-ink);
+}
+
+/* 見出し行（下の太罫） */
+.adm-head {
+  position: relative;
+  border-bottom: var(--adm-rule-outer) solid var(--rep-ink);
+}
+
+.adm-head__title,
+.adm-head__note {
+  position: absolute;
+  top: 1.45mm;
+  font-size: 12.9pt;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+  text-align: left;
+}
+
+.adm-head__title {
+  left: 12.4mm;
+}
+
+.adm-head__note {
+  left: 119.8mm;
+}
+
+/* 行（2 行目以降は上に行の区切り罫） */
+.adm-row {
+  display: flex;
+  flex-direction: column;
+  padding: var(--adm-row-pad, 1mm) calc(var(--trim-w) - var(--margin-right) - var(--adm-in-right) - var(--adm-rule-outer)) 0 var(--adm-in-left);
+}
+
+.adm-row + .adm-row {
+  border-top: var(--adm-rule-row) solid var(--rep-ink);
+}
+
+/* 行ごとの実測値: 入れ子の表の上の空き、段落の行送り（倍率。9.5pt で 4.05 / 4.5 / 4.9mm）、段落の上の空き、流れ図の段の高さと行送り */
+.adm-row--1 { --adm-row-pad: 1.04mm; --adm-lh: 1.21; --adm-items-gap: 1.4mm; }
+.adm-row--2 { --adm-row-pad: 2.05mm; --adm-lh: 1.343; --adm-items-gap: 0.55mm; --adm-flow-head: 5.05mm; --adm-flow-a: 14.85mm; --adm-flow-b: 13.85mm; --adm-flow-lh-a: 1.462; --adm-flow-lh-b: 1.343; }
+.adm-row--3 { --adm-row-pad: 0.6mm;  --adm-lh: 1.462; --adm-items-gap: 0.45mm; --adm-flow-head: 4.9mm; --adm-flow-a: 14.4mm; --adm-flow-b: 14.75mm; --adm-flow-lh-a: 1.403; --adm-flow-lh-b: 1.373; }
+.adm-row--4 { --adm-row-pad: 0.55mm; --adm-lh: 1.343; --adm-items-gap: 0.5mm; }
+
+/* ---- Layer 2 + 3: 入れ子の表（共通） ---- */
+.adm-sched,
+.adm-flow {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: var(--adm-rule-sub) solid var(--rep-ink);
+  font-size: var(--adm-fs-cell);
+  font-weight: var(--adm-fw-text);
+  line-height: 1.2;
+}
+
+.adm-sched th,
+.adm-sched td,
+.adm-flow th,
+.adm-flow td {
+  border: var(--adm-rule-sub-inner) solid var(--rep-ink);
+  padding: 0;
+  vertical-align: middle;
+  font-weight: var(--adm-fw-text);
+  white-space: normal;
+}
+
+/* 日程表 A（第 1 行）: 区分 | 受付期間 | 試験日 | 発表日 */
+.adm-sched--a .adm-sched__c1 { width: 14.2mm; }
+.adm-sched--a .adm-sched__c2 { width: 91.4mm; }
+.adm-sched--a .adm-sched__c3 { width: 41mm; }
+.adm-sched--a thead th { height: 4.5mm; text-align: center; }
+.adm-sched--a thead th:nth-child(2) { letter-spacing: 0.18mm; padding-left: 2.4mm; }
+.adm-sched--a tbody th { height: 4.55mm; text-align: center; letter-spacing: 0.8mm; padding-left: 0.8mm; }
+.adm-sched--a tbody td { padding-left: 2.4mm; text-align: left; letter-spacing: 0.26mm; }
+.adm-sched--a tbody td:nth-child(3) { padding-left: 1.4mm; letter-spacing: 0.42mm; }
+.adm-sched--a tbody td:nth-child(4) { padding-left: 0.4mm; letter-spacing: 0.45mm; }
+
+/* 日程表 B（第 4 行）: 区分＋受付期間 | 試験日 | 発表日 */
+.adm-sched--b .adm-sched__c1 { width: 94mm; }
+.adm-sched--b .adm-sched__c2 { width: 45.2mm; }
+.adm-sched--b thead th { height: 4.95mm; text-align: center; }
+.adm-sched--b tbody td { height: 4.95mm; text-align: center; }
+.adm-sched--b tbody td:first-child { text-align: left; letter-spacing: 0.2mm; }
+/* 試験日・発表日の日付は列の中央より 2〜3mm 右（参考の実測）。最下段（均等割り・文言）は中央 */
+.adm-sched--b tbody td:nth-child(2) { padding-left: 6.8mm; letter-spacing: 0.3mm; }
+.adm-sched--b tbody td:nth-child(3) { padding-left: 6.4mm; letter-spacing: 0.5mm; }
+.adm-sched--b tbody .adm-sched__last td:nth-child(n+2) { padding-left: 0; letter-spacing: 0; }
+.adm-sched--b tbody .adm-sched__last td:nth-child(3) { letter-spacing: 0.2mm; text-indent: 0.2mm; }
+
+.adm-sched__kind {
+  display: inline-block;
+  width: 16.8mm;
+  letter-spacing: 0.85mm;
+  text-align: center;
+}
+
+/* 均等割り（「随　時」「随　時　実　施」の型） */
+.adm-spread {
+  text-align-last: justify;
+  text-align: justify;
+}
+
+.adm-sched__kind.adm-spread {
+  width: 10.6mm;
+  margin: 0 3.6mm 0 2.6mm;
+  letter-spacing: 0;
+}
+
+.adm-spread--wide {
+  display: inline-block;
+  width: 23.5mm;
+}
+
+/* 流れ図（第 2・3 行）: 登録・受付 → 面接・審査 → 許可・合格 */
+.adm-flow__c1 { width: 48.3mm; }
+.adm-flow__c2 { width: 82.1mm; }
+.adm-flow thead th { height: var(--adm-flow-head, 4.9mm); text-align: center; }
+.adm-flow tbody td {
+  position: relative;
+  line-height: 1.403;
+  text-align: left;
+  text-spacing-trim: trim-start;   /* 行頭の【 の前の空きを詰める（参考の書体は括弧の字面が左に寄る） */
+}
+.adm-flow .adm-flow__a td { height: var(--adm-flow-a, 14.6mm); line-height: var(--adm-flow-lh-a, 1.403); }
+.adm-flow .adm-flow__b td { height: var(--adm-flow-b, 14.3mm); line-height: var(--adm-flow-lh-b, 1.373); }
+.adm-flow tbody td:nth-child(1) { padding-left: 2.6mm; }
+.adm-flow tbody td:nth-child(2) { padding-left: 1.8mm; }
+.adm-flow tbody td:nth-child(3) { padding-left: 3mm; }
+
+.adm-indent {
+  padding-left: 1em;
+}
+
+/* 矢印（列の境界をまたぐ。セルの左の罫から左へ 2.25mm、右へ 2.75mm） */
+.adm-flow__arrow {
+  position: absolute;
+  top: 50%;
+  left: -2.25mm;
+  width: 5mm;
+  height: 2.2mm;
+  margin-top: -1.1mm;
+  color: var(--rep-ink);
+}
+
+/* 矢印のあるセルは矢印の分だけ文字を右へ */
+.adm-flow .adm-flow__b td:nth-child(2) { padding-left: 3.2mm; }
+
+/* ---- Layer 3: 【 】ラベルの段落（ラベル列＋本文列。本文の 2 行目以降はラベルの幅だけ字下げ） ---- */
+.adm-items {
+  margin-top: var(--adm-items-gap);
+  font-size: var(--adm-fs-body);
+  font-weight: var(--adm-fw-text);
+  line-height: var(--adm-lh);
+}
+
+.adm-item {
+  display: grid;
+  grid-template-columns: var(--adm-label-w) minmax(0, 1fr);
+}
+
+.adm-item__label {
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.24mm;
+  font-feature-settings: 'palt' 1;
+}
+
+/* 3 文字のラベルを 4 文字分の幅に均等割り（【特　待　生】の型） */
+.adm-item__label--spaced {
+  display: flex;
+  width: calc(var(--adm-label-w) - 0.2mm);
+}
+
+.adm-item__label--spaced > span {
+  flex: 1;
+  text-align: justify;
+  text-align-last: justify;
+  padding: 0 0.6mm;
+}
+
+.adm-item__text {
+  text-align: left;
+}
+
+/* 第 2〜4 行は本文の前に半角ほどの空き */
+.adm-items--gap .adm-item__text {
+  padding-left: 1.6mm;
+}
+
+/* ---- Layer 3: ノンブル（下中央） ---- */
+.adm-folio {
+  position: absolute;
+  top: 279.9mm;
+  left: 0;
+  width: var(--trim-w);
+  font-size: 10pt;
+  line-height: 1;
+  text-align: center;
+  color: var(--rep-ink);
+}

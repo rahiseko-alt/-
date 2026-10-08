@@ -1,0 +1,26 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "学科紹介（右ページ）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: course
+# Layer 1（BASE VISUAL）: 全面背景なし（参考は白地）。写真は page.html の photo-frame（プレースホルダ）。Layer 1 生成待ちの一覧は notes と review.md
+status: review             # draft | review | approved
+notes: |
+  - Phase 5 完コピ検証（3 ラウンド。記録は reviews/page_001/review.md）。参考 references/HAL-nagoya/brochure-2/page_001.jpg の見開きの右ページ
+    （比較は prep/page_001-r.yaml で正立・右ページの切り出し・台形補正）。判型 291×297mm（仮）・塗り足し 3mm・binding: left で右ページ
+  - グリッド: 版面 = ノド 6.7mm・小口 19.6mm・天 13mm・地 9mm（book.yaml）。帯見出し・講師段・写真・ステップ表の左右端は版面の端（6.7 / 271.4mm）。
+    講師段 = 5 段（段の幅 41.5mm・ピッチ 55.4mm・段の左端から 7mm 左に縦罫。page.css の --lect-*）。
+    ステップ表 = book.yaml の 4 段（段間 0.8mm の白。grid-template-columns は --columns / --gutter）。
+    ゾーン = 帯見出し 13.4〜21.7mm ／ 講師 25.8〜103mm ／ 中段の淡い面 113.4mm〜（14mm で白へ）／ ピックアップ 120.7〜167mm ／
+    ステップ表の見出し 168mm・矢羽根 176.2〜187mm・パネル 〜284.5mm ／ 注記 285.2mm ／ 柱 13.4mm〜（小口側の縦帯）／ ノンブル 右下
+  - Layer 1（生成待ち・すべて photo-frame のプレースホルダ。参考の各領域の平均の明るさの灰色）:
+    講師写真 4 枚（33×34 / 33×37 / 33×37 / 33×35.5mm、バストアップ）、切り抜き人物 1 点（段 3、28×34mm、上を丸めた枠で代用）、
+    ピックアップの作品写真 2 枚（59.6×40.1mm = 黒地に作品 6 点のグリッド、118.4×45.3mm = 作品ビジュアル 2 点の横長）。
+    講師の写真・学生作品は自社版では company-data/photos の実写真に置き換える（実在の人物・作品を生成で代用しない）
+  - ロゴ 5 点: company-data に正式データがないため、参考の各ロゴの外接矩形の灰色の面（.lect__logo）
+  - Layer 2: 帯見出し（左下・右上の面取り）、講師段の縦罫、キャプションの行ごとの濃色地、ピックアップのタグ（吹き出し）と見出し下の罫、
+    中段のグラデーションの面、矢羽根 4 段（clip-path。縁の明るい線つき・年次が進むほど濃い）、淡色パネル 4 枚（4 段目だけ薄紫）、黒丸（CSS の円）、柱の二重三角
+  - Layer 3: 文字はすべてダミー（参考と同じ文字数・行数。数字は 0、年次は「0ダミ」）。講師カードは components/lecturer-card.hbs（引数で文字を渡す）
+  - 最小サイズ: 参考の肩書（約 5.8pt）と注記（約 5.7pt）は 6.5pt に上げた（注記は 60 → 52 字）。柱とノンブルは安全領域 5mm の内側へ 0.8 / 1.1mm 移した【要確認】
+  - 色: 参考の実測色を page.css 冒頭の --rep-*（矢羽根 --rep-step-1〜4、パネル --rep-panel-1〜4）に集約（Phase 8 でブランドカラーに置き換える）
+  - 残差と次の作業: review.md の「ラウンド 3」と「次にやること」

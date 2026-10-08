@@ -1,0 +1,372 @@
+/*
+ * page_001 専用のスタイル（compose が @scope でこのページだけに限定する）
+ * 完コピ検証: 参考ページ（補正後の比較画像 1414×2000px = 6.733px/mm）から実測した値。寸法は .trim 基準の mm、文字は pt
+ * 文字の位置は「字面の上端」の実測値から逆算している（line-height: 1 の箱では字面の上端 ≒ 箱の上端 + 0.1em）
+ * 色は参考ページの推定値を --rep-* に置く（撮影画像からの推定。Phase 8 でブランドカラー var(--color-*) に置き換える）
+ */
+
+:scope {
+  --rep-primary: #c14455;       /* 色面パネル・目次の見出しバー（主色） */
+  --rep-primary-deep: #982433;  /* 濃色タブ（主色の濃） */
+  --rep-wine: #74283a;          /* 目次の群見出し・下罫（主色の濃よりさらに暗く彩度の低いワイン色。撮影の明るい部分での推定） */
+  --rep-dot: #cf6d7a;           /* 正方形ドット（主色に白を 約 22% 重ねた色） */
+  --rep-white: #ffffff;         /* 白抜き文字・白の点線 */
+  --rep-ink: #231815;           /* 黒の文字・告知枠 */
+  --rep-leader: #444444;        /* 目次の点線リーダー */
+  --rep-band: #aaaaaa;          /* 告知帯（グレー地。文字は黒） */
+  /* プレースホルダ（ロゴの正式データ待ち） */
+  --rep-slot: #e6e6e6;
+  --rep-slot-line: #b9b9b9;
+}
+
+/* ---------- Layer 2: 色面パネル・タブ・ドット・白の点線（SVG） ---------- */
+
+.cover-art {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 297mm;
+  overflow: visible;
+}
+
+.panel { fill: var(--rep-primary); }
+.tab { fill: var(--rep-primary-deep); }
+.dot { fill: var(--rep-dot); }
+
+.dotline {
+  stroke: var(--rep-white);
+  stroke-width: 0.45;
+  stroke-linecap: round;
+  stroke-dasharray: 0 1.006;
+}
+
+/* ---------- Layer 3: パネル上の白抜き文字 ---------- */
+
+.tab-label,
+.kicker,
+.cover-title,
+.cover-sub {
+  position: absolute;
+  margin: 0;
+  color: var(--rep-white);
+  font-family: var(--font-heading);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 濃色タブの 2 行: 14pt・太ゴシック。字面の上端 10.4 / 18.86mm（行送り 8.46mm）、タブの中央 */
+.tab-label {
+  left: 16.26mm;
+  top: 8.15mm;
+  width: 32.38mm;
+  font-size: 14pt;
+  font-weight: 700;
+  line-height: 8.46mm;
+  font-feature-settings: 'palt' 1;
+}
+
+/* 資料種別の小ラベル: 18pt・太ゴシック。字面 x 37.7–62.2 / 上端 95.05mm */
+.kicker {
+  left: 20.1mm;
+  top: 94.42mm;
+  width: 60mm;
+  font-size: 18pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.047em;
+  font-feature-settings: 'palt' 1;
+}
+
+/* 表紙タイトル 2 行: 40pt・太ゴシック（700）。参考の線の太さ（字画の中央値 1.63mm）は 900（2.08mm）より 700（1.78mm）に近い。
+   1 行目は字間を広げて 2 行目と同じ幅（字面 x 17.2–82.4mm）にそろえる */
+.cover-title {
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  font-size: 40pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: left;
+  word-break: keep-all;
+}
+
+.cover-title__l1,
+.cover-title__l2 {
+  position: absolute;
+  display: block;
+}
+
+/* 1 行目: 字面の上端 109.45mm */
+.cover-title__l1 {
+  left: 16.95mm;
+  top: 108.04mm;
+  letter-spacing: 0.222em;
+  font-feature-settings: normal;
+}
+
+/* 2 行目: 字面の上端 126.2mm（行送り 16.75mm）。ダミーの片仮名は参考の文字より字幅が広いので、行の幅（字面 x 17.4–82.6mm）に合わせてわずかに詰める */
+.cover-title__l2 {
+  left: 16.75mm;
+  top: 124.79mm;
+  letter-spacing: -0.029em;
+  font-feature-settings: 'palt' 1;
+}
+
+/* 副題（角括弧つき）: 12pt・中ゴシック。字面 x 30.3–69.95 / 上端 144.95mm */
+.cover-sub {
+  left: 20.33mm;
+  top: 144.6mm;
+  width: 60mm;
+  font-size: 12pt;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.09em;
+}
+
+/* ---------- ロゴ類のプレースホルダ（book/logo-slot） ---------- */
+
+.logo-slot {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--rep-slot);
+  border: 0.2mm solid var(--rep-slot-line);
+}
+
+.logo-slot--round {
+  border-radius: 50%;
+}
+
+.logo-slot__cross {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-slot__cross path {
+  fill: none;
+  stroke: var(--rep-slot-line);
+  stroke-width: 0.6;
+}
+
+/* エンブレム（円）: 中心 (148.9, 59.9)、直径 33.7mm */
+.logo-slot--emblem { left: 132.05mm; top: 43.05mm; width: 33.7mm; height: 33.7mm; }
+/* 法人名（2×2 の小さな冠＋4 字）: x 42.9–71.4 / y 260.2–264.3mm */
+.logo-slot--corp { left: 42.9mm; top: 260.2mm; width: 28.5mm; height: 4.1mm; }
+/* エンブレム小（円）: 中心 (35.2, 271.1)、直径 11.55mm */
+.logo-slot--mark { left: 29.43mm; top: 265.33mm; width: 11.55mm; height: 11.55mm; }
+/* 校名ロゴタイプ: x 43.2–180.0 / y 266.1–276.1mm */
+.logo-slot--logotype { left: 43.2mm; top: 266.1mm; width: 136.8mm; height: 10mm; }
+
+/* ---------- 目次 ---------- */
+
+/* 目次ブロック: x 108.4–190.7mm。子要素の top はページの座標（mm） */
+.toc {
+  position: absolute;
+  left: 108.4mm;
+  top: 0;
+  width: 82.4mm;
+  height: 0;
+  font-family: var(--font-body);
+  color: var(--rep-ink);
+}
+
+/* 見出しバー: x 108.27–189.5 / y 95.2–101.3mm。9.5pt・太ゴシックの白抜き、中央 */
+.toc__bar {
+  position: absolute;
+  left: -0.13mm;
+  top: 95.2mm;
+  width: 81.23mm;
+  height: 6.1mm;
+  margin: 0;
+  background: var(--rep-primary);
+  color: var(--rep-white);
+  font-size: 9.5pt;
+  font-weight: 700;
+  line-height: 6.1mm;
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 群: 群見出しの箱の上端を --top に置く。下罫と項目はそこからの相対位置 */
+.toc-group {
+  position: absolute;
+  left: 0.1mm;
+  top: var(--top);
+  width: 81.9mm;
+  margin: 0;
+}
+
+/* 群見出しの字面の上端: 105.4 / 133.4 / 166.3 / 194.7mm、下罫の中心: 110.0 / 138.1 / 171.1 / 199.4mm、
+   最初の項目の字面の上端: 113.5 / 141.7 / 174.9 / 203.0mm。
+   項目の行送り: 5.2 / 5.1 / 5.05 / 5.05mm。群見出しの字間は、ダミーの片仮名（palt で字幅が狭くなる）で短くなる行の長さを参考に合わせる値 */
+.toc-group--g1 { --top: 105.05mm; --rule-top: 4.75mm; --items-top: 6.92mm; --pitch: 5.2mm; --title-ls: 0.1mm; }
+.toc-group--g2 { --top: 133.05mm; --rule-top: 4.85mm; --items-top: 7.12mm; --pitch: 5.1mm; --title-ls: 0.154mm; }
+.toc-group--g3 { --top: 165.95mm; --rule-top: 4.95mm; --items-top: 7.42mm; --pitch: 5.05mm; --title-ls: 0.04mm; }
+.toc-group--g4 { --top: 194.35mm; --rule-top: 4.85mm; --items-top: 7.12mm; --pitch: 5.05mm; --title-ls: 0.052mm; }
+
+/* 群見出し: 10pt・太ゴシック・ワイン色。後ろの補足は 7.5pt・黒で同じベースライン */
+.toc-group__title {
+  margin: 0;
+  color: var(--rep-wine);
+  font-size: 10pt;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--title-ls);
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+}
+
+.toc-group__note {
+  color: var(--rep-ink);
+  font-size: 7.5pt;
+}
+
+/* 下罫: ワイン色・0.25mm。V 字は左端から 7.27–9.86mm、深さ 2.25mm */
+.toc-group__rule {
+  position: absolute;
+  left: 0;
+  top: var(--rule-top);
+  width: 81.9mm;
+  height: 2.8mm;
+  overflow: visible;
+}
+
+.toc-group__rule polyline {
+  fill: none;
+  stroke: var(--rep-wine);
+  stroke-width: 0.25;
+  stroke-linejoin: miter;
+}
+
+.toc-group__items {
+  position: absolute;
+  left: 0;
+  top: var(--items-top);
+  width: 81.75mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 項目: 行送り --pitch（5.05〜5.2mm）。● は直径 1.4mm（x 109.0mm）、項目名は 7.2pt・太ゴシック（字面の左端 111.2mm。参考の字画の太さは群見出しと同程度で 500 では細い） */
+.toc-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--pitch);
+  padding-left: 2.57mm;
+  font-size: 7.2pt;
+  font-weight: 700;
+  line-height: var(--pitch);
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+}
+
+.toc-item::before {
+  content: "";
+  position: absolute;
+  left: 0.5mm;
+  top: calc(var(--pitch) / 2 - 0.52mm);
+  width: 1.4mm;
+  height: 1.4mm;
+  border-radius: 50%;
+  background: var(--rep-ink);
+}
+
+.toc-item__text {
+  flex: none;
+}
+
+/* 点線リーダー: 字面の中央の高さ。細かい点（0.18mm）を濃いグレーで。項目名から 1.8mm、ページ番号の手前 0.9mm */
+.toc-item__leader {
+  flex: 1 1 auto;
+  position: relative;
+  top: 0.18mm;
+  height: 0;
+  margin: 0 0.9mm 0 1.8mm;
+  border-top: 0.18mm dotted var(--rep-leader);
+}
+
+/* ページ番号: 右端をそろえる（字面の右端 190.2mm） */
+.toc-item__num {
+  flex: none;
+  text-align: right;
+}
+
+/* 告知帯: x 108.4–190.7 / y 214.75–223.6mm。グレー地・黒の 7.3pt を 2 行中央揃え（行送り 4.0mm）。
+   ダミーは片仮名が多いので palt を使わず、字間で行の長さ（参考 53.3 / 43.1mm）に合わせる */
+.toc__band {
+  position: absolute;
+  left: 0;
+  top: 214.75mm;
+  width: 82.3mm;
+  min-height: 8.85mm;
+  box-sizing: border-box;
+  margin: 0;
+  padding-top: 0.18mm;
+  background: var(--rep-band);
+  color: var(--rep-ink);
+  font-size: 7.3pt;
+  font-weight: 500;
+  line-height: 4mm;
+  letter-spacing: 0.1mm;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 告知ボックス: 罫の中心 x 108.5–190.8 / y 226.0–234.3mm、黒の細枠 0.25mm。7.1pt を 2 行左揃え（行送り 3.6mm、字面の左端 110.6mm）。
+   palt なし・字間 -0.05mm で行の長さ（参考 77.8 / 67.9mm）に合わせる */
+.toc__box {
+  position: absolute;
+  left: -0.025mm;
+  top: 225.875mm;
+  width: 82.55mm;
+  min-height: 8.55mm;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.28mm 1mm 0 1.85mm;
+  border: 0.25mm solid var(--rep-ink);
+  font-size: 7.1pt;
+  font-weight: 500;
+  line-height: 3.6mm;
+  letter-spacing: -0.05mm;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ---------- フッター ---------- */
+
+/* 認定表記 2 行: 参考は 約 6pt（字面の上端 252.6 / 255.15mm）。社内基準の最小 6.5pt に合わせ、字数を減らした */
+.accredit {
+  position: absolute;
+  left: 29.5mm;
+  top: 252.2mm;
+  margin: 0;
+  color: var(--rep-ink);
+  font-family: var(--font-body);
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 2.6mm;
+  letter-spacing: 0.05mm;
+  white-space: nowrap;
+}
+
+/* 補足 1 行: 7.7pt。右端はロゴタイプの右端（179.75mm）、字面の上端 277.7mm */
+.footnote {
+  position: absolute;
+  right: 30.15mm;
+  top: 277.43mm;
+  margin: 0;
+  color: var(--rep-ink);
+  font-family: var(--font-body);
+  font-size: 7.7pt;
+  font-weight: 500;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}

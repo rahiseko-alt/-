@@ -1,0 +1,16 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "コース紹介（完コピ検証）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: course
+# Layer 1（BASE VISUAL）: 全面背景は使わない（外周の帯・白パネル・淡色の面はすべて Layer 2）
+status: review             # draft | review | approved
+notes: |
+  完コピ検証（Phase 5）3 ラウンド済み（books/replica/b-course/reviews/page_001/review.md）。参考ページ（見開きの左ページ）を .trim 基準の mm で実測し、全要素を絶対配置。
+  グリッド: 片ページ 6 段（段 27.8mm・段間 3.9mm、小口側 17mm 〜 ノド側 203.3mm。解析 page_016.yaml の grid.columns と同じ）。授業カード = 2 段ずつ 3 枚。
+  外周の帯（小口 7mm・天地 4.3mm）＋角丸の白パネル（ノド側は仕上がり線まで）。大写真と情報ボックスはノド側の塗り足しまで裁ち落とし。
+  Layer 2: 帯・白パネル・タブ・アイコンの円と線画（SVG）・円バッジ・写真枠の角丸・情報ボックスとカードの淡色グラデーション・ピル 2 種と紐飾り（SVG）・箇条書きの点・マーカー・ノンブルのハート（SVG）。
+  授業カードは BOOK 固有の部品 books/replica/b-course/components/class-card.hbs（span で 2 段 / 4 段、.class-row が写真とカードの高さをそろえる）。
+  Layer 3: すべてダミーテキスト（字数・改行位置は参考に合わせ、6.5pt 未満の注記だけは字数を減らした）。サブコピーは -1.1°、職種ピルは +1°、バッジの文字は +8° 傾ける。
+  Layer 1 生成待ち・素材待ち: 大写真 1 点（193×117mm、塗り足し込み）・授業写真 3 点（各 59.5×38.7mm）。photo-frame のプレースホルダ。全面背景の生成は不要。
+  色は page.css 冒頭の --rep-*（撮影画像からの推定値）。Phase 8 でブランドカラーへ置き換える。

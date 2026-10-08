@@ -1,0 +1,41 @@
+# BOOK の設定（npm run new:book で 2026-10-08 に作成）
+# - 判型・塗り足し・解像度: system/rules/output.md ／ 命名: system/rules/naming.md
+# - パスはすべてリポジトリルート相対（先頭スラッシュなし・"/" 区切り）
+# id は books/ からの相対パス（ディレクトリと一致させる）
+id: replica/b-course
+title: "完コピ検証 B コース紹介"
+# kind: brochure | admissions | flyer | poster | guide | event | other
+kind: brochure
+description: "Phase 5 完コピ検証: 選択コース紹介の片ページ（大写真＋学び・職種の情報ボックス＋授業カード 3 枚＋円バッジ）を再現する。文字はすべてダミー、写真はプレースホルダ"
+format:
+  # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
+  size: A4
+  # orientation: portrait | landscape
+  orientation: portrait
+  bleed_mm: 3                   # 塗り足し（片側）
+  safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
+  margins_mm: { top: 6, bottom: 13.5, inside: 6.7, outside: 17 }   # 参考ページの実測（要素の外端: 上 6 = 小見出しラベル、下 13.5 = 授業カードの下端、ノド側 6.7 = カードの右端、小口側 17 = 写真・カードの左端）。大写真と情報ボックスはノド側へ裁ち落とし。要素は page.css で mm の絶対配置
+  columns: 6                    # 段組の段数（解析 page_016.yaml の「片ページ 6 段相当」。授業カード 1 枚 = 2 段 = 59.5mm）
+  gutter_mm: 3.9                # 段間（授業カードの間隔の実測）
+  binding: right                # 1 ページだけの BOOK で page_001 を左ページ（ノド = 右、ノンブル = 左下）として描くための指定。参考の冊子自体は左綴じ
+# 共通 CSS（shared/layouts/README.md）。後ろほど優先。ページ固有のスタイルは pages/<pageId>/page.css に書く
+styles:
+  - shared/layouts/grid.css
+  - shared/layouts/typography.css
+  - shared/layouts/components.css
+# CSS 変数の上書き（例: "--color-accent": "#d9a21b"、"--fs-body": "9pt"）。色は原則 company-data/brand/colors/colors.yaml の値を使う
+theme: {}
+# ページの並び順（ページ ID は識別子。並べ替えても ID は付け直さない）。追加は npm run new:page -- --book replica/b-course --after <pageId>
+pages:
+  - page_001
+output:
+  png_dpi: 150                  # この完コピ検証 BOOK だけ 150（比較用。印刷用の BOOK は 350 のまま）
+  preview_dpi: 150              # 作業確認用の目安（npm run render -- --dpi 150 --out /tmp/<確認用>。output/ には置かない）
+notes: |
+  完コピ検証（Phase 5）用の 1 ページ BOOK。参考: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg の見開きの左ページ
+  （比較は references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml で正立・単ページ・台形補正した画像と行う）。
+  判型: 物理サイズは不明。参考は撮影画像で、紙の端から測った片ページの縦横比は 約 0.67 だが、正円のはずのアイコンの円が横 0.95 倍の楕円に写っており、
+  撮影時の横方向の縮み（ページの反り）と判断した。円が正円になる補正後の縦横比は 約 0.70 で、A4 縦（0.7071）との差が 1% 以内のため A4 縦とした。
+  参考ページは見開きの左ページ（ノド = 右、ノンブル = 左下）。page_001 を左ページとして描くため binding を right にした（左右のマージン変数とノンブルの側だけに効く）。
+  要素はすべて .trim 基準の mm で絶対配置（6 段グリッド: 段 27.8mm・段間 3.9mm、小口側 17mm から）。
+  Layer 1: 画像生成ツールがないため、写真はすべてプレースホルダ（photo-frame）。全面背景の生成は不要（外周の帯・白パネル・淡色の面はすべて単色かグラデーションで Layer 2）

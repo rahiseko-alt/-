@@ -1,0 +1,105 @@
+{{!--
+  page_001: 完コピ検証（イベント告知チラシ・縦 1 面）
+  参考: references/nagoya-iryo-hisho-it/flyers/prep/page_002.yaml（撮影画像を正立・台形補正して比較）
+  解析: references/nagoya-iryo-hisho-it/flyers/analysis/page_002.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : 写真のコラージュ 6 点・切り抜きの人物 2 名・イラスト（飲み物・菓子・建物・ティーカップ・景品・行内の小さな絵）は
+                          すべてプレースホルダ（生成待ち）。全面背景はなし（白地）
+    Layer 2 STRUCTURE   : 中央の縦帯・日付の囲み 2 つ（斜線の地紋）・フッター帯・QR の白地・手描きの線（SVG）・切り抜きの人物の仮の輪郭（SVG）
+    Layer 3 CONTENT     : キッカー・イベント名（2 行・フチ取り）・サブ見出し・リード・補足・時刻・日付・特典・注記・箇条・QR。
+                          文字はダミー（参考と同じ文字数・改行位置）、数字は 0。QR は company-data の URL から {{qr}} で生成
+
+  - 座標は .trim（仕上がり線の左上が原点、mm）。位置・大きさは参考の実測値（review.md）
+  - 重なり順: 写真・帯（z 0）→ イベント名（z 2。帯と独立した絶対配置で、2 行目は左右の写真にはみ出す）
+              → フッター帯（z 1）→ 切り抜きの人物（z 3。フッター帯より手前）
+--}}
+
+{{!-- ===== ヒーロー（0〜139mm）: 中央の縦帯 + 左右の写真のコラージュ（天・左右は塗り足しまで） ===== --}}
+<div class="band bleed-top" aria-hidden="true"></div>
+
+<div class="cell cell--l1">{{> photo-frame}}</div>
+<div class="cell cell--l2">{{> photo-frame}}</div>
+<div class="cell cell--l3">{{> photo-frame}}</div>
+<div class="cell cell--r1">{{> photo-frame}}</div>
+<div class="cell cell--r2">{{> photo-frame}}</div>
+<div class="cell cell--r3">{{> photo-frame}}</div>
+
+{{!-- Layer 3: キッカー・イベント名・サブ見出し（白抜き。イベント名は帯と独立した絶対配置） --}}
+<p class="kicker">ダミーのキッカー文章です！</p>
+<h1 class="title">
+  <span class="title__l1">見出し</span>
+  <span class="title__l2">ダミーのタイトル</span>
+</h1>
+<p class="subhead">サブ見出しのダミー文章です！</p>
+
+{{!-- ===== 中段: リード 2 行（行内に小さなイラスト 2 つ）+ 左右のイラスト ===== --}}
+<p class="lead">
+  <span class="lead__l1">ダミー<span class="icon icon--a" aria-hidden="true"></span>ダミー文章<span class="icon icon--b" aria-hidden="true"></span>をダミー文章、ダミーテキストを</span>
+  <span class="lead__l2">ダミー文、ダミーテキストダミー文章についてダミーです！</span>
+</p>
+<div class="illust illust--juice">{{> photo-frame}}</div>
+<div class="illust illust--cookie">{{> photo-frame}}</div>
+
+{{!-- 左: 建物のイラスト 2 つ + 補足 2 行 + 手描きの波線 --}}
+<div class="illust illust--bldg1">{{> photo-frame}}</div>
+<div class="illust illust--bldg2">{{> photo-frame}}</div>
+<p class="aside">
+  <span class="aside__l1">ダミ・ダミ・ダミー文の</span>
+  <span class="aside__l2">ダミーテキストもダミーだよ！</span>
+</p>
+<svg class="line line--wave" viewBox="8 205 60 10" aria-hidden="true">
+  <path d="M9.5 212.3 C 13 213.4, 17 212.3, 21 211.7 S 27 211.0, 29.5 211.6 S 32.5 213.6, 34.5 212.7 S 38.5 211.3, 43 211.3 L 55 211.5 C 59.5 211.3, 63 209.8, 66.4 206.8"/>
+</svg>
+
+{{!-- 右: 時刻のラベル・時刻・ティーカップのイラスト・日付の囲み 2 つ --}}
+<div class="illust illust--teacup">{{> photo-frame}}</div>
+<p class="time-label">【ダミーのラベル】</p>
+<p class="time">00:00〜00:00/00:00〜00:00</p>
+
+<div class="datebox datebox--1">
+  <p class="datebox__label">ラベル</p>
+  <p class="datebox__date"><span class="datebox__md">0<span class="datebox__sl">/</span>0</span><span class="datebox__dow">曜</span></p>
+</div>
+<div class="datebox datebox--2">
+  <p class="datebox__label">ラベル</p>
+  <p class="datebox__date"><span class="datebox__md">00<span class="datebox__sl">/</span>0</span><span class="datebox__dow">曜</span></p>
+</div>
+
+{{!-- ===== 特典: 見出し 2 行 + 筆の下線 + 注記 2 行 + 景品のイラスト ===== --}}
+<p class="prize__head">ダミー0見出し！</p>
+<svg class="line line--brush" viewBox="84 231 66 9" aria-hidden="true">
+  <path d="M86.5 237.6 Q 112 233.0 140 235.3"/>
+  <path d="M92 238.4 Q 120 234.8 147 236.5"/>
+</svg>
+<p class="prize__sub">ダミーテキスト見出し</p>
+<p class="prize__note">
+  <span>※ダミーテキストダミーテキスト</span>
+  <span>※ダミーテキストダミーテキストダミー文</span>
+</p>
+<div class="illust illust--bottle">{{> photo-frame}}</div>
+<div class="illust illust--card-white">{{> photo-frame}}</div>
+<div class="illust illust--card-green">{{> photo-frame}}</div>
+<div class="illust illust--card-red">{{> photo-frame}}</div>
+
+{{!-- ===== フッター帯（地・左右は塗り足しまで）: 箇条 3 行 + 予約の案内 + QR ===== --}}
+<div class="footer-band bleed-bottom bleed-left bleed-right" aria-hidden="true"></div>
+<ul class="bullets">
+  <li>・ダミーテキスト0文字！</li>
+  <li>・ダミー文！</li>
+  <li>・ダミーテキストあり<small>（0ダ0ダミー　ダミーテキストダミー）</small></li>
+</ul>
+<p class="reserve">ダミー文字だ<span class="reserve__pointer" aria-hidden="true"></span></p>
+<div class="qr-box">{{qr facts.school.url size=24.3}}</div>
+
+{{!-- ===== 切り抜きの人物 2 名（Layer 1 生成待ち。いまは無彩色の仮の輪郭。フッター帯より手前） ===== --}}
+<svg class="cutout" viewBox="-3 220 93 80" preserveAspectRatio="none" aria-hidden="true">
+  {{!-- 奥の人物（指さし）: 体 → 頭 → 腕 --}}
+  <path class="cutout__back" d="M32 246 Q 36 241.6 43 241.3 L 47.5 241.5 Q 52 244 53.5 250 L 55.5 268 L 57.5 300 L 33 300 Z"/>
+  <ellipse class="cutout__back-head" cx="39.4" cy="233.2" rx="6.9" ry="9.1"/>
+  <path class="cutout__back-arm" d="M44 241.2 L 69 238 L 76 237.3 L 86 236.2 L 86.3 237.4 L 77.5 239.4 L 76.8 244 L 73 246.6 L 69 244.2 L 50.5 249.2 L 46 247.5 Z"/>
+  {{!-- 手前の人物: 体 → 頭（左に束ねた髪） --}}
+  <path class="cutout__front" d="M-3 300 L -3 257 Q 0 253 6 251 L 14 247.6 L 30 247.6 Q 35 249 36 256 L 38.5 300 Z"/>
+  <ellipse class="cutout__front-head" cx="23.6" cy="236.6" rx="9" ry="10.6"/>
+  <ellipse class="cutout__front-head" cx="15.6" cy="236.5" rx="2.4" ry="5.5"/>
+</svg>

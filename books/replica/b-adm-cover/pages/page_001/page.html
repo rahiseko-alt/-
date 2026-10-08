@@ -1,0 +1,87 @@
+{{!--
+  page_001「募集要項 表紙（完コピ検証）」— Phase 5 完コピ検証
+
+  参考（レイアウト）: references/nagoya-iryo-hisho-it/admissions/prep/page_001.yaml（page_001.jpg を正立・台形補正したもの）
+  解析: references/nagoya-iryo-hisho-it/admissions/analysis/page_001.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（白地。色面・ドット・罫線はすべて単色なので Layer 2）
+    Layer 2 STRUCTURE   : 色面パネル・濃色タブ（天に塗り足し）・正方形ドット（SVG pattern、10 列固定）・白の点線（以上 SVG）、
+                          目次の見出しバー・群見出しの下罫と V 字の切り欠き（book/toc-group）・点線リーダー（book/toc-item）・告知帯・告知枠（HTML/CSS）、
+                          ロゴ類のプレースホルダ（book/logo-slot）
+    Layer 3 CONTENT     : すべてダミーテキスト（参考資料の文字・年度・数字・固有名詞は書き写さない。字数と改行位置だけ合わせる）。ページ番号は 0
+
+  座標は .trim 基準の mm（実測値。page.css に集約）。色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーへ置き換える）
+--}}
+
+{{!-- Layer 2: 色面パネル・濃色タブ・正方形ドット・白の点線（viewBox はページの mm 座標そのまま） --}}
+<svg class="cover-art" viewBox="0 0 210 297" aria-hidden="true">
+  <defs>
+    {{!-- ドット: 列のピッチ 6.99mm × 行のピッチ 8mm、一辺 3.37mm。パネル幅に対して 10 列で固定（原点 = 各ブロックの左上） --}}
+    <pattern id="bac-dots-top" patternUnits="userSpaceOnUse" x="16.78" y="41.36" width="6.99" height="8">
+      <rect class="dot" width="3.37" height="3.37"/>
+    </pattern>
+    <pattern id="bac-dots-bottom" patternUnits="userSpaceOnUse" x="16.78" y="167.2" width="6.99" height="8">
+      <rect class="dot" width="3.37" height="3.37"/>
+    </pattern>
+  </defs>
+  <rect class="panel" x="9.8" y="8.5" width="79.83" height="226.8"/>
+  {{!-- 濃色タブ: 天の塗り足し（-3mm）まで伸ばす --}}
+  <rect class="tab" x="16.26" y="-3" width="32.38" height="37.9"/>
+  {{!-- 上段 10 列 × 5 行、下段 10 列 × 8 行 --}}
+  <rect x="16.78" y="41.36" width="66.28" height="35.37" fill="url(#bac-dots-top)"/>
+  <rect x="16.78" y="167.2" width="66.28" height="59.37" fill="url(#bac-dots-bottom)"/>
+  {{!-- 白の点線（丸い点、ピッチ 約 1mm） --}}
+  <line class="dotline" x1="16.72" y1="103.9" x2="83.1" y2="103.9"/>
+</svg>
+
+{{!-- Layer 3: 濃色タブの 2 行（対象年度と対象者のラベル。年度は 0 で伏せる） --}}
+<p class="tab-label">0000年0月<br>ダミー文</p>
+
+{{!-- Layer 3: 資料種別の小ラベル・表紙タイトル 2 行・副題 --}}
+<p class="kicker">ダミー語</p>
+<h1 class="cover-title"><span class="cover-title__l1">表題見本</span><span class="cover-title__l2">ダミー表記</span></h1>
+<p class="cover-sub">［副題のダミー文字］</p>
+
+{{!-- エンブレム（正式データ待ち） --}}
+{{> book/logo-slot mod="emblem" round=true label="エンブレム（正式データ待ちのプレースホルダ）"}}
+
+{{!-- 目次 --}}
+<nav class="toc" aria-label="目次">
+  <p class="toc__bar">目次の見出しバーのダミーテキスト</p>
+
+  {{#> book/toc-group mod="g1" title="ダミー群名、ダミーテキストの見出し" note="ダミーの補足文字"}}
+    {{> book/toc-item text="ダミー語・項目・ダミー文" pno="0"}}
+    {{> book/toc-item text="項目〜ダミーテキスト" pno="0"}}
+    {{> book/toc-item text="ダミー項目名" pno="0〜0"}}
+  {{/book/toc-group}}
+
+  {{#> book/toc-group mod="g2" title="XX見出(ダミー語句)とダミーテキスト" note="ダミーの補足文字"}}
+    {{> book/toc-item text="ダミーテキストの項目名・ダミーテキストの見出し" pno="0"}}
+    {{> book/toc-item text="ダミーテキストの項目" pno="0"}}
+    {{> book/toc-item text="ダミーの項目テキストです" pno="0"}}
+    {{> book/toc-item text="XX項目(ダミー語句)ダミーテキスト" pno="0"}}
+  {{/book/toc-group}}
+
+  {{#> book/toc-group mod="g3" title="ダミー見出しテキストです" note="ダミーの補足文字"}}
+    {{> book/toc-item text="ダミーテキストとダミーの項目名例" pno="0〜0"}}
+    {{> book/toc-item text="ダミーテキスト項目・ダミーテキストの項目名例" pno="0"}}
+    {{> book/toc-item text="項目名・ダミー語句・ダミーテキストの項目" pno="00"}}
+  {{/book/toc-group}}
+
+  {{#> book/toc-group mod="g4" title="ダミー項目と見出・ダミー語句" note="のダミー補足文字列"}}
+    {{> book/toc-item text="項目名例" pno="00〜00"}}
+    {{> book/toc-item text="項目・ダミーテキストとダミーの項目名" pno="00"}}
+  {{/book/toc-group}}
+
+  {{!-- Layer 2 + 3: グレーの告知帯（2 行・中央揃え）と細枠の告知ボックス（2 行・左揃え）。文章量で高さが伸びる --}}
+  <p class="toc__band">XXXのダミーテキストXXダミー・ダミー文字<br>ダミーテキストのダミーテキスト例。</p>
+  <p class="toc__box">ダミーテキスト・ダミーの文字列は、例文「ダミーテキスト・ダミー文<br>ダミー文」ダミーテキスト文、ダミーテキストのダミー文字列。</p>
+</nav>
+
+{{!-- フッター: 認定表記 2 行（参考は 約 6pt。最小 6.5pt に合わせて字数を減らした）→ 法人名 → エンブレム＋校名ロゴタイプ → 補足 1 行 --}}
+<p class="accredit">ダミーテキストのダミーテキスト／ダミーテキスト／ダミーテキスト／ダミーテキストのダミー文<br>ダミー語 ダミーテキスト ダミー文字／ダミーテキスト文 ダミーテキストのダミー例文</p>
+{{> book/logo-slot mod="corp" label="法人名（正式データ待ちのプレースホルダ）"}}
+{{> book/logo-slot mod="mark" round=true label="エンブレム小（正式データ待ちのプレースホルダ）"}}
+{{> book/logo-slot mod="logotype" label="校名ロゴタイプ（正式データ待ちのプレースホルダ）"}}
+<p class="footnote">ダミーテキストの補足表記例文</p>

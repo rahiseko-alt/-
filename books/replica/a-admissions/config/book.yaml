@@ -1,0 +1,49 @@
+# BOOK の設定（npm run new:book で 2026-10-08 に作成）
+# - 判型・塗り足し・解像度: system/rules/output.md ／ 命名: system/rules/naming.md
+# - パスはすべてリポジトリルート相対（先頭スラッシュなし・"/" 区切り）
+# id は books/ からの相対パス（ディレクトリと一致させる）
+id: replica/a-admissions
+title: "完コピ検証 A 募集要項 出願の流れ"
+# kind: brochure | admissions | flyer | poster | guide | event | other
+kind: admissions
+description: "Phase 5 完コピ検証: 募集要項の見開きの右ページ（相談案内 + 角丸パネルの出願手順 3 段階）の構造を再現する。文字はすべてダミー"
+format:
+  # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
+  size: custom
+  # 参考資料の実寸は不明。片ページは正方形（補正画像の紙の端で縦横比 約 0.996、表紙も 約 0.99〜1.0）。
+  # 本文の字送り（参考の 1.37%H）が 8pt 前後になる 210×210mm（A4 の幅の正方形）を仮の判型とした【要確認: 実寸】
+  width_mm: 210
+  height_mm: 210
+  # orientation: portrait | landscape
+  orientation: portrait
+  bleed_mm: 3                   # 塗り足し（片側）
+  safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
+  # 参考ページの実測（補正画像 2000×2000px、1mm = 9.52px）: 見出し・パネルの左端 6.1mm（ノド）、略地図・パネルの右端 200.0〜200.4mm（小口まで 約 10mm）、
+  # 見出しの字面の上端 約 7.5mm、パネルの下端 201.3mm
+  margins_mm: { top: 7, bottom: 8.5, inside: 6, outside: 10 }   # 版面のマージン（inside = ノド、outside = 小口）
+  columns: 12                   # 段組の段数
+  gutter_mm: 4                  # 段間
+  # 参考の冊子は横組み・左綴じ（見開きの右が奇数ノンブル）。1 ページ目が右ページ（ノド = 左）になる
+  binding: left                 # left（左綴じ）| right（右綴じ）| none（一枚もの: チラシ・ポスター）
+# 共通 CSS（shared/layouts/README.md）。後ろほど優先。ページ固有のスタイルは pages/<pageId>/page.css に書く
+styles:
+  - shared/layouts/grid.css
+  - shared/layouts/typography.css
+  - shared/layouts/components.css
+# CSS 変数の上書き（例: "--color-accent": "#d9a21b"、"--fs-body": "9pt"）。色は原則 company-data/brand/colors/colors.yaml の値を使う
+theme: {}
+# ページの並び順（ページ ID は識別子。並べ替えても ID は付け直さない）。追加は npm run new:page -- --book replica/a-admissions --after <pageId>
+pages:
+  - page_001
+output:
+  png_dpi: 150                  # 完コピ検証用（印刷しない）。比較には 150dpi で十分
+  preview_dpi: 150              # 作業確認用の目安（npm run render -- --dpi 150 --out /tmp/<確認用>。output/ には置かない）
+notes: >-
+  Phase 5 の完コピ検証用 BOOK（印刷・配布しない）。参考: references/HAL-nagoya/admissions/page_002.jpg（見開きの写真）の右ページ。
+  比較には補正指定 references/HAL-nagoya/admissions/prep/page_002-r.yaml を使う（回転・右ページの切り出し・台形補正）。
+  参考資料の実寸は不明（撮影画像のみ）。判型 210×210mm は縦横比（正方形）と本文の字送りから決めた仮の値。
+  文字はすべてダミー（同じ文字数・改行）、数字は 0（手順の通し番号 1〜3 だけは構造として残した）。写真・生成背景は使っていない（Layer 2/3 だけで再現）。
+  略地図は中立の単純図形のプレースホルダ（参考の地図の内容は再現しない。Phase 8 で company-data の所在地情報から作る）。
+  QR は qr ヘルパーで facts.school.url（TODO）を符号化した仮のもの。ロゴは使っていない（このページにロゴはない）。
+  参考の色は page.css 冒頭の --rep-* 変数にまとめた（Phase 8 でブランドカラーへ置き換える）。
+  状態と次の作業は reviews/page_001/review.md を参照

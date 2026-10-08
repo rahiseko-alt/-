@@ -1,0 +1,17 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "入試一覧表（右ページ）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: data
+# Layer 1（BASE VISUAL）: なし。参考ページは白地のみ（罫・表・文字は Layer 2/3）
+status: review             # draft | review | approved
+notes: >-
+  Phase 5 完コピ検証（3 ラウンド。記録は reviews/page_001/review.md）。見開きをまたぐ表の右ページ（binding: left で 1 ページ目 = 右ページ）。
+  グリッド: A4、版面 = 天 26・地 22.8・ノド 3・小口 16.6mm（book.yaml）。表は .trim の x = 0（ノドの折り目。左ページの表と行をつなぐので縦罫なし）から
+  小口側の外枠 193.2mm まで、上 31.0mm・下 274.2mm。1 列（見出し行＋4 行）の CSS Grid で、行の高さは page.css の --adm-row-head / --adm-row-1〜4
+  （7.2 / 61.55 / 60.8 / 49.05 / 64.2mm。左ページも同じ変数を使う）、行は minmax(変数, auto) なので文字が増えてもあふれずに伸びる。
+  行の中は入れ子の表（左右 3.2 / 190.4mm）→【 】ラベルの段落（ラベル列 17.2mm、2 行目以降はその幅だけ字下げ）。12 段グリッドには乗せていない（参考の表が段組と無関係のため）。
+  入れ子の表: 日程表 A（区分 / 受付期間 / 試験日 / 発表日、4 行）、流れ図 2 つ（3 列 × 2 段、列の境界に SVG の矢印 components/adm-arrow.hbs）、日程表 B（区分＋受付期間 / 試験日 / 発表日、5 行）。
+  Layer 分担: Layer 1 なし／Layer 2 = 罫（外枠・見出し行 1.2pt、行の区切り・入れ子の外枠 0.6pt、内罫 0.4pt）と矢印／Layer 3 = 注記・見出し行・表の文字・段落・ノンブル。
+  文字はすべてダミー（参考と同じ字数・改行）、数字は 0。本文・セル 9.5pt / 500、見出し行 12.9pt / 700、ラベル 700。2 割増えたら 8pt に下げれば行の高さを変えずに収まる（確認済み）。
+  色は page.css 冒頭の --rep-*（スミ＋赤の 2 色）。プレースホルダ: なし

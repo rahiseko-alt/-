@@ -1,0 +1,64 @@
+{{!--
+  page_001: 完コピ検証（学科紹介の見開きの左ページ — 裁ち落とし写真 + 学科名タブ / 写真を回り込む本文 2 段 / 科目リスト）
+  参考: references/kokusai-igaku-gijutsu/brochure/prep/page_006-l.yaml（撮影画像を正立・単ページ・台形補正して比較）
+  解析: references/kokusai-igaku-gijutsu/brochure/analysis/page_006.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : 上部の裁ち落とし写真・本文に回り込ませる写真 2 点は photo-frame のプレースホルダ（生成待ち）。全面背景はなし（白地）
+    Layer 2 STRUCTURE   : 学科名タブ（写真の左下を白く切り欠く）・縦棒・ラベル下の細罫・帯見出しの色帯・丸い行頭記号（page.css）
+    Layer 3 CONTENT     : 学科名・見出し・本文・ラベル・帯見出し・科目名・ノンブル。文字はすべてダミー（参考と同じ行数・改行位置）
+
+  - 座標は .trim（仕上がり線の左上が原点、mm）。左ページ（小口 = 左 15.3mm、ノド = 右 12.5mm）
+  - 学科色は page.css の --rep-dept の 1 つだけ。同型の別学科のページはこの値の差し替えで色が再現できる
+  - 部品は books/replica/c-course/components/（dept-header・bar-heading・wrap-text・band-list）。shared/ へ移す候補（review.md「次にやること」）
+--}}
+
+{{!-- Layer 1 + 2 + 3: 裁ち落とし写真（天・小口・ノド）+ 学科名タブ（白い切り欠き）+ 学科名 --}}
+{{> book/dept-header name="学科名ダミー"}}
+
+{{!-- 本文 2 段（各段: 縦棒見出し + 先頭 5 行は全幅・6 行目から写真を回り込む本文） --}}
+<div class="sec sec--1">
+  {{> book/wrap-text title="見出しダミー文字見本" body="本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミ。"}}
+</div>
+<div class="sec sec--2">
+  {{> book/wrap-text title="見出しダミー文字列の見本文章" body="本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミ本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見本ダミー文章本文見。"}}
+</div>
+
+{{!-- 科目リスト: ラベル + 版面幅の細罫 --}}
+<h2 class="list-label">ラベル名</h2>
+<hr class="list-rule" aria-hidden="true">
+
+{{!-- 科目リスト 左の段: 帯見出し 2 つ（3 列の箇条） --}}
+<div class="list-col list-col--left">
+  <div class="band-list band-list--3col" style="--bl-rows: 3">
+    {{#> book/band-list title="帯見出し"}}
+      <li>科目見</li><li>科目見</li><li>科目見</li>
+      <li>科目</li><li>科目見本</li><li>科目見本</li>
+      <li>科目見本ダ</li><li>科目見本ダミー文字列</li>
+    {{/book/band-list}}
+  </div>
+  <div class="band-list band-list--3col band-list--second" style="--bl-rows: 6">
+    {{#> book/band-list title="ダミー見出し"}}
+      <li>科目見</li><li>科目見</li><li>科目見</li><li>科目見本ダ</li><li>科目見</li><li>科目見本ダ</li>
+      <li>科目見</li><li>科目見本</li><li>科目見本ダミー文字</li><li>科目見本ダミ</li><li>科目見</li><li>科目見本ダ</li>
+      <li>科目見本ダ</li><li>科目見本</li><li>科目見本ダミ</li><li>科目見本ダミー文字</li><li>科目見本ダミー文字列名</li>
+    {{/book/band-list}}
+  </div>
+</div>
+
+{{!-- 科目リスト 右の段: 帯見出し 1 つ（2 列の箇条。数字は 0） --}}
+<div class="list-col list-col--right">
+  <div class="band-list band-list--2col" style="--bl-rows: 15">
+    {{#> book/band-list title="帯見出し"}}
+      <li>科目見本ダミー</li><li>科目見本ダミー</li><li>科目見本ダミー</li><li>科目見本ダミ</li><li>科目見本ダミ</li>
+      <li>科目見本ダミー文字</li><li>科目見本ダ</li><li>科目見本ダミー文</li><li>科目見本ダミ</li><li>科目見本(0ダミ×0ダミ)</li>
+      <li>科目見本ダミー</li><li>科目見本ダミー</li><li>科目見本ダミー文字</li><li>科目見本ダミー</li><li>科目見本ダミ</li>
+      <li>科目見本ダミー</li><li>科目見本ダ</li><li>科目見本ダ</li><li>科目見本ダミー文字</li><li>科目見本ダミー文</li>
+      <li>科目見本ダミー文</li><li>科目見本ダミー文字</li><li>科目見本ダミー</li><li>科目見本ダミー</li><li>科目見本ダ</li>
+      <li>科目見本ダミ</li><li>科目見本(0ダミ×0ダミ)</li><li>科目見本ダミ</li><li>科目見本(0ダミ×0ダミ)</li>
+    {{/book/band-list}}
+  </div>
+</div>
+
+{{!-- Layer 3: ノンブル（左ページ = 左下の小口寄り。2 桁表示。page.number は book.yaml の pages の並び順） --}}
+<p class="folio-num">0{{page.number}}</p>

@@ -1,0 +1,9 @@
+# このBOOKが使う参考資料（docs/concept.md §5 ／ system/rules/references.md）
+# - 参考資料はコピーしない。references/<source>/<kind>/ 以下をリポジトリルート相対パスで指定する
+# - 参考ページは見開きの写真（90° 倒れて保存）なので、layout_reference には画像ではなく補正指定（prep/*.yaml）を書く。
+#   npm run compare がこの指定で正立・右ページの切り出し・台形補正をしてから比較する（補正画像は .cache/ref-prep/。コミットしない）
+# - 参考画像はページに直接貼らない（背景・{{asset}} に指定しない）。比較・目視・画像生成の参照入力に使う
+references:
+  - references/HAL-nagoya/admissions/
+page_001:
+  layout_reference: [references/HAL-nagoya/admissions/prep/page_002-r.yaml]

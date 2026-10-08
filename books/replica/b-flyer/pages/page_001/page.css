@@ -1,0 +1,626 @@
+/*
+ * page_001: 完コピ検証（イベント告知チラシ — 写真のコラージュ + 中央の縦帯 + 大きなイベント名 → リード → 日付の囲み 2 つ → 特典 → フッター帯）
+ * 参考: references/nagoya-iryo-hisho-it/flyers/prep/page_002.yaml（比較用の補正指定）
+ * - 寸法は mm（.trim 基準）、文字サイズは pt。位置は参考の実測値（reviews/page_001/review.md）
+ * - 参考の色は下の --rep-* に集約する。Phase 8 でブランドカラー（var(--color-*)）に置き換える
+ *   （対応の目安: rose → --color-primary、rose-light → 地紋の明るい筋、brown → --color-text、maroon / mauve → 見出し用の濃色）
+ * - 書体は Noto Sans JP（参考は太い丸ゴシック。丸ゴシックは同梱されていないため代用）
+ */
+
+:scope {
+  /* ---- 参考の配色（撮影画像の実測。印刷の色そのものではない） ---- */
+  --rep-rose: #bf767b;          /* 中央の縦帯・日付の囲み・フッター帯・イベント名のフチ（面積 約 30%） */
+  --rep-rose-dark: #b8737a;     /* 日付の囲みの地紋（濃い筋） */
+  --rep-rose-light: #ca8d92;    /* 日付の囲みの地紋（明るい筋） */
+  --rep-white: #ffffff;
+  --rep-brown: #3a2b26;         /* リード（濃い茶） */
+  --rep-ink: #222222;           /* 時刻・時刻のラベル */
+  --rep-maroon: #6e454c;        /* 左の補足（くすんだえんじ） */
+  --rep-mauve: #85717d;         /* 特典の見出し（灰みのモーブ） */
+  --rep-note: #857a82;          /* 特典の注記 */
+  --rep-brush: #a8938f;         /* 特典の見出しの下の手描きの 2 本線 */
+  --rep-wave: #4d4c52;          /* 左の補足の下の手描きの波線 */
+  --rep-pointer: #f2c14e;       /* 予約の案内の指さしアイコン（仮の図形） */
+
+  /* ---- 写真・イラストのプレースホルダ（参考の各領域の平均の明るさに合わせた無彩色。Layer 1 生成待ち） ---- */
+  --ph-l1: #9e9e9e;
+  --ph-l2: #bababa;
+  --ph-l3: #9f9f9f;
+  --ph-r1: #b6b6b6;
+  --ph-r2: #d2d2d2;
+  --ph-r3: #c9c9c9;
+  --ph-juice: #dddddd;
+  --ph-cookie: #b5b5b5;
+  --ph-teacup: #d2d2d2;
+  --ph-bldg1: #a8a8a8;
+  --ph-bldg2: #b1b1b1;
+  --ph-bottle: #c6c6c6;
+  --ph-card-red: #8f8f8f;
+  --ph-card-white: #d9d9d9;
+  --ph-card-green: #888888;
+  --ph-icon: #c4c4c4;
+  --ph-cutout-front: #4e4e4e;      /* 手前の人物（濃い上着） */
+  --ph-cutout-front-head: #5a5a5a;
+  --ph-cutout-back: #8c8c8c;       /* 奥の人物（黒い上衣 + 白いエプロン） */
+  --ph-cutout-back-head: #606060;
+  --ph-cutout-back-arm: #2a2a2a;   /* 指さしの腕（黒い袖） */
+
+  /* ---- ヒーローの格子（参考の実測） ---- */
+  --hero-h: 139mm;              /* 写真と帯の下端 */
+  --row-1: 47.5mm;              /* 写真の行の境界 1 */
+  --row-2: 93.2mm;              /* 写真の行の境界 2 */
+  --band-x: 58.5mm;             /* 中央の縦帯（写真の下に敷く。見える幅は 59.2〜150.5mm） */
+  --band-w: 93mm;
+}
+
+/* =========================================================
+ * Layer 2: 中央の縦帯（天は塗り足しまで）
+ * ========================================================= */
+.band {
+  position: absolute;
+  left: var(--band-x);
+  width: var(--band-w);
+  height: calc(var(--hero-h) + var(--bleed));
+  background: var(--rep-rose);
+}
+
+/* =========================================================
+ * Layer 1（素材）+ Layer 2（枠）: 写真のコラージュ 3 行 × 左右 2 列（隙間なし。天・左右は塗り足しまで）
+ * ========================================================= */
+.cell {
+  position: absolute;
+}
+
+.cell .photo-frame {
+  height: 100%;
+}
+
+.cell .photo-frame__placeholder,
+.illust .photo-frame__placeholder {
+  min-height: 0;
+  border: 0;
+  background: var(--ph-bg, #b0b0b0);
+  font-size: 6.5pt;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cell--l1,
+.cell--l2,
+.cell--l3 {
+  left: calc(var(--bleed) * -1);
+  width: calc(59.2mm + var(--bleed));
+}
+
+.cell--l3 {
+  width: calc(60.7mm + var(--bleed));   /* 下段の写真だけ帯側へ 1.5mm 広い（参考の実測） */
+}
+
+.cell--r1,
+.cell--r2,
+.cell--r3 {
+  left: 150.5mm;
+  right: calc(var(--bleed) * -1);
+}
+
+.cell--r3 {
+  left: 151mm;
+}
+
+.cell--l1,
+.cell--r1 {
+  top: calc(var(--bleed) * -1);
+  height: calc(var(--row-1) + var(--bleed));
+}
+
+.cell--l2,
+.cell--r2 {
+  top: var(--row-1);
+  height: calc(var(--row-2) - var(--row-1));
+}
+
+.cell--l3,
+.cell--r3 {
+  top: var(--row-2);
+  height: calc(var(--hero-h) - var(--row-2));
+}
+
+.cell--l1 { --ph-bg: var(--ph-l1); }
+.cell--l2 { --ph-bg: var(--ph-l2); }
+.cell--l3 { --ph-bg: var(--ph-l3); }
+.cell--r1 { --ph-bg: var(--ph-r1); }
+.cell--r2 { --ph-bg: var(--ph-r2); }
+.cell--r3 { --ph-bg: var(--ph-r3); }
+
+/* =========================================================
+ * Layer 3: キッカー・イベント名・サブ見出し（白抜き）
+ * ========================================================= */
+.kicker,
+.subhead {
+  position: absolute;
+  left: 5.45mm;
+  width: 200mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--rep-white);
+  font-feature-settings: 'palt' 1;
+}
+
+.kicker {
+  top: 20.6mm;
+  font-size: 21.5pt;
+}
+
+.subhead {
+  top: 110.3mm;
+  font-size: 21pt;
+}
+
+/* イベント名: 白文字 + ローズの太いフチ（フチは塗りの下に描く）。帯と独立した絶対配置で、2 行目は左右の写真に重なる */
+.title {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--rep-white);
+  /* フチ取り: 参考のフチは角の丸い太いフチ（見える幅 約 2.3mm）。-webkit-text-stroke は角がとがる（stroke-linejoin が効かない）ため、
+     ずらした影を半径 2.3 / 1.55 / 0.8mm の円周上に並べて丸いフチを作る（影は文字の下に描かれる。
+     ぼかし 0 の影はアンチエイリアスがかからず外周が段になるため、0.3mm だけぼかして段をならす） */
+  text-shadow:
+    2.30mm 0mm 0.3mm var(--rep-rose),
+    2.22mm 0.60mm 0.3mm var(--rep-rose),
+    1.99mm 1.15mm 0.3mm var(--rep-rose),
+    1.63mm 1.63mm 0.3mm var(--rep-rose),
+    1.15mm 1.99mm 0.3mm var(--rep-rose),
+    0.60mm 2.22mm 0.3mm var(--rep-rose),
+    0mm 2.30mm 0.3mm var(--rep-rose),
+    -0.60mm 2.22mm 0.3mm var(--rep-rose),
+    -1.15mm 1.99mm 0.3mm var(--rep-rose),
+    -1.63mm 1.63mm 0.3mm var(--rep-rose),
+    -1.99mm 1.15mm 0.3mm var(--rep-rose),
+    -2.22mm 0.60mm 0.3mm var(--rep-rose),
+    -2.30mm 0mm 0.3mm var(--rep-rose),
+    -2.22mm -0.60mm 0.3mm var(--rep-rose),
+    -1.99mm -1.15mm 0.3mm var(--rep-rose),
+    -1.63mm -1.63mm 0.3mm var(--rep-rose),
+    -1.15mm -1.99mm 0.3mm var(--rep-rose),
+    -0.60mm -2.22mm 0.3mm var(--rep-rose),
+    0mm -2.30mm 0.3mm var(--rep-rose),
+    0.60mm -2.22mm 0.3mm var(--rep-rose),
+    1.15mm -1.99mm 0.3mm var(--rep-rose),
+    1.63mm -1.63mm 0.3mm var(--rep-rose),
+    1.99mm -1.15mm 0.3mm var(--rep-rose),
+    2.22mm -0.60mm 0.3mm var(--rep-rose),
+    1.55mm 0mm 0.3mm var(--rep-rose),
+    1.43mm 0.59mm 0.3mm var(--rep-rose),
+    1.10mm 1.10mm 0.3mm var(--rep-rose),
+    0.59mm 1.43mm 0.3mm var(--rep-rose),
+    0mm 1.55mm 0.3mm var(--rep-rose),
+    -0.59mm 1.43mm 0.3mm var(--rep-rose),
+    -1.10mm 1.10mm 0.3mm var(--rep-rose),
+    -1.43mm 0.59mm 0.3mm var(--rep-rose),
+    -1.55mm 0mm 0.3mm var(--rep-rose),
+    -1.43mm -0.59mm 0.3mm var(--rep-rose),
+    -1.10mm -1.10mm 0.3mm var(--rep-rose),
+    -0.59mm -1.43mm 0.3mm var(--rep-rose),
+    0mm -1.55mm 0.3mm var(--rep-rose),
+    0.59mm -1.43mm 0.3mm var(--rep-rose),
+    1.10mm -1.10mm 0.3mm var(--rep-rose),
+    1.43mm -0.59mm 0.3mm var(--rep-rose),
+    0.80mm 0mm 0.3mm var(--rep-rose),
+    0.57mm 0.57mm 0.3mm var(--rep-rose),
+    0mm 0.80mm 0.3mm var(--rep-rose),
+    -0.57mm 0.57mm 0.3mm var(--rep-rose),
+    -0.80mm 0mm 0.3mm var(--rep-rose),
+    -0.57mm -0.57mm 0.3mm var(--rep-rose),
+    0mm -0.80mm 0.3mm var(--rep-rose),
+    0.57mm -0.57mm 0.3mm var(--rep-rose);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.title__l1,
+.title__l2 {
+  position: absolute;
+  display: block;
+}
+
+.title__l1 {
+  top: 33.1mm;
+  left: 58.7mm;
+  font-size: 96pt;
+  letter-spacing: 0.005em;
+  font-feature-settings: normal;   /* 参考は漢字 3 字の等幅の字送り。ダミーのかなを palt で詰めない */
+}
+
+.title__l2 {
+  top: 73.9mm;
+  left: 18.5mm;
+  font-size: 80pt;
+  letter-spacing: -0.07em;
+  font-feature-settings: 'palt' 1;
+  /* 参考の 2 行目は字幅の狭い極太丸ゴシック（小書きのかな・長音を含む）。ダミーの全角かなで行長を合わせるため長体 92% にする
+     （字間を詰めすぎると字形が重なるため） */
+  transform: scaleX(0.92);
+  transform-origin: left center;
+}
+
+/* =========================================================
+ * 中段: リード 2 行（中央揃え。行内の小さなイラストはプレースホルダ）
+ * ========================================================= */
+.lead {
+  position: absolute;
+  top: 142.1mm;
+  left: 17.3mm;
+  width: 180mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 19pt;
+  font-weight: 700;
+  line-height: 8.6mm;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--rep-brown);
+  font-feature-settings: 'palt' 1;
+}
+
+.lead > span {
+  display: block;
+}
+
+/* 行ごとの字間（ダミー文字と参考の字形の幅の差を吸収して行長を合わせる） */
+.lead__l1 { letter-spacing: -0.041em; }
+.lead__l2 { letter-spacing: -0.035em; }
+
+/* 行内の小さなイラスト（菓子・飲み物。Layer 1 生成待ち） */
+.icon {
+  display: inline-block;
+  vertical-align: -0.1em;
+  height: 0.95em;
+  margin: 0 0.12em;
+  border-radius: 50%;
+  background: var(--ph-icon);
+}
+
+.icon--a { width: 1em; }
+.icon--b { width: 0.6em; border-radius: 0.2em; }
+
+/* =========================================================
+ * Layer 1（素材）: イラストのプレースホルダ（輪郭で抜く素材なので角丸で弱く見せる）
+ * ========================================================= */
+.illust {
+  position: absolute;
+}
+
+.illust .photo-frame {
+  height: 100%;
+}
+
+.illust .photo-frame__placeholder {
+  border-radius: 2mm;
+}
+
+.illust--juice  { left: 12.6mm; top: 142.4mm; width: 13.4mm; height: 18mm; --ph-bg: var(--ph-juice); }
+.illust--cookie { left: 187.3mm; top: 149.3mm; width: 16mm; height: 8.5mm; --ph-bg: var(--ph-cookie); }
+.illust--teacup { left: 87mm; top: 171.6mm; width: 13mm; height: 11mm; --ph-bg: var(--ph-teacup); }
+.illust--bldg1  { left: 18mm; top: 168.6mm; width: 22.8mm; height: 22mm; --ph-bg: var(--ph-bldg1); }
+.illust--bldg2  { left: 47.7mm; top: 173mm; width: 22.8mm; height: 17.8mm; --ph-bg: var(--ph-bldg2); }
+.illust--bottle { left: 153.75mm; top: 225.8mm; width: 8.5mm; height: 38mm; transform: rotate(-14deg); --ph-bg: var(--ph-bottle); }
+/* 景品のカード 3 枚（参考では少しずつ傾けて重ねている。奥から 白・緑・赤） */
+.illust--card-white { left: 186mm; top: 229.8mm; width: 21mm; height: 13.5mm; transform: rotate(1.5deg); --ph-bg: var(--ph-card-white); }
+.illust--card-green { left: 169.3mm; top: 241.3mm; width: 22.5mm; height: 16.5mm; transform: rotate(-6deg); --ph-bg: var(--ph-card-green); }
+.illust--card-red   { left: 164mm; top: 225mm; width: 22mm; height: 14mm; transform: rotate(10deg); --ph-bg: var(--ph-card-red); }
+
+/* =========================================================
+ * 左: 補足 2 行（中央揃え）+ 手描きの波線
+ * ========================================================= */
+.aside {
+  position: absolute;
+  top: 192.7mm;
+  left: 8.1mm;
+  width: 60mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 15pt;
+  font-weight: 700;
+  line-height: 7.5mm;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--rep-maroon);
+  font-feature-settings: 'palt' 1;
+}
+
+.aside > span {
+  display: block;
+}
+
+.aside__l1 { letter-spacing: 0.04em; }
+.aside__l2 { letter-spacing: -0.07em; }
+
+.line {
+  position: absolute;
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line--wave {
+  left: 8mm;
+  top: 205mm;
+  width: 60mm;
+  height: 10mm;
+  stroke: var(--rep-wave);
+  stroke-width: 0.45;
+}
+
+/* =========================================================
+ * 右: 時刻のラベル・時刻・日付の囲み 2 つ
+ * ========================================================= */
+.time-label,
+.time {
+  position: absolute;
+  left: 97.85mm;
+  width: 100mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+.time-label {
+  top: 163.8mm;
+  left: 96.9mm;
+  font-size: 13.5pt;
+  letter-spacing: 0.03em;
+  font-feature-settings: 'palt' 1;
+}
+
+.time {
+  top: 171.2mm;
+  font-family: var(--font-number);
+  font-size: 15.9pt;
+}
+
+/* 日付の囲み: ローズの矩形 + 明るい斜線の地紋（角なし）。ラベルと日付の間に白の細罫 */
+.datebox {
+  position: absolute;
+  top: 181.9mm;
+  width: 50.3mm;
+  height: 36.3mm;
+  background: repeating-linear-gradient(129deg, var(--rep-rose-dark) 0 1.9mm, var(--rep-rose-light) 1.9mm 3.36mm);
+  color: var(--rep-white);
+}
+
+.datebox--1 { left: 94.9mm; }
+.datebox--2 { left: 150.4mm; }
+
+.datebox__label {
+  position: absolute;
+  top: 2.6mm;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20pt;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  font-feature-settings: 'palt' 1;
+}
+
+/* 白の細罫（参考は囲みごとに左右の余白が少し違う。囲み 1: 左 2.7 / 右 4.5mm、囲み 2: 左 4.1 / 右 3.5mm） */
+.datebox::after {
+  content: '';
+  position: absolute;
+  top: 12.5mm;
+  left: var(--rule-left, 4mm);
+  right: var(--rule-right, 4mm);
+  height: 0.6mm;
+  background: var(--rep-white);
+}
+
+.datebox__date {
+  position: absolute;
+  top: 15.1mm;
+  right: var(--date-right, 4mm);
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--date-gap, 4mm);
+  font-family: var(--font-number);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.datebox--1 { --date-right: 4.5mm; --date-gap: 4mm; --rule-left: 2.7mm; --rule-right: 4.5mm; }
+.datebox--2 { --date-right: 3.4mm; --date-gap: 2.8mm; --rule-left: 4.1mm; --rule-right: 3.5mm; }
+
+.datebox__md {
+  font-size: 41pt;
+}
+
+/* 斜線は数字の高さに収める（参考の丸ゴシックの斜線は短い） */
+.datebox__sl {
+  margin: 0 0.08em;
+  font-size: 0.74em;
+  vertical-align: 0.2em;
+}
+
+/* 曜日の丸囲み（白い円 + ローズの文字） */
+.datebox__dow {
+  display: grid;
+  place-items: center;
+  width: 7.6mm;
+  height: 7.6mm;
+  border-radius: 50%;
+  background: var(--rep-white);
+  color: var(--rep-rose);
+  font-family: var(--font-heading);
+  font-size: 12pt;
+  font-weight: 700;
+  transform: translateY(-0.2mm);
+}
+
+/* =========================================================
+ * 特典: 見出し 2 行（中央揃え）+ 手描きの 2 本線 + 注記 2 行（左揃え）
+ * ========================================================= */
+.prize__head,
+.prize__sub {
+  position: absolute;
+  width: 80mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--rep-mauve);
+  font-feature-settings: 'palt' 1;
+}
+
+.prize__head {
+  top: 226mm;
+  left: 77.75mm;
+  font-size: 21pt;
+}
+
+.prize__sub {
+  top: 240.5mm;
+  left: 80.35mm;
+  font-size: 19pt;
+  letter-spacing: -0.04em;
+}
+
+.line--brush {
+  left: 84mm;
+  top: 231mm;
+  width: 66mm;
+  height: 9mm;
+  stroke: var(--rep-brush);
+  stroke-width: 0.5;
+}
+
+.prize__note {
+  position: absolute;
+  top: 252.7mm;
+  left: 101.9mm;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 7pt;
+  font-weight: 500;
+  line-height: 4.2mm;
+  white-space: nowrap;
+  color: var(--rep-note);
+}
+
+.prize__note > span {
+  display: block;
+}
+
+/* =========================================================
+ * Layer 2: フッター帯（地・左右は塗り足しまで）+ Layer 3: 箇条・予約の案内・QR
+ * ========================================================= */
+.footer-band {
+  position: absolute;
+  top: 266.5mm;
+  z-index: 1;
+  background: var(--rep-rose);
+}
+
+.bullets {
+  position: absolute;
+  top: 268.6mm;
+  left: 60.9mm;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-heading);
+  font-size: 16.3pt;
+  font-weight: 700;
+  line-height: 7.8mm;
+  white-space: nowrap;
+  color: var(--rep-white);
+  font-feature-settings: 'palt' 1;
+}
+
+.bullets small {
+  margin-left: 1mm;
+  font-size: 7.8pt;
+  font-weight: 700;
+  font-feature-settings: normal;
+}
+
+.reserve {
+  position: absolute;
+  top: 277.4mm;
+  left: 156mm;
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6mm;
+  font-family: var(--font-heading);
+  font-size: 9pt;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-white);
+}
+
+/* 指さしのアイコン（参考は絵文字。仮の図形。Layer 1 生成待ち） */
+.reserve__pointer {
+  display: inline-block;
+  width: 4.5mm;
+  height: 2.6mm;
+  background: var(--rep-pointer);
+  clip-path: polygon(0 35%, 60% 35%, 60% 0, 100% 50%, 60% 100%, 60% 65%, 0 65%);
+}
+
+/* QR の白地（24.3mm 角）と QR（company-data の URL から生成） */
+.qr-box {
+  position: absolute;
+  top: 268.8mm;
+  left: 181.2mm;
+  z-index: 1;
+  width: 24.3mm;
+  height: 24.3mm;
+  display: grid;
+  place-items: center;
+  background: var(--rep-white);
+}
+
+.qr-box .qr {
+  display: block;
+}
+
+/* =========================================================
+ * 切り抜きの人物 2 名（仮の輪郭。フッター帯より手前。左・地は塗り足しまで）
+ * ========================================================= */
+.cutout {
+  position: absolute;
+  left: calc(var(--bleed) * -1);
+  top: 220mm;
+  z-index: 3;
+  width: 93mm;
+  height: 80mm;
+  overflow: visible;
+}
+
+.cutout__back { fill: var(--ph-cutout-back); }
+.cutout__back-head { fill: var(--ph-cutout-back-head); }
+.cutout__back-arm { fill: var(--ph-cutout-back-arm); }
+.cutout__front { fill: var(--ph-cutout-front); }
+.cutout__front-head { fill: var(--ph-cutout-front-head); }

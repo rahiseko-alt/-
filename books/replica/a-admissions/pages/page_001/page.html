@@ -1,0 +1,122 @@
+{{!--
+  page_001「出願の流れ」— Phase 5 完コピ検証（見開きの右ページ）
+  参考: references/HAL-nagoya/admissions/page_002.jpg（補正指定 references/HAL-nagoya/admissions/prep/page_002-r.yaml）
+  解析: references/HAL-nagoya/admissions/analysis/page_002.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（白地。写真・生成背景を使わない）
+    Layer 2 STRUCTURE   : 略地図の枠と仮の単純図形、角丸パネル + 黒帯、手順のピル、縦矢印（SVG）、横罫、指さしアイコン（SVG）
+    Layer 3 CONTENT     : 見出し・本文・相談時間・連絡先・手順の説明・注意事項・ノンブル、QR（qr ヘルパー）
+
+  - 文字はすべてダミー（参考と同じ文字数・改行位置）。数字は 0（手順の通し番号 1〜3 だけは構造として残した）。参考資料の文字は書き写していない
+  - 参考で 6.5pt 未満の行（連絡先の 1 行目・地図の注記・注意事項の 2 行目）は 6.5pt にして文字数を減らした（review.md【要確認】）
+  - 略地図は中立のプレースホルダ（道路・建物・目印の単純図形のみ。参考の地図の内容は再現しない）。Phase 8 で company-data の所在地情報から作る
+  - QR は {{qr}} で facts.school.url（現在 TODO）を符号化した仮のもの。Phase 8 で正式な URL に差し替わる
+  - 位置・寸法は .trim 基準の mm（page.css）。色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーの変数に置き換える）
+--}}
+
+{{!-- ===== 上部: 相談案内（Layer 3） ===== --}}
+<h1 class="rep-lead-title">ダミー見出し。ダミー文字列だ。</h1>
+<p class="rep-lead">ダミーテキストダミーテキストダミ、「ダミーテキストダ、ABCをダミーテキスト」ダミーテキスト。<br>ダミー文字、ダミーテキストダ、ダミーテキストダミーテキストダミーテ、ダミーテキストダミーテキス。<br>ダミーテキストダミーテキストダミーテキスト、ダミーテキストダミーテキス。</p>
+
+<h2 class="rep-visit-title">ダミ<span class="rep-visit-title__dot">・</span>ダミ<span class="rep-visit-title__gap"></span>ダミ</h2>
+<p class="rep-hours num">00:00〜00:00（ダミ・ダミ、00/00〜0/0をダミ）</p>
+<p class="rep-online">※ダミーテキストダミーテキストダミー。ダミー文字ABCダミーテキストダミー。</p>
+
+{{!-- 連絡先（参考の校名・住所・電話・URL は使わない。Phase 8 で facts.school の値に置き換える） --}}
+<div class="rep-contact">
+  <p class="rep-contact__org">ダミー文 ダミー文字</p>
+  <p class="rep-contact__office">ABCダミー<span class="rep-contact__dept">ダミー文字</span></p>
+  <p class="rep-contact__addr num">〒000-0000 ダミーテキストダミ0-00-0</p>
+  <p class="rep-contact__tel num">TEL.000-000-0000</p>
+  <p class="rep-contact__url num">abc.xx.xx</p>
+</div>
+
+{{!-- 略地図（Layer 2: 中立の単純図形のプレースホルダ。地名・駅名などの文字は入れない） --}}
+<figure class="rep-map" aria-label="略地図（仮）">
+  <svg class="rep-map__svg" viewBox="0 0 49.2 39.3" aria-hidden="true">
+    <rect class="rep-map__road" x="1.6" y="11.3" width="45.2" height="3.4"/>
+    <rect class="rep-map__road" x="1.6" y="23.5" width="45.2" height="2.9"/>
+    <rect class="rep-map__road" x="5.2" y="3.2" width="3.2" height="30.8"/>
+    <rect class="rep-map__road" x="20.2" y="3.2" width="3.2" height="30.8"/>
+    <rect class="rep-map__block" x="9.6" y="6.4" width="8.6" height="15.8"/>
+    <rect class="rep-map__rail" x="12.6" y="2.6" width="1.4" height="31.6"/>
+    <circle class="rep-map__mark" cx="30.4" cy="18.6" r="2.2"/>
+  </svg>
+  <figcaption class="rep-map__caption">■ダミーテキスト0ダミ。ダミーテキスト。</figcaption>
+</figure>
+
+{{!-- ===== 角丸パネル: 出願の流れ（Layer 2 の枠・黒帯 + Layer 3 の文字） ===== --}}
+<div class="rep-band" aria-hidden="true"></div>
+<div class="rep-panel" aria-hidden="true"></div>
+
+<h2 class="rep-band__title">ABCダミ・<br>ダミーテキストダミ</h2>
+<ul class="rep-band__list">
+  <li class="rep-band__intro">ダミーテキストダミーテキABCダミーテキストダミーテキストダ。</li>
+  <li>●00ダミーテキストダミー</li>
+  <li class="rep-band__long">●ダミーテキストダミー・ダミーテキストダミー・ダミーテ（ダミー文ABC・ダミーテキストダ）ダミーテキ</li>
+  <li>●ダミーテキスト・ABダミーテキストダミーテキスト</li>
+</ul>
+
+{{!-- キャッチ（小さな仮名 + 大きな数字 + 欧文 + 小見出し。字面の位置を個別にそろえる） --}}
+<p class="rep-catch rep-catch__pre">ダミー</p>
+<p class="rep-catch rep-catch__num num">0</p>
+<p class="rep-catch rep-catch__en">ABCD!</p>
+<h3 class="rep-catch rep-catch__sub">ABCダミー文字</h3>
+
+{{!-- 手順の列: ピル + 縦矢印（Layer 2）と番号（Layer 3） --}}
+<p class="rep-step rep-step--1"><span>ABCD</span>1</p>
+<p class="rep-step rep-step--2"><span>ABCD</span>2</p>
+<p class="rep-step rep-step--3"><span>ABCD</span>3</p>
+<p class="rep-step rep-step--done">ダミー文</p>
+<svg class="rep-arrow rep-arrow--1" viewBox="0 0 5.7 19.1" preserveAspectRatio="none" aria-hidden="true"><path d="M1.95 0H3.75V15.2H5.7L2.85 19.1L0 15.2H1.95Z"/></svg>
+<svg class="rep-arrow rep-arrow--2" viewBox="0 0 5.7 12.6" preserveAspectRatio="none" aria-hidden="true"><path d="M1.95 0H3.75V8.7H5.7L2.85 12.6L0 8.7H1.95Z"/></svg>
+<svg class="rep-arrow rep-arrow--3" viewBox="0 0 5.7 18.9" preserveAspectRatio="none" aria-hidden="true"><path d="M1.95 0H3.75V15H5.7L2.85 18.9L0 15H1.95Z"/></svg>
+
+{{!-- 内容の列: 段階ごとの横罫（Layer 2） --}}
+<hr class="rep-rule rep-rule--1">
+<hr class="rep-rule rep-rule--2">
+<hr class="rep-rule rep-rule--3">
+<hr class="rep-rule rep-rule--4">
+
+{{!-- 段階 1 --}}
+<h3 class="rep-h3 rep-h3--1">ダミーテキスト・ABダミーのABCダミーテキストダ</h3>
+<p class="rep-s1-user"><b>ダミー文字</b><span>ダミーテキストダミー、「ダミーテキス」ダミーテキストダミーテ。</span></p>
+<p class="rep-s1-entry">ダミ・ダミーテキストダミー</p>
+<ul class="rep-s1-list">
+  <li>・ダミー文</li>
+  <li>・ダミー語</li>
+  <li>・ダミーテキストダミ</li>
+</ul>
+<p class="rep-s1-qrlabel">ABCダミーテキストダミーテ</p>
+<svg class="rep-hand" viewBox="0 0 6.1 3" aria-hidden="true"><path d="M0.25 0.45H1.1V2.85H0.25Z"/><path d="M1.1 0.6L2.2 0.6L2.6 0.4L5.6 0.4A0.33 0.33 0 0 1 5.6 1.06L3.95 1.06A0.27 0.27 0 0 1 3.95 1.6A0.27 0.27 0 0 1 3.9 2.15A0.27 0.27 0 0 1 3.75 2.7L1.1 2.7Z"/><path d="M3.25 1.06H3.95M3.25 1.6H3.95M3.25 2.15H3.9"/></svg>
+<div class="rep-qr">{{qr facts.school.url size=16.85}}</div>
+
+{{!-- 段階 2 --}}
+<h3 class="rep-h3 rep-h3--2">ダミー文字／ABダミーテキストダミー文</h3>
+<p class="rep-s2-side">ダミーテキストダミーテキスト、<br>ダミーテキストダミーテキ。</p>
+<ul class="rep-s2-list">
+  <li>①ダミーテキストダ</li>
+  <li>②ダミーテキストダミー</li>
+  <li>③ダミー文（ダミー文ABC／ダミーテキストダ）ダミーテキストダ。</li>
+</ul>
+
+{{!-- 段階 3 --}}
+<h3 class="rep-h3 rep-h3--3">ABダミーテキストダミー、ダミーテキストダミーテキストダ</h3>
+<p class="rep-s3-sub">ダミーテキストダミーテキストダ。</p>
+<h3 class="rep-h3 rep-h3--4">ダミー文・ダミー・ダミーテキストダ、ダミーテキスト</h3>
+<p class="rep-s3-paren">（ダミーテキストダミーテキストダミー）</p>
+<p class="rep-s3-item">●ダミーテキストダミーテキ、ダ0ダミーテキ、ダミーテキストダミーテキ、ダミーテキストダミーテキストダミ</p>
+<p class="rep-s3-item2">ダミーテキストダミーテキ。</p>
+<p class="rep-s3-ref">※ダミーテキストダ、ダミーテキストダミーテキストダ。</p>
+
+{{!-- 完了 --}}
+<p class="rep-done">ダミーテキストダミーテ、ダミー文字、ダミーテキストダミーテキス</p>
+
+{{!-- 注意事項（パネル下部。全幅の横罫の下） --}}
+<hr class="rep-rule rep-rule--note">
+<p class="rep-note-label">【ダミー文】</p>
+<p class="rep-note"><span class="rep-note__wide">※ABCダミー、ダミーテキストダミーテキストダミーテキス。※ダミーテキストダミーテキストダミーテキストダミーテキストダミーテ。</span><br>※ダミーテキストダミーテキスト、ダミーテキストダミーテキ。※ダミーテキストダミーテキストダミーテキストダミーテキス、ダミーテキストダミーテキスト。</p>
+
+{{!-- ノンブル（番号だけ。小口側の下。安全領域の内側） --}}
+<p class="rep-folio">{{page.number}}</p>

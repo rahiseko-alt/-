@@ -1,0 +1,204 @@
+{{!--
+  page_001「生活ガイド カード構成（完コピ検証）」— Phase 5 完コピ検証
+
+  参考（レイアウト）: references/nagoya-iryo-hisho-it/guide-living/prep/page_002-r.yaml（見開きの右ページを補正したもの）
+  解析: references/nagoya-iryo-hisho-it/guide-living/analysis/page_002.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、写真 5 点とアプリの画面はすべて photo-frame のプレースホルダ。地・帯・カードは単色なので Layer 2）
+    Layer 2 STRUCTURE   : 上部の薄グレーの帯、統計のラベル（白地・黒枠のピル＋下向きの三角）・点線の縦罫、
+                          特徴カード 2 枚（book/feature-card: 白地・細枠・写真枠・book/speech-tag の吹き出しタグ）、付帯パネル（薄グレー＋チャコールのピル見出し）、
+                          設備アイコンの格子（青い角丸＋白の線画 SVG）、ピル、赤いバッジ、写真の上の帯・無線 LAN のバッジ、
+                          下段 2 段のカード（book/tab-card: 薄グレーの地＋英字タブ）、白いパネル、スマートフォンの枠、黄色の円、線画アイコン（汎用の SVG）
+    Layer 3 CONTENT     : すべてダミーテキスト（参考資料の文字・数値・アプリ名・サービス名・電話番号は書き写さない。数字は 0）。
+                          QR は {{qr}} で company-data の URL（現在 TODO）から生成。ノンブルは page.number
+
+  座標は .trim 基準の mm（実測値。page.css に集約）。色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーへ置き換える）
+--}}
+
+{{!-- 線画アイコンの定義（汎用の形。viewBox 0 0 10 10、白の線で描く。参考のアイコンをなぞったものではない） --}}
+<svg class="icon-defs" width="0" height="0" aria-hidden="true">
+  <defs>
+    <symbol id="bl-ic-wifi" viewBox="0 0 10 10"><path d="M1.4 4.6 A5.2 5.2 0 0 1 8.6 4.6 M2.9 6.1 A3.1 3.1 0 0 1 7.1 6.1 M4.3 7.5 A1.1 1.1 0 0 1 5.7 7.5"/><circle cx="5" cy="8.6" r="0.55" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="bl-ic-chair" viewBox="0 0 10 10"><rect x="3.4" y="1" width="3.2" height="3.6" rx="1"/><path d="M2.4 5.6 H7.6 M5 5.6 V7.6 M3 9 L5 7.6 L7 9 M2.4 4.6 V5.6 M7.6 4.6 V5.6"/></symbol>
+    <symbol id="bl-ic-desk" viewBox="0 0 10 10"><path d="M1 3 H9 M1.8 3 V8.6 M8.2 3 V8.6"/><rect x="5" y="3" width="3.2" height="2.2"/></symbol>
+    <symbol id="bl-ic-curtain" viewBox="0 0 10 10"><path d="M1 1.4 H9 M1.6 1.4 Q3.6 5 2 8.6 H4.2 Q4.2 5 4.6 1.4 M8.4 1.4 Q6.4 5 8 8.6 H5.8 Q5.8 5 5.4 1.4"/></symbol>
+    <symbol id="bl-ic-aircon" viewBox="0 0 10 10"><rect x="1" y="2.2" width="8" height="3.4" rx="0.6"/><path d="M2 4.6 H8 M3 7 L2.5 8.8 M5 7 V8.8 M7 7 L7.5 8.8"/></symbol>
+    <symbol id="bl-ic-lamp" viewBox="0 0 10 10"><path d="M5 0.8 V3 M2.4 6.2 Q5 2.2 7.6 6.2 Z"/><circle cx="5" cy="7.6" r="0.9"/></symbol>
+    <symbol id="bl-ic-shelf" viewBox="0 0 10 10"><rect x="1.6" y="2" width="1.7" height="6.6"/><rect x="3.8" y="2" width="1.7" height="6.6"/><path d="M6.2 2.6 L7.8 2.3 L8.8 8.3 L7.2 8.6 Z M1 8.9 H9"/></symbol>
+    <symbol id="bl-ic-closet" viewBox="0 0 10 10"><rect x="2.4" y="1" width="5.2" height="8" rx="0.3"/><path d="M5 1 V9 M4.2 4.6 V5.6 M5.8 4.6 V5.6"/></symbol>
+    <symbol id="bl-ic-bed" viewBox="0 0 10 10"><path d="M1 2.6 V8.8 M1 6.2 H9 V8.8 M1 7.6 H9"/><rect x="1.8" y="4.2" width="2.2" height="1.4" rx="0.4"/><path d="M4.6 6.2 V5 H9 V6.2"/></symbol>
+    <symbol id="bl-ic-plate" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.1"/><circle cx="5" cy="5" r="1.9"/><path d="M0.9 1.8 V8.2 M9.1 1.8 V8.2 M0.4 1.8 V3.4 Q0.9 4.2 1.4 3.4 V1.8"/></symbol>
+    <symbol id="bl-ic-pot" viewBox="0 0 10 10"><rect x="2" y="4.2" width="6" height="4.4" rx="1"/><path d="M1.4 4.2 H8.6 M3.4 4.2 Q5 2.4 6.6 4.2 M5 2.4 V1.8 M2 5.6 H1 M8 5.6 H9"/></symbol>
+    <symbol id="bl-ic-bath" viewBox="0 0 10 10"><path d="M1 5.4 H9 V6.6 Q9 8.6 7 8.6 H3 Q1 8.6 1 6.6 Z M3 1.2 Q2.4 2 3 2.8 Q3.6 3.6 3 4.2 M5 1.2 Q4.4 2 5 2.8 Q5.6 3.6 5 4.2 M7 1.2 Q6.4 2 7 2.8 Q7.6 3.6 7 4.2"/></symbol>
+    <symbol id="bl-ic-shower" viewBox="0 0 10 10"><path d="M2 9 V2.2 Q2 1 3.2 1 H4.6 V2.4 M3.2 2.4 H6 L5.4 4 H3.8 Z M3.8 5.2 L3.4 6.6 M4.6 5.2 V6.8 M5.4 5.2 L5.8 6.6 M4 7.6 L3.6 8.8 M5.2 7.6 L5.6 8.8"/></symbol>
+    <symbol id="bl-ic-washer" viewBox="0 0 10 10"><rect x="2" y="1.2" width="6" height="7.6" rx="0.8"/><circle cx="5" cy="5.6" r="1.9"/><path d="M3 2.6 H5"/></symbol>
+    <symbol id="bl-ic-study" viewBox="0 0 10 10"><rect x="1.8" y="1.6" width="5" height="7.2" rx="0.4"/><path d="M3 3.4 H5.6 M3 5 H4.6 M5.4 8 L8.6 2.6 L9.2 3 L6 8.4 L5.2 8.6 Z"/></symbol>
+  </defs>
+</svg>
+
+{{!-- Layer 2: 上部の薄グレーの帯（統計ブロックの地。上・左・右は塗り足しまで） --}}
+<div class="top-band bleed-top bleed-left bleed-right" aria-hidden="true"></div>
+
+{{!-- ===== 統計ブロック（左: アイコン＋見出し＋説明 / 点線の縦罫 / 右: ラベル＋大きな数字 3 列） ===== --}}
+
+{{!-- Layer 2: 星と親指の線画アイコン（汎用の形） --}}
+<svg class="stat-icon" viewBox="0 0 13 10" aria-hidden="true">
+  <g class="stat-icon__stars">
+    <path transform="translate(1.6 5.6)" d="M0 -0.9 L0.26 -0.28 L0.86 -0.28 L0.38 0.12 L0.55 0.72 L0 0.36 L-0.55 0.72 L-0.38 0.12 L-0.86 -0.28 L-0.26 -0.28 Z"/>
+    <path transform="translate(3.3 2.7)" d="M0 -0.9 L0.26 -0.28 L0.86 -0.28 L0.38 0.12 L0.55 0.72 L0 0.36 L-0.55 0.72 L-0.38 0.12 L-0.86 -0.28 L-0.26 -0.28 Z"/>
+    <path transform="translate(6.3 1.6)" d="M0 -0.9 L0.26 -0.28 L0.86 -0.28 L0.38 0.12 L0.55 0.72 L0 0.36 L-0.55 0.72 L-0.38 0.12 L-0.86 -0.28 L-0.26 -0.28 Z"/>
+    <path transform="translate(9.6 2.7)" d="M0 -0.9 L0.26 -0.28 L0.86 -0.28 L0.38 0.12 L0.55 0.72 L0 0.36 L-0.55 0.72 L-0.38 0.12 L-0.86 -0.28 L-0.26 -0.28 Z"/>
+    <path transform="translate(11.4 5.6)" d="M0 -0.9 L0.26 -0.28 L0.86 -0.28 L0.38 0.12 L0.55 0.72 L0 0.36 L-0.55 0.72 L-0.38 0.12 L-0.86 -0.28 L-0.26 -0.28 Z"/>
+  </g>
+  <path class="stat-icon__thumb" d="M3.4 6 H5 V9.6 H3.4 Z M5 6.2 L6.6 4.4 Q6.9 3.6 7.4 4 Q7.8 4.4 7.5 5.2 L7.2 6 H8.9 Q9.5 6 9.4 6.7 L9 9 Q8.9 9.6 8.3 9.6 H5"/>
+</svg>
+
+{{!-- Layer 3: 見出し・説明・注記 --}}
+<h2 class="stat-title">ダミー項目</h2>
+<p class="stat-copy">ダミーテキストダミーテキストダミーテキ<br>ストダミーテキスト、ダミーテキストダミ<br>ーテキストダミー・ダミーテキスト。ダミ<br>ーテキストダミーテキストダミーテキス<br>トがダミーです。</p>
+<p class="stat-note">※ダミーテキストダミーテキストダミー</p>
+
+{{!-- Layer 2: 点線の縦罫 --}}
+<div class="stat-rule" aria-hidden="true"></div>
+
+{{!-- Layer 2 + 3: ラベル（白地・黒枠のピル＋下向きの三角）と大きな数字（数値はダミーの 0） --}}
+<div class="stat-label stat-label--1">ダミー項目</div>
+<div class="stat-label stat-label--2">ダミ</div>
+<div class="stat-label stat-label--3">ダミー項目</div>
+<p class="stat-num stat-num--1"><span class="stat-num__int">00</span><span class="stat-num__dec">.0%</span></p>
+<p class="stat-num stat-num--2"><span class="stat-num__int">00</span><span class="stat-num__dec">.0%</span></p>
+<p class="stat-num stat-num--3"><span class="stat-num__int">00</span><span class="stat-num__dec">.0%</span></p>
+<p class="stat-source">※0000年度 ダミーより</p>
+
+{{!-- ===== 特徴カード A（写真（左）＋見出し・本文・設備アイコンのパネル（右）） ===== --}}
+{{#> book/feature-card mod="a" tag="ダミー項目" ratio="81.6 / 62.6"}}
+  {{!-- Layer 2 + 3: 写真の上の無線 LAN のバッジ（黒い角丸＋白の線画＋白抜きの英字） --}}
+  <div class="wifi-badge">
+    <svg class="wifi-badge__icon" viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-wifi"/></svg>
+    <span class="wifi-badge__text">Ab-Cd</span>
+  </div>
+  {{!-- Layer 2 + 3: 写真の下端の半透明の帯（注記 2 行＋電話のアイコンと番号。番号はダミー） --}}
+  <div class="photo-strip" aria-hidden="true"></div>
+  <p class="photo-strip__text">ダミーテキストダミーテキストダミー。<br>ダミーテキストダミーテキスト。</p>
+  <svg class="photo-strip__icon" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.4"/><path d="M3.3 2.8 Q2.6 3.4 3.2 4.8 Q4.1 6.6 5.6 7.1 Q6.7 7.5 7.2 6.8 L6.4 5.9 L5.6 6.3 Q4.4 5.6 4 4.6 L4.5 3.9 Z"/></svg>
+  <p class="photo-strip__tel">0000-00-0000</p>
+
+  {{!-- Layer 3: 見出し（2 行）と本文（2 行） --}}
+  <h2 class="fcard__title">ダミー見出しのダミーテキスト<br>ダミー・ダミー見出</h2>
+  <p class="fcard__text">ダミーテキストダミーテキストダミーテキストダミーテキ。ダミー、<br>ダミーテキストダミーテキストダミーテキストダミーテ。</p>
+
+  {{!-- Layer 2 + 3: 付帯パネル（薄グレー＋チャコールのピル見出し 2 本＋青い角丸のアイコンの格子 3×3 / 3×2） --}}
+  <div class="fpanel fpanel--a">
+    <p class="pill-head pill-head--a1"><span class="pill-head__dot">●</span>ダミーテキストダミー</p>
+    <p class="pill-head pill-head--a2"><span class="pill-head__dot">●</span>ダミー・ダミーテキス</p>
+    <div class="fpanel__divider" aria-hidden="true"></div>
+    <ul class="tiles tiles--l">
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-wifi"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-chair"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-desk"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-curtain"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-aircon"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-lamp"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-shelf"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-closet"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-bed"/></svg><span>ダミー</span></li>
+    </ul>
+    <ul class="tiles tiles--r">
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-plate"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-pot"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-bath"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-shower"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-washer"/></svg><span>ダミー</span></li>
+      <li class="tile"><svg viewBox="0 0 10 10" aria-hidden="true"><use href="#bl-ic-study"/></svg><span>ダミー</span></li>
+    </ul>
+    <p class="fpanel__note">※ダミーテキスト。</p>
+  </div>
+{{/book/feature-card}}
+
+{{!-- ===== 特徴カード B（写真（左）＋見出し・本文・ピルのパネル（右）、右上に赤いバッジ） ===== --}}
+{{#> book/feature-card mod="b" tag="ダミー項目" ratio="81.6 / 46.6"}}
+  <h2 class="fcard__title">ダミー見出し！ダミー<br>見出しダミーテキス</h2>
+  <p class="fcard__text">ダミーテキスト・ダミーテキストダミーテキスト。ダミーテキストダミ<br>ダミーテキストダミーテキストダミーテキストです。</p>
+
+  {{!-- Layer 2 + 3: 付帯パネル（チャコールのピル見出し＋ピンク・青のピル） --}}
+  <div class="fpanel fpanel--b">
+    <p class="pill-head pill-head--b"><span class="pill-head__dot">●</span>ダミーテキストダミー</p>
+    <p class="pill pill--pink pill--b1">ダミー語</p>
+    <p class="pill pill--blue pill--b2">ダミーテキスト</p>
+    <p class="pill pill--blue pill--b3">ダミーテキス</p>
+    <p class="pill pill--pink pill--b4">ダミーテキストダミーテキストダミーテキス</p>
+  </div>
+
+  {{!-- Layer 2 + 3: 赤いバッジ（カードの右上の角をまたぐ。白の線画＋白抜きの見出しと 2 行の文） --}}
+  <div class="red-badge">
+    <svg class="red-badge__icon" viewBox="0 0 10 8" aria-hidden="true"><rect x="0.4" y="1.8" width="9.2" height="5.8" rx="0.5"/><path class="red-badge__handle" d="M3.4 1.8 V0.9 Q3.4 0.4 3.9 0.4 H6.1 Q6.6 0.4 6.6 0.9 V1.8"/><path class="red-badge__band" d="M2.4 1.8 V7.6 M7.6 1.8 V7.6"/></svg>
+    <p class="red-badge__title">ダミー項目</p>
+    <p class="red-badge__text">ダミーテキストダ、<br>ダミーテキストダミーです</p>
+  </div>
+{{/book/feature-card}}
+
+{{!-- ===== 下段 左: 英字タブ付きのカード（見出し・本文を中央揃え → 横長の写真 → 写真＋白いパネル（文・再生アイコン・QR）） ===== --}}
+{{#> book/tab-card mod="l" tab="DUMMYCAPTIONS"}}
+  <h2 class="tcard__title tcard__title--l">ダミー見出しとダミーのテキスト</h2>
+  <p class="tcard__text tcard__text--l">ダミーテキストダミーテキストダミーテキストを<br>ダミー・ダミーテキスト、ダミーテキストダ。</p>
+  <div class="tphoto tphoto--wide">{{> photo-frame ratio="78.1 / 27.3"}}<span class="tphoto__label">ダミーテキ</span></div>
+  <div class="tphoto tphoto--small">{{> photo-frame ratio="37.1 / 24.2"}}<span class="tphoto__label">ダミー</span></div>
+  <div class="video-box">
+    <p class="video-box__text">ダミーテキストダミーテキス<br>ABCDEFGにてダミー！</p>
+    <svg class="video-box__play" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.6"/><path d="M4 3.1 L7.1 5 L4 6.9 Z"/></svg>
+    <div class="video-box__qr">{{qr facts.school.url size=15.6}}</div>
+  </div>
+{{/book/tab-card}}
+
+{{!-- ===== 下段 右: 英字タブ付きのカード（見出し・サブ → アプリの名前と QR → スマートフォンの枠＋灰色のピル 2 本＋白いパネル） ===== --}}
+{{#> book/tab-card mod="r" tab="DUMMIES"}}
+  <h2 class="tcard__title tcard__title--r">ダミー見出しダミー見出し</h2>
+  <p class="tcard__sub">ダミーテキストダミーテキストダミーテキスト！</p>
+
+  {{!-- Layer 2 + 3: QR の案内（左右の斜線＋2 行）と QR（company-data の URL から生成。現在は TODO） --}}
+  <svg class="qr-guide__slashes" viewBox="62 3 22 7" aria-hidden="true"><path d="M62.85 3.6 L65.95 9.4 M83.05 3.9 L80.05 9.4"/></svg>
+  <p class="qr-guide__text">ダミーテキスト<br>ダミーテキ</p>
+  <div class="app-qr">{{qr facts.school.url size=16}}</div>
+
+  {{!-- Layer 3: アプリの名前（ダミー）。ロゴは素材待ち（灰色の破線の枠） --}}
+  <p class="app-kicker">ダミーテキスト</p>
+  <div class="app-logo" aria-hidden="true"></div>
+  <p class="app-name"><span class="app-name__ruby">ダミー</span>Sample</p>
+
+  {{!-- Layer 2: スマートフォンの枠（下端は切れる）。画面はアプリの画面の素材待ち --}}
+  <div class="phone">
+    <span class="phone__camera" aria-hidden="true"></span>
+    <span class="phone__speaker" aria-hidden="true"></span>
+    <div class="phone__screen">{{> photo-frame ratio="23.5 / 38.4"}}</div>
+  </div>
+
+  {{!-- Layer 2 + 3: 灰色のピル 2 本 --}}
+  <p class="grey-pill grey-pill--1">ダミーテキストダミーテキスト・ダミー！</p>
+  <p class="grey-pill grey-pill--2">ダミーのテキストダミーテキスト！</p>
+
+  {{!-- Layer 2 + 3: 白いパネル（見出し＋7 項目のリスト＋黄色の円の線画アイコン） --}}
+  <div class="app-panel">
+    <p class="app-panel__title">Sampleダミーダミ</p>
+    <ul class="app-panel__list">
+      <li>ダミー項目</li>
+      <li>ダミー、ダミーの表示</li>
+      <li>ダミーテキストダミー</li>
+      <li>ダミーテキストダ</li>
+      <li>ダミーテキス</li>
+      <li>ダミーテキストダミー</li>
+      <li>ダミーのテキスト</li>
+    </ul>
+    <svg class="app-panel__circle" viewBox="0 0 20 20" aria-hidden="true">
+      <circle class="app-panel__disc" cx="10" cy="10" r="9.4"/>
+      <g class="app-panel__art">
+        <rect x="5.4" y="4" width="6.6" height="11" rx="1" transform="rotate(-8 8.7 9.5)"/>
+        <path d="M10.6 14.6 L10.2 9.8 Q10.2 9 10.9 9 Q11.6 9 11.6 9.8 L11.8 12 Q12.6 11.6 13.2 12 Q14 11.8 14.4 12.4 Q15.2 12.3 15.4 13 L15.3 15 Q15 16.4 13.6 16.6 H12 Q11 16.4 10.6 14.6 Z M9.6 7.6 L9 6.8 M11.2 7.2 L11.4 6.3 M12.3 8.1 L13 7.5"/>
+      </g>
+    </svg>
+  </div>
+  <p class="tcard__note">※ダミーテキストです。ダミーテキスト</p>
+{{/book/tab-card}}
+
+{{!-- Layer 3: ノンブル（小口側の下。極小のグレー → 最小 6.5pt） --}}
+<p class="folio-num">{{page.number}}</p>

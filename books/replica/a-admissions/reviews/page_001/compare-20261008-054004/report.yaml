@@ -1,0 +1,14 @@
+# npm run compare の結果（diff.png / side-by-side.png / overlay.png と同じディレクトリ）
+# mismatch_ratio は推移の参考値。合否は画像を目視して決める（system/rules/review.md）
+book: replica/a-admissions
+page: page_001
+reference: references/HAL-nagoya/admissions/prep/page_002-r.yaml
+rendered: books/replica/a-admissions/output/png/page_001.png
+width: 1241
+height: 1241
+mismatch_pixels: 257331
+mismatch_ratio: 0.167089
+threshold: 0.1
+crop_bleed: true
+dpi: 150.05
+created: 2026-10-08T05:40:04+00:00

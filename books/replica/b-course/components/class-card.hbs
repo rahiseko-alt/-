@@ -1,0 +1,21 @@
+{{!--
+  class-card: 授業カード（上に写真、下に淡色の面＋見出し・小見出し・本文）— Phase 5 完コピ検証で作った BOOK 固有の部品
+  呼び出し: {{> book/class-card title="..." sub="..." body="..." span=2}}
+  パラメータ:
+    title : 必須。授業名（中央揃え）
+    body  : 必須。本文（両端揃え。カードの幅で折り返す）
+    sub   : 任意。小見出し（学科色・中央揃え）
+    span  : 任意。グリッドの段数（既定 2。片ページ 6 段のうち 2 段 = 59.5mm、4 段 = 122.9mm）
+    photo : 任意。company-data/photos の写真 ID（省略時は写真待ちのプレースホルダ）
+  - 並べる行（.class-row）が 6 段のグリッドと、写真の高さ（--photo-h）・カードの高さを決める。カードの枚数と幅は呼び出し側で変えられる
+  - Layer 1: 写真（photo-frame）／ Layer 2: 写真の上辺の角丸・淡色のグラデーション面 ／ Layer 3: 見出し・小見出し・本文
+  - スタイルは pages/page_001/page.css の .class-row / .class-card（色は --rep-*）
+--}}
+<article class="class-card"{{#if span}} style="--span: {{span}}"{{/if}}>
+  <div class="class-card__photo">{{#if photo}}{{> photo-frame id=photo}}{{else}}{{> photo-frame}}{{/if}}</div>
+  <div class="class-card__body">
+    <h3 class="class-card__title">{{title}}</h3>
+    {{#if sub}}<p class="class-card__sub">{{sub}}</p>{{/if}}
+    <p class="class-card__text">{{body}}</p>
+  </div>
+</article>
