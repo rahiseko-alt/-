@@ -347,6 +347,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 | `new:page` | `--book <id>` `[--after <pageId>]` `[--type other]` `[--title "..."]` | 空いている次の `page_NNN` を作り、`book.yaml` の `pages` に挿入（コメント保持） |
 | `ref:ingest` | `--source <name>` `--kind <kind>` `(--pdf <file> \| --images <dir>)` `[--dpi 150]` `[--format jpg\|png]`（既定 jpg） | PDF を `original/` にコピーし `pdftoppm` で `page_NNN.jpg`（`--format png` で `.png`）、または画像を `page_NNN.<ext>` に正規化。`source.yaml` と `analysis/book.yaml` がなければ雛形から作成。次の手順（forbidden_terms の記入）を表示 |
 | `ref:prep` | `(--spec <path> ... \| --all)` | `references/<source>/<kind>/prep/<name>.yaml`（`image`・`rotate`（時計回り 0/90/180/270）・`corners`（正立後の 左上・右上・右下・左下、比率）・`aspect`（幅/高さ）・`height_px`）に従い、ページ画像を回転→射影変換（双線形補間）して `.cache/ref-prep/<source>/<kind>/prep/<name>.png` に出力。`compare` の参照（`--reference` / `layout_reference`）に指定ファイルを書くと自動で実行 |
+| `gen:inputs` | `(--book <id> ... \| --all)` | `books/<id>/backgrounds/layer1-orders.yaml`（Layer 1 の生成指示）を読み、補正後の参考ページ（`reference_prep`。なければ `reference_image`）から各素材の `crop_mm`（仕上がり線基準の mm）を切り出して `.cache/gen-inputs/<id>/<素材 id>.png` に出力（ページ外は白）。素材ごとに必要な画素数（BOOK の `png_dpi` と 350dpi）・人物の有無・生成済みかを表示 |
 | `doctor` | `[--quiet]` | Node 22 以上、Chromium の起動、@fontsource、Noto での日本語描画、sharp、git-lfs、poppler（`pdfinfo` / `pdftoppm`。テストと PDF 取り込みに必要なので致命的）を確認。致命的な問題で終了コード 1 |
 | `setup` | `[--quiet]` | `system/scripts/setup.sh`: Git LFS（install --local / pull）、必要時のみ `npm ci`、Chromium の確認とインストール、`pdfinfo` / `pdftoppm` がなければ `apt-get install poppler-utils`（root かパスワードなし sudo のとき）、`npm run doctor`。冪等 |
 | `dev` | （環境変数 `STUDIO_ROOT=<dir>` `PORT=<番号>`） | Vite プレビュー（既定: リポジトリルート・ポート 5173）。`--root` は使えない |
@@ -363,6 +364,8 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 | 5 | 事実の直書き: company-data の文字列（4 文字以上、TODO 以外）が `books/**/page.html` やパーシャルにそのまま書かれている | 警告（`{{facts...}}` を使う） |
 | 6 | 禁止語: いずれかの `source.yaml` の `forbidden_terms` が `books/**`・`company-data/**`・`shared/**` のテキストファイルに出現 | エラー |
 | 7 | `backgrounds/*.{png,jpg,jpeg,webp}` に同じベース名の `.prompt.yaml` がない | 警告 |
+| 7 | `backgrounds/layer1-orders.yaml` の形式・`book` の不一致・参照先の欠落 | エラー |
+| 7 | `backgrounds/layer1-orders.yaml` の素材のうち、同じベース名の画像がまだないもの（全件そろって `status: pending` のままなら generated を促す） | 警告 |
 
 実際のリポジトリ（company-data がプレースホルダ、books が空）で終了コード 0 になることが前提です。
 

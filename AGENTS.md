@@ -62,7 +62,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 │  ├─ rules/                 制作ルール（まず 00-principles.md）
 │  ├─ prompts/               作業用プロンプト（解析・背景生成・完コピ・変換・レビュー・日常編集）
 │  ├─ templates/             new:book / new:page / ref:ingest が使う雛形、review.md、background.prompt.yaml
-│  ├─ scripts/               CLI（render / compare / validate / new-book / new-page / ingest-reference / ref-prep / doctor / setup.sh）
+│  ├─ scripts/               CLI（render / compare / validate / new-book / new-page / ingest-reference / ref-prep / gen-inputs / doctor / setup.sh）
 │  ├─ design-engine/         ページ合成・スキーマ・テンプレート（Handlebars）・Vite プレビュー
 │  ├─ devcontainer/          Dockerfile と環境の説明
 │  └─ fixtures/studio/       テスト用のミニスタジオ（架空の「サンプル学園」）
@@ -90,6 +90,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | `npm run new:page -- --book <id> [--after <pageId>] [--type other] [--title "..."]` | ページを追加 |
 | `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150] [--format jpg\|png]` | 参考資料を取り込み（PDF のページ画像は既定 JPEG） |
 | `npm run ref:prep -- (--spec <references/.../prep/<name>.yaml> \| --all)` | 写真・スキャンの参考ページを比較用に正立・単ページ・台形補正（`.cache/ref-prep/` に出力。`compare` の参照に指定ファイルを書けば自動で行う） |
+| `npm run gen:inputs -- (--book <id> ... \| --all)` | Layer 1 の生成指示（`backgrounds/layer1-orders.yaml`）から、生成モデルへ入力する参考ページの切り出し（`.cache/gen-inputs/`）と必要な画素数の一覧を作る |
 | `npm run render -- --book <id> [--page <id> ...] [--format png\|pdf\|both] [--dpi N] [--guides] [--release] [--out <dir>]` | PNG / PDF 出力 |
 | `npm run compare -- --book <id> --page <id> [--reference <path>] [--rendered <png>] [--threshold 0.1]` | 参考ページとの比較（diff / side-by-side / overlay / report.yaml） |
 | `npm run validate [-- --strict]` | データ・BOOK・参考資料・テンプレートの検証、直書き・禁止語・生成記録の確認 |
@@ -165,6 +166,7 @@ docs/concept.md §14 の最重要原則（詳細と具体的な行動: system/ru
 | BOOK が使う参考資料 | `books/<id>/references.yaml` | パスで指定（コピーしない） |
 | ページの構造と文字 | `books/<id>/pages/<pageId>/page.html`（+ `page.css`、`page.yaml`） | |
 | ページの背景（生成） | `books/<id>/backgrounds/<pageId>.png` + `<pageId>.prompt.yaml` | |
+| Layer 1 の生成指示（生成前） | `books/<id>/backgrounds/layer1-orders.yaml` | 素材ごとの大きさ・切り出し範囲・プロンプト。生成画像は `<素材 id>.png` + `.prompt.yaml`。未生成は `validate` が警告 |
 | BOOK 固有の部品 | `books/<id>/components/*.hbs` | `{{> book/<名前>}}` |
 | 共通の部品・CSS | `shared/components/*.hbs`、`shared/layouts/*.css` | |
 | 再利用する生成ビジュアル | `shared/generated-assets/` + `.prompt.yaml` | |

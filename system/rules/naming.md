@@ -45,6 +45,7 @@ ID とパスは、スクリプト・テンプレート・レビュー記録か�
 | `books/<id>/pages/<pageId>/page.yaml` `page.html` `page.css` | ページ（`page.css` は任意） |
 | `books/<id>/backgrounds/<pageId>.png` | ページの全面背景。同じページに複数: `<pageId>-<用途>.png`（例: `page_001-alt.png`） |
 | `books/<id>/backgrounds/<name>.prompt.yaml` | 画像と同じベース名の生成記録（`page_001.png` ↔ `page_001.prompt.yaml`） |
+| `books/<id>/backgrounds/layer1-orders.yaml` | Layer 1 の生成指示。素材 id は `<pageId>-<用途>`（例: `page_001-hero`）で、生成画像のベース名になる（`page_001-hero.png` + `page_001-hero.prompt.yaml`） |
 | `books/<id>/components/<name>.hbs` | BOOK 固有のパーシャル。`{{> book/<name>}}` で呼ぶ |
 | `books/<id>/reviews/<pageId>/review.md` | ページのレビュー記録 |
 | `books/<id>/reviews/<pageId>/compare-<YYYYMMDD-HHmmss>/` | 比較の出力（`npm run compare`） |

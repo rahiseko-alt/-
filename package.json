@@ -16,6 +16,7 @@
     "new:page": "tsx system/scripts/new-page.ts",
     "ref:ingest": "tsx system/scripts/ingest-reference.ts",
     "ref:prep": "tsx system/scripts/ref-prep.ts",
+    "gen:inputs": "tsx system/scripts/gen-inputs.ts",
     "doctor": "tsx system/scripts/doctor.ts",
     "setup": "bash system/scripts/setup.sh",
     "typecheck": "tsc -p tsconfig.json",
