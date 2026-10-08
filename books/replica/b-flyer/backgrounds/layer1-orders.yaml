@@ -10,7 +10,7 @@
 #   必要な画素数は同じコマンドの一覧（印刷相当は 350dpi の値）。写真・人物は長辺 1024px 以上で生成して縮小する
 # - 写真のコラージュは隙間なしの格子（行の境界 47.5 / 93.2mm、左列 〜59.2mm（下段 〜60.7mm）、右列 150.5mm〜（下段 151mm〜））。
 #   各写真は枠いっぱいの 1 枚の写真として生成する（枠線・余白・角丸・周辺減光なし）。写真の上にはイベント名（白い字＋ローズのフチ。Layer 3）が重なる
-# - 人物を含む素材（people: true）は【要確認: 生成人物の使用可否の方針】。架空の人物にし、参考の人物の顔・髪型を写さない（構図参照は配置とポーズだけ）。
+# - 人物を含む素材（people: true）は（生成人物は使用可。2026-10-08 決定）。架空の人物にし、参考の人物の顔・髪型を写さない（構図参照は配置とポーズだけ）。
 #   Phase 8（自社版）では写真・人物は company-data/photos の自社写真に差し替える（生成画像を本校の写真として使わない）
 # - 対象外にしたもの（生成指示に入れない）:
 #   - 予約の案内の右の指さし（4.4×2.2mm）: 絵文字大の単純なアイコン。Layer 2（SVG の手の形）で描く（system/rules/image-generation.md「単純なアイコンは入れない」）
@@ -46,7 +46,7 @@ items:
       Style: candid documentary campus snapshot, 35mm lens, eye level, f/2.8, gentle softness, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, poster, clock, screen text, name tag, border, frame, vignette, collage seams, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
     summary: "左上の写真: 机で書き物をする女子学生と、資料を持って説明する女性の先生（明るい教室）"
-    notes: "人物 2 名（【要確認】生成人物）。参考の人物の顔に似せない（構図参照は配置とポーズだけ、強さは低め）。350dpi 相当 857×696px 以上"
+    notes: "人物 2 名（生成人物。使用可: 2026-10-08 決定）。参考の人物の顔に似せない（構図参照は配置とポーズだけ、強さは低め）。350dpi 相当 857×696px 以上"
 
   - id: page_001-photo-l2
     kind: photo
@@ -92,7 +92,7 @@ items:
       Style: candid friendly snapshot, 35mm lens, eye level, sharp faces, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, name tag, uniform badge, border, frame, vignette, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
     summary: "左下の写真: 肩を組んでピースをする男子学生 2 人（赤い上着と緑のシャツ、白い壁）"
-    notes: "人物 2 名（【要確認】生成人物）。手指が崩れやすいので V サインの手を拡大して確認する。350dpi 相当 878×631px 以上"
+    notes: "人物 2 名（生成人物。使用可: 2026-10-08 決定）。手指が崩れやすいので V サインの手を拡大して確認する。350dpi 相当 878×631px 以上"
 
   - id: page_001-photo-r1
     kind: photo
@@ -115,7 +115,7 @@ items:
       Style: candid portrait snapshot, 50mm lens, eye level, f/2, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, wall sign, name tag, border, frame, vignette, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
     summary: "右上の写真: 笑顔で手を振る女性 2 人（白いレースのブラウスと黒い T シャツにグレーのベスト、クリーム色の壁）"
-    notes: "人物 2 名（【要確認】生成人物）。参考の人物の顔に似せない（構図参照は配置とポーズだけ、強さは低め）。350dpi 相当 861×696px 以上"
+    notes: "人物 2 名（生成人物。使用可: 2026-10-08 決定）。参考の人物の顔に似せない（構図参照は配置とポーズだけ、強さは低め）。350dpi 相当 861×696px 以上"
 
   - id: page_001-photo-r2
     kind: photo
@@ -161,7 +161,7 @@ items:
       Style: candid classroom photo, 35mm lens, eye level, f/2.8, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, laptop logo, screen text, user interface, signage, name tag, badge, border, frame, vignette, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
     summary: "右下の写真: ノートパソコンを一緒に見る男子学生とレースのブラウスの女子学生（明るいパソコン教室）"
-    notes: "人物 2 名（【要確認】生成人物）。ノートパソコンの天板にメーカーのロゴを出さない。350dpi 相当 854×631px 以上"
+    notes: "人物 2 名（生成人物。使用可: 2026-10-08 決定）。ノートパソコンの天板にメーカーのロゴを出さない。350dpi 相当 854×631px 以上"
 
   # ===== 切り抜きの人物 2 名（透過 PNG。フッター帯より手前、地・左は塗り足しまで） =====
   - id: page_001-person-pointing
@@ -186,7 +186,7 @@ items:
       Style: photorealistic, 50mm lens, eye level, sharp focus.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, background scenery, other people, cast shadow, name tag, badge, ID card, brand, cropped head, cut-off fingers, extra fingers, deformed hands, distorted face, celebrity likeness"
     summary: "切り抜きの人物（奥）: 右へ腕を伸ばして指さす、黒い上衣に白いエプロンの女性（白背景で生成し透過 PNG に）"
-    notes: "【要確認】生成人物。白背景で生成し、髪の毛先と指先を残して透過 PNG に切り抜く（手順を .prompt.yaml の notes に）。指先の位置（x 86.4mm）が参考の視線誘導（特典の見出しを指す）の要なので合わせる。手前の人物と同じ光・色温度で生成する。350dpi 相当 854×1075px 以上"
+    notes: "生成人物（使用可: 2026-10-08 決定）。白背景で生成し、髪の毛先と指先を残して透過 PNG に切り抜く（手順を .prompt.yaml の notes に）。指先の位置（x 86.4mm）が参考の視線誘導（特典の見出しを指す）の要なので合わせる。手前の人物と同じ光・色温度で生成する。350dpi 相当 854×1075px 以上"
 
   - id: page_001-person-front
     kind: cutout
@@ -209,7 +209,7 @@ items:
       Style: photorealistic, 50mm lens, eye level, sharp focus.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, background scenery, other people, cast shadow, name tag, badge, ID card, brand, cropped head, extra fingers, deformed hands, distorted face, celebrity likeness"
     summary: "切り抜きの人物（手前）: 黒いカーディガンに白いエプロン、髪をまとめた女性の腰から上（白背景で生成し透過 PNG に）"
-    notes: "【要確認】生成人物。奥の人物より手前に重ねる（奥の人物の体の左側を隠す）。白背景で生成し透過 PNG に切り抜く。350dpi 相当 593×1047px 以上"
+    notes: "生成人物（使用可: 2026-10-08 決定）。奥の人物より手前に重ねる（奥の人物の体の左側を隠す）。白背景で生成し透過 PNG に切り抜く。350dpi 相当 593×1047px 以上"
 
   # ===== 中段のイラスト（透過 PNG。枠と同じ縦横比で生成し、photo-frame の src に指定） =====
   - id: page_001-illust-juice

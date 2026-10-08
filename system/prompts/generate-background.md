@@ -54,7 +54,7 @@ Phase 5 の完コピ BOOK（`books/replica/*`）などで、ページ側が素�
    - プロンプト: `prompt` と `negative_prompt` をそのまま使う（ツールに合わせた言い換えは可。意味を変えたら `.prompt.yaml` の `notes` に書く）
    - 大きさ: `size_mm` の縦横比。画素数は一覧の「必要」以上（印刷に回す素材は 350dpi の値）
    - `kind: cutout` は単色背景で生成し、透過 PNG に切り抜く（手順を `notes` に書く）
-   - `people: true` の素材は、実在の在校生等と誤認されない表現にし、使用可否を人間に確認する【要確認: 生成人物の使用可否の方針】
+   - `people: true` の素材は、実在の人物（参考に写っている人物を含む）に似せず、実在の在校生等と誤認されない表現にする。Phase 5 の完コピ用の生成指示は全件使用可（2026-10-08 決定。system/rules/image-generation.md §2）
 4. 保存する: `books/<bookId>/backgrounds/<素材 id>.png`（写真調は `.jpg` 可）と `<素材 id>.prompt.yaml`。`reference_inputs` に `reference_image` のパスと方式・切り出し範囲（`crop_mm`）・塗りつぶした部分を書く
 5. `placement` のとおりページから参照する（例: `{{> photo-frame src="books/<bookId>/backgrounds/page_001-hero.png" ratio="193 / 117"}}`）。`page.html` の構造・文字は変えない
 6. 全件そろったら `layer1-orders.yaml` の `status` を `generated` にする

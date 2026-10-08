@@ -42,7 +42,7 @@ items:
       Style: realistic documentary school photography, high resolution, sRGB, no text anywhere (blank name badges, blank boards, no posters or signage).
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, name badge text, embroidered lettering, brand, signage, poster, chalkboard writing, whiteboard writing, screen text, clock numerals, celebrity, identifiable real person, distorted hands, extra limbs, blurry"
     summary: "下部の全幅写真。明るいリハビリ実習室で、階段・平行棒・青いマットのベッド・歩行器を使って白衣の学生が練習する群像（左右裁ち落とし）"
-    notes: "人物を含む【要確認: 生成人物の使用可否の方針】。必要画素 1276×456px（150dpi）、印刷なら 2976×1065px（350dpi）。参考の人物の顔立ち・体格を引き継がないよう img2img ではなく構図参照にし、強さは低めにする。Phase 8 では自社写真（company-data/photos）に差し替える前提の代用。review.md の「216×80.3mm」は誤り（実寸は 216×77.3mm。下はフッター帯で止まり塗り足しにかからない）"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素 1276×456px（150dpi）、印刷なら 2976×1065px（350dpi）。参考の人物の顔立ち・体格を引き継がないよう img2img ではなく構図参照にし、強さは低めにする。Phase 8 では自社写真（company-data/photos）に差し替える前提の代用。review.md の「216×80.3mm」は誤り（実寸は 216×77.3mm。下はフッター帯で止まり塗り足しにかからない）"
 
   - id: page_001-feat1-reformer
     kind: cutout
@@ -122,7 +122,7 @@ items:
       Palette: uniforms deep navy #37437f, shirt white #fefefe, hair black #272728, table and chairs dark brown #5a4436, small accents yellow-green #a8b84a, skin light beige #f1d6c2.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, speech bubble, writing on paper, background scenery, photo, 3d render, gradient background, frame, border"
     summary: "特長 3 の小さなフラットイラスト。机を囲んで勉強する学生 2 人と、そばで教える先生（白地、透過に抜く）"
-    notes: "イラストの人物を含む（実在の人物と誤認されにくいが、方針は【要確認: 生成人物の使用可否の方針】）。必要画素 171×121px（150dpi）、350dpi で 400×282px。参考のイラストを img2img で写さず、画風と配置だけを参照する"
+    notes: "イラストの人物を含む（実在の人物と誤認されにくいが、生成人物は使用可（2026-10-08 決定））。必要画素 171×121px（150dpi）、350dpi で 400×282px。参考のイラストを img2img で写さず、画風と配置だけを参照する"
 
   - id: page_001-feat3-photo
     kind: photo
@@ -143,7 +143,7 @@ items:
       Style: candid documentary school photo, realistic, generic young adults of East Asian appearance, not identifiable; the tablet screen shows only a blurred dark interface with no readable content.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen, user interface text, printed sweatshirt, brand, signage, poster, celebrity, identifiable real person, distorted hands, extra fingers"
     summary: "特長 3 の写真。机のタブレットを先生が指さし、濃い色のセーターの学生たちが囲んで学ぶ教室のスナップ"
-    notes: "人物を含む【要確認: 生成人物の使用可否の方針】。必要画素 208×176px（150dpi）、350dpi で 485×411px。画面・服に文字が出たら作り直す"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素 208×176px（150dpi）、350dpi で 485×411px。画面・服に文字が出たら作り直す"
 
   - id: page_001-feat4-illust
     kind: illustration
@@ -183,7 +183,7 @@ items:
       Style: realistic friendly school-brochure portrait, shallow depth of field, generic and not identifiable people, plain uniforms with no badges or lettering.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, name badge, embroidered lettering, brand, signage, billboard, celebrity, identifiable real person, distorted hands, extra fingers"
     summary: "特長 4 の写真。屋上の明るい曇り空を背景に、白い半袖の実習着で並んで笑う若い男女 2 人"
-    notes: "人物を含む【要確認: 生成人物の使用可否の方針】。必要画素 208×175px（150dpi）、350dpi で 485×408px。背景のビルに看板・文字が出たら作り直す"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素 208×175px（150dpi）、350dpi で 485×408px。背景のビルに看板・文字が出たら作り直す"
 
   - id: page_001-title-deco
     kind: decoration

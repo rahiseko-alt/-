@@ -5,7 +5,7 @@
 #   切り出して目視で確認した。上部の写真は参考では仕上がりの内側（0〜210 × 0〜81mm）しかないため、塗り足しの 3mm は参考の外（白）になる
 # - 入力の切り出し: npm run gen:inputs -- --book replica/c-course（.cache/gen-inputs/replica/c-course/<id>.png。mask のとおり塗ってから入力する）
 # - 必要な画素数: 上部の写真 1276 × 496px（png_dpi 150）／ 2976 × 1157px（350dpi）、回り込みの写真 各 288 × 210px（150dpi）／ 672 × 489px（350dpi）
-# - 3 点とも人物を含む【要確認: 生成人物の使用可否の方針】（system/rules/image-generation.md §2）。顔・名札・刺繍ロゴは入力前に塗る（mask）
+# - 3 点とも人物を含む（生成人物は使用可。2026-10-08 決定）（system/rules/image-generation.md §2）。顔・名札・刺繍ロゴは入力前に塗る（mask）
 # - 参考の写真に写る実在の人物・制服のロゴ・施設を再現しない。生成するのはリハビリ・演習の場面の一般的な人物だけ（施設名・看板・掲示物なし）
 book: replica/c-course
 page: page_001

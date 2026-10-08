@@ -3,7 +3,7 @@
 # - crop_mm は補正後の参考ページ（npm run ref:prep の出力 .cache/ref-prep/ 以下の page_003-l.png、1414×2000px、1mm = 6.733px）上の範囲。
 #   参考の写真の外周（紙の白との境目）を輝度の断面で実測した値で、出力 PNG（150dpi・塗り足し込み 1276×1789px）で測った枠の位置とは最大 1.2mm 違う（各 notes）
 # - 入力画像の切り出しは npm run gen:inputs -- --book replica/b-web-it（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
-# - 8 件すべて人物を含む（people: true）。生成人物の使用可否は【要確認: 生成人物の使用可否の方針】（system/rules/image-generation.md §2）。
+# - 8 件すべて人物を含む（people: true）。生成人物は使用可（2026-10-08 決定）（system/rules/image-generation.md §2）。
 #   参考の人物は実在の在校生・卒業生なので、参考画像は構図（姿勢・配置・画角）の参照だけに使い（reference_usage: composition）、
 #   顔は入力前に塗りつぶす。顔立ち・髪型を参考の人物に寄せない
 # - 画面が写る写真（memo-c1・memo-c6・memo-c7）は、画面の中身を文字のないぼけた抽象的な面にする（読める文字・コード・UI のラベルを入れない）
@@ -42,7 +42,7 @@ items:
       Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, sharp focus on the face, realistic skin, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, user interface labels, keyboard legends, brand, brand logo on laptop or monitor, signage, poster text, calendar, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "メモカード（左上の象限）の写真: 明るいデザイン作業机で、モニターに向かって考える若い女性（画面は文字のないぼけた青い面）"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考の写真は枠より左右に狭い（参考 x 52.5〜87.9mm に対し枠は回転前 51.3〜88.8mm。左端 1.2mm・右端 0.9mm の差、縦横比も 1.78 に対し枠 1.83）。生成は size_mm の比率で、参考の構図を左右に少し広げる。必要画素（gen:inputs の一覧が正）: 150dpi で 221×121px、350dpi で 517×282px。長辺 1024px 程度で生成して縮小してよい"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。参考の写真は枠より左右に狭い（参考 x 52.5〜87.9mm に対し枠は回転前 51.3〜88.8mm。左端 1.2mm・右端 0.9mm の差、縦横比も 1.78 に対し枠 1.83）。生成は size_mm の比率で、参考の構図を左右に少し広げる。必要画素（gen:inputs の一覧が正）: 150dpi で 221×121px、350dpi で 517×282px。長辺 1024px 程度で生成して縮小してよい"
 
   - id: page_001-memo-c2
     kind: photo
@@ -66,7 +66,7 @@ items:
       Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/4, sharp focus on the face, realistic, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo on monitor, apple logo, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "メモカード（右上の象限）の写真: 白い壁のオフィスでマウスを持って笑う、黄色い T シャツの若い女性。右にオレンジのモニターの背面"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考の写真は枠より 0.8mm 低い（参考の下端 99.0mm、枠 99.8mm）。上 1/3 は白い壁のまま（参考も紙の白と境目がないほど明るい）。必要画素: 150dpi で 219×123px、350dpi で 511×287px"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。参考の写真は枠より 0.8mm 低い（参考の下端 99.0mm、枠 99.8mm）。上 1/3 は白い壁のまま（参考も紙の白と境目がないほど明るい）。必要画素: 150dpi で 219×123px、350dpi で 511×287px"
 
   - id: page_001-memo-c6
     kind: photo
@@ -90,7 +90,7 @@ items:
       Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, sharp focus on the face, realistic, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, code lines, terminal, user interface labels, keyboard legends, brand, brand logo on laptop or monitor, apple logo, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "メモカード（右の象限・中）の写真: 白い明るいオフィスで白いモニターに向かう、眼鏡に黒い T シャツの若い男性（左の画面は文字のない暗いぼかし）"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考と枠の差は 0.7mm 以内。参考の左の画面にはコード状の横線が写っているため、生成結果に文字・コードの模様が出たら作り直す（拡大して確認）。必要画素: 150dpi で 218×115px、350dpi で 508×269px"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。参考と枠の差は 0.7mm 以内。参考の左の画面にはコード状の横線が写っているため、生成結果に文字・コードの模様が出たら作り直す（拡大して確認）。必要画素: 150dpi で 218×115px、350dpi で 508×269px"
 
   - id: page_001-memo-c7
     kind: photo
@@ -114,7 +114,7 @@ items:
       Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, realistic, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, user interface labels, keyboard legends, brand, brand logo on laptop lid or headphones, apple logo, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "メモカード（右下の象限）の写真: 夕方の暗めのオフィスで、紺のノート PC の向こうに座るヘッドホンを首にかけた若い男性"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考と枠の差は 0.8mm 以内。ページの中で最も暗い写真（平均 #625d61）なので、明るくしすぎない。必要画素: 150dpi で 218×116px、350dpi で 508×271px"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。参考と枠の差は 0.8mm 以内。ページの中で最も暗い写真（平均 #625d61）なので、明るくしすぎない。必要画素: 150dpi で 218×116px、350dpi で 508×271px"
 
   - id: page_001-grad-l
     kind: photo
@@ -138,7 +138,7 @@ items:
       Style: natural editorial workplace portrait, 50mm lens, f/2.8, realistic, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo, printed T-shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "左の卒業生ボックスの写真（縦長）: 暗い背景の前で、白い T シャツでキーボードを打つ若い女性の斜め横顔"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。卒業生（実在の人物の紹介）の枠なので、Phase 8 では自社の卒業生の実写真（company-data/photos/）に置き換える前提。完コピ検証の生成画像を自社の卒業生として使わない。参考と枠の差は 0.5mm 以内。必要画素: 150dpi で 170×195px、350dpi で 397×455px"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。卒業生（実在の人物の紹介）の枠なので、Phase 8 では自社の卒業生の実写真（company-data/photos/）に置き換える前提。完コピ検証の生成画像を自社の卒業生として使わない。参考と枠の差は 0.5mm 以内。必要画素: 150dpi で 170×195px、350dpi で 397×455px"
 
   - id: page_001-grad-r
     kind: photo
@@ -162,7 +162,7 @@ items:
       Style: natural editorial workplace photograph, 35mm lens, f/4, realistic, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo on PC or chair, embroidered logo on polo shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "右の卒業生ボックスの写真（正方形）: 白い壁の前、黒いメッシュチェアでキーボードとマウスを操作する黒いポロシャツの若い女性"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。卒業生（実在の人物の紹介）の枠なので、Phase 8 では自社の卒業生の実写真に置き換える前提。参考の写真は 33.1×33.9mm でわずかに縦長（枠は正方形。差 0.9mm 以内）。ポロシャツの胸の刺繍ロゴ状の模様を入れない。必要画素: 150dpi で 198×198px、350dpi で 462×462px"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。卒業生（実在の人物の紹介）の枠なので、Phase 8 では自社の卒業生の実写真に置き換える前提。参考の写真は 33.1×33.9mm でわずかに縦長（枠は正方形。差 0.9mm 以内）。ポロシャツの胸の刺繍ロゴ状の模様を入れない。必要画素: 150dpi で 198×198px、350dpi で 462×462px"
 
   - id: page_001-cutout-tr
     kind: cutout
@@ -186,7 +186,7 @@ items:
       Style: realistic full-length fashion catalogue photograph, 70mm lens, camera at waist height, no perspective distortion, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand logo on sandals, printed slogan on clothing, name tag, lanyard, background scenery, floor texture, props, second person, cropped feet, cropped head, harsh shadow, white halo, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "右上の切り抜き人物（全身）: 拳を軽く上げて立つ、白い T シャツと黒いロングスカートの若い女性。白背景で生成し透過 PNG に切り抜く"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。白背景で生成 → 人物だけを切り抜いて透過 PNG（髪の毛先・指先に白いふちを残さない。置く先の地は淡い水色 #e2ecf6 と黄 #fcf49c）→ 人物の外接矩形で余白を詰め、縦横比 21.5:59 に透明の余白で合わせる（足元を下端に）。必要画素: 150dpi で 127×348px、350dpi で 296×813px。縦長の比率で生成できないツールでは 9:16 などで生成してから切り詰める"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。白背景で生成 → 人物だけを切り抜いて透過 PNG（髪の毛先・指先に白いふちを残さない。置く先の地は淡い水色 #e2ecf6 と黄 #fcf49c）→ 人物の外接矩形で余白を詰め、縦横比 21.5:59 に透明の余白で合わせる（足元を下端に）。必要画素: 150dpi で 127×348px、350dpi で 296×813px。縦長の比率で生成できないツールでは 9:16 などで生成してから切り詰める"
 
   - id: page_001-cutout-bl
     kind: cutout
@@ -210,4 +210,4 @@ items:
       Style: realistic full-length fashion catalogue photograph, 70mm lens, camera at waist height, no perspective distortion, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand logo on sandals, printed slogan on clothing, name tag, lanyard, background scenery, floor texture, props, second person, cropped feet, cropped head, harsh shadow, white halo, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
     summary: "左下の切り抜き人物（全身）: 片手を腰に、もう片手で上を指さして立つ、白いブラウスとドット柄の白いワイドパンツの若い女性。白背景で生成し透過 PNG に切り抜く"
-    notes: "人物あり【要確認: 生成人物の使用可否の方針】。白背景で生成 → 人物だけを切り抜いて透過 PNG（白い服が白背景と溶けやすいので、服の輪郭を丁寧に残す。置く先の地は淡い水色 #e2ecf6、指先の後ろは黄 #fcf49c）→ 人物の外接矩形で余白を詰め、縦横比 20.2:55 に透明の余白で合わせる（足元を下端に）。必要画素: 150dpi で 119×325px、350dpi で 278×758px。ドット柄の色 #4a4a55 は撮影画像からの目測"
+    notes: "人物あり（生成人物は使用可。2026-10-08 決定）。白背景で生成 → 人物だけを切り抜いて透過 PNG（白い服が白背景と溶けやすいので、服の輪郭を丁寧に残す。置く先の地は淡い水色 #e2ecf6、指先の後ろは黄 #fcf49c）→ 人物の外接矩形で余白を詰め、縦横比 20.2:55 に透明の余白で合わせる（足元を下端に）。必要画素: 150dpi で 119×325px、350dpi で 278×758px。ドット柄の色 #4a4a55 は撮影画像からの目測"

@@ -104,7 +104,7 @@
 - Layer 1 の素材: 円形写真 6 点（直径 31.5mm: PC 作業・28mm: 談笑・28mm: 接客、下段 25mm・28mm・24mm。いずれも人物の顔〜胸元、顔を円の中心より上）、
   切り抜き人物 1 体（全身、約 17×64mm、指差しのポーズ、パネルの枠をまたいで立つ）。自社写真（company-data/photos/）が入ったら photo-frame に id を渡す。
   切り抜き人物は SVG のシルエットを写真に置き換える。画像生成ツールがある環境なら、生成は Layer 1 の規則（system/rules/image-generation.md）で
-- Layer 1 の生成指示: backgrounds/layer1-orders.yaml（7 件、人物を含む 7 件。円形写真 6 点・切り抜き人物 1 体。crop_mm は補正画像上の実測で、枠の位置から 右へ 最大 12.4mm・上下に 2.7〜5.0mm ずれる（「比較の前提」）。入力の切り出しは npm run gen:inputs -- --book replica/b-data。生成人物の使用可否は【要確認】）
+- Layer 1 の生成指示: backgrounds/layer1-orders.yaml（7 件、人物を含む 7 件。円形写真 6 点・切り抜き人物 1 体。crop_mm は補正画像上の実測で、枠の位置から 右へ 最大 12.4mm・上下に 2.7〜5.0mm ずれる（「比較の前提」）。入力の切り出しは npm run gen:inputs -- --book replica/b-data。生成人物は使用可（2026-10-08 決定））
 - Phase 8 で: page.css 冒頭の --rep-* をブランドカラー（var(--color-*)）に置き換える。パネルごとの色分け（ローズ・グリーン・山吹・淡いピンク）は自社のカテゴリ色として company-data/brand/colors に役割を追加するか検討する。
   数値（就職率・人数・件数）・ランキングの項目・出典は company-data/facts/results.yaml の値（as_of・source 付き）から作り、facts にない値は TODO のまま人間に確認する（参考の数値・病院名は流用しない）。
   地図は自社の拠点・地域を示す図にするか、別の図版に差し替えるかを決める

@@ -36,7 +36,7 @@ items:
       STYLE: natural candid documentary photograph for a school brochure, eye-level, 35mm-equivalent lens, f/2.8, sharp focus on the face, background slightly soft, realistic color, no heavy retouching.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, labels, stickers, name tag, badge, printed board, screen text, child, baby, celebrity likeness, extra fingers, deformed hands, frame, border"
     summary: "ベビーベッドのある明るい実習室で、赤いポロシャツの若い女性（腰上・中央右寄り）が無地の白いボードを右へ掲げて微笑む横長写真"
-    notes: "参考写真の人物の顔・容姿に似せない（composition 参照のみ。img2img や顔を保つ参照は使わない）。人物は生成人物の使用可否【要確認】の対象。crop_mm の y は補正画像上の実測（上端 41.7mm）で、枠の位置（y 43mm）より 1.3mm 上（補正画像の上端を撮影範囲の端で止めたためのずれ。prep/page_016-l.yaml の notes）。参考はノドの谷線（x 210mm）までなので、ノド側の塗り足し 3mm は生成で背景を延長する。必要画素数: 350dpi で 2701×1612px（150dpi で 1157×691px）。Phase 8 では company-data/photos の自社写真に差し替える（学校の写真に生成画像は使えない）"
+    notes: "参考写真の人物の顔・容姿に似せない（composition 参照のみ。img2img や顔を保つ参照は使わない）。生成人物は使用可（2026-10-08 決定）。crop_mm の y は補正画像上の実測（上端 41.7mm）で、枠の位置（y 43mm）より 1.3mm 上（補正画像の上端を撮影範囲の端で止めたためのずれ。prep/page_016-l.yaml の notes）。参考はノドの谷線（x 210mm）までなので、ノド側の塗り足し 3mm は生成で背景を延長する。必要画素数: 350dpi で 2701×1612px（150dpi で 1157×691px）。Phase 8 では company-data/photos の自社写真に差し替える（学校の写真に生成画像は使えない）"
 
   - id: page_001-class-1
     kind: photo
@@ -58,7 +58,7 @@ items:
       STYLE: candid classroom snapshot, eye-level, 35mm-equivalent lens, moderate depth of field, natural colors with the slight softness of a printed brochure photo. Faces largely hidden behind the paper goggles (not identifiable).
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, character mascot, badge, printed pattern with letters, celebrity likeness, extra fingers, deformed hands, frame, border"
     summary: "緑の壁と淡い水色の丸の前で、若い女性 2 人が白い紙のゴーグルを目に当ててポーズをとる授業写真"
-    notes: "参考写真の人物に似せない（composition 参照のみ）。人物は生成人物の使用可否【要確認】の対象。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
+    notes: "参考写真の人物に似せない（composition 参照のみ）。生成人物は使用可（2026-10-08 決定）。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
 
   - id: page_001-class-2
     kind: photo
@@ -81,7 +81,7 @@ items:
       STYLE: candid documentary snapshot, 28mm-equivalent lens, natural colors, slight softness. Faces turned away or partially hidden; no identifiable people.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, printed handout, clothing print, screen text, celebrity likeness, extra fingers, deformed hands, frame, border"
     summary: "床にひざをついた学生 5 人が乳児サイズの訓練用人形 2 体で胸骨圧迫を練習する様子を斜め上から写した授業写真"
-    notes: "参考写真の人物に似せない（composition 参照のみ）。人物は生成人物の使用可否【要確認】の対象。訓練用人形は人物ではないが、本物の乳児に見えないこと。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
+    notes: "参考写真の人物に似せない（composition 参照のみ）。生成人物は使用可（2026-10-08 決定）。訓練用人形は人物ではないが、本物の乳児に見えないこと。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
 
   - id: page_001-class-3
     kind: photo
@@ -102,7 +102,7 @@ items:
       STYLE: candid group-work snapshot, eye-level, 50mm-equivalent lens, shallow depth of field, natural colors. No papers, notebooks or screens with visible writing.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, notebook writing, screen text, celebrity likeness, extra fingers, deformed hands, frame, border"
     summary: "白いブラインドの明るい教室で、マスクの学生 2 人が机をはさんで話し合うグループワークの授業写真"
-    notes: "参考写真の人物に似せない（composition 参照のみ）。人物は生成人物の使用可否【要確認】の対象。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
+    notes: "参考写真の人物に似せない（composition 参照のみ）。生成人物は使用可（2026-10-08 決定）。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
 
   - id: page_001-butterflies
     kind: illustration

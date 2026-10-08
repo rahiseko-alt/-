@@ -9,7 +9,7 @@
 #   上端の 0.5〜0.8mm の揺れは参考写真の紙の波打ち（reviews/page_001/review.md「参考側の補正」）なので、crop_mm は枠と同じ位置にした
 # - 入力画像の切り出しは npm run gen:inputs -- --book replica/a-course（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
 # - 人物（講師 5 点）: 参考は実在の人物。顔・容姿を似せない（顔の参照・キャラクター参照・顔の入れ替え系の方式は使わない。
-#   入力は mask で顔の内側をぼかした切り出しを、構図・明暗の参照だけに使う）。生成人物の使用可否は【要確認】（system/rules/image-generation.md §2）。
+#   入力は mask で顔の内側をぼかした切り出しを、構図・明暗の参照だけに使う）。生成人物は使用可（2026-10-08 決定）（system/rules/image-generation.md §2）。
 #   自社版（Phase 8）では講師写真を company-data/photos の実写真（権利確認済み）に置き換え、生成人物で代用しない
 # - 作品写真 2 点: 参考は他校の学生作品。参考の作品をなぞらない（img2img の強い参照は使わず、構図・色調の参照に留める）。
 #   自社版では自校の学生作品の実写真に置き換える
@@ -44,7 +44,7 @@ items:
       Style: photorealistic editorial portrait, 85mm lens at eye level, f/2.8, sharp focus on the eyes, natural skin texture, no retouching artefacts. A fictional person who does not resemble any real or famous individual.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, print on clothing, signage, screen text, name tag, badge, celebrity likeness, famous person, multiple people, hands, glasses, border, frame, deformed face"
     summary: "講師 1（段 1）のバストアップ写真。黒に近い背景、明るい灰色のパーカーの 40 代男性の顔の大写し。下端にキャプションの帯が重なる"
-    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×201px、350dpi で 455×469px（1024px 程度で生成して縮小）。参考の講師の顔・髪型の細部を似せない。参考は露出オーバーの印刷物の写真なので、色は目安（背景は黒に締める）。生成後は .jpg で保存し、文字・ロゴ状の模様がないことを拡大して確認する"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素: 150dpi で 195×201px、350dpi で 455×469px（1024px 程度で生成して縮小）。参考の講師の顔・髪型の細部を似せない。参考は露出オーバーの印刷物の写真なので、色は目安（背景は黒に締める）。生成後は .jpg で保存し、文字・ロゴ状の模様がないことを拡大して確認する"
 
   - id: page_001-lect-2
     kind: photo
@@ -65,7 +65,7 @@ items:
       Style: photorealistic corporate headshot, 85mm lens at eye level, sharp focus, clean and professional. A fictional person who does not resemble any real or famous individual.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, lapel pin, name tag, badge, signage, screen text, celebrity likeness, famous person, multiple people, hands, glasses, patterned background, border, frame, deformed face"
     summary: "講師 2（段 2）のバストアップ写真。明るい灰色の壁の前、紺のスーツの 40 歳前後の男性。下 15% にキャプションの帯が重なる"
-    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×219px、350dpi で 455×510px。参考の講師の顔を似せない。生成後は .jpg で保存"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素: 150dpi で 195×219px、350dpi で 455×510px。参考の講師の顔を似せない。生成後は .jpg で保存"
 
   - id: page_001-lect-3-cutout
     kind: cutout
@@ -88,7 +88,7 @@ items:
       Style: photorealistic corporate headshot for a cut-out, 85mm lens at eye level, sharp focus. A fictional person who does not resemble any real or famous individual.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, background scenery, coloured background, gradient background, cast shadow, vignette, name tag, badge, celebrity likeness, famous person, multiple people, hands, glasses, border, frame, deformed face"
     summary: "講師 3（段 3）の切り抜き人物。白地で生成し、頭と肩の輪郭で透過 PNG に抜く。白いシャツの 30 代男性、笑顔"
-    notes: "人物を含む【要確認: 生成人物の使用可否】。切り抜き: 白地で生成 → 人物の輪郭で切り抜いて透過 PNG（白いシャツが白地に溶けないよう、肩の縁の灰色の影を残す。手順を .prompt.yaml の notes に書く）。必要画素: 150dpi で 165×201px、350dpi で 386×469px。参考では右の肩が枠の外（x 153.4mm・y 約 63.5mm）まで出ている。枠のままでは肩が枠の右端・下端で切れる（残る差）。合わせるなら page.css の .lect--cutout .lect__photo を右・下へ広げる（例: 31.5×36.5mm）必要があり、その場合は同じ人物の構図で広げた縦横比で生成し直す"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。切り抜き: 白地で生成 → 人物の輪郭で切り抜いて透過 PNG（白いシャツが白地に溶けないよう、肩の縁の灰色の影を残す。手順を .prompt.yaml の notes に書く）。必要画素: 150dpi で 165×201px、350dpi で 386×469px。参考では右の肩が枠の外（x 153.4mm・y 約 63.5mm）まで出ている。枠のままでは肩が枠の右端・下端で切れる（残る差）。合わせるなら page.css の .lect--cutout .lect__photo を右・下へ広げる（例: 31.5×36.5mm）必要があり、その場合は同じ人物の構図で広げた縦横比で生成し直す"
 
   - id: page_001-lect-4
     kind: photo
@@ -109,7 +109,7 @@ items:
       Style: photorealistic corporate headshot, 85mm lens at eye level, sharp focus. A fictional person who does not resemble any real or famous individual.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, lapel pin, name tag, badge, signage, screen text, reflections in glasses, celebrity likeness, famous person, multiple people, hands, patterned background, border, frame, deformed face"
     summary: "講師 4（段 4）のバストアップ写真。白っぽい壁の前、白髪まじりで眼鏡、濃色のジャケットの 50 代後半の男性"
-    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×219px、350dpi で 455×510px。参考の講師の顔を似せない。生成後は .jpg で保存"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素: 150dpi で 195×219px、350dpi で 455×510px。参考の講師の顔を似せない。生成後は .jpg で保存"
 
   - id: page_001-lect-5
     kind: photo
@@ -130,7 +130,7 @@ items:
       Style: photorealistic casual portrait taken with a 50mm lens at eye level, shallow depth of field, sharp focus on the face. A fictional person who does not resemble any real or famous individual.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, print on clothing, signage, shop sign, street sign, licence plate, screen text, name tag, celebrity likeness, famous person, multiple people, crowd, hands, glasses, border, frame, deformed face"
     summary: "講師 5（段 5）の屋外のバストアップ写真。曇り空と瓦屋根の建物のぼけ、黒い T シャツの巻き毛の 30 代男性、笑顔"
-    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×210px、350dpi で 455×489px。参考の講師の顔を似せない。背景の建物に看板・文字が出たら作り直す。生成後は .jpg で保存"
+    notes: "人物を含む（生成人物は使用可。2026-10-08 決定）。必要画素: 150dpi で 195×210px、350dpi で 455×489px。参考の講師の顔を似せない。背景の建物に看板・文字が出たら作り直す。生成後は .jpg で保存"
 
   - id: page_001-pick-1
     kind: photo
