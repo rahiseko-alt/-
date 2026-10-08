@@ -1,0 +1,178 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 座標・寸法は仕上がり（.trim、291×297mm、左上原点）の mm。crop_mm は補正後の参考ページ
+#   （npm run ref:prep の .cache/ref-prep/HAL-nagoya/brochure-2/prep/page_001-r.png、1960×2000px、1mm = 6.735px）上の範囲
+# - size_mm は page.css の枠の寸法。出力 PNG（150dpi・塗り足し 3mm 込み 1754×1789px）でプレースホルダの灰色の外接矩形を測って確認した
+#   （段 1: 11.0〜43.7 × 26.1〜59.8mm、段 2: 66.4〜99.3 × 26.1〜62.9mm、段 3: 122.5〜150.1 × 27.5〜61.5mm、段 4: 177.3〜209.9 × 26.1mm〜、
+#    段 5: 232.5〜265.4 × 26.1〜61.5mm、作品 1: 89.1〜148.6 × 121.0〜160.8mm、作品 2: 153.1〜271.3 × 121.6〜166.8mm。差は縁の 1px のにじみ）
+# - 参考側の写真の外形（補正画像の画素の実測）: 段 1 10.5〜43.4 × 25.1〜59.2mm、段 2 66.3〜99.1 × 25.4〜63.2mm、段 4 176.9〜210.1 × 26.8mm〜、
+#   段 5 232.9〜266.3 × 26.3mm〜、作品 1 89.1〜148.5 × 121.0〜160.7mm、作品 2 153.1〜271.4 × 121.3〜166.9mm。
+#   上端の 0.5〜0.8mm の揺れは参考写真の紙の波打ち（reviews/page_001/review.md「参考側の補正」）なので、crop_mm は枠と同じ位置にした
+# - 入力画像の切り出しは npm run gen:inputs -- --book replica/a-course（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
+# - 人物（講師 5 点）: 参考は実在の人物。顔・容姿を似せない（顔の参照・キャラクター参照・顔の入れ替え系の方式は使わない。
+#   入力は mask で顔の内側をぼかした切り出しを、構図・明暗の参照だけに使う）。生成人物の使用可否は【要確認】（system/rules/image-generation.md §2）。
+#   自社版（Phase 8）では講師写真を company-data/photos の実写真（権利確認済み）に置き換え、生成人物で代用しない
+# - 作品写真 2 点: 参考は他校の学生作品。参考の作品をなぞらない（img2img の強い参照は使わず、構図・色調の参照に留める）。
+#   自社版では自校の学生作品の実写真に置き換える
+# - 対象外にしたもの（Layer 1 にしない）:
+#   - 講師カードのロゴ 5 点（.lect__logo）: 第三者企業のロゴ。生成しない・プレースホルダのまま（使用許諾は review.md の【要確認】）
+#   - 帯見出し・キャプションの濃色地・講師段の縦罫・タグ・罫・矢羽根・パネル: 単純な図形・色面（Layer 2）
+#   - 中段の淡い灰色のグラデーション（.rep-shade）: 単純なグラデーション（Layer 2。CSS で参考の明るさに一致済み）
+#   - 参考の右上（x 205〜265mm、y 3〜12mm）の淡い文字状の影: 裏のページの裏写り（デザインではない）
+#   - 参考の左端（x 0〜1mm）の色の筋: 撮影時に写り込んだ隣のページの小口
+book: replica/a-course
+page: page_001
+reference_image: references/HAL-nagoya/brochure-2/page_001.jpg
+reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
+status: pending
+items:
+  - id: page_001-lect-1
+    kind: photo
+    people: true
+    optional: false
+    # .lect--1 .lect__photo（left 6.7 + 4.2 = 10.9mm・top 26mm・33×34mm）
+    size_mm: [33.0, 34.0]
+    bleed: false
+    crop_mm: [10.9, 26.0, 33.0, 34.0]
+    placement: "components/lecturer-card.hbs の .lect__photo の photo-frame に src を渡す。部品に任意の引数 photo（リポジトリルート相対パス）を足し、`{{> photo-frame}}` を `{{#if photo}}{{> photo-frame src=photo}}{{else}}{{> photo-frame}}{{/if}}` にする。pages/page_001/page.html の段 1 の呼び出し（col=\"1\"）に photo=\"books/replica/a-course/backgrounds/page_001-lect-1.jpg\" を足す。枠は page.css の .lect--1 .lect__photo（33×34mm、object-fit: cover・中央）のまま。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、下端のキャプションの濃紺の帯（切り出しの下 3.3mm = y 56.7〜60.0mm、左端から x 43.2mm まで）を周囲の服の色で塗りつぶす。顔を似せないため、顔の内側（目・鼻・口の範囲。切り出しの x 約 8〜24mm・y 約 7〜27mm）を強くぼかすか肌色で塗り、頭と肩のシルエット・背景の暗さ・光の向きだけを残す"
+    prompt: |
+      Portrait-format 33:34 (almost square) head-and-shoulders photograph of one generic man in his early 40s, East Asian, dark hair pulled back from the forehead and tied behind the head, relaxed neutral-to-slight smile, looking straight into the camera, wearing a plain light heather-grey hooded sweatshirt with no print.
+      Composition: a very tight close-up; the face is centred horizontally (face centre at about 49% of the width), the top of the hair is about 5% below the top edge, the eyes sit at about 41% of the height and the chin at about 77%; the hair spans roughly 19% to 79% of the width. The hood and shoulders fill the bottom 20%. The bottom 8% of the frame (left 90%) will be covered by dark navy caption bars, so keep only plain clothing there.
+      Background: a deep, almost black charcoal studio backdrop (#0d090a to #0e0d13) with only a faint, soft lighter falloff behind the head; nothing else in the background.
+      Lighting: soft key light from the front-left, gentle fill, natural warm skin tones (the print reads about #a6776a in the mid-tones), the grey hoodie around #8a8080 to #685d5d in shadow; moderate contrast like a magazine interview portrait.
+      Style: photorealistic editorial portrait, 85mm lens at eye level, f/2.8, sharp focus on the eyes, natural skin texture, no retouching artefacts. A fictional person who does not resemble any real or famous individual.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, print on clothing, signage, screen text, name tag, badge, celebrity likeness, famous person, multiple people, hands, glasses, border, frame, deformed face"
+    summary: "講師 1（段 1）のバストアップ写真。黒に近い背景、明るい灰色のパーカーの 40 代男性の顔の大写し。下端にキャプションの帯が重なる"
+    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×201px、350dpi で 455×469px（1024px 程度で生成して縮小）。参考の講師の顔・髪型の細部を似せない。参考は露出オーバーの印刷物の写真なので、色は目安（背景は黒に締める）。生成後は .jpg で保存し、文字・ロゴ状の模様がないことを拡大して確認する"
+
+  - id: page_001-lect-2
+    kind: photo
+    people: true
+    optional: false
+    # .lect--2 .lect__photo（left 6.7 + 55.4 + 4.2 = 66.3mm・top 26mm・33×37mm）
+    size_mm: [33.0, 37.0]
+    bleed: false
+    crop_mm: [66.3, 26.0, 33.0, 37.0]
+    placement: "components/lecturer-card.hbs の .lect__photo の photo-frame に src を渡す（page_001-lect-1 と同じく部品に任意の引数 photo を足す）。pages/page_001/page.html の段 2 の呼び出し（col=\"2\"）に photo=\"books/replica/a-course/backgrounds/page_001-lect-2.jpg\" を足す。枠は page.css の .lect--2 .lect__photo（33×37mm、object-fit: cover・中央）のまま。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、下端のキャプションの濃紺の帯 2 行（切り出しの下 6.6mm = y 56.4〜63.0mm、ほぼ全幅）を周囲のスーツ・壁の色で塗りつぶす。顔の内側（目・鼻・口の範囲。切り出しの x 約 9〜24mm・y 約 9〜27mm）を強くぼかすか肌色で塗り、頭と肩のシルエット・背景の明るさ・光の向きだけを残す"
+    prompt: |
+      Portrait-format 33:37 head-and-shoulders photograph of one generic man around 40, East Asian, short neat black hair with a natural side fringe, calm friendly expression with a slight smile, looking straight into the camera, wearing a dark navy business suit, white shirt and a plain dark tie.
+      Composition: the face is centred horizontally (face centre at about 51% of the width), the top of the hair about 5% below the top edge, the eyes at about 47% of the height and the chin at about 71%; the head spans roughly 19% to 82% of the width. The suit shoulders fill the bottom 27% and run off both sides. The bottom 15% of the frame will be covered by two dark navy caption bars, so keep only plain suit fabric there.
+      Background: a flat, evenly lit warm light-grey wall (#cbc5be on the left to #c0b9b4 on the right), no texture, no objects.
+      Lighting: soft, even frontal studio light, gentle shadows, natural warm skin tones (about #b58572 in the print), suit around #2e3150 to #4c517b, hair near #282022.
+      Style: photorealistic corporate headshot, 85mm lens at eye level, sharp focus, clean and professional. A fictional person who does not resemble any real or famous individual.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, lapel pin, name tag, badge, signage, screen text, celebrity likeness, famous person, multiple people, hands, glasses, patterned background, border, frame, deformed face"
+    summary: "講師 2（段 2）のバストアップ写真。明るい灰色の壁の前、紺のスーツの 40 歳前後の男性。下 15% にキャプションの帯が重なる"
+    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×219px、350dpi で 455×510px。参考の講師の顔を似せない。生成後は .jpg で保存"
+
+  - id: page_001-lect-3-cutout
+    kind: cutout
+    people: true
+    optional: false
+    # .lect--cutout .lect__photo（left 6.7 + 110.8 + 4.8 = 122.3mm・top 27.5mm・28×34mm）
+    size_mm: [28.0, 34.0]
+    bleed: false
+    # 参考の人物の輪郭（補正画像で非白の範囲）: 髪の上端 27.0mm、耳の幅 127.8〜146.8mm（y 37〜43mm）、首 130.0〜142.5mm（y 49〜55mm）、
+    # 肩は y 57mm から広がり、右の肩は x 153.4mm（y 63mm）まで出る（枠の右 150.3mm より 3mm 外、下 61.5mm より約 2mm 下）。左の肩はキャプションの下
+    crop_mm: [122.3, 27.5, 28.0, 34.0]
+    placement: "components/lecturer-card.hbs の .lect__photo の photo-frame に src を渡す（page_001-lect-1 と同じく部品に任意の引数 photo を足す）。pages/page_001/page.html の段 3 の呼び出し（col=\"3\" cutout=\"1\"）に photo=\"books/replica/a-course/backgrounds/page_001-lect-3-cutout.png\"（透過 PNG）を足す。枠は page.css の .lect--cutout .lect__photo（left 122.3mm・top 27.5mm・28×34mm、object-fit: cover）のまま。上を丸めた灰色の面（.photo-frame__placeholder の border-radius）は画像が入ると出なくなる。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、下端のキャプションの濃紺の帯（切り出しの下 4mm = y 57.5〜61.5mm、左端から x 145.9mm まで）を白で塗りつぶす。顔の内側（目・鼻・口の範囲。切り出しの x 約 8〜22mm・y 約 8〜23mm）を強くぼかすか肌色で塗り、頭と肩のシルエットと白地だけを残す"
+    prompt: |
+      Portrait-format 28:34 head-and-shoulders cut-out photograph of one generic man in his mid-30s, East Asian, short dark hair swept up and back, neatly trimmed moustache and short stubble beard, broad friendly smile showing teeth, looking straight into the camera, wearing a crisp white open-collar shirt with no tie.
+      Isolated subject on a plain pure white background (#ffffff), no shadow on the background, no floor, no props, with clean, crisp edges around the hair and shoulders so it can be cut out to a transparent PNG.
+      Composition: the top of the hair just touches the top edge; the face is centred slightly right of centre (face centre at about 54% of the width), the eyes at about 39% of the height and the chin at about 69%; the ears at roughly 20% and 88% of the width. The neck and the start of the shoulders fill the bottom 30%; the shoulders slope outward and run off the bottom and right edges. The bottom 12% of the frame (left 85%) will be covered by dark navy caption bars, so nothing important there.
+      Lighting: bright, soft, high-key frontal studio light, even exposure, natural warm tan skin tones (about #9c733f to #a6776a in the print), hair near #181417, shirt bright white #f2f1f0 with soft grey folds so it still separates from the white background.
+      Style: photorealistic corporate headshot for a cut-out, 85mm lens at eye level, sharp focus. A fictional person who does not resemble any real or famous individual.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, background scenery, coloured background, gradient background, cast shadow, vignette, name tag, badge, celebrity likeness, famous person, multiple people, hands, glasses, border, frame, deformed face"
+    summary: "講師 3（段 3）の切り抜き人物。白地で生成し、頭と肩の輪郭で透過 PNG に抜く。白いシャツの 30 代男性、笑顔"
+    notes: "人物を含む【要確認: 生成人物の使用可否】。切り抜き: 白地で生成 → 人物の輪郭で切り抜いて透過 PNG（白いシャツが白地に溶けないよう、肩の縁の灰色の影を残す。手順を .prompt.yaml の notes に書く）。必要画素: 150dpi で 165×201px、350dpi で 386×469px。参考では右の肩が枠の外（x 153.4mm・y 約 63.5mm）まで出ている。枠のままでは肩が枠の右端・下端で切れる（残る差）。合わせるなら page.css の .lect--cutout .lect__photo を右・下へ広げる（例: 31.5×36.5mm）必要があり、その場合は同じ人物の構図で広げた縦横比で生成し直す"
+
+  - id: page_001-lect-4
+    kind: photo
+    people: true
+    optional: false
+    # .lect--4 .lect__photo（left 6.7 + 166.2 + 4.2 = 177.1mm・top 26mm・33×37mm）
+    size_mm: [33.0, 37.0]
+    bleed: false
+    crop_mm: [177.1, 26.0, 33.0, 37.0]
+    placement: "components/lecturer-card.hbs の .lect__photo の photo-frame に src を渡す（page_001-lect-1 と同じく部品に任意の引数 photo を足す）。pages/page_001/page.html の段 4 の呼び出し（col=\"4\"）に photo=\"books/replica/a-course/backgrounds/page_001-lect-4.jpg\" を足す。枠は page.css の .lect--4 .lect__photo（33×37mm、object-fit: cover・中央）のまま。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、下端のキャプションの濃紺の帯 2 行（切り出しの下 5.1mm = y 57.9〜63.0mm、ほぼ全幅）を周囲のスーツ・シャツの色で塗りつぶす。顔の内側（目・眼鏡・鼻・口の範囲。切り出しの x 約 8〜24mm・y 約 11〜26mm）を強くぼかすか肌色で塗り、頭と肩のシルエット・背景の明るさだけを残す"
+    prompt: |
+      Portrait-format 33:37 head-and-shoulders photograph of one generic man in his late 50s, East Asian, thick tousled salt-and-pepper grey hair, thin rectangular metal-frame glasses, calm serious expression, looking straight into the camera, wearing a dark charcoal suit jacket over a white open-collar shirt, no tie.
+      Composition: the face is centred horizontally (face centre at about 48% of the width), the top of the hair about 5% below the top edge, the eyes at about 43% of the height and the chin at about 67%; the hair spans roughly 12% to 82% of the width. The suit shoulders fill the bottom 28% and run off both sides. The bottom 15% of the frame will be covered by two dark navy caption bars, so keep only plain suit and shirt there.
+      Background: a flat, evenly lit off-white wall with a very gentle warm gradient, slightly darker on the left (#d3cec1) and lighter on the right (#ebe9d8), no texture, no objects.
+      Lighting: soft, even frontal studio light, no glare on the glasses, natural warm skin tones (about #ac806b in the print), grey hair around #8a8a86 to #7f685b, suit #2f3040 to #747699.
+      Style: photorealistic corporate headshot, 85mm lens at eye level, sharp focus. A fictional person who does not resemble any real or famous individual.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, lapel pin, name tag, badge, signage, screen text, reflections in glasses, celebrity likeness, famous person, multiple people, hands, patterned background, border, frame, deformed face"
+    summary: "講師 4（段 4）のバストアップ写真。白っぽい壁の前、白髪まじりで眼鏡、濃色のジャケットの 50 代後半の男性"
+    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×219px、350dpi で 455×510px。参考の講師の顔を似せない。生成後は .jpg で保存"
+
+  - id: page_001-lect-5
+    kind: photo
+    people: true
+    optional: false
+    # .lect--5 .lect__photo（left 6.7 + 221.6 + 4.2 = 232.5mm・top 26mm・33×35.5mm）
+    size_mm: [33.0, 35.5]
+    bleed: false
+    crop_mm: [232.5, 26.0, 33.0, 35.5]
+    placement: "components/lecturer-card.hbs の .lect__photo の photo-frame に src を渡す（page_001-lect-1 と同じく部品に任意の引数 photo を足す）。pages/page_001/page.html の段 5 の呼び出し（col=\"5\"）に photo=\"books/replica/a-course/backgrounds/page_001-lect-5.jpg\" を足す。枠は page.css の .lect--5 .lect__photo（33×35.5mm、object-fit: cover・中央）のまま。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、下端のキャプションの濃紺の帯 2 行（切り出しの下 4mm = y 57.5〜61.5mm、ほぼ全幅）を周囲の服の色で塗りつぶす。顔の内側（目・鼻・口の範囲。切り出しの x 約 10〜26mm・y 約 9〜26mm）を強くぼかすか肌色で塗り、頭と肩のシルエット・空と建物の明暗だけを残す"
+    prompt: |
+      Portrait-format 33:35.5 outdoor head-and-shoulders snapshot of one generic man in his early 30s, East Asian, thick curly dark hair, big relaxed smile with eyes slightly narrowed, head tilted a little, looking toward the camera, wearing a plain black crew-neck T-shirt with a thin dark bag strap over one shoulder.
+      Composition: the face is centred slightly right of centre (face centre at about 54% of the width), the top of the hair about 6% below the top edge, the eyes at about 43% of the height and the chin at about 70%. The shoulders fill the bottom 18% and run off both sides. The bottom 12% of the frame will be covered by two dark navy caption bars, so keep only the plain black T-shirt there.
+      Background: the upper half is a pale, bright overcast sky (#eceadf); behind the shoulders, from about 52% of the height downward, an out-of-focus low residential building with a terracotta tiled roof and beige walls (#755a56 roof, light beige walls) on both sides of the head, softly blurred, no signs, no windows with readable details.
+      Lighting: soft daylight from an overcast sky, slightly backlit, face a little shadowed but readable (about #9c6e62 skin in the print), natural, casual travel-photo mood.
+      Style: photorealistic casual portrait taken with a 50mm lens at eye level, shallow depth of field, sharp focus on the face. A fictional person who does not resemble any real or famous individual.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, print on clothing, signage, shop sign, street sign, licence plate, screen text, name tag, celebrity likeness, famous person, multiple people, crowd, hands, glasses, border, frame, deformed face"
+    summary: "講師 5（段 5）の屋外のバストアップ写真。曇り空と瓦屋根の建物のぼけ、黒い T シャツの巻き毛の 30 代男性、笑顔"
+    notes: "人物を含む【要確認: 生成人物の使用可否】。必要画素: 150dpi で 195×210px、350dpi で 455×489px。参考の講師の顔を似せない。背景の建物に看板・文字が出たら作り直す。生成後は .jpg で保存"
+
+  - id: page_001-pick-1
+    kind: photo
+    people: false
+    optional: false
+    # .rep-ph--pick1（left 89.1mm・top 120.8mm・59.6×40.1mm）
+    # 参考の中身（補正画像の実測）: 黒い台紙に作品写真 6 点（3 列 × 2 段）。列 x 89.8〜107.7 / 109.8〜127.4 / 129.5〜147.3mm、
+    # 段 y 126.4〜139.9 / 142.8〜156.2mm。上の黒い帯 121.0〜126.3mm、各サムネイルの下に小さな白い説明文（y 140.0〜141.0 / 156.3〜157.5mm）
+    size_mm: [59.6, 40.1]
+    bleed: false
+    crop_mm: [89.1, 120.8, 59.6, 40.1]
+    placement: "pages/page_001/page.html の .rep-ph--pick1 の `{{> photo-frame}}` を `{{> photo-frame src=\"books/replica/a-course/backgrounds/page_001-pick-1.jpg\"}}` にする。枠は page.css の .rep-ph--pick1（left 89.1mm・top 120.8mm・59.6×40.1mm、object-fit: cover・中央）のまま。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、各サムネイルの下の小さな説明文（1 段目 y 140.0〜141.0mm、2 段目 y 156.3〜157.5mm。各列の左寄り x 89.8〜100 / 109.8〜118 / 129.5〜137mm 前後）を台紙の黒（#0d0b0e）で塗りつぶす。サムネイル内のパッケージ・冊子・画面の題字や文字状の部分も周囲の色で塗る"
+    prompt: |
+      Landscape 59.6:40.1 (about 3:2) image of a student graphic-design portfolio presentation board: a flat matte black board (#0d0b0e) holding six small product photographs in a neat grid of 3 columns by 2 rows, nothing else.
+      Composition: a solid black band across the top 13% of the frame; the six photos are equal rectangles about 30% of the width and 34% of the height each; columns at about 1%-31%, 35%-64% and 68%-98% of the width (narrow black gutters, almost no margin on the left); rows at about 14%-48% and 55%-88% of the height; plain black below each row and along the bottom 12%. No captions under the photos.
+      Each photo: a studio product shot on a seamless warm light-grey backdrop (#b3a399 to #d8d0c8) with a few faint scattered pale petals, showing packaging and print mock-ups decorated with original abstract dark-fantasy artwork in deep brown, black and glowing amber gold (#3a2a1e, #8a5a20, #e0a040): 1) a gallery wall with three framed dark-amber panels under a white shelf, 2) a sculptural folded black-and-brown gift box, 3) a long dark booklet above a small printed card, 4) a set of disc cases, an open booklet and a disc, 5) two printed folders fanned out, 6) a smartphone mock-up with a blank dark screen beside an art print. All artwork is abstract and pictorial only.
+      Lighting: soft even studio light, gentle contact shadows, slightly warm.
+      Style: photorealistic product photography composited onto a presentation board, crisp edges, high resolution.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, title lettering, labels, barcode, brand, trademark, readable screen, UI text, people, hands, faces, white border, frame around the board"
+    summary: "ピックアップの作品写真 1。黒い台紙に、パッケージ・冊子の作品の商品写真 6 点（3 列 × 2 段）を並べたボード"
+    notes: "人物なし。必要画素: 150dpi で 352×237px、350dpi で 821×553px。参考は他校の学生作品なので、作品の図柄はなぞらない（構図と色調の参照だけ）。1 枚で生成しにくい場合は、商品写真 6 点を別々に生成し、黒い台紙（#0d0b0e）の上に上記の位置で並べて 1 枚に合成してよい（合成手順を .prompt.yaml の notes に書く）。説明文は再現しない（必要なら Layer 3 で別に置く）"
+
+  - id: page_001-pick-2
+    kind: photo
+    people: false
+    optional: false
+    # .rep-ph--pick2（left 153mm・top 121.5mm・right 19.6mm → 118.4×45.3mm）
+    # 参考の中身（補正画像の実測）: 作品ビジュアル 2 点が隙間なく横に並ぶ。境目 x 211.8mm（左 58.8mm・右 59.6mm）
+    size_mm: [118.4, 45.3]
+    bleed: false
+    crop_mm: [153.0, 121.5, 118.4, 45.3]
+    placement: "pages/page_001/page.html の .rep-ph--pick2 の `{{> photo-frame}}` を `{{> photo-frame src=\"books/replica/a-course/backgrounds/page_001-pick-2.jpg\"}}` にする。枠は page.css の .rep-ph--pick2（left 153mm・top 121.5mm・118.4×45.3mm、object-fit: cover・中央）のまま。文字・構造は変えない"
+    reference_usage: composition
+    mask: "入力前に、右半分の奥の化粧箱のラベル（x 242.8〜250.6mm・y 132.5〜138.0mm。切り出しの x 89.8〜97.6mm・y 11.0〜16.5mm）を周囲の濃い赤（#7a2a40 前後）で、左半分の本の背・表紙の文字（x 182.5〜193mm・y 153.5〜157.5mm。切り出しの x 29.5〜40mm・y 32〜36mm）を周囲の濃紺で塗りつぶす。ほかにも拡大して文字状に見える部分（瓶のラベルなど）があれば周囲の色で塗る"
+    prompt: |
+      Wide 118.4:45.3 (about 2.6:1) diptych of two original photorealistic 3DCG still-life renders placed edge to edge with a hard vertical seam at 49.7% of the width and no gap or border.
+      Left panel (cool blue tone): an antique vanity table in front of a tall multi-pane window; outside, soft out-of-focus snowy trees in pale blue-grey light (#a0a6ad) fill the upper half. On the table, left to right: an ornate dark metal lantern with a faint blue glow at the far left edge rising to the top; a clear crystal slipper-shaped glass ornament and a few deep navy roses at the lower left; a faceted pale-blue crystal perfume bottle with a dark square stopper; a tall cobalt-blue perfume bottle (#3048a8) with a round disc stopper in the centre; a second cobalt bottle topped with small blue glass flowers; a short stack of dark blank books; a small ornate silver jewellery box; an upright white porcelain plate with a blue floral pattern at the right. Overall tone #7a7e87 with cobalt accents.
+      Right panel (warm rose-magenta tone): a close, slightly high-angle view of a vintage dressing table: a large silver tray with blue-and-white floral porcelain pieces filling the lower right; a round porcelain trinket box with a floral lid at the centre-left; a stemmed glass goblet holding dried flowers; in the soft background a dark red gift box with a deep red rose, draped pink fabrics and blurred shelves, and a pale lace curtain at the upper right. Overall tone #907c83, shadows plum #7a5c68, highlights soft pink-white #e8d8dc.
+      Lighting: soft window light, gentle bloom, rich detail and dense textures in both panels; no empty areas are needed (no text is placed over this image).
+      Style: high-end photorealistic 3D render, shallow depth of field, cinematic colour grading, sharp mid-ground detail.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, label text, perfume label, book titles, readable lettering, brand, trademark, monogram, signage, people, hands, faces, white gap between panels, border, frame"
+    summary: "ピックアップの作品写真 2。青い窓辺の香水瓶の静物（左）と、ローズ色の化粧台の磁器の静物（右）の 3DCG 作品 2 点を横に並べた横長"
+    notes: "人物なし。必要画素: 150dpi で 699×268px、350dpi で 1631×624px。参考は他校の学生作品なので、作品の構図・配色の参照に留め、なぞらない（img2img の強い参照は使わない）。香水・化粧品などの実在ブランドの品・ラベルを出さない。1 枚で生成しにくい場合は、左（58.8×45.3mm）と右（59.6×45.3mm）を別々に生成し、隙間なく横に並べて 1 枚に合成してよい（合成手順を .prompt.yaml の notes に書く）"

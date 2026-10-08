@@ -108,6 +108,7 @@
 
 ## 次にやること
 
+- Layer 1 の生成指示: books/replica/a-course/backgrounds/layer1-orders.yaml（7 件、人物を含む 5 件。入力の切り出しと必要画素数は npm run gen:inputs -- --book replica/a-course）
 - Layer 1 生成待ち（Phase 5 の検証用。生成した場合は books/replica/a-course/backgrounds/ か shared/generated-assets/ に置き、.prompt.yaml を付ける）:
   - 講師のバストアップ写真 4 枚（段 1: 33×34mm、段 2・4: 33×37mm、段 5: 33×35.5mm。下端にキャプションが重なる）
   - 切り抜き人物 1 点（段 3: 28×34mm、白地に頭と肩の輪郭で抜いた素材。肩が右の段の縦罫の手前まで出る）
