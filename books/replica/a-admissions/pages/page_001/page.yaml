@@ -1,0 +1,18 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "出願の流れ"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: other
+# Layer 1（BASE VISUAL）: なし。参考ページは白地で、黒帯・ピル・矢印も単色（Layer 2 の色面・SVG）
+status: review             # draft | review | approved
+notes: >-
+  Phase 5 完コピ検証（3 ラウンド。記録は reviews/page_001/review.md）。見開きの右ページ（判型 210×210mm の仮の値、左綴じの右ページ = ノドが左）。
+  グリッド: 版面 = ノド 6mm・小口 10mm・天 7mm・地 8.5mm（book.yaml）。パネル（6.1〜200.0 × 56.1〜201.3mm、角丸 3mm）と略地図の枠は版面の左右いっぱい。
+  パネル内は 手順の列（ピル 12.0〜57.3mm）＋ 内容の列（横罫 64.8〜193.5mm、文字の左端 65.1mm）の 2 列で、参考が 12 段グリッドに乗っていないため .col-N は使わず mm で配置した。
+  文字はすべて絶対配置・折り返しなし（改行位置は <br> で参考と同じ）。字面の上端から top を逆算している（page.css 冒頭のコメント）。
+  Layer 分担: Layer 1 なし ／ Layer 2 = 角丸パネル + 黒帯、手順のピル、縦矢印（SVG）、横罫、略地図の枠と仮図形（SVG）、指さしアイコン（SVG）／
+  Layer 3 = 見出し・本文・相談時間・連絡先・手順の説明・注意事項・ノンブル（page.number）、QR（qr ヘルパー）。
+  文字はダミー（参考と同じ文字数・改行。欧文は ABC、数字は 0、手順の通し番号 1〜3 は構造として残した）。
+  プレースホルダ: 略地図（道路・建物・目印の中立の単純図形。Phase 8 で company-data の所在地情報から作る）、QR（facts.school.url が TODO のため TODO 文字列を符号化した仮。描画時に警告が出る）、
+  連絡先（校名・住所・電話・URL はダミー。Phase 8 で facts.school の値に置き換える）。
+  色は page.css 冒頭の --rep-*（墨・黒帯・淡灰のピル・灰の矢印・地図の灰）。残差はダミーと参考の字形差・欧文書体の差・地図の中身・ノンブルの位置（安全領域）だけ

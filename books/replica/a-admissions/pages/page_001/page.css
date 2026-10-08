@@ -1,0 +1,478 @@
+/*
+ * page_001 出願の流れ — Phase 5 完コピ検証（compose が @scope でこのページだけに限定する）
+ * - 寸法は mm、文字サイズは pt。位置は参考の補正画像（2000×2000px、1mm = 9.52px）の字面・罫・枠の実測
+ * - 文字の top は「字面の上端」から逆算（Noto Sans JP: 行送り L のとき 漢字の字面の上端 ≒ 行の上端 + (L/2 − 0.444)em）
+ * - 版面: 左 = ノド 6mm（var(--margin-left)）、右 = 小口 10mm（var(--margin-right)）。パネルと略地図は版面の左右いっぱい
+ * - 12 段グリッドには乗っていない（パネル内は 手順の列 12.0〜57.3mm ／ 内容の列 64.8〜193.5mm）ため、.col-N は使っていない
+ */
+
+/* ---- 参考ページの色（Phase 8 でブランドカラーの変数に置き換える） ---- */
+:scope {
+  --rep-ink: #1e1e1e;          /* 文字・罫線・パネルの枠 */
+  --rep-band: #262628;         /* パネル上部の黒帯・完了のピル */
+  --rep-pill: #bcbcbc;         /* 手順のピル（淡灰） */
+  --rep-pill-line: #2a2a2a;    /* ピルの細枠 */
+  --rep-arrow: #767679;        /* 縦矢印 */
+  --rep-map-frame: #9a9a9a;    /* 略地図の枠 */
+  --rep-map-road: #a8a8a8;     /* 略地図の道路（仮） */
+  --rep-map-block: #2b2b2b;    /* 略地図の建物（仮） */
+  --rep-paper: #ffffff;
+
+  /* パネルの外形（.trim 基準） */
+  --rep-panel-x: 6.09mm;
+  --rep-panel-y: 56.07mm;
+  --rep-panel-w: 193.8mm;
+  --rep-panel-h: 145.2mm;
+  --rep-panel-r: 3mm;
+  /* パネル内の列 */
+  --rep-step-x: 11.97mm;       /* 手順のピルの左端 */
+  --rep-step-w: 45.33mm;
+  --rep-content-x: 65.1mm;     /* 内容の列の文字の左端 */
+
+  color: var(--rep-ink);
+}
+
+/* 共通: このページの文字はすべて絶対配置・折り返しなし（改行は <br> で参考と同じ位置に入れる） */
+.rep-lead-title, .rep-lead, .rep-visit-title, .rep-hours, .rep-online, .rep-contact p,
+.rep-band__title, .rep-band__list, .rep-catch, .rep-step, .rep-h3,
+.rep-s1-user, .rep-s1-entry, .rep-s1-list, .rep-s1-qrlabel, .rep-s2-side, .rep-s2-list,
+.rep-s3-sub, .rep-s3-paren, .rep-s3-item, .rep-s3-item2, .rep-s3-ref, .rep-done,
+.rep-note-label, .rep-note, .rep-folio, .rep-map__caption {
+  position: absolute;
+  margin: 0;
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: left;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* =========================================================
+ * 上部: 相談案内
+ * ========================================================= */
+
+/* 見出し（14.5pt・太字・全角どり。字面 6.1〜78.7mm × 7.6〜12.0mm） */
+.rep-lead-title {
+  top: 7.12mm;
+  left: 6mm;
+  font-size: 14.5pt;
+  font-weight: 700;
+  font-feature-settings: normal;
+}
+
+/* 本文 3 行（8.8pt・行送り 5.51mm。字面の上端 15.1 / 20.6 / 26.1mm。参考は約物（、。「」）を半角に詰めているので halt で合わせた） */
+.rep-lead {
+  top: 13.4mm;
+  left: 6.05mm;
+  font-size: 8.8pt;
+  font-weight: 500;
+  line-height: 1.775;
+  font-feature-settings: 'halt' 1;
+}
+
+/* 相談の見出し（15pt・太字。字面 34.9〜39.4mm。中黒だけ半角に詰め、語の間は 0.2em） */
+.rep-visit-title {
+  top: 34.45mm;
+  left: 5.8mm;
+  font-size: 15pt;
+  font-weight: 700;
+  font-feature-settings: normal;
+}
+
+.rep-visit-title__dot { font-feature-settings: 'palt' 1; }
+
+.rep-visit-title__gap {
+  display: inline-block;
+  width: 0.2em;
+}
+
+/* 相談時間（8.25pt。字面の上端 41.9mm）と注記（7.25pt。字面の上端 46.0mm） */
+.rep-hours {
+  top: 41.66mm;
+  left: 6mm;
+  font-size: 8.25pt;
+  font-weight: 500;
+  font-feature-settings: normal;
+}
+
+.rep-online {
+  top: 45.86mm;
+  left: 5.6mm;
+  font-size: 7.25pt;
+}
+
+/* 連絡先（左端 108.1mm。参考は 6〜7pt。6.5pt 未満の行は 6.5pt に上げて文字数を減らした） */
+.rep-contact p {
+  left: 108.1mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+}
+
+.rep-contact .rep-contact__org {
+  top: 33.47mm;
+  letter-spacing: 0.07em;
+}
+
+.rep-contact .rep-contact__office {
+  top: 36.13mm;
+  font-size: 8.7pt;
+  font-weight: 500;
+}
+
+.rep-contact__dept {
+  margin-left: 0.25em;
+  font-size: 6.5pt;
+}
+
+.rep-contact .rep-contact__addr { top: 39.87mm; }
+
+.rep-contact .rep-contact__tel {
+  top: 42.71mm;
+  font-size: 6.9pt;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.rep-contact .rep-contact__url {
+  top: 46.06mm;
+  font-size: 6.9pt;
+  font-weight: 500;
+}
+
+/* 略地図の枠（151.2〜200.4mm × 7.9〜47.2mm、灰色の細枠）。中身は仮の単純図形 */
+.rep-map {
+  position: absolute;
+  top: 7.9mm;
+  left: 151.2mm;
+  width: 49.2mm;
+  height: 39.3mm;
+  margin: 0;
+  border: 0.25mm solid var(--rep-map-frame);
+}
+
+.rep-map__svg {
+  position: absolute;
+  inset: -0.25mm;
+  width: 49.2mm;
+  height: 39.3mm;
+}
+
+.rep-map__road { fill: var(--rep-map-road); }
+.rep-map__block { fill: var(--rep-map-block); }
+.rep-map__rail { fill: var(--rep-paper); stroke: var(--rep-map-block); stroke-width: 0.3; }
+.rep-map__mark { fill: var(--rep-paper); stroke: var(--rep-map-block); stroke-width: 0.6; }
+
+.rep-map__caption {
+  top: 35.6mm;
+  left: 1.3mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+}
+
+/* =========================================================
+ * 角丸パネル（6.1〜200.0mm × 56.1〜201.3mm、角丸 3mm、墨の細枠）+ 上部の黒帯（〜80.5mm）
+ * ========================================================= */
+.rep-band {
+  position: absolute;
+  top: var(--rep-panel-y);
+  left: var(--rep-panel-x);
+  width: var(--rep-panel-w);
+  height: 24.46mm;
+  border-radius: var(--rep-panel-r) var(--rep-panel-r) 0 0;
+  background: var(--rep-band);
+}
+
+.rep-panel {
+  position: absolute;
+  top: var(--rep-panel-y);
+  left: var(--rep-panel-x);
+  width: var(--rep-panel-w);
+  height: var(--rep-panel-h);
+  border: 0.3mm solid var(--rep-ink);
+  border-radius: var(--rep-panel-r);
+}
+
+/* 黒帯の見出し 2 行（17pt・白抜き・太字。字面の上端 61.0 / 70.8mm） */
+.rep-band__title {
+  top: 59.23mm;
+  left: 13mm;
+  font-size: 17pt;
+  font-weight: 700;
+  line-height: 1.628;
+  letter-spacing: 0.06em;
+  color: var(--rep-paper);
+  font-feature-settings: normal;
+}
+
+/* 黒帯の右の説明 4 行（7.1pt・白抜き。左端 74.0mm、字面の上端 61.2 / 65.6 / 69.8 / 74.0mm） */
+.rep-band__list {
+  top: 60.17mm;
+  left: 73.9mm;
+  font-size: 7.1pt;
+  font-weight: 700;
+  line-height: 1.71;
+  letter-spacing: 0.08em;
+  color: var(--rep-paper);
+}
+
+/* 3 行目だけは参考も字間を詰めて 1 行に収めている */
+.rep-band__list .rep-band__long { letter-spacing: 0; }
+
+/* キャッチ（字面の上端: 仮名 87.5mm / 数字 85.2mm / 欧文 87.8mm / 小見出し 89.6mm。下端は 93.2mm にそろう） */
+.rep-catch__pre {
+  top: 86.84mm;
+  left: 12.2mm;
+  font-size: 16pt;
+  font-weight: 900;
+  font-feature-settings: 'palt' 1;
+}
+
+.rep-catch__num {
+  top: 83.23mm;
+  left: 29.2mm;
+  font-size: 30pt;
+  font-weight: 900;
+}
+
+.rep-catch__en {
+  top: 86.61mm;
+  left: 37.7mm;
+  font-size: 20pt;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.rep-catch__sub {
+  top: 89.34mm;
+  left: 64.9mm;
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  font-feature-settings: normal;
+}
+
+/* 手順のピル（12.0〜57.3mm、高さ 6.75mm、淡灰 + 墨の細枠、角丸 1.3mm）。最後だけ墨ベタ白抜き */
+.rep-step {
+  left: var(--rep-step-x);
+  width: var(--rep-step-w);
+  height: 6.75mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.25mm solid var(--rep-pill-line);
+  border-radius: 1.3mm;
+  background: var(--rep-pill);
+  font-size: 12.5pt;
+  font-weight: 700;
+}
+
+.rep-step span { margin-right: 0.08em; }
+.rep-step--1 { top: 98.59mm; }
+.rep-step--2 { top: 127.15mm; }
+.rep-step--3 { top: 149.0mm; }
+
+.rep-step--done {
+  top: 177.03mm;
+  height: 7mm;
+  border-color: var(--rep-band);
+  background: var(--rep-band);
+  color: var(--rep-paper);
+  font-size: 11.3pt;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em;
+}
+
+/* 縦矢印（中心 34.65mm、軸 1.8mm、矢じり 5.7 × 3.9mm、灰） */
+.rep-arrow {
+  position: absolute;
+  left: calc(34.65mm - 2.85mm);
+  width: 5.7mm;
+  fill: var(--rep-arrow);
+}
+
+.rep-arrow--1 { top: 106.89mm; height: 19.1mm; }
+.rep-arrow--2 { top: 135.24mm; height: 12.6mm; }
+.rep-arrow--3 { top: 157.18mm; height: 18.9mm; }
+
+/* 内容の列の横罫（64.8〜193.5mm、0.3mm）と注意事項の上の全幅罫（12.3〜193.4mm） */
+.rep-rule {
+  position: absolute;
+  left: 64.8mm;
+  width: 128.7mm;
+  height: 0.3mm;
+  margin: 0;
+  border: 0;
+  background: var(--rep-ink);
+}
+
+.rep-rule--1 { top: 98.4mm; }
+.rep-rule--2 { top: 127.45mm; }
+.rep-rule--3 { top: 149.35mm; }
+.rep-rule--4 { top: 177.75mm; }
+
+.rep-rule--note {
+  top: 188.55mm;
+  left: 12.3mm;
+  width: 181.1mm;
+}
+
+/* ---- 段階ごとの見出し（11.35pt・太字。段階 1 だけ 11.1pt） ---- */
+.rep-h3 {
+  left: var(--rep-content-x);
+  font-size: 11.35pt;
+  font-weight: 700;
+  font-feature-settings: normal;
+}
+
+.rep-h3--1 { top: 100.78mm; font-size: 11.1pt; }
+.rep-h3--2 { top: 129.98mm; }
+.rep-h3--3 { top: 151.5mm; }
+.rep-h3--4 { top: 161.38mm; }
+
+/* 段階 1 */
+.rep-s1-user {
+  top: 106.47mm;
+  left: var(--rep-content-x);
+  font-size: 9pt;
+}
+
+.rep-s1-user b { font-weight: 700; }
+
+.rep-s1-user span {
+  margin-left: 2.4mm;
+  font-size: 7.7pt;
+}
+
+.rep-s1-entry {
+  top: 110.72mm;
+  left: var(--rep-content-x);
+  font-size: 9pt;
+  font-weight: 700;
+}
+
+.rep-s1-list {
+  top: 115.38mm;
+  left: var(--rep-content-x);
+  font-size: 7.2pt;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+}
+
+.rep-s1-qrlabel {
+  top: 117.85mm;
+  left: 135.0mm;
+  font-size: 7.2pt;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.rep-hand {
+  position: absolute;
+  top: 117.95mm;
+  left: 170.2mm;
+  width: 6.1mm;
+  height: 3mm;
+  fill: var(--rep-paper);
+  stroke: var(--rep-ink);
+  stroke-width: 0.3;
+  stroke-linejoin: round;
+}
+
+/* QR（符号部 13.2mm 角 = 180.0〜193.1mm × 111.5〜124.7mm。周囲に規格の余白 4 モジュール） */
+.rep-qr {
+  position: absolute;
+  top: 109.7mm;
+  left: 178.2mm;
+  width: 16.85mm;
+  height: 16.85mm;
+  line-height: 0;
+}
+
+/* 段階 2 */
+.rep-s2-side {
+  top: 129.6mm;
+  left: 140.9mm;
+  font-size: 7pt;
+  line-height: 1.33;
+  letter-spacing: 0.03em;
+}
+
+.rep-s2-list {
+  top: 135.0mm;
+  left: 66.5mm;
+  font-size: 7.3pt;
+  line-height: 1.569;
+}
+
+/* 段階 3 */
+.rep-s3-sub {
+  top: 156.31mm;
+  left: var(--rep-content-x);
+  font-size: 7.1pt;
+  letter-spacing: 0.14em;
+}
+
+.rep-s3-paren {
+  top: 166.15mm;
+  left: var(--rep-content-x);
+  font-size: 7.1pt;
+  letter-spacing: 0.03em;
+  text-spacing-trim: trim-start;
+}
+
+.rep-s3-item {
+  top: 169.93mm;
+  left: 65.6mm;
+  font-size: 7.2pt;
+}
+
+.rep-s3-item2 {
+  top: 173.8mm;
+  left: 68.2mm;
+  font-size: 7.2pt;
+}
+
+.rep-s3-ref {
+  top: 173.8mm;
+  right: calc(210mm - 192.3mm);
+  font-size: 7.2pt;
+  letter-spacing: 0.02em;
+}
+
+/* 完了の説明（8.7pt・中太） */
+.rep-done {
+  top: 180.76mm;
+  left: 65.6mm;
+  font-size: 8.7pt;
+  font-weight: 500;
+}
+
+/* 注意事項（ラベル 8.2pt 太字 + 2 行 6.5pt。参考の 2 行目は 6.4pt 相当で、最小 6.5pt を守るため 1 字減らした） */
+.rep-note-label {
+  top: 191.93mm;
+  left: 11.85mm;
+  font-size: 8.2pt;
+  font-weight: 700;
+  font-feature-settings: 'palt' 1;
+}
+
+.rep-note {
+  top: 190.75mm;
+  left: 27.3mm;
+  font-size: 6.5pt;
+  line-height: 1.62;
+}
+
+.rep-note__wide { letter-spacing: 0.03em; }
+
+/* ノンブル（番号のみ。参考は下端から 4mm で安全領域の外 → 安全領域の線 205mm に合わせた） */
+.rep-folio {
+  top: 202.18mm;
+  right: 5mm;
+  font-size: 8.6pt;
+  font-weight: 400;
+}
