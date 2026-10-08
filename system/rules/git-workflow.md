@@ -17,7 +17,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | 3. ルール確認 | `AGENTS.md` → 作業に関係する `system/rules/*.md` → 使う `system/prompts/*.md` |
 | 4. 対象確認 | `books/<id>/config/book.yaml`（`notes`）、各 `page.yaml`（`status` / `notes`）、`reviews/<pageId>/review.md` の「次にやること」 |
 | 5. 作業 | ルールとプロンプトに従う。状態はファイルに書く |
-| 6. 検証 | `npm run check`（型チェック・validate・テスト）、変更した BOOK の `npm run render` と目視 |
+| 6. 検証 | `npm run doctor`（環境診断）、`npm run check`（型チェック・validate・テスト）、変更した BOOK の `npm run render` と出力 PNG の目視 |
 | 7. commit | 下記の規則で、作業単位ごとにコミット |
 | 8. push | リモートに push。push できない場合は理由と未 push の内容を人間に伝える |
 | 9. 終了 | 未完了の作業を `review.md` の「次にやること」や `notes` に書いてからコミット・push して終える |
@@ -26,7 +26,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 
 - `main` に直接コミットしない。作業ごとにブランチを作り、プルリクエストでマージする
   - 例: `book/brochure-page-016`、`ref/hal-brochure`、`data/courses-update`、`system/render-fix`
-- CI（`.github/workflows/ci.yml`）はプルリクエストと `main` への push で、`npm run doctor` → `npm run check` → フィクスチャのスモークレンダリングを実行する。CI が失敗しているブランチはマージしない
+- GitHub Actions の CI は使わない（push / プルリクエストでの自動検証はない）。commit / push の前に、作業セッション内（ローカル / Dev Container / Claude Code / Codex）で `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視を行い、すべて通ったものだけを push・マージする
 - エージェントがブランチを指定されている場合は、それに従う
 
 ## 3. コミット

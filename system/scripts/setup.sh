@@ -184,7 +184,7 @@ fi
 # ---------- 4. OS パッケージ（poppler-utils） ----------
 
 # pdfinfo / pdftoppm は ref:ingest の PDF 取り込みと npm run check（テスト）に必要。
-# Dev Container・CI のイメージには入っているが、Codex cloud などのコンテナにはないことがある。
+# Dev Container のイメージには入っているが、Codex cloud などのコンテナにはないことがある。
 # root かパスワードなし sudo が使えるときだけ apt-get で入れる（失敗しても続行し、doctor が NG として報告する）
 if command -v pdfinfo >/dev/null 2>&1 && command -v pdftoppm >/dev/null 2>&1; then
   log "poppler-utils: インストール済み"

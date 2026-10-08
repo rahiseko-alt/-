@@ -26,7 +26,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 3. **ルールを確認する**: このファイル → 作業に関係する `system/rules/*.md` → 使う `system/prompts/*.md`
 4. **対象を確認する**: `books/<id>/config/book.yaml` の `notes`、各 `page.yaml` の `status` / `notes`、`books/<id>/reviews/<pageId>/review.md` の「次にやること」。状態はすべてファイルにある
 5. **作業する**: ルールとプロンプトに従う。分析・生成記録・レビュー結果はファイルに書く
-6. **検証する**: `npm run check`、変更した BOOK の `npm run render`、出力 PNG の目視
+6. **検証する**: `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視。GitHub Actions の CI は使わない。検証はローカル / Dev Container / Claude Code / Codex の作業セッション内で行い、通ってから commit / push する
 7. **commit する**: 日本語・種別付き（system/rules/git-workflow.md）
 8. **push する**
 9. **終了する**: 未完了の作業は `review.md` の「次にやること」や `notes` に書き、commit / push してから終える。次のセッションが会話履歴なしで再開できる状態にする
@@ -41,7 +41,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | Phase 4 | 参考資料解析（`analysis/*.yaml`） | 未着手 |
 | Phase 5 | 完コピ検証（代表ページを 2 ラウンド以上比較・修正） | 未着手 |
 | Phase 6 | BASELINE 確定 | 未着手 |
-| Phase 7 | 保護機構（Filesystem Permission / PreToolUse Hook / Git 差分チェック・CI） | 計画のみ・**未導入**（system/rules/protection.md） |
+| Phase 7 | 保護機構（Filesystem Permission / PreToolUse Hook / Git 差分チェック） | 計画のみ・**未導入**（system/rules/protection.md） |
 | Phase 8 | 自社版への変換 | 未着手 |
 | Phase 9 | 日常編集 | 未着手 |
 
@@ -72,7 +72,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 │  ├─ components/            共通パーシャル（*.hbs）
 │  ├─ layouts/               共通 CSS（grid / typography / components）
 │  └─ generated-assets/      再利用する AI 生成ビジュアル（+ .prompt.yaml）
-├─ .devcontainer/  .github/workflows/ci.yml  .claude/settings.json
+├─ .devcontainer/  .claude/settings.json
 └─ package.json  tsconfig.json  vitest.config.ts
 ```
 
@@ -142,8 +142,8 @@ docs/concept.md §14 の最重要原則（詳細と具体的な行動: system/ru
 - **完コピ検証は最低 2 ラウンド**: Phase 5 では `npm run compare` による視覚比較と修正を 2 回以上行い、`review.md` に記録する（system/rules/review.md）
 - **docs/concept.md を編集しない**
 - **バイナリは Git LFS**: png / jpg / jpeg / pdf / webp / tif / psd / ai は `.gitattributes` で LFS 管理
-- **検証を通す**: commit 前に `npm run check`。`approved` のページを変えたら理由をコミットメッセージに書く
-- **保護機構（Phase 7）はまだ導入しない**: PreToolUse フック・権限設定・CI のパス監視は Phase 6 の baseline 確定後に導入する（system/rules/protection.md）
+- **検証を通す**: commit / push の前に、セッション内で `npm run doctor`・`npm run check`・変更した BOOK の `npm run render`・出力 PNG の目視を行う（自動 CI はないため、これが唯一の検証）。`approved` のページを変えたら理由をコミットメッセージに書く
+- **保護機構（Phase 7）はまだ導入しない**: PreToolUse フック・権限設定・Git 差分チェックは Phase 6 の baseline 確定後に導入する（system/rules/protection.md）
 
 ## 8. どこに何を置くか
 

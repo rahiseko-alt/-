@@ -384,7 +384,6 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 | Dev Container / Codespaces | `.devcontainer/devcontainer.json` → `system/devcontainer/Dockerfile`（Playwright 1.56.1 のイメージ + Noto CJK・Git LFS・poppler）。作成時に `setup.sh` |
 | Codex cloud | セットアップスクリプトに `bash system/scripts/setup.sh`（poppler-utils も `apt-get` で入れる） |
 | Claude Code on the web | `.claude/settings.json` の SessionStart フック（リモート時のみ `setup.sh --quiet`） |
-| CI | `.github/workflows/ci.yml`: `npm ci` → Chromium → `npm run doctor` → `npm run check` → フィクスチャのスモークレンダリング（`--root system/fixtures/studio --book smoke --dpi 72`）→ 出力をアーティファクトとして保存 |
 
 Playwright のバージョン（`package.json`）と Dockerfile のベースイメージのタグは必ず同時に更新します（system/devcontainer/README.md）。
 
@@ -401,4 +400,4 @@ Playwright のバージョン（`package.json`）と Dockerfile のベースイ�
   - レンダリング（ブラウザ）: PNG の画素数、PDF のページ数・サイズ・フォント埋め込み
   - CLI: validate の各検査（禁止語・直書き・記録漏れ）、compare の出力、new:book / new:page / ref:ingest の生成物
   - 実リポジトリ: `npm run validate` が終了コード 0
-- CI では `npm run check` に加えてスモークレンダリングを行い、出力をアーティファクトとして残す
+- GitHub Actions の CI は使わない。テストを含む検証は各作業セッション内（ローカル / Dev Container / Claude Code / Codex）で `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視の順に行い、通ってから commit / push する
