@@ -121,6 +121,15 @@ Phase 5 で完コピ検証したページ（いずれも 3 ラウンド。記録
 | `HAL-nagoya/brochure-1` page_015 左（学科一覧表） | `books/replica/a-brochure` | `prep/page_015-l.yaml` |
 | `nagoya-iryo-hisho-it/brochure-web-it` page_003 左（職種の 2 軸図） | `books/replica/b-web-it` | `prep/page_003-l.yaml` |
 | `kokusai-igaku-gijutsu/flyers` page_002（チラシ裏面） | `books/replica/c-flyer` | `prep/page_002.yaml` |
+| `HAL-nagoya/brochure-2` page_001 右（学科の標準見開き） | `books/replica/a-course` | `prep/page_001-r.yaml` |
+| `HAL-nagoya/admissions` page_002 右（出願の手順） | `books/replica/a-admissions` | `prep/page_002-r.yaml` |
+| `nagoya-iryo-hisho-it/brochure-1` page_016 左（コース紹介） | `books/replica/b-course` | `prep/page_016-l.yaml` |
+| `nagoya-iryo-hisho-it/brochure-2` page_001 左（データページ） | `books/replica/b-data` | `prep/page_001-l.yaml` |
+| `nagoya-iryo-hisho-it/admissions` page_001（表紙） | `books/replica/b-adm-cover` | `prep/page_001.yaml` |
+| `nagoya-iryo-hisho-it/guide-living` page_002 右（カード構成） | `books/replica/b-living` | `prep/page_002-r.yaml` |
+| `nagoya-iryo-hisho-it/flyers` page_002（イベントチラシ） | `books/replica/b-flyer` | `prep/page_002.yaml` |
+| `kokusai-igaku-gijutsu/brochure` page_006 左（学科紹介） | `books/replica/c-course` | `prep/page_006-l.yaml` |
+| `kokusai-igaku-gijutsu/admissions` page_005 右（日程表） | `books/replica/c-admissions` | `prep/page_005-r.yaml` |
 
 Phase 5 の前に必要なこと（全資料共通）:
 
