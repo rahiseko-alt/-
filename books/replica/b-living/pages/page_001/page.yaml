@@ -1,13 +1,20 @@
 # ページの設定（system/rules/page-layers.md）
 id: page_001
-title: "表紙"
+title: "生活ガイド カード構成（完コピ検証）"
 # type: cover | toc | message | course | interview | data | access | back-cover | other
-type: cover
-# Layer 1（BASE VISUAL）: 背景画像を置いたらコメントを外す。画像と同じベース名の .prompt.yaml も必須
-# background:
-#   image: books/replica/b-living/backgrounds/page_001.png
-#   fit: cover             # cover | contain
-#   position: center       # CSS の object-position
-#   opacity: 1
-status: draft              # draft | review | approved
-notes: ""
+type: other
+# Layer 1（BASE VISUAL）: 全面背景は使わない（白地・上部の薄グレーの帯・カード・ピルはすべて単色で Layer 2）
+status: review             # draft | review | approved
+notes: |
+  完コピ検証（Phase 5）3 ラウンド済み（books/replica/b-living/reviews/page_001/review.md）。参考ページ（見開きの右ページ）を .trim 基準の mm で実測し、全要素を絶対配置。
+  グリッド: 版面 = マージン 上 10・下 19・ノド 14.2・小口 20mm、2 段・段間 6.7mm（下段のカード 2 枚が各 84.55mm の段にちょうど乗る）。
+  上の特徴カード 2 枚は 1 段（x 15.1–189.6mm）、統計ブロックは帯（0–52mm）の中に左 説明（x 16.8–60）/ 点線の縦罫（x 65.4）/ 右 ラベル＋数字 3 列（ピッチ 36.7mm）。
+  Layer 2: 上部の薄グレーの帯、統計のラベル（黒枠のピル＋下向きの三角）・点線の縦罫、特徴カード（books/replica/b-living/components/feature-card.hbs: 白地・極薄の枠・写真枠。
+  高さ = 上の余白 + 写真（比率固定）+ 下の余白）、吹き出しタグ（components/speech-tag.hbs: SVG の角丸＋尻尾。カードの左上の角をまたぐ負のオフセット）、
+  付帯パネル（薄グレー＋チャコールのピル見出し）、設備アイコンの格子（青い角丸＋汎用の線画 SVG）、ピル、赤いバッジ（カードの右上の角をまたぐ）、写真の上の帯・無線 LAN のバッジ、
+  下段のカード（components/tab-card.hbs: 薄グレーの地＋英字タブ＋尖り）、白いパネル、スマートフォンの枠、黄色の円と線画。
+  Layer 3: すべてダミーテキスト（字数・改行位置は参考に合わせ、6.5pt（白抜きは 7pt）未満の文字だけ字数を減らした）。数字は 0、英字はダミーの欧文。QR は {{qr facts.school.url}}（現在 TODO）。
+  見出しは参考に合わせて palt なし（ベタ組み）。統計の数字・英字タブは Noto Sans JP を横 84%・80% に縮めて字幅の狭い書体に近づけた。
+  Layer 1 生成待ち・素材待ち: 写真 5 点（カード A 81.6×62.6mm の居室、カード B 81.6×46.6mm の人物の集合、左下 78.1×27.3mm・37.1×24.2mm のイベントの集合写真）、
+  アプリの画面（23.5×38.4mm。スマートフォンの枠の中）、アプリのロゴ（7.6×8.5mm の破線の枠）。いずれも photo-frame のプレースホルダか破線の枠。全面背景の生成は不要。
+  色は page.css 冒頭の --rep-*（撮影画像からの推定値）。Phase 8 でブランドカラーへ置き換える。

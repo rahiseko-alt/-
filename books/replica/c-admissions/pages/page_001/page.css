@@ -219,7 +219,7 @@
 }
 
 /* 矢印のあるセルは矢印の分だけ文字を右へ */
-.adm-flow__b td:nth-child(2) { padding-left: 3.2mm; }
+.adm-flow .adm-flow__b td:nth-child(2) { padding-left: 3.2mm; }
 
 /* ---- Layer 3: 【 】ラベルの段落（ラベル列＋本文列。本文の 2 行目以降はラベルの幅だけ字下げ） ---- */
 .adm-items {

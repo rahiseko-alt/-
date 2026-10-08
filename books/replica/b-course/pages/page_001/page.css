@@ -171,10 +171,11 @@
   font-size: 9pt;
   font-weight: 700;
   line-height: 4.5mm;
+  letter-spacing: 0.04em;
   text-align: center;
   white-space: nowrap;
   color: var(--rep-badge-ink);
-  transform: translateY(-0.8mm) rotate(6.5deg);
+  transform: translateY(-0.4mm) rotate(8deg);   /* 参考は 約 8.4° 右へ傾く（ノド寄りの反り 約 +1° を差し引いた推定） */
 }
 
 /* ---------- 大写真（Layer 1 待ち）と情報ボックス ---------- */

@@ -547,15 +547,14 @@
   font-weight: 900;
 }
 
-/* 柱の二重の右向き三角（縦組みでは下向き） */
+/* 柱の二重の右向き三角（縦に流れるので下向きの三角を 2 つ重ねる） */
 .rep-running__arrow {
   display: inline-block;
   width: 2.2mm;
-  height: 3.2mm;
-  margin: 0 1.2mm;
+  height: 3mm;
+  margin: 1mm 0;
   background: var(--rep-ink);
-  clip-path: polygon(0 0, 50% 50%, 0 100%, 50% 100%, 100% 50%, 50% 0);
-  clip-path: polygon(0 0, 45% 50%, 0 100%, 0 100%, 0 0, 50% 0, 95% 50%, 50% 100%, 50% 0);
+  clip-path: polygon(0 0, 100% 0, 50% 45%, 0 0, 0 52%, 100% 52%, 50% 97%, 0 52%);
 }
 
 /* ノンブル（小口 = 右下。参考より 1.1mm 上: 安全領域 5mm の内側） */

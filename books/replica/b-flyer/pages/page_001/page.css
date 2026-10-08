@@ -172,6 +172,7 @@
   color: var(--rep-white);
   -webkit-text-stroke: 4.6mm var(--rep-rose);
   paint-order: stroke fill;
+  stroke-linejoin: round;
   white-space: nowrap;
   pointer-events: none;
 }
