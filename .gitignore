@@ -8,3 +8,5 @@ coverage/
 # テスト用フィクスチャの出力は追跡しない
 system/fixtures/**/output/
 system/fixtures/**/reviews/
+# npm run compare の比較画像（参考ページの画素を含むため BOOK にはコミットしない。report.yaml と review.md はコミットする）
+books/**/reviews/**/compare-*/*.png

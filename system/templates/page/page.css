@@ -1,0 +1,101 @@
+/*
+ * __PAGE_ID__ 専用のスタイル（compose が @scope でこのページだけに限定する）
+ * - 寸法は mm、文字サイズは pt
+ * - 色・書体は CSS 変数（var(--color-*) / var(--font-*)）を使い、値を直書きしない
+ * - 版面: var(--margin-top) / --margin-bottom / --margin-left / --margin-right（左右はページの左右で自動的に入れ替わる）
+ */
+
+/* Layer 2: 上部の色面 */
+.band {
+  position: absolute;
+  height: calc(var(--margin-top) + 44mm);
+  background: var(--color-primary);
+}
+
+/* Layer 3: 見出し */
+.head {
+  position: absolute;
+  top: calc(var(--margin-top) + 8mm);
+  left: var(--margin-left);
+  right: var(--margin-right);
+  color: var(--color-background);
+}
+
+.head__school {
+  font-size: 9pt;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.head__title {
+  margin-top: 3mm;
+  font-size: 26pt;
+}
+
+/* 本文エリア（版面の内側） */
+.body {
+  position: absolute;
+  top: calc(var(--margin-top) + 58mm);
+  left: var(--margin-left);
+  right: var(--margin-right);
+  bottom: calc(var(--margin-bottom) + 10mm);
+}
+
+.lead {
+  padding-left: 4mm;
+  border-left: 1.2mm solid var(--color-accent);
+  font-size: 11pt;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+/* Layer 2: パネル（2 段） */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  margin-top: 10mm;
+}
+
+.card {
+  padding: 6mm;
+  background: var(--color-surface);
+  border-top: 1mm solid var(--color-primary);
+}
+
+.card__title {
+  font-size: 13pt;
+  color: var(--color-primary);
+}
+
+.card__text {
+  margin-top: 3mm;
+  font-size: 9.5pt;
+  line-height: 1.75;
+}
+
+/* Layer 3: ノンブル（小口側・安全領域の内側） */
+.page-folio {
+  position: absolute;
+  bottom: calc(var(--safe) + 4mm);
+  display: flex;
+  align-items: baseline;
+  gap: 3mm;
+  font-size: 7.5pt;
+  color: var(--color-muted);
+}
+
+.page-folio[data-side='right'] {
+  right: var(--margin-outside);
+  flex-direction: row-reverse;
+}
+
+.page-folio[data-side='left'] {
+  left: var(--margin-outside);
+}
+
+.page-folio__number {
+  font-size: 10pt;
+  font-weight: 700;
+  color: var(--color-primary);
+}
