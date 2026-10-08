@@ -17,6 +17,7 @@
     "ref:ingest": "tsx system/scripts/ingest-reference.ts",
     "ref:prep": "tsx system/scripts/ref-prep.ts",
     "gen:inputs": "tsx system/scripts/gen-inputs.ts",
+    "photo:add": "tsx system/scripts/photo-add.ts",
     "doctor": "tsx system/scripts/doctor.ts",
     "setup": "bash system/scripts/setup.sh",
     "typecheck": "tsc -p tsconfig.json",

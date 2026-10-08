@@ -61,6 +61,8 @@ company-data/
 | `copy/*.yaml` | 自由なキーと値 |
 
 `file` などのパスはすべてリポジトリルート相対（`/` 区切り、先頭スラッシュなし）で書きます。例: `company-data/photos/campus-exterior.jpg`。
+
+写真は `npm run photo:add -- --file <画像> --id <写真ID> --rights "<使用条件・肖像の同意>"` で登録します。向きを補正し、EXIF（撮影位置・機種・日時など）を消して `company-data/photos/` に書き出し、`photos.yaml` に追記します。権利と、写っている人の掲載同意が確認できた写真だけを登録します（`--rights` は必須で、`TODO` は不可）。HEIC は先に JPEG へ書き出してください。
 スキーマの定義: `system/design-engine/src/schemas/company.ts`。
 
 ## BOOK からの参照

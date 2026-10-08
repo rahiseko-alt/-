@@ -5,6 +5,7 @@
 # - ファイルは company-data/photos/ 以下に置き、file はリポジトリルート相対で書く（Git LFS で管理）
 # - BOOK からは {{photo "<id>"}} で参照する（未登録の ID はエラーになる）
 # - rights には使用条件（期限・媒体の制限・肖像の同意状況など）を書く
+# - 登録は npm run photo:add -- --file <画像> --id <写真ID> --rights "..."（EXIF の撮影位置などを消して取り込む）
 #
 # 記入例（実データを受け取るまで空のまま）:
 # photos:
