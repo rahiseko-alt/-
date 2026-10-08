@@ -1,0 +1,438 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 座標・寸法は仕上がり（.trim、A4 縦 210×297mm、左上原点）の mm。塗り足しは片側 3mm（x −3〜213・y −3〜300 まで）
+# - size_mm は出力の枠の大きさ（page.css の値。出力 PNG 150dpi・1276×1789px（塗り足し込み 216×303mm）で各枠を ±0.2mm で確認）。
+#   傾けて置く枠（ボトル・カード 3 枚）は傾ける前の大きさ。画像は正立で生成し、ページ側の CSS（transform: rotate）で傾ける
+# - crop_mm は補正後の参考ページ（npm run ref:prep の出力。.cache/ref-prep/ 以下、1414×2000px、1mm = 6.733px）上の範囲。
+#   塗り足しにかかる枠は x / y が負、またはページの外まで（参考にはその部分がないので、入力画像では白。生成で外側へ広げる）。
+#   傾けた枠は、傾いた参考の絵を囲む軸平行の外接矩形（notes の角度で回して正立させてから入力する）。
+#   行内の小さな絵 2 つは、ダミー文字で行内の位置が 1〜3mm ずれるため、参考の絵の位置（枠と同じ縦横比）
+# - 入力画像の切り出しは npm run gen:inputs -- --book replica/b-flyer（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）。
+#   必要な画素数は同じコマンドの一覧（印刷相当は 350dpi の値）。写真・人物は長辺 1024px 以上で生成して縮小する
+# - 写真のコラージュは隙間なしの格子（行の境界 47.5 / 93.2mm、左列 〜59.2mm（下段 〜60.7mm）、右列 150.5mm〜（下段 151mm〜））。
+#   各写真は枠いっぱいの 1 枚の写真として生成する（枠線・余白・角丸・周辺減光なし）。写真の上にはイベント名（白い字＋ローズのフチ。Layer 3）が重なる
+# - 人物を含む素材（people: true）は【要確認: 生成人物の使用可否の方針】。架空の人物にし、参考の人物の顔・髪型を写さない（構図参照は配置とポーズだけ）。
+#   Phase 8（自社版）では写真・人物は company-data/photos の自社写真に差し替える（生成画像を本校の写真として使わない）
+# - 対象外にしたもの（生成指示に入れない）:
+#   - 予約の案内の右の指さし（4.4×2.2mm）: 絵文字大の単純なアイコン。Layer 2（SVG の手の形）で描く（system/rules/image-generation.md「単純なアイコンは入れない」）
+#   - 右中段の写真に重なる大きなティーカップ: 写真 page_001-photo-r2 の一部として生成する（ページに別の枠はない。review.md のとおり）
+#   - 中央の縦帯・フッター帯・日付の囲みの斜線の地紋と白の細罫・曜日の丸囲み・QR の白地・手描きの波線と 2 本線: 単色の面・単純な線（Layer 2）
+#   - 文字・数字・QR（Layer 3）。このページにロゴはない
+#   - 中段の白地に淡く見える文字と落書き風の絵: 表面（別ページ）の裏写り。原稿の要素ではない
+book: replica/b-flyer
+page: page_001
+reference_image: references/nagoya-iryo-hisho-it/flyers/page_002.jpg
+reference_prep: references/nagoya-iryo-hisho-it/flyers/prep/page_002.yaml
+status: pending
+items:
+  # ===== 写真のコラージュ 6 点（天・左右は塗り足しまで） =====
+  - id: page_001-photo-l1
+    kind: photo
+    people: true
+    optional: false
+    # .cell--l1: left −3mm・top −3mm・62.2×50.5mm（出力 PNG で −3.0〜59.1 × −3.0〜47.5mm）
+    size_mm: [62.2, 50.5]
+    bleed: true
+    crop_mm: [-3.0, -3.0, 62.2, 50.5]
+    placement: 'page.html の <div class="cell cell--l1"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-photo-l1.jpg"}} にする（枠は塗り足しまで −3〜59.2 × −3〜47.5mm、object-fit: cover）'
+    reference_usage: composition
+    mask: "右端に 0.2mm ほど入る中央の縦帯のローズ（x 59.0〜59.2mm）を隣の写真の色で塗る。天・左の塗り足し 3mm（入力画像の上端・左端の白）は塗らずに生成で外側へ広げる"
+    prompt: |
+      Landscape photo, aspect 1.23:1 (62.2 x 50.5 mm), one continuous photo filling the frame edge to edge (no border, no vignette).
+      Composition: a classroom desk scene with two people. Left half: a fictional young female student (about 20) with long light-brown wavy hair and bangs, seated, smiling and looking down while writing on a sheet of paper, her face at about x 30%, y 34%. Right half: a fictional female instructor (about 40) with dark hair tied back, black blazer over a pale blue striped shirt, leaning in from the right with several sheets of white paper in her hands, explaining with a warm smile, her face at about x 66%, y 22%. Bottom 25%: light wooden desk with scattered blank white papers and the dark edge of a keyboard at the bottom-left.
+      Keep free of faces and hands: the top 6% and the left 5% (print bleed, trimmed off) and the right 5%.
+      Background: bright office-like classroom, white ceiling with long fluorescent light strips, a few softly out-of-focus students far right. No wall clock, no posters, no signs, papers blank or with only illegible soft marks.
+      Lighting: bright, even overhead light, high-key, soft shadows.
+      Palette: pale grey-white background #e1dfe2, cool blue-grey accents #93a3c3, black blazer #2c2121, natural warm skin tones, light wood #c9a77a. The photo sits next to a flat dusty-rose band #bf767b, so keep its tones bright and slightly warm.
+      Style: candid documentary campus snapshot, 35mm lens, eye level, f/2.8, gentle softness, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, poster, clock, screen text, name tag, border, frame, vignette, collage seams, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
+    summary: "左上の写真: 机で書き物をする女子学生と、資料を持って説明する女性の先生（明るい教室）"
+    notes: "人物 2 名（【要確認】生成人物）。参考の人物の顔に似せない（構図参照は配置とポーズだけ、強さは低め）。350dpi 相当 857×696px 以上"
+
+  - id: page_001-photo-l2
+    kind: photo
+    people: false
+    optional: false
+    # .cell--l2: left −3mm・top 47.5mm・62.2×45.7mm（出力 PNG で −3.0〜59.1 × 47.5〜93.4mm）
+    size_mm: [62.2, 45.7]
+    bleed: true
+    crop_mm: [-3.0, 47.5, 62.2, 45.7]
+    placement: 'page.html の <div class="cell cell--l2"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-photo-l2.jpg"}} にする（枠は −3〜59.2 × 47.5〜93.2mm、左は塗り足しまで、object-fit: cover）'
+    reference_usage: composition
+    mask: "イベント名 2 行目の白い字とローズのフチ（x 約 17.5〜59.2mm、y 約 73.5〜93.2mm）と右端に入る中央の縦帯のローズ（x 59.0〜59.2mm）を、周りの床・家具・壁の色で塗る。左の塗り足し 3mm（入力画像の左端の白）は生成で広げる"
+    prompt: |
+      Landscape photo, aspect 1.36:1 (62.2 x 45.7 mm), one continuous photo filling the frame edge to edge.
+      Composition: interior of a bright, modern school lounge / lobby with no people. Top 30%: a smooth curved ceiling soffit with warm indirect cove lighting sweeping from the top-left to the top-right, a few round downlights. Middle band: cream and beige walls, plain white doors and one dark recessed doorway left of centre, a low white reception counter right of centre. Lower right: round light-wood tables with white chairs. Lower left: polished pale floor softly reflecting the light.
+      The lower-right two-thirds (x 33-100%, y 55-100%) will be covered by large white lettering: keep it simple and low-detail there (floor, tables, chairs only). The left 5% is print bleed (trimmed).
+      No signs, no notice boards, no posters, no screens, no text anywhere.
+      Lighting: warm indirect light mixed with soft daylight, high-key, soft shadows.
+      Palette: warm beige #bea883, cream #e7dfcf, light wood #c9a96e, olive-brown shadows #827249, white furniture.
+      Style: architectural interior snapshot, 24mm lens, eye level, straight verticals, natural colours, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, people, brand, signage, notice board, poster, screen, border, frame, vignette, pink lettering"
+    summary: "左中段の写真: 人のいない明るいラウンジ（曲面の天井の間接照明・白い受付台・丸テーブルと白い椅子）"
+    notes: "人物なし。参考は特定の学校の内装なので、配置と光の雰囲気だけを参照し、同じ内装を写さない。350dpi 相当 857×630px 以上"
+
+  - id: page_001-photo-l3
+    kind: photo
+    people: true
+    optional: false
+    # .cell--l3: left −3mm・top 93.2mm・63.7×45.8mm（下段だけ帯側へ 1.5mm 広い。出力 PNG で −3.0〜60.7 × 93.5〜139.1mm）
+    size_mm: [63.7, 45.8]
+    bleed: true
+    crop_mm: [-3.0, 93.2, 63.7, 45.8]
+    placement: 'page.html の <div class="cell cell--l3"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-photo-l3.jpg"}} にする（枠は −3〜60.7 × 93.2〜139mm、左は塗り足しまで、object-fit: cover）'
+    reference_usage: composition
+    mask: "上部のイベント名 2 行目の字の下端とローズのフチ（x 約 18〜60.7mm、y 93.2〜約 101mm。右寄りの縦画 x 約 51〜60.7mm は y 約 105mm まで）と、右端に入るサブ見出しの 1 字目の端（x 58.5〜60.7mm、y 約 110〜119mm）を壁の色で塗る。左の塗り足し 3mm は生成で広げる"
+    prompt: |
+      Landscape photo, aspect 1.39:1 (63.7 x 45.8 mm), one continuous photo filling the frame edge to edge.
+      Composition: two fictional young men (late teens), waist-up, standing shoulder to shoulder with arms around each other, both laughing and each raising a V (peace) sign with the outer hand. Left man, face at about x 34%, y 37%: short dark hair, red work jacket open over a white T-shirt, V sign at shoulder height on the left. Right man, face at about x 61%, y 43%: short black hair, olive-green work shirt with a chest pocket, V sign on the right.
+      The top 18% (x 30-100%), and the top 26% near the right edge (x 82-100%), will be covered by white lettering: keep only plain wall there, no heads or hands. The left 5% is print bleed (trimmed).
+      Background: plain off-white / light warm grey wall with soft shadows.
+      Lighting: bright frontal light, cheerful, soft shadows.
+      Palette: off-white wall #ead8ca, warm grey #9c938b, red jacket #b5332e, olive green #5d6b3c, deep navy shadows #2a3440, natural skin tones.
+      Style: candid friendly snapshot, 35mm lens, eye level, sharp faces, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, name tag, uniform badge, border, frame, vignette, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
+    summary: "左下の写真: 肩を組んでピースをする男子学生 2 人（赤い上着と緑のシャツ、白い壁）"
+    notes: "人物 2 名（【要確認】生成人物）。手指が崩れやすいので V サインの手を拡大して確認する。350dpi 相当 878×631px 以上"
+
+  - id: page_001-photo-r1
+    kind: photo
+    people: true
+    optional: false
+    # .cell--r1: left 150.5mm・top −3mm・62.5×50.5mm（右・天は塗り足しまで。出力 PNG で 150.6〜213.1 × −3.0〜47.5mm）
+    size_mm: [62.5, 50.5]
+    bleed: true
+    crop_mm: [150.5, -3.0, 62.5, 50.5]
+    placement: 'page.html の <div class="cell cell--r1"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-photo-r1.jpg"}} にする（枠は 150.5〜213 × −3〜47.5mm、object-fit: cover）'
+    reference_usage: composition
+    mask: "左下のイベント名 1 行目の右端の字のフチ（x 150.5〜約 159mm、y 約 39〜47.5mm）と左端の際のローズ（あれば）を背景の壁の色で塗る。天・右の塗り足し 3mm は生成で広げる"
+    prompt: |
+      Landscape photo, aspect 1.24:1 (62.5 x 50.5 mm), one continuous photo filling the frame edge to edge.
+      Composition: two fictional young women (about 20), waist-up, side by side facing the camera, smiling and waving with open palms raised next to their faces. Left woman, face at about x 39%, y 25%: short dark bob with straight bangs, white lace short-sleeve blouse, her right hand raised by her cheek. Right woman, face at about x 70%, y 22%: short dark hair, black T-shirt under a grey tailored vest, thin bracelet, her left hand raised by her cheek.
+      The bottom-left corner (x 0-16%, y 73-100%) will be covered by lettering: keep it plain. The top 6% and the right 5% are print bleed (trimmed): keep heads and hands out of them.
+      Background: warm cream wall with a soft out-of-focus white lace curtain on the left. No signs or lettering on the wall.
+      Lighting: soft warm indoor light, gentle and bright.
+      Palette: cream white #eaeceb, warm beige #deb8a1, charcoal #282934, white lace, natural skin tones.
+      Style: candid portrait snapshot, 50mm lens, eye level, f/2, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, wall sign, name tag, border, frame, vignette, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
+    summary: "右上の写真: 笑顔で手を振る女性 2 人（白いレースのブラウスと黒い T シャツにグレーのベスト、クリーム色の壁）"
+    notes: "人物 2 名（【要確認】生成人物）。参考の人物の顔に似せない（構図参照は配置とポーズだけ、強さは低め）。350dpi 相当 861×696px 以上"
+
+  - id: page_001-photo-r2
+    kind: photo
+    people: false
+    optional: false
+    # .cell--r2: left 150.5mm・top 47.5mm・62.5×45.7mm（右は塗り足しまで。出力 PNG で 150.6〜213.1 × 47.6〜93.5mm）
+    size_mm: [62.5, 45.7]
+    bleed: true
+    crop_mm: [150.5, 47.5, 62.5, 45.7]
+    placement: 'page.html の <div class="cell cell--r2"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-photo-r2.jpg"}} にする（枠は 150.5〜213 × 47.5〜93.2mm、object-fit: cover）。ティーカップはこの写真の一部（別の枠は作らない）'
+    reference_usage: composition
+    mask: "イベント名 1 行目の右端の字のフチ（x 150.5〜約 160.4mm、y 47.5〜約 70mm）、イベント名 2 行目の白い字とフチ（x 150.5〜約 205mm、y 約 72〜93.2mm）、上端の壁の看板の文字（x 約 156〜176mm、y 47.5〜約 51.5mm）を、机・床・壁の色で塗る。右の塗り足し 3mm は生成で広げる"
+    prompt: |
+      Landscape image, aspect 1.37:1 (62.5 x 45.7 mm), one continuous photo filling the frame edge to edge.
+      Composition: a bright, empty lecture room with long rows of white desks and white chairs receding diagonally from the lower left toward the upper right, a light ceiling with linear lights and a soft white glow from large windows. Collage element: a large white porcelain teacup on a saucer, filled with clear amber black tea, seen from a slightly high angle, placed in the upper middle (cup and saucer from x 30% to 66%, y 14% to 54%) with a soft natural shadow, like a cut-out photo pasted over the room.
+      Keep low-detail (desks, floor and ceiling only): the left 16% over the full height, and the lower 46% from x 0 to 88%, which will be covered by large white lettering. The right 5% is print bleed (trimmed).
+      No people, no signs on the walls, no screens, no lettering.
+      Lighting: bright daylight, high-key, clean.
+      Palette: off-white #f4efea, light warm grey #dfd8cf, mid grey #8b8580, amber tea #b5651d to #c8762a, white porcelain with cool grey shading.
+      Style: interior photo with a playful photo-collage element, 24mm lens, slightly elevated angle, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, people, brand, signage, wall sign, screen, projector image, border, frame, vignette, pink lettering, teabag tag"
+    summary: "右中段の写真: 白い机と椅子が並ぶ明るい講義室と、上中央に重ねた紅茶のティーカップ"
+    notes: "人物なし。参考ではティーカップが写真の上に重ねた素材になっている。1 枚で生成しにくい場合は、講義室の写真とティーカップを別に生成して合成してよい（手順を .prompt.yaml の notes に書く）。350dpi 相当 861×630px 以上"
+
+  - id: page_001-photo-r3
+    kind: photo
+    people: true
+    optional: false
+    # .cell--r3: left 151mm・top 93.2mm・62×45.8mm（右は塗り足しまで。出力 PNG で 151.3〜213.1 × 93.5〜139.1mm）
+    size_mm: [62.0, 45.8]
+    bleed: true
+    crop_mm: [151.0, 93.2, 62.0, 45.8]
+    placement: 'page.html の <div class="cell cell--r3"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-photo-r3.jpg"}} にする（枠は 151〜213 × 93.2〜139mm、object-fit: cover）'
+    reference_usage: composition
+    mask: "上端のイベント名 2 行目の字の下端とローズのフチ（x 151〜約 176mm は y 93.2〜約 103.5mm、x 約 180〜205mm は y 93.2〜約 97mm）、左端に入るサブ見出しの末尾の感嘆符（x 151〜約 153.5mm、y 約 112〜121mm）、左端の際のローズ（x 151.0〜151.2mm）を、天井・壁・机の色で塗る。右の塗り足し 3mm は生成で広げる"
+    prompt: |
+      Landscape photo, aspect 1.35:1 (62.0 x 45.8 mm), one continuous photo filling the frame edge to edge.
+      Composition: two fictional students at a desk with an open laptop. Left, face at about x 36%, y 38%: a young man with short dark hair in a beige button-up shirt, leaning toward the laptop with interest, hands together on the desk. Right, face at about x 68%, y 26%: a young woman with long dark hair tied back, white lace long-sleeve blouse and a thin pale lanyard strap (no card), smiling while typing. The open laptop is in the lower-left foreground (x 0-55%, y 60-100%), seen from behind or the side so its screen is NOT visible.
+      The top 23% for x 0-45% and the top 9% for x 45-90% will be covered by lettering: keep only plain ceiling and wall there (the woman's hair top may just touch it). The right 5% is print bleed (trimmed).
+      Background: bright computer classroom with blurred desks, a few blurred students and white walls, window light. No readable screens, no signs.
+      Lighting: bright natural daylight, soft shadows.
+      Palette: pale mint-white #f4fbea, warm sand #e7cf9c, beige shirt #c2a77f, olive-brown shadows #6d6141, white lace, natural skin tones.
+      Style: candid classroom photo, 35mm lens, eye level, f/2.8, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, laptop logo, screen text, user interface, signage, name tag, badge, border, frame, vignette, pink lettering, extra fingers, deformed hands, distorted face, celebrity likeness"
+    summary: "右下の写真: ノートパソコンを一緒に見る男子学生とレースのブラウスの女子学生（明るいパソコン教室）"
+    notes: "人物 2 名（【要確認】生成人物）。ノートパソコンの天板にメーカーのロゴを出さない。350dpi 相当 854×631px 以上"
+
+  # ===== 切り抜きの人物 2 名（透過 PNG。フッター帯より手前、地・左は塗り足しまで） =====
+  - id: page_001-person-pointing
+    kind: cutout
+    people: true
+    optional: false
+    # 奥の人物（指さし）。参考の実測: 髪の上端 223.0mm・顔の中心 (39.5, 235)・体の右端 57.3mm・指先 (86.4, 237.6)。体は地の塗り足しまで
+    size_mm: [62.0, 78.0]
+    bleed: true
+    crop_mm: [26.0, 222.0, 62.0, 78.0]
+    placement: 'page.html の <svg class="cutout">（仮の輪郭）を削除し、.trim 直下に <img class="cutout-img cutout-img--pointing" src="{{asset "books/replica/b-flyer/backgrounds/page_001-person-pointing.png"}}" alt=""> を置く。page.css: .cutout-img { position: absolute; z-index: 3; } .cutout-img--pointing { left: 26mm; top: 222mm; width: 62mm; height: 78mm; }（下は塗り足しまで）。手前の人物（page_001-person-front）より DOM で前に置き、奥に描く'
+    reference_usage: composition
+    mask: "人物以外をすべて白で塗る: 手前の人物（x 26〜約 40mm の全高）、フッター帯のローズの地と白抜きの箇条（y 266.5mm〜、x 約 57〜88mm）、右上の特典の見出しと筆の線（x 84〜88mm、y 226〜238mm）、背景の裏写り。地の塗り足し 3mm（入力画像の下端の白）は体を下へ続けて生成する"
+    prompt: |
+      Portrait 0.79:1 (62 x 78 mm). A single fictional young woman (about 20), standing, framed from just above the top of her head to the upper thighs, body in three-quarter view turned toward the viewer's right, big open smile, looking toward where she points.
+      Pose: her arm on the viewer's right side is fully extended to the right, almost horizontal and rising slightly, index finger pointing right; the shoulder is at about x 34%, y 26% and the fingertip touches x 97%, y 20%. The other arm hangs relaxed at her side.
+      Position: top of the hair 1.5% below the top edge; face centre at about x 22%, y 17%; head width about 21% of the frame width; torso from about x 5% to 51%; the body continues past the bottom edge (print bleed). The left 22% of her body will be hidden behind another person, so it can be simple.
+      Appearance: black hair with straight blunt bangs, tied back, small drop earrings; black fitted long-sleeve top / cardigan with a white bib apron over it; a thin pale-pink lanyard strap with no card or badge.
+      Background: plain pure white #ffffff, no floor, no cast shadow, crisp clean edges for cutting out to a transparent PNG.
+      Lighting: soft, even frontal studio light, slightly warm.
+      Palette: black sleeves #0a090e, white apron #f2f2f2 with soft grey shading #c6c9d4, pale pink lanyard #e8b4bc, natural skin tones.
+      Style: photorealistic, 50mm lens, eye level, sharp focus.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, background scenery, other people, cast shadow, name tag, badge, ID card, brand, cropped head, cut-off fingers, extra fingers, deformed hands, distorted face, celebrity likeness"
+    summary: "切り抜きの人物（奥）: 右へ腕を伸ばして指さす、黒い上衣に白いエプロンの女性（白背景で生成し透過 PNG に）"
+    notes: "【要確認】生成人物。白背景で生成し、髪の毛先と指先を残して透過 PNG に切り抜く（手順を .prompt.yaml の notes に）。指先の位置（x 86.4mm）が参考の視線誘導（特典の見出しを指す）の要なので合わせる。手前の人物と同じ光・色温度で生成する。350dpi 相当 854×1075px 以上"
+
+  - id: page_001-person-front
+    kind: cutout
+    people: true
+    optional: false
+    # 手前の人物。参考の実測: 髪留めの上端 225.1mm・顔の中心 (23.6, 236.6)・体の右端 37.6mm。左と地は塗り足しまで
+    size_mm: [43.0, 76.0]
+    bleed: true
+    crop_mm: [-3.0, 224.0, 43.0, 76.0]
+    placement: 'page.html の <svg class="cutout"> を削除した位置に、奥の人物の <img> の後ろ（手前に描く）に <img class="cutout-img cutout-img--front" src="{{asset "books/replica/b-flyer/backgrounds/page_001-person-front.png"}}" alt=""> を置く。page.css: .cutout-img--front { left: -3mm; top: 224mm; width: 43mm; height: 76mm; }（.cutout-img の position: absolute・z-index 3 を共有。左・下は塗り足しまで）'
+    reference_usage: composition
+    mask: "人物以外をすべて白で塗る: 奥の人物（x 約 30〜40mm の髪・黒い上衣・エプロン）、フッター帯のローズの地（y 266.5mm〜）、背景の裏写り。左と地の塗り足し 3mm（入力画像の左端・下端の白）は体を外へ続けて生成する"
+    prompt: |
+      Portrait 0.57:1 (43 x 76 mm). A single fictional young woman (about 20), standing, framed from just above the top of her head to mid-thigh, body facing the camera and turned slightly toward the viewer's right, head slightly tilted, soft closed-mouth smile, looking at the camera.
+      Position: top of the hair (with a small hair clip) 1.5% below the top edge; face centre at about x 62%, y 17%; face width about 25% of the frame width; her shoulder and arm on the viewer's left run off the left edge and her body runs off the bottom edge (both are print bleed); her other side ends at about x 95%. Arms relaxed down, hands loosely clasped in front at the very bottom.
+      Appearance: dark brown hair tied back in a low bun with a few loose strands; open black knit cardigan over a white T-shirt and a white bib apron; a thin pale-pink lanyard strap with no card or badge; a small white fluffy pom-pom charm at waist height.
+      Background: plain pure white #ffffff, no floor, no cast shadow, crisp clean edges for cutting out to a transparent PNG.
+      Lighting: soft, even frontal studio light, slightly warm (same light as the pointing person).
+      Palette: near-black cardigan #272530, white apron #f2f2f2 with soft grey shading #c6c9d4, pale pink lanyard #e8b4bc, natural skin tones.
+      Style: photorealistic, 50mm lens, eye level, sharp focus.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, background scenery, other people, cast shadow, name tag, badge, ID card, brand, cropped head, extra fingers, deformed hands, distorted face, celebrity likeness"
+    summary: "切り抜きの人物（手前）: 黒いカーディガンに白いエプロン、髪をまとめた女性の腰から上（白背景で生成し透過 PNG に）"
+    notes: "【要確認】生成人物。奥の人物より手前に重ねる（奥の人物の体の左側を隠す）。白背景で生成し透過 PNG に切り抜く。350dpi 相当 593×1047px 以上"
+
+  # ===== 中段のイラスト（透過 PNG。枠と同じ縦横比で生成し、photo-frame の src に指定） =====
+  - id: page_001-illust-juice
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--juice: left 12.6mm・top 142.4mm・13.4×18mm（出力 PNG で 12.7〜26.1 × 142.6〜160.6mm）。参考の絵 13.0〜26.1 × 142.5〜160.3mm（ストローの先は 139.8mm まで）
+    size_mm: [13.4, 18.0]
+    bleed: false
+    crop_mm: [12.6, 142.4, 13.4, 18.0]
+    placement: 'page.html の <div class="illust illust--juice"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-juice.png"}} にする（透過 PNG）'
+    reference_usage: composition
+    mask: "なし（白地の上の絵だけ）"
+    prompt: |
+      Portrait 0.74:1 (13.4 x 18 mm). A soft hand-painted watercolor and colored-pencil illustration of a single tall glass of iced lemon tea: the glass stands in the right three-quarters of the frame from about 15% down to the bottom edge, a round lemon slice hooked on the upper-left rim (slice centre at about x 25%, y 20%), a clear straw leaning to the right with its top at the top-right edge, ice cubes and a pale golden drink.
+      Palette: pale gold #e0d5aa to #c3b284, lemon yellow #f2d36b, light grey glass outlines, white highlights; delicate, transparent, airy.
+      Background: plain pure white #ffffff, no table, no cast shadow, to be cut out to a transparent PNG.
+      Style: gentle pastel food illustration for a flyer, clean edges.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, label, background scenery, table, cast shadow, photo-realism"
+    summary: "リードの左のイラスト: レモンの輪切りを添えた背の高いアイスレモンティーのグラス（水彩風）"
+    notes: "人物なし。白背景で生成して透過 PNG に切り抜く"
+
+  - id: page_001-illust-cookies
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--cookie: left 187.3mm・top 149.3mm・16×8.5mm（出力 PNG で 187.5〜203.4 × 149.6〜157.9mm）
+    size_mm: [16.0, 8.5]
+    bleed: false
+    crop_mm: [187.3, 149.3, 16.0, 8.5]
+    placement: 'page.html の <div class="illust illust--cookie"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-cookies.png"}} にする（透過 PNG）'
+    reference_usage: composition
+    mask: "なし（白地の上の絵だけ）"
+    prompt: |
+      Landscape 1.88:1 (16 x 8.5 mm). A soft, slightly realistic illustration of two round butter cookies (linzer style) with scalloped edges, each with a small heart-shaped window filled with glossy red jam. The left cookie is slightly higher and in front, overlapping the right one which sits a little lower; together they fill the frame, each cookie about as tall as the frame, seen from above at a low angle.
+      Palette: golden biscuit #e3d09b, toasted edges #ceb28a, soft shadow #78694e, jam #8b2a3a with a white highlight.
+      Background: plain pure white #ffffff, no plate, no cast shadow, to be cut out to a transparent PNG.
+      Style: warm, appetising pastel food illustration, clean edges.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, packaging, plate, background scenery, cast shadow"
+    summary: "リードの右のイラスト: ハート形のジャムをのせた丸いクッキー 2 枚（重ねて置く）"
+    notes: "人物なし。参考の絵は枠より上に 約 1mm はみ出す（148.3〜158.0mm）。2 枚とも枠の中に収めて描く"
+
+  - id: page_001-illust-teacup
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--teacup: left 87mm・top 171.6mm・13×11mm（出力 PNG で 87.1〜100.0 × 171.8〜182.6mm）。参考の絵 86.9〜100.3 × 170.9〜180.9mm
+    size_mm: [13.0, 11.0]
+    bleed: false
+    crop_mm: [87.0, 171.6, 13.0, 11.0]
+    placement: 'page.html の <div class="illust illust--teacup"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-teacup.png"}} にする（透過 PNG）'
+    reference_usage: composition
+    mask: "右下の日付の囲みのローズの角（x 94.9〜100mm、y 181.9〜182.6mm）を白で塗る"
+    prompt: |
+      Landscape 1.18:1 (13 x 11 mm). A soft illustration of a single clear glass teacup with a small handle on the left, filled with bright golden-yellow tea, sitting on a white saucer decorated with tiny pale flowers, seen from a slightly high three-quarter angle. The whole cup and saucer fit inside the frame: cup rim at the top edge, cup in the upper 75%, the saucer almost the full width with its lower edge at about 90% of the height.
+      Palette: golden tea #e8d24a to #c7af50, clear glass with pale grey outlines #bcc1b3, white saucer #f7f1df with soft grey shading.
+      Background: plain pure white #ffffff, no table, no cast shadow, to be cut out to a transparent PNG.
+      Style: gentle pastel illustration with a light watercolor feel, clean edges.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, teabag tag, background scenery, table, cast shadow"
+    summary: "時刻のラベルの左のイラスト: 金色のお茶が入ったガラスのティーカップとソーサー"
+    notes: "人物なし。参考のカップの縁は枠の上端より 0.7mm 上にあるが、枠の中に収めて描く（枠は動かさない）"
+
+  - id: page_001-illust-building-tower
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--bldg1: left 18mm・top 168.6mm・22.8×22mm（出力 PNG で 18.0〜40.9 × 168.9〜190.7mm）。参考の絵 18.0〜40.8 × 169.0〜190.5mm
+    size_mm: [22.8, 22.0]
+    bleed: false
+    crop_mm: [18.0, 168.6, 22.8, 22.0]
+    placement: 'page.html の <div class="illust illust--bldg1"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-building-tower.png"}} にする（透過 PNG。傾きは絵の中に描く）'
+    reference_usage: composition
+    mask: "時計の文字盤（x 約 26〜29mm、y 約 170.5〜173mm）を白で塗る（針・数字を残さない）。背景の淡い裏写りの文字は白で塗る"
+    prompt: |
+      Nearly square 1.04:1 (22.8 x 22 mm). A cute flat clip-art illustration of a classic stone university building with a tall central clock tower, the whole building tilted about 10 degrees counter-clockwise (right side higher), filling the frame: the tower top near the top edge at about x 42%, wide wings to both sides reaching the left and right edges, a dark arched entrance at the bottom centre, rows of small dark windows. The clock is a plain white disc with two simple hands only.
+      Palette: muted grey-brown stone #7d7669, shadows #64533f, highlights #aba69c, dark windows #3f3a33, thin dark brown outlines.
+      Background: plain pure white #ffffff, no ground, no cast shadow, to be cut out to a transparent PNG.
+      Style: friendly Japanese flyer clip art, flat colours with gentle shading.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, clock numerals, sign, banner, flag text, emblem, crest, brand, background scenery, ground, cast shadow"
+    summary: "左中段のイラスト（左）: 時計塔のある石造りの大学の建物（左回りに 約 10° 傾ける）"
+    notes: "人物なし。実在の建物に似せない（一般的な時計塔の校舎）"
+
+  - id: page_001-illust-building-school
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--bldg2: left 47.7mm・top 173mm・22.8×17.8mm（出力 PNG で 48.0〜70.5 × 173.1〜190.7mm）。参考の絵 47.7〜70.5 × 173.3〜192.9mm
+    size_mm: [22.8, 17.8]
+    bleed: false
+    crop_mm: [47.7, 173.0, 22.8, 17.8]
+    placement: 'page.html の <div class="illust illust--bldg2"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-building-school.png"}} にする（透過 PNG。傾きは絵の中に描く）'
+    reference_usage: composition
+    mask: "中央の屋根の下の帯の英字（x 約 56〜64mm、y 約 178〜180.5mm）を壁の黄色で塗る。時計の文字盤は白で塗る"
+    prompt: |
+      Landscape 1.28:1 (22.8 x 17.8 mm). A cute flat clip-art illustration of a small two-storey school building, the whole building tilted about 12 degrees clockwise (right side lower), fitting entirely inside the frame: a central tower block with a small red flag on a pole near the top edge (at about x 45%), a plain round clock without numerals below its roof, brown roofs on the two side wings, cream-yellow walls, a blue arched double door at the centre bottom, arched windows, a strip of green shrubs along the base. The panel under the central roof is plain and blank.
+      Palette: cream yellow #ecd8a1, warm ochre shading #bd9b6b, brown roofs #7a4a32, blue door #6fa8d6, green shrubs #5f7f3a, red flag #c8504a, thin dark brown outlines #5a4632.
+      Background: plain pure white #ffffff, no ground, no cast shadow, to be cut out to a transparent PNG.
+      Style: friendly Japanese flyer clip art, flat colours with gentle shading.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, sign, school sign, nameplate, banner, flag text, clock numerals, emblem, crest, brand, background scenery, ground, cast shadow"
+    summary: "左中段のイラスト（右）: 旗と時計のある黄色い壁の校舎（右回りに 約 12° 傾ける。看板の文字なし）"
+    notes: "人物なし。参考の建物は右下の角が 192.9mm まで下がり、枠の下端（190.8mm）より 2.1mm はみ出す。枠の中に収まるように描く（傾きをやや浅くするか、全体を 1 割ほど小さく）"
+
+  # ===== 特典の景品のイラスト（透過 PNG。正立で生成し、ページ側の CSS で傾ける） =====
+  - id: page_001-illust-bottle
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--bottle: left 153.75mm・top 225.8mm・8.5×38mm を rotate(−14deg)（中心 158.0, 244.8mm）。crop_mm は傾いた枠の外接矩形
+    size_mm: [8.5, 38.0]
+    bleed: false
+    crop_mm: [149.3, 225.3, 17.4, 38.9]
+    placement: 'page.html の <div class="illust illust--bottle"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-bottle.png"}} にする（透過 PNG。正立の画像を .illust--bottle の rotate(-14deg) で傾ける）'
+    reference_usage: composition
+    mask: "ボトルの縦向きのロゴと下部の小さな文字（ボトルの中ほどと下 1/4）をボトルの地の色で塗る。右上に入る赤いカードの端（x 163mm〜）を白で塗る。塗った後、切り出しを時計回りに 14° 回して正立させ、中央の 8.5×38mm を入力する"
+    prompt: |
+      Tall portrait 0.22:1 (8.5 x 38 mm), standing perfectly upright (the page rotates it by CSS). A plain cylindrical cosmetic mist bottle filling the frame height: a slim straight body over the lower 70%, a slightly narrower shoulder and neck, and a long cylindrical cap on top.
+      Surface: matte pale grey with a faint blue tint, a soft vertical highlight on the left, completely blank: no label, no printing, no logo, no lettering.
+      Palette: pale blue-grey #b1c0c7, highlight #c1d3d5, shadow side #99a7a7.
+      Background: plain pure white #ffffff, no cast shadow, to be cut out to a transparent PNG.
+      Style: clean, soft product illustration, studio light from the left.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, label, printing, barcode, embossed lettering, tilted, background scenery, cast shadow"
+    summary: "景品のイラスト: ラベルも文字もない淡いグレーの円筒形のボトル（正立で生成。ページで −14° 傾ける）"
+    notes: "人物なし。参考のボトルは実在の商品なので、形と色の雰囲気だけを参照し、ブランドの文字・マークを一切入れない"
+
+  - id: page_001-illust-card-burger
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--card-red: left 164mm・top 225mm・22×14mm を rotate(10deg)（中心 175, 232mm）。crop_mm は傾いた枠の外接矩形
+    size_mm: [22.0, 14.0]
+    bleed: false
+    crop_mm: [163.0, 223.2, 24.1, 17.6]
+    placement: 'page.html の <div class="illust illust--card-red"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-card-burger.png"}} にする（透過 PNG。正立の画像を rotate(10deg) で傾ける）'
+    reference_usage: composition
+    mask: "カード以外（左下のボトル、右の白いカードの端とリボン、下の緑のカードの端）を白で塗る。塗った後、切り出しを反時計回りに 10° 回して正立させ、中央の 22×14mm を入力する"
+    prompt: |
+      Landscape 1.57:1 (22 x 14 mm), perfectly upright (the page rotates it by CSS). A gift card with rounded corners filling the whole frame, solid tomato red, with a cute flat illustration of a hamburger (sesame bun, green lettuce, tomato, patty) centred and occupying about 70% of the card.
+      The card carries nothing else: no lettering, no numbers, no brand mark, no stripe.
+      Palette: tomato red #c4512d with darker edge #9b4a19, bun #e8b85a, lettuce #8fbf4a, patty #7a4a2a, thin dark outlines.
+      Background: plain pure white #ffffff outside the card, no cast shadow, to be cut out to a transparent PNG.
+      Style: friendly flat clip art, soft simple shading.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, trademark, restaurant logo, barcode, magnetic stripe, tilted, background scenery, cast shadow"
+    summary: "景品のイラスト: ハンバーガーの絵の赤いカード（文字・ブランドなし。ページで +10° 傾ける）"
+    notes: "人物なし。実在の店のカードに似せない（ロゴ・店名・色の組み合わせの再現をしない）"
+
+  - id: page_001-illust-card-ribbon
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--card-white: left 186mm・top 229.8mm・21×13.5mm を rotate(1.5deg)（中心 196.5, 236.55mm）。crop_mm は傾いた枠の外接矩形
+    size_mm: [21.0, 13.5]
+    bleed: false
+    crop_mm: [185.8, 229.5, 21.4, 14.1]
+    placement: 'page.html の <div class="illust illust--card-white"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-card-ribbon.png"}} にする（透過 PNG。正立の画像を rotate(1.5deg) で傾ける）'
+    reference_usage: composition
+    mask: "カード中央の英字 4 文字（x 約 191〜202mm、y 約 234.5〜238.5mm）をカードの白で塗る。左端に重なる赤いカードの端、左下の黒い点は白で塗る。塗った後、切り出しを反時計回りに 1.5° 回して中央の 21×13.5mm を入力する"
+    prompt: |
+      Landscape 1.56:1 (21 x 13.5 mm), perfectly upright (the page rotates it by CSS). A white gift card with rounded corners and a thin light grey border filling the frame; a deep wine-red satin ribbon with a small bow wraps diagonally across the upper-left corner, and a matching thin diagonal band crosses the lower-right corner. The centre of the card is plain white and completely empty.
+      Palette: card white #f6fbfb with soft grey edge #c9cdd0, ribbon wine red #7a2f45 with highlight #b04a63.
+      Background: plain pure white #ffffff outside the card, no cast shadow, to be cut out to a transparent PNG (keep the card's grey border so it separates from the paper).
+      Style: friendly flat clip art, soft simple shading.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, gift lettering, tag text, barcode, magnetic stripe, tilted, background scenery, cast shadow"
+    summary: "景品のイラスト: 角にえんじのリボンを掛けた白いギフトカード（中央は空白。ページで +1.5° 傾ける）"
+    notes: "人物なし。白い紙の上に置くので、カードの縁の薄いグレーの線を残して紙と見分けられるようにする"
+
+  - id: page_001-illust-card-coffee
+    kind: illustration
+    people: false
+    optional: false
+    # .illust--card-green: left 169.3mm・top 241.3mm・22.5×16.5mm を rotate(−6deg)（中心 180.55, 249.55mm）。crop_mm は傾いた枠の外接矩形
+    size_mm: [22.5, 16.5]
+    bleed: false
+    crop_mm: [168.5, 240.2, 24.1, 18.8]
+    placement: 'page.html の <div class="illust illust--card-green"> の中の {{> photo-frame}} を {{> photo-frame src="books/replica/b-flyer/backgrounds/page_001-illust-card-coffee.png"}} にする（透過 PNG。正立の画像を rotate(-6deg) で傾ける）'
+    reference_usage: composition
+    mask: "カップの帯の丸いロゴ状のマーク（x 約 177〜183mm、y 約 247〜253mm）を帯の茶色で塗る。上に重なる赤いカードの端と右上の白いカードの角は白で塗る。塗った後、切り出しを時計回りに 6° 回して中央の 22.5×16.5mm を入力する"
+    prompt: |
+      Landscape 1.36:1 (22.5 x 16.5 mm), perfectly upright (the page rotates it by CSS). A gift card with rounded corners filling the frame, bright grass green with a lighter green diagonal panel in the lower-left, and in the centre a cute flat illustration of a takeaway coffee cup: white dome lid, white cup, and a plain brown kraft sleeve band.
+      The sleeve band and the card are completely blank: no circular emblem, no mark, no lettering.
+      Palette: grass green #689a28, light green panel #8fbf4a, deep green edge #255348, kraft brown sleeve #8a6a4e, white #ffffff, thin dark outlines.
+      Background: plain pure white #ffffff outside the card, no cast shadow, to be cut out to a transparent PNG.
+      Style: friendly flat clip art, soft simple shading.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, trademark, circular emblem, coffee chain logo, siren, barcode, magnetic stripe, tilted, background scenery, cast shadow"
+    summary: "景品のイラスト: 持ち帰りのコーヒーカップの絵の緑のカード（ロゴ・文字なし。ページで −6° 傾ける）"
+    notes: "人物なし。実在のコーヒー店のカードに似せない（カップの帯に丸いマークを入れない）"
+
+  # ===== リードの行内の小さな絵 2 つ（任意。いまは灰色の丸・角丸の仮の図形） =====
+  - id: page_001-icon-cookie
+    kind: illustration
+    people: false
+    optional: true
+    # .lead__l1 の .icon--a（1em × 0.95em、19pt = 6.7×6.4mm。出力 PNG で 51.0〜57.6 × 143.8〜149.9mm）。参考の絵は 52.1〜59.6 × 143.4〜150.4mm（ダミー文字で行内の位置がずれる）
+    size_mm: [6.7, 6.4]
+    bleed: false
+    crop_mm: [52.0, 143.1, 7.7, 7.4]
+    placement: 'page.html の .lead__l1 内の <span class="icon icon--a" aria-hidden="true"></span> を <img class="icon icon--a" src="{{asset "books/replica/b-flyer/backgrounds/page_001-icon-cookie.png"}}" alt=""> に置き換え、page.css の .icon から background と border-radius を外す（大きさ・行内の位置はそのまま）'
+    reference_usage: composition
+    mask: "左右に入る前後の字（あれば）を白で塗る"
+    prompt: |
+      Nearly square 1.05:1 (6.7 x 6.4 mm). A tiny emoji-style chocolate chip cookie filling the frame: one round golden-tan cookie with 7 or 8 dark chocolate chips, soft gradient shading and a slightly bumpy edge. Simple bold shapes that stay readable at 7 mm.
+      Palette: golden tan #d6a96a, edge #b9864a, chips #4a2a1a.
+      Background: plain pure white #ffffff, no cast shadow, to be cut out to a transparent PNG.
+      Style: glossy emoji illustration, clean outline.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, plate, background scenery, cast shadow, fine detail"
+    summary: "リード 1 行目の行内の小さな絵（1）: 絵文字風のチョコチップクッキー"
+    notes: "任意（灰色の丸の仮の図形でも配置・行長は合っている）。人物なし"
+
+  - id: page_001-icon-drink
+    kind: illustration
+    people: false
+    optional: true
+    # .lead__l1 の .icon--b（0.6em × 0.95em = 4.0×6.4mm。出力 PNG で 90.5〜94.4 × 143.8〜149.9mm）。参考の絵は 87.0〜91.2 × 142.7〜150.4mm（ダミー文字で行内の位置がずれる）
+    size_mm: [4.0, 6.4]
+    bleed: false
+    crop_mm: [86.8, 143.15, 4.6, 7.4]
+    placement: 'page.html の .lead__l1 内の <span class="icon icon--b" aria-hidden="true"></span> を <img class="icon icon--b" src="{{asset "books/replica/b-flyer/backgrounds/page_001-icon-drink.png"}}" alt=""> に置き換え、page.css の .icon から background と border-radius を外す（大きさ・行内の位置はそのまま）'
+    reference_usage: composition
+    mask: "左右に入る前後の字（あれば）を白で塗る"
+    prompt: |
+      Portrait 0.63:1 (4.0 x 6.4 mm). A tiny emoji-style tropical juice glass filling the frame height: a stemmed glass with an amber-to-orange gradient drink, a thin dark straw angled to the upper right, a small fruit garnish on the rim. Simple bold shapes that stay readable at 6 mm.
+      Palette: amber #e9a13b to orange #c0702a, clear glass with pale grey outline #9aa7b0, garnish yellow #f2c14e.
+      Background: plain pure white #ffffff, no cast shadow, to be cut out to a transparent PNG.
+      Style: glossy emoji illustration, clean outline.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, umbrella print, background scenery, cast shadow, fine detail"
+    summary: "リード 1 行目の行内の小さな絵（2）: 絵文字風の脚付きグラスのジュース"
+    notes: "任意（角丸の仮の図形でも配置・行長は合っている）。人物なし"
