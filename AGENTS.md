@@ -37,8 +37,8 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | --- | --- | --- |
 | Phase 1 | 基礎環境構築（モノレポ、Dev Container、Node/TypeScript、Vite、Playwright、レンダリング、日本語フォント、スクリプト、ルール、データ形式） | **完了** |
 | Phase 2 | 環境をテンプレート化（会社・BOOK ごとに複製せず、このモノレポに BOOK と参考資料を追加していく） | 方針として適用中 |
-| Phase 3 | 参考資料投入（`references/` へ PDF とページ画像を格納） | **次の作業** |
-| Phase 4 | 参考資料解析（`analysis/*.yaml`） | 未着手 |
+| Phase 3 | 参考資料投入（`references/` へ PDF とページ画像を格納） | **完了**（3 校・14 資料・157 ページ） |
+| Phase 4 | 参考資料解析（`analysis/*.yaml`） | **次の作業** |
 | Phase 5 | 完コピ検証（代表ページを 2 ラウンド以上比較・修正） | 未着手 |
 | Phase 6 | BASELINE 確定 | 未着手 |
 | Phase 7 | 保護機構（Filesystem Permission / PreToolUse Hook / Git 差分チェック） | 計画のみ・**未導入**（system/rules/protection.md） |
@@ -46,7 +46,8 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | Phase 9 | 日常編集 | 未着手 |
 
 - `company-data/` は学校名（AIビジネス専門学校）以外すべて `"TODO: ..."` のプレースホルダ、ブランドカラーは仮の値（`status: provisional`）
-- `references/` と `books/` は README のみ（実データなし）
+- `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`analysis/` は雛形のまま
+- `books/` は README のみ（実データなし）
 - フェーズが進んだら、この表を同じコミットで更新する
 
 ## 4. ディレクトリマップ

@@ -1,0 +1,27 @@
+# 参考資料の出自（system/rules/references.md）
+# npm run ref:ingest で 2026-10-08 に作成。title / obtained / forbidden_terms / notes を人間が記入する
+# source / kind は references/<source>/<kind>/ と同じ
+source: nagoya-iryo-hisho-it
+kind: brochure-2
+title: "TODO: 資料の正式名称を記入"
+# 入手日（YYYY-MM-DD）
+obtained: null
+# 元資料（PDF）のパス。画像だけで取り込んだ場合は null
+original: "references/nagoya-iryo-hisho-it/brochure-2/original/nagoya-iryo-hisho-it-brochure-2.pdf"
+# ページ画像の枚数（page_001 〜）
+pages: 9
+# 固定値。制作の参考以外に使わない
+usage: reference-only
+# 【必須】自社の BOOK・company-data・shared に絶対に出てはいけない語。取り込み直後に必ず記入する
+#   学校名・法人名・略称・英語名、固有の学科名・コース名、固有のキャッチコピー、人物名、企業名、
+#   独自の制度名・イベント名、URL・ドメイン・電話番号の特徴的な部分 など
+#   一般的な語（「学科」「就職」「オープンキャンパス」など）は登録しない
+#   発行元のディレクトリ名（nagoya-iryo-hisho-it）が他校名そのものなら、それも登録する
+#   （references/nagoya-iryo-hisho-it/... の形のパスは照合から除外されるので、references.yaml や生成記録の reference_inputs・source_refs の参照には影響しない）
+#   npm run validate は books/・company-data/・shared/ に出現するとエラーにする
+forbidden_terms: []
+#  - "（他校の学校名）"
+#  - "（他校の略称・英語名）"
+#  - "（固有のキャッチコピー）"
+# 入手経路・利用上の注意・見開きの扱い（例: page_002 は 2〜3 ページの見開き）
+notes: ""
