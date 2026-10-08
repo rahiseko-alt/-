@@ -76,6 +76,7 @@
   `.prompt.yaml`（reference_inputs に references/kokusai-igaku-gijutsu/flyers/page_002.jpg と方式）を付けて置き、photo-frame の src に指定する
   - 下部の全幅写真（幅:高さ ≒ 2.7:1、216×80.3mm＝塗り足し込み）: 自社写真（company-data/photos）が届くまでは生成画像で代用
   - 特長 3・4 の写真（35.2×29.9mm、35.2×29.6mm）、特長 1・2 の切り抜き写真（透過 PNG）、特長 3・4 の小さなフラットイラスト、タイトル帯右上の飾り
+  - 生成指示: backgrounds/layer1-orders.yaml（9 件、人物を含む 4 件。素材ごとの枠の実寸・参考の切り出し範囲・プロンプト・配置先。下部写真の実寸は 216×77.3mm）
 - 共通部品の候補（shared/ は別作業で。ここでは編集していない）:
   - `feature-row`（番号の円＋見出し＋本文＋任意の補足ボックス＋右列の画像の行モジュール）: page.html の `.feat` 4 段がそのまま型。
     引数は number・label（前置き語）・title（改行は nl2br）・body・note_label・note_text・media（src / ratio / 切り抜きかどうか）。

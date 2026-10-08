@@ -1,7 +1,7 @@
 # Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
 # - 座標・寸法は仕上がり（.trim、A4 縦 210×297mm、左上原点）の mm。塗り足しは片側 3mm（出力 PNG は 150dpi で 1276×1789px = 216×303mm）
 # - size_mm は出力した枠の実寸（Playwright で .media / .photo-bottom の外接矩形を測り、150dpi の出力 PNG で確認）
-# - crop_mm は補正後の参考ページ（npm run ref:prep の .cache/ref-prep/kokusai-igaku-gijutsu/flyers/prep/page_002.png、
+# - crop_mm は補正後の参考ページ（reference_prep を npm run ref:prep で補正した .cache/ref-prep/ 以下の page_002.png、
 #   1414×2000px、1mm = 6.733px）上の範囲。レプリカは参考に合わせてあるので枠の位置と同じ。切り出して該当の写真・イラストが
 #   入っていることを目視で確認した（切り抜き・イラストは参考の画素の外接矩形とも 0.5mm 以内で一致）
 # - 入力画像の切り出しは npm run gen:inputs -- --book replica/c-flyer（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
