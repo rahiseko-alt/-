@@ -1,0 +1,19 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "特長紹介（完コピ検証）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: other
+# Layer 1（BASE VISUAL）: 全面背景はなし（参考は白地）。写真・イラストは page.html の photo-frame（プレースホルダ）
+status: review             # draft | review | approved
+notes: |
+  - Phase 5 完コピ検証（3 ラウンド。reviews/page_001/review.md）。参考 references/kokusai-igaku-gijutsu/flyers/page_002.jpg
+    （比較は prep/page_002.yaml で正立・台形補正）。A4 縦・塗り足し 3mm
+  - グリッド: 左右マージン 10mm。行モジュールの 3 列 = 番号の円 10〜40mm ／ 文字 44.3〜158mm（本文 9.5pt × 34 字）／ 右列 164.6〜199.8mm。
+    補足ボックスは 43.7〜199.8mm の全幅。ゾーン = タイトル帯 0〜25.9mm＋細帯 25.9〜29.9mm ／ 特長 4 段（円の上端 34.9・89.85・130.8・170mm）／
+    下部写真 206〜283.3mm ／ フッター帯 283.3mm〜（帯と写真は塗り足しまで）
+  - Layer 1: Layer 1 生成待ち。下部の全幅写真・特長 3・4 の写真・特長 1・2 の切り抜き写真・特長 3・4 のイラストは photo-frame のプレースホルダ
+    （参考の各領域の平均の明るさに合わせた灰色）。タイトル帯右上の小さな飾りイラスト（鳥と花）は未配置。全面背景なし（白地）
+  - Layer 2: タイトル帯と細帯 2 段・番号の円（直径 30mm・縁 1mm）・補足ボックス（角丸 1.6mm・影）・フッター帯・ピル型バッジ（page.css）
+  - Layer 3: 文字はすべてダミー（参考と同じ字数・改行位置。数字は 0、円の番号 1〜4 は並び順）。フッターの学校名だけ {{facts.school.name}}
+  - 色: 参考の実測色を page.css 冒頭の --rep-* に集約（Phase 8 でブランドカラーに置き換える）。書体は Noto Sans JP（参考の丸ゴシックの代用）
+  - 残差と次の作業: review.md の「ラウンド 3」と「次にやること」

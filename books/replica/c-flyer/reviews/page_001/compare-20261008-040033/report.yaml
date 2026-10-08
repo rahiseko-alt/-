@@ -1,0 +1,14 @@
+# npm run compare の結果（diff.png / side-by-side.png / overlay.png と同じディレクトリ）
+# mismatch_ratio は推移の参考値。合否は画像を目視して決める（system/rules/review.md）
+book: replica/c-flyer
+page: page_001
+reference: references/kokusai-igaku-gijutsu/flyers/prep/page_002.yaml
+rendered: books/replica/c-flyer/output/png/page_001.png
+width: 1241
+height: 1754
+mismatch_pixels: 905579
+mismatch_ratio: 0.41603
+threshold: 0.1
+crop_bleed: true
+dpi: 150.05
+created: 2026-10-08T04:00:33+00:00

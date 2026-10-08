@@ -1,0 +1,349 @@
+/*
+ * page_001: 完コピ検証（チラシ裏面 — タイトル帯 + 番号付き特長の行モジュール 4 段 + 下部の全幅写真 + フッター帯）
+ * 参考: references/kokusai-igaku-gijutsu/flyers/prep/page_002.yaml（比較用の補正指定）
+ * - 寸法は mm（.trim 基準）、文字サイズは pt
+ * - 参考の色は下の --rep-* に集約する。Phase 8 でブランドカラー（var(--color-*)）に置き換える
+ *   （対応の目安: plum → --color-primary、plum-dark → 見出し用の濃色、yellow → --color-accent、beige → --color-surface）
+ */
+
+:scope {
+  /* ---- 参考の配色（撮影画像の実測。印刷の色そのものではない） ---- */
+  --rep-plum: #93296a;          /* タイトル帯・フッター帯（面積 約 12%） */
+  --rep-plum-dark: #6d2145;     /* 特長の見出し・番号の数字 */
+  --rep-circle-line: #5c2236;   /* 番号の円の縁・前置き語 */
+  --rep-mauve: #a96b8a;         /* タイトル帯の下の細帯 1 段目 */
+  --rep-pink-light: #dbbacb;    /* タイトル帯の下の細帯 2 段目 */
+  --rep-pale-yellow: #f7eda2;   /* 番号の円の塗り */
+  --rep-yellow: #fce74a;        /* タイトル内の数字 */
+  --rep-beige: #f7f0e2;         /* 補足ボックスの地 */
+  --rep-label: #94652f;         /* 補足ボックスのラベル（オレンジ茶） */
+  --rep-note-text: #4a433b;     /* 補足ボックスの本文 */
+  --rep-text: #333336;          /* 本文 */
+  --rep-text-strong: #1c1b1e;   /* 本文の太字 */
+  --rep-white: #ffffff;
+  --rep-title-edge: #4a1230;    /* タイトルの白文字の縁取り */
+  --rep-badge: #efd6e6;         /* フッターのピル型バッジ */
+  --rep-badge-text: #7a4a66;
+
+  /* ---- 写真・イラストのプレースホルダ（参考の各領域の平均の明るさに合わせた無彩色。Layer 1 生成待ち） ---- */
+  --ph-photo-bottom: #9d9d9d;
+  --ph-photo-3: #5b5b5b;
+  --ph-photo-4: #d0d0d0;
+  --ph-cutout-1: #b1b1b1;
+  --ph-cutout-2: #9f9f9f;
+  --ph-cutout-vr: #9d9d9d;
+  --ph-illust-3: #aeaeae;
+  --ph-illust-4: #bebebe;
+
+  /* ---- 行モジュールの列（参考の実測。左右マージン 10mm） ---- */
+  --col-num-x: 10mm;            /* 番号の円（直径 30mm） */
+  --col-text-x: 44.3mm;         /* 見出し・本文の左端 */
+  --col-text-w: 113.7mm;        /* 本文の行長（9.5pt × 34 字） */
+  --col-note-x: 43.7mm;         /* 補足ボックスの左端（右端は版面の右端 199.8mm） */
+  --col-media-x: 164.6mm;       /* 右列の写真（幅 35.2mm） */
+
+  /* ---- 文字 ---- */
+  --fs-feat-title: 19.5pt;
+  --fs-feat-body: 9.5pt;
+  --lh-feat-body: 4.48mm;
+  --fs-note-label: 9pt;
+  --fs-note-text: 8pt;
+}
+
+/* =========================================================
+ * Layer 2: タイトル帯（プラムの帯 + 2 段の細帯。天・左右は塗り足しまで）
+ * ========================================================= */
+.title-band {
+  position: absolute;
+  height: calc(25.9mm + var(--bleed));
+  background: var(--rep-plum);
+}
+
+.title-band__strip {
+  position: absolute;
+  height: 2mm;
+}
+
+.title-band__strip--1 {
+  top: 25.9mm;
+  background: var(--rep-mauve);
+}
+
+.title-band__strip--2 {
+  top: 27.9mm;
+  background: var(--rep-pink-light);
+}
+
+/* Layer 3: タイトル（白 + 黄の数字。ベースラインをそろえる） */
+.band-title {
+  position: absolute;
+  top: 4.35mm;
+  left: 10.2mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-white);
+  /* 参考の白文字は細い濃色の縁取り付き。縁は塗りの下に描く（字形を細らせない） */
+  -webkit-text-stroke: 0.35mm var(--rep-title-edge);
+  paint-order: stroke fill;
+  letter-spacing: 0;
+  font-feature-settings: normal;   /* 参考は漢字中心の等幅の字送り。ダミーのカナを palt で詰めない */
+}
+
+.band-title__main {
+  font-size: 32pt;
+  letter-spacing: 0.02em;
+}
+
+.band-title__num {
+  margin-left: 1.6mm;
+  font-size: 42pt;
+  color: var(--rep-yellow);
+}
+
+.band-title__num2 {
+  margin-left: 0.6mm;
+  font-size: 38pt;
+  color: var(--rep-yellow);
+}
+
+.band-title__tail {
+  margin-left: 0.6mm;
+  font-size: 21.5pt;
+}
+
+/* 右上の小さな飾りイラスト（Layer 1 生成待ち。参考では白い鳥と花。いまは置かない） */
+
+/* =========================================================
+ * 特長の行モジュール（番号の円 + 見出し + 本文 + 補足ボックス + 右列の画像）
+ * 各段の top は page.html の style で指定（参考の実測）
+ * ========================================================= */
+.feat {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+/* Layer 2: 番号の円（淡黄の塗り + 濃いプラムの縁） */
+.feat__num {
+  position: absolute;
+  top: 0;
+  left: var(--col-num-x);
+  width: 30mm;
+  height: 30mm;
+  border: 1mm solid var(--rep-circle-line);
+  border-radius: 50%;
+  background: var(--rep-pale-yellow);
+}
+
+/* Layer 3: 番号（前置き語 + 大きな数字） */
+.feat__no-label {
+  position: absolute;
+  left: 4.7mm;
+  top: 13.35mm;
+  font-family: var(--font-heading);
+  font-size: 12.5pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rep-circle-line);
+  font-feature-settings: 'palt' 1;
+}
+
+.feat__no {
+  position: absolute;
+  left: 13.2mm;
+  top: 4.4mm;
+  font-family: var(--font-number);
+  font-size: 48pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rep-plum-dark);
+}
+
+/* Layer 3: 見出し・本文（左列の右） */
+.feat__text {
+  position: absolute;
+  left: var(--col-text-x);
+  width: var(--col-text-w);
+}
+
+.feat__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-feat-title);
+  font-weight: 700;
+  line-height: 7.8mm;
+  color: var(--rep-plum-dark);
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.feat__title--loose {
+  line-height: 9.06mm;
+}
+
+.feat__body {
+  margin: 2.2mm 0 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-feat-body);
+  font-weight: 400;
+  line-height: var(--lh-feat-body);
+  color: var(--rep-text);
+  text-align: left;
+}
+
+.feat__body b {
+  font-weight: 700;
+  color: var(--rep-text-strong);
+}
+
+/* 1 行ずつ組む（参考の改行位置を再現。行長いっぱいの行は両端揃え） */
+.ln {
+  display: block;
+  white-space: nowrap;
+}
+
+.ln--full {
+  text-align: justify;
+  text-align-last: justify;
+  white-space: normal;
+}
+
+/* Layer 2 + 3: 補足ボックス（生成り・角丸・柔らかい影。本文の下、右列の画像の下まで全幅） */
+.feat__note {
+  position: relative;
+  width: calc(199.8mm - var(--col-note-x));
+  margin: 1.9mm 0 0 calc(var(--col-note-x) - var(--col-text-x));
+  padding: 0.7mm 2.3mm 1.1mm;
+  border-radius: 1.6mm;
+  background: var(--rep-beige);
+  box-shadow: 0.3mm 0.5mm 1.2mm rgba(110, 80, 40, 0.28);
+}
+
+.feat__note--1 {
+  padding-bottom: 0.8mm;
+}
+
+.feat__note-label {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-note-label);
+  font-weight: 700;
+  line-height: 4.4mm;
+  color: var(--rep-label);
+  font-feature-settings: 'palt' 1;
+}
+
+.feat__note-text {
+  margin: 0;
+  font-size: var(--fs-note-text);
+  font-weight: 400;
+  line-height: 4.3mm;
+  color: var(--rep-note-text);
+  white-space: nowrap;
+}
+
+.feat__note-text--tight {
+  letter-spacing: -0.04em;
+}
+
+/* Layer 1（素材）+ Layer 2（枠）: 右列の写真・切り抜き写真・イラスト（すべてプレースホルダ） */
+.media {
+  position: absolute;
+  z-index: 1;
+}
+
+.media .photo-frame {
+  height: 100%;
+}
+
+.media .photo-frame__placeholder,
+.photo-bottom .photo-frame__placeholder {
+  min-height: 0;
+  border: 0;
+  background: var(--ph-bg, #b0b0b0);
+  font-size: 6.5pt;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.media--cutout-1 { --ph-bg: var(--ph-cutout-1); }
+.media--cutout-2 { --ph-bg: var(--ph-cutout-2); }
+.media--cutout-vr { --ph-bg: var(--ph-cutout-vr); }
+.media--illust-3 { --ph-bg: var(--ph-illust-3); }
+.media--illust-4 { --ph-bg: var(--ph-illust-4); }
+.media--photo-3 { --ph-bg: var(--ph-photo-3); }
+.media--photo-4 { --ph-bg: var(--ph-photo-4); }
+
+/* 切り抜き写真・イラストは輪郭で抜く素材なので、枠は角丸で弱く見せる（矩形の写真と区別する） */
+.media--cutout .photo-frame__placeholder,
+.media--illust .photo-frame__placeholder {
+  border-radius: 2mm;
+}
+
+/* =========================================================
+ * 下部の全幅写真（左右は塗り足しまで。フッター帯に接する）
+ * ========================================================= */
+.photo-bottom {
+  position: absolute;
+  top: 206mm;
+  height: 77.3mm;
+  --ph-bg: var(--ph-photo-bottom);
+}
+
+.photo-bottom .photo-frame {
+  height: 100%;
+}
+
+/* =========================================================
+ * Layer 2: フッター帯（地・左右は塗り足しまで）
+ * ========================================================= */
+.footer-band {
+  position: absolute;
+  top: 283.3mm;
+  background: var(--rep-plum);
+}
+
+/* Layer 3: フッター（法人名・学校名・ピル型バッジ） */
+.footer {
+  position: absolute;
+  top: 285.6mm;
+  left: 43.2mm;
+  display: flex;
+  align-items: center;
+  height: 7.4mm;
+  color: var(--rep-white);
+  white-space: nowrap;
+}
+
+.footer__corp {
+  font-size: 10pt;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.footer__school {
+  margin-left: 4.4mm;
+  font-family: var(--font-heading);
+  font-size: 14.5pt;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.footer__badge {
+  margin-left: 3.8mm;
+  padding: 0 2.6mm;
+  height: 4.9mm;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2.45mm;
+  background: var(--rep-badge);
+  color: var(--rep-badge-text);
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
