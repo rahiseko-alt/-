@@ -7,7 +7,7 @@
 #   ページ（page.css）は「真の幾何」で組んだので、crop_mm は枠の位置と一致しない。crop_mm は補正画像そのものの上で写真の外接矩形を画素で実測した値
 #   （ずれ: ページ中央〜ノド側の円形写真は 右へ +7.7〜+12.4mm、上半分の 3 点は 上へ 2.7〜4.9mm、下段の 3 点は 下へ 1.4〜5.0mm。各 notes）。
 #   円形写真の切り出しは正方形にならない（反りとノド側の縮みで楕円に写る）。入力前に size_mm の縦横比（1:1）へ伸縮して正円に戻してから使う
-# - Layer 1 は円形写真 6 点と切り抜き人物 1 体の 7 件。すべて人物を含む（生成人物の使用可否は【要確認】: system/rules/image-generation.md §2）。
+# - Layer 1 は円形写真 6 点と切り抜き人物 1 体の 7 件。すべて人物を含む（生成人物は使用可（2026-10-08 決定）: system/rules/image-generation.md §2）。
 #   参考の人物に似せない（構図・ポーズ・服の色調・光だけを参照し、顔は架空の別人にする）
 # - 対象外にしたもの（Layer 1 にしない）:
 #   - 外周帯（淡い水色）と方眼紙の地紙: 単色の面と 3mm の細い罫線なので Layer 2（page.css の .band / .paper）。生成不要
@@ -43,7 +43,7 @@ items:
       Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field (background softly blurred), sharp eyes, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, readable screen, sign, label, name tag, badge, emblem, printed paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
     summary: "上段右の大きい円（直径 31.5mm）: 事務の制服の若い女性がノート PC で作業しながらカメラに笑顔。顔は左上寄り、PC は右下"
-    notes: "補正画像との差: 枠（真の幾何）x 131.25・y 131.55mm に対し、補正画像では +10.3mm 右・4.7mm 上に写り、横 33.8×縦 33.2mm に拡大されている（反り・ノド側の縮み・天地の欠け）。入力前に 1:1 へ伸縮する。顔を円の中心より上に（解析 image_crop）。顔が円の縁に近すぎたら photo-frame の position で調整する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 枠（真の幾何）x 131.25・y 131.55mm に対し、補正画像では +10.3mm 右・4.7mm 上に写り、横 33.8×縦 33.2mm に拡大されている（反り・ノド側の縮み・天地の欠け）。入力前に 1:1 へ伸縮する。顔を円の中心より上に（解析 image_crop）。顔が円の縁に近すぎたら photo-frame の position で調整する。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"
 
   - id: page_001-disc-c2
     kind: photo
@@ -66,7 +66,7 @@ items:
       Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, badge, emblem, printed paper, brochure, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
     summary: "中段の下の円（直径 28mm）: チェックのブラウスの制服の若い女性がカウンター越しに左の相手へ笑顔で接客。手は左下"
-    notes: "補正画像との差: 枠 x 136.9・y 167mm に対し、補正画像では +10.6mm 右・2.7mm 上、30.0×29.3mm に拡大。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 枠 x 136.9・y 167mm に対し、補正画像では +10.6mm 右・2.7mm 上、30.0×29.3mm に拡大。入力前に 1:1 へ伸縮する。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"
 
   - id: page_001-disc-c3
     kind: photo
@@ -89,7 +89,7 @@ items:
       Style: photorealistic candid editorial photo, 50mm lens, slightly above eye-level, shallow depth of field, sharp eyes, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, readable screen, blackboard writing, sign, label, name tag, badge, emblem, printed paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
     summary: "中段の右の円（直径 28mm）: 教室の机でノート PC を前に、右の相手と談笑する若い女性。背景は暗めの椅子"
-    notes: "補正画像との差: 枠 x 162・y 150.7mm に対し、補正画像では +12.0mm 右・4.9mm 上、28.4×29.9mm（紙の反りで右上がりに傾いた楕円）。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 枠 x 162・y 150.7mm に対し、補正画像では +12.0mm 右・4.9mm 上、28.4×29.9mm（紙の反りで右上がりに傾いた楕円）。入力前に 1:1 へ伸縮する。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"
 
   - id: page_001-disc-c4
     kind: photo
@@ -112,7 +112,7 @@ items:
       Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, ID card, badge, emblem, printed paper, document text, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
     summary: "下段左の小さい円（直径 25mm）: 受付カウンターで左の来客に笑顔を向ける制服の若い女性。顔は右上寄り"
-    notes: "補正画像との差: 枠 x 90・y 202.9mm に対し、補正画像では +7.7mm 右・1.4mm 下、25.2×26.5mm。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 枠 x 90・y 202.9mm に対し、補正画像では +7.7mm 右・1.4mm 下、25.2×26.5mm。入力前に 1:1 へ伸縮する。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"
 
   - id: page_001-disc-c5
     kind: photo
@@ -135,7 +135,7 @@ items:
       Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, badge, emblem, printed paper, printed brochure, document text, photos on paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
     summary: "下段右の上の円（直径 28mm）: 紺のワンピースの制服の若い女性が白い紙を体の前に持ち、もう一方の手を上げて説明しながら右上を見て笑顔"
-    notes: "補正画像との差: 枠 x 169.7・y 232.9mm に対し、補正画像では +12.4mm 右・1.8mm 下、26.0×31.6mm の縦長の楕円（ノド寄りの横の縮みと縦の引き伸ばし）。入力前に横 ×1.22 で 1:1 に伸縮して正円に戻す。持っている紙は無地にする（参考の印刷物を写さない）。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 枠 x 169.7・y 232.9mm に対し、補正画像では +12.4mm 右・1.8mm 下、26.0×31.6mm の縦長の楕円（ノド寄りの横の縮みと縦の引き伸ばし）。入力前に横 ×1.22 で 1:1 に伸縮して正円に戻す。持っている紙は無地にする（参考の印刷物を写さない）。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"
 
   - id: page_001-disc-c6
     kind: photo
@@ -158,7 +158,7 @@ items:
       Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, badge, emblem, printed paper, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
     summary: "下段右の下の円（直径 24mm）: 白シャツに黒いベストの制服の若い女性が淡い緑の無地のクリアファイルを持って笑顔。背景は鮮やかなオレンジ"
-    notes: "補正画像との差: 枠 x 160.6・y 261.4mm に対し、補正画像では +12.0mm 右・5.0mm 下、24.8×25.9mm。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 枠 x 160.6・y 261.4mm に対し、補正画像では +12.0mm 右・5.0mm 下、24.8×25.9mm。入力前に 1:1 へ伸縮する。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"
 
   - id: page_001-person
     kind: cutout
@@ -182,4 +182,4 @@ items:
       Style: photorealistic fashion catalogue photo, 85mm lens, camera at chest height to avoid perspective distortion, whole body in sharp focus, sRGB.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand mark on clothes or shoes, signage, screen text, name tag, badge, emblem, props, bag, background scenery, floor texture, strong shadow, cropped feet, cropped hands, real person likeness, celebrity, extra fingers, deformed hands, distorted face, multiple people"
     summary: "下段左の全身の切り抜き人物（約 22.5×68.3mm）: ラベンダーグレーのブラウスとワイドジーンズの若い女性が右の見出しを指差して立つ。白背景で生成して透過 PNG に切り抜く"
-    notes: "補正画像との差: 置き換え先の箱（真の幾何）x 18.2・y 209.7mm に対し、補正画像では +2.4mm 右・3.0mm 下、23.4×71.4mm（縦に 約 4.5%・横に 約 4% 拡大）。真の幾何への換算は、同じ高さの基準線（レール y 199.9mm = 補正 202.5、パネルの下辺 276.9mm = 補正 283.0、パネルの左辺 19.8mm = 補正 22.3、ラベルの左端 40.3mm = 補正 43.6）で補正画像を区分線形に直した（review.md の換算式では頭の位置が 約 2mm ずれるため、近くの線で合わせた）。指差しの手は参考ではラベルの左端に 0.4mm かかる（背面 SVG に置くのでラベルの下に隠れる）。白背景で生成して切り抜き、透過 PNG で保存する（切り抜き後の外接矩形で切り詰める）。生成人物の使用可否は【要確認】、参考の人物に似せない"
+    notes: "補正画像との差: 置き換え先の箱（真の幾何）x 18.2・y 209.7mm に対し、補正画像では +2.4mm 右・3.0mm 下、23.4×71.4mm（縦に 約 4.5%・横に 約 4% 拡大）。真の幾何への換算は、同じ高さの基準線（レール y 199.9mm = 補正 202.5、パネルの下辺 276.9mm = 補正 283.0、パネルの左辺 19.8mm = 補正 22.3、ラベルの左端 40.3mm = 補正 43.6）で補正画像を区分線形に直した（review.md の換算式では頭の位置が 約 2mm ずれるため、近くの線で合わせた）。指差しの手は参考ではラベルの左端に 0.4mm かかる（背面 SVG に置くのでラベルの下に隠れる）。白背景で生成して切り抜き、透過 PNG で保存する（切り抜き後の外接矩形で切り詰める）。生成人物は使用可（2026-10-08 決定）、参考の人物に似せない"

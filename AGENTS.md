@@ -48,7 +48,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 - `company-data/` は学校名（AIビジネス専門学校）以外すべて `"TODO: ..."` のプレースホルダ、ブランドカラーは仮の値（`status: provisional`）
 - `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`source.yaml` の `forbidden_terms` 記入済み。`analysis/` は全資料の解析済み（Phase 5 の候補は references/README.md と各 `book.yaml`）
 - `books/` は Phase 5 の完コピ検証用の `books/replica/`（12 BOOK・各 1 ページ。一覧は references/README.md。文字はダミー、写真は枠のみ。状態と【要確認】は各 `review.md`）だけ。自社の BOOK はまだない
-- Phase 5 の次の作業（Codex）: Layer 1 の生成。対象は `npm run validate` の「Layer 1 が未生成」の警告（`books/replica/*/backgrounds/layer1-orders.yaml`）。手順は system/prompts/generate-background.md「生成指示から生成する」。人物を含む素材（40 件）は生成人物の使用可否が【要確認】
+- Phase 5 の次の作業（Codex）: Layer 1 の生成。対象は `npm run validate` の「Layer 1 が未生成」の警告（`books/replica/*/backgrounds/layer1-orders.yaml`）。手順は system/prompts/generate-background.md「生成指示から生成する」。人物を含む素材（40 件）も全件使用可（2026-10-08 に人間が決定。system/rules/image-generation.md §2）
 - フェーズが進んだら、この表を同じコミットで更新する
 
 ## 4. ディレクトリマップ

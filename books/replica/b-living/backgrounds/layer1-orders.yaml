@@ -65,7 +65,7 @@ items:
       No logos or prints on clothing or bags, no signs or lettering anywhere.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, printed t-shirt, celebrity, real person, distorted hands, extra fingers, deformed faces, uniform"
     summary: "明るいガラス張りのホールで振り返って笑う若者 8 人のスナップ（中央左の女性にピント、背景は白く飛んだガラス）"
-    notes: "【要確認: 生成人物の使用可否の方針】（system/rules/image-generation.md §2）。実在の在校生・卒業生と誤認されない表現にし、掲載前に人間が確認する。参考写真の人物（顔・髪型・服の柄の組み合わせ）を再現しない: img2img は使わず、構図参照は弱め（人数・立ち位置・視線の向きだけ）。手指・顔の破綻を拡大して確認する。必要画素: 350dpi で 1124×642px、150dpi で 482×275px。JPG（sRGB）可"
+    notes: "（生成人物は使用可。2026-10-08 決定）（system/rules/image-generation.md §2）。実在の在校生・卒業生と誤認されない表現にし、掲載前に人間が確認する。参考写真の人物（顔・髪型・服の柄の組み合わせ）を再現しない: img2img は使わず、構図参照は弱め（人数・立ち位置・視線の向きだけ）。手指・顔の破綻を拡大して確認する。必要画素: 350dpi で 1124×642px、150dpi で 482×275px。JPG（sRGB）可"
 
   - id: page_001-photo-event-wide
     kind: photo
@@ -89,7 +89,7 @@ items:
       All signs, shop fronts and vehicles are completely blank: no letters, numbers, logos or route names anywhere.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, shop sign, bus company name, license plate, banner, screen text, celebrity, deformed faces"
     summary: "休憩所の駐車場で大型バスを背に並ぶ約 60〜70 人の記念の集合写真（横長。看板・車体は無地）"
-    notes: "【要確認: 生成人物の使用可否の方針】。参考の看板・バスの社名・地名は必ずマスクし、生成結果にも文字状の模様が出ていないか拡大して確認する（出ていたら作り直すか、その部分を無地に修正して notes に記録）。人物は小さいので顔の破綻が目立ちにくいが、実在の在校生と誤認されない表現にする。必要画素: 350dpi で 1076×376px、150dpi で 461×161px。JPG（sRGB）可"
+    notes: "（生成人物は使用可。2026-10-08 決定）。参考の看板・バスの社名・地名は必ずマスクし、生成結果にも文字状の模様が出ていないか拡大して確認する（出ていたら作り直すか、その部分を無地に修正して notes に記録）。人物は小さいので顔の破綻が目立ちにくいが、実在の在校生と誤認されない表現にする。必要画素: 350dpi で 1076×376px、150dpi で 461×161px。JPG（sRGB）可"
 
   - id: page_001-photo-event-small
     kind: photo
@@ -111,7 +111,7 @@ items:
       No text, numbers, logos or prints anywhere, including on the T-shirts.
     negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, banner, scoreboard, team name, jersey number, printed t-shirt, screen text, deformed faces"
     summary: "体育館で前列はひざをつき後列は立って手でハートを作る約 20 人の集合写真（黒の運動着、緑の壁、木の床）"
-    notes: "【要確認: 生成人物の使用可否の方針】。ゼッケン・背番号・チーム名などの文字を出さない。必要画素: 350dpi で 511×333px、150dpi で 219×143px。JPG（sRGB）可"
+    notes: "（生成人物は使用可。2026-10-08 決定）。ゼッケン・背番号・チーム名などの文字を出さない。必要画素: 350dpi で 511×333px、150dpi で 219×143px。JPG（sRGB）可"
 
   - id: page_001-app-screen
     kind: illustration
