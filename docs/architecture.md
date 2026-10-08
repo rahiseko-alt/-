@@ -321,6 +321,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 - `.bleed`（`.bleed-top` 等）を付けた要素は塗り足しの端まで広がる
 - `data-side` はページ番号と綴じ方向で決まる（左綴じ: 奇数 = 右、偶数 = 左／右綴じ: 逆／綴じなし: 常に右）。右ページはノドが左
 - 本文に `TODO` が残っていると警告（`render --release` ではエラー）
+- 描画結果の文字を走査し、6.5pt 未満の文字、白抜き（RGB がすべて 230 以上）で 7pt 未満または 12pt 未満でウェイト 500 未満の文字、安全領域（`safe_mm`）の外の文字を警告（`render --release` ではエラー）。字の大きさは CSS の transform・SVG の座標変換を含めた実寸、位置は文字の送り方向と直角の向きを 1em の枠で測る。`data-print-qa="ignore"` の中と写真枠のプレースホルダは対象外（`system/scripts/lib/print-qa.ts`）
 
 ### プレビュー（Vite）
 

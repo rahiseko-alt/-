@@ -55,7 +55,7 @@ npm run render -- --book brochure --release
 | `--format png\|pdf\|both` | 出力形式（既定 `both`） |
 | `--dpi N` | PNG の解像度（既定 `book.yaml` の `output.png_dpi`） |
 | `--guides` | 仕上がり線・塗り足し・安全領域・マージン・段組のガイドを重ねる |
-| `--release` | 描画結果に `TODO` が含まれる、またはガイドが有効なら失敗する |
+| `--release` | 描画結果に `TODO` が含まれる、6.5pt 未満（白抜きは 7pt 未満、12pt 未満でウェイト 500 未満）や安全領域の外の文字がある、またはガイドが有効なら失敗する（通常の出力ではどれも警告） |
 | `--out <dir>` | 出力先（既定 `books/<id>/output`） |
 | `--root <dir>` | スタジオのルート（既定 リポジトリルート。テストは `system/fixtures/studio`） |
 
