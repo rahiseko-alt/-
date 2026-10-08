@@ -114,10 +114,10 @@
   border-top: var(--adm-rule-row) solid var(--rep-ink);
 }
 
-.adm-row--1 { --adm-row-pad: 1.04mm; --adm-lh: 4.05mm; --adm-items-gap: 1.4mm; }
-.adm-row--2 { --adm-row-pad: 2.05mm; --adm-lh: 4.5mm;  --adm-items-gap: 0.55mm; --adm-flow-head: 5.05mm; --adm-flow-a: 14.85mm; --adm-flow-b: 13.85mm; --adm-flow-lh-a: 4.9mm; --adm-flow-lh-b: 4.5mm; }
-.adm-row--3 { --adm-row-pad: 0.6mm;  --adm-lh: 4.9mm;  --adm-items-gap: 0.45mm; --adm-flow-head: 4.9mm; --adm-flow-a: 14.4mm; --adm-flow-b: 14.75mm; --adm-flow-lh-a: 4.7mm; --adm-flow-lh-b: 4.6mm; }
-.adm-row--4 { --adm-row-pad: 0.55mm; --adm-lh: 4.5mm;  --adm-items-gap: 0.5mm; }
+.adm-row--1 { --adm-row-pad: 1.04mm; --adm-lh: 1.21; --adm-items-gap: 1.4mm; }
+.adm-row--2 { --adm-row-pad: 2.05mm; --adm-lh: 1.343; --adm-items-gap: 0.55mm; --adm-flow-head: 5.05mm; --adm-flow-a: 14.85mm; --adm-flow-b: 13.85mm; --adm-flow-lh-a: 1.462; --adm-flow-lh-b: 1.343; }
+.adm-row--3 { --adm-row-pad: 0.6mm;  --adm-lh: 1.462; --adm-items-gap: 0.45mm; --adm-flow-head: 4.9mm; --adm-flow-a: 14.4mm; --adm-flow-b: 14.75mm; --adm-flow-lh-a: 1.403; --adm-flow-lh-b: 1.373; }
+.adm-row--4 { --adm-row-pad: 0.55mm; --adm-lh: 1.343; --adm-items-gap: 0.5mm; }
 
 /* ---- Layer 2 + 3: 入れ子の表（共通） ---- */
 .adm-sched,
@@ -195,12 +195,12 @@
 .adm-flow thead th { height: var(--adm-flow-head, 4.9mm); text-align: center; }
 .adm-flow tbody td {
   position: relative;
-  line-height: 4.7mm;
+  line-height: 1.403;
   text-align: left;
   text-spacing-trim: trim-start;   /* 行頭の【 の前の空きを詰める（参考の書体は括弧の字面が左に寄る） */
 }
-.adm-flow .adm-flow__a td { height: var(--adm-flow-a, 14.6mm); line-height: var(--adm-flow-lh-a, 4.7mm); }
-.adm-flow .adm-flow__b td { height: var(--adm-flow-b, 14.3mm); line-height: var(--adm-flow-lh-b, 4.7mm); }
+.adm-flow .adm-flow__a td { height: var(--adm-flow-a, 14.6mm); line-height: var(--adm-flow-lh-a, 1.403); }
+.adm-flow .adm-flow__b td { height: var(--adm-flow-b, 14.3mm); line-height: var(--adm-flow-lh-b, 1.373); }
 .adm-flow tbody td:nth-child(1) { padding-left: 2.6mm; }
 .adm-flow tbody td:nth-child(2) { padding-left: 1.8mm; }
 .adm-flow tbody td:nth-child(3) { padding-left: 3mm; }

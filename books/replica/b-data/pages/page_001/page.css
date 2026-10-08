@@ -1,101 +1,628 @@
 /*
  * page_001 専用のスタイル（compose が @scope でこのページだけに限定する）
- * - 寸法は mm、文字サイズは pt
- * - 色・書体は CSS 変数（var(--color-*) / var(--font-*)）を使い、値を直書きしない
- * - 版面: var(--margin-top) / --margin-bottom / --margin-left / --margin-right（左右はページの左右で自動的に入れ替わる）
+ * 完コピ検証: 参考ページを「真の幾何」に直した推定値（review.md「比較の前提」）から実測した値。寸法は .trim 基準の mm、文字は pt
+ * 色は参考ページの推定値を --rep-* に置く（撮影画像からの推定。Phase 8 でブランドカラー var(--color-*) に置き換える）
  */
 
-/* Layer 2: 上部の色面 */
+:scope {
+  /* 地 */
+  --rep-band: #dde9f5;          /* 外周帯（淡い水色） */
+  --rep-paper: #ffffff;         /* 地紙 */
+  --rep-grid: #e6e7ec;          /* 方眼（3mm） */
+  /* パネル・ラベル */
+  --rep-rose-line: #c78b9c;     /* 上のパネルの枠 */
+  --rep-rose-panel: #fffbfc;    /* 上のパネルの地 */
+  --rep-green-line: #a8b088;    /* 下のパネルの枠 */
+  --rep-pink-label: #eed1d8;    /* 上のパネルのラベル */
+  --rep-green-label: #dfe5c8;   /* ランキングのラベル */
+  --rep-orange-label: #f7e2c0;  /* 求人データのラベル */
+  --rep-rose-label: #f6e7ec;    /* 輩出数のラベル */
+  --rep-hook-rose: #9d5d71;     /* 吊り下げ線と丸点 */
+  --rep-hook-green: #6f784f;
+  --rep-hook-orange: #a98058;
+  --rep-rail: #a7a8a2;          /* 下段のレール・区切り線 */
+  /* 強調色 */
+  --rep-rose: #b84e6e;          /* 大数字・単位・キラキラ */
+  --rep-navy: #44598f;          /* 大見出しの紺 */
+  --rep-navy-dark: #2d3b64;     /* 大見出しの外側のフチ */
+  --rep-cream: #fff4c8;         /* 袋文字の中 */
+  --rep-brown: #6a3b2a;         /* 袋文字のフチ（見出し・ラベル） */
+  --rep-shadow-rose: #dfa2ab;   /* 袋文字の影 */
+  --rep-olive: #4d520f;         /* ランキングのラベルの袋文字のフチ */
+  --rep-olive-ink: #4b5528;     /* 同、小さい文字 */
+  --rep-gold: #f4d064;          /* 求人データのラベルの袋文字の中 */
+  --rep-gold-line: #81601b;     /* 同、フチ */
+  --rep-gold-ink: #946a35;      /* 同、小さい文字 */
+  --rep-rose-ink: #a35e76;      /* 輩出数のラベルの小さい文字 */
+  /* 括弧 */
+  --rep-bracket-pink: #e2a9b5;
+  --rep-bracket-blue: #8e99c5;
+  --rep-bracket-green: #b3c58e;
+  /* 吹き出し（塗り / 線 / 文字） */
+  --rep-peach: #fbe8d9;  --rep-peach-line: #8a5d48;  --rep-peach-ink: #6d4a3a;
+  --rep-blue: #e6eff6;   --rep-blue-line: #45566a;   --rep-blue-ink: #3d4a5c;
+  --rep-sky: #e8f2fa;    --rep-sky-line: #3f5884;    --rep-sky-ink: #3c4f78;
+  --rep-lavender: #e8e9f6; --rep-lavender-line: #3e4474; --rep-lavender-ink: #3f456f;
+  --rep-pink: #fbeaef;   --rep-pink-line: #a35f78;   --rep-pink-ink: #8f4f66;
+  --rep-balloon-line: #66676a;
+  /* 地図・写真 */
+  --rep-map: #a7b47a;           /* 地図のシルエット */
+  --rep-photo: #c9ced6;         /* 写真のプレースホルダ */
+  --rep-silhouette: #b7bdc6;    /* 切り抜き人物のプレースホルダ */
+  /* 文字 */
+  --rep-ink: #3c393a;           /* 本文・ランキング */
+  --rep-ink-soft: #4d4648;      /* ラベル 1 行目 */
+  --rep-spark: #6c6f84;         /* 見出しのキラキラ */
+  --rep-heart: #b9566f;         /* ノンブルのハート */
+}
+
+/* ---------- Layer 2: 外周帯と方眼紙の地紙 ---------- */
+
 .band {
-  position: absolute;
-  height: calc(var(--margin-top) + 44mm);
-  background: var(--color-primary);
+  background: var(--rep-band);
 }
 
-/* Layer 3: 見出し */
-.head {
+/* 地紙: 小口側の角だけ丸い（ノド側は見開きの右ページへ続くので塗り足しまで） */
+.paper {
   position: absolute;
-  top: calc(var(--margin-top) + 8mm);
-  left: var(--margin-left);
-  right: var(--margin-right);
-  color: var(--color-background);
+  left: 10.3mm;
+  top: 10mm;
+  right: calc(var(--bleed) * -1);
+  height: 276.7mm;
+  border-radius: 5mm 0 0 5mm;
+  background-color: var(--rep-paper);
+  background-image:
+    linear-gradient(to right, var(--rep-grid) 0.12mm, transparent 0.12mm),
+    linear-gradient(to bottom, var(--rep-grid) 0.12mm, transparent 0.12mm);
+  background-size: 3mm 3mm;
+  background-position: 1.2mm 1.5mm;
 }
 
-.head__school {
+.backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 297mm;
+  overflow: visible;
+}
+
+.stop-bracket-pink { stop-color: var(--rep-bracket-pink); }
+.stop-bracket-blue { stop-color: var(--rep-bracket-blue); }
+.stop-bracket-green { stop-color: var(--rep-bracket-green); }
+
+.lead-ribbon {
+  fill: none;
+  stroke: #e3e3e8;
+  stroke-width: 0.35;
+}
+
+.bracket {
+  fill: none;
+  stroke: url(#bd-bracket);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spark { fill: var(--rep-spark); }
+.spark--rose { fill: var(--rep-rose); opacity: 0.85; }
+
+/* 角欠きパネル（枠 0.6mm） */
+.panel { stroke-width: 0.6; }
+.panel--rose { fill: var(--rep-rose-panel); stroke: var(--rep-rose-line); }
+.panel--green { fill: var(--rep-paper); stroke: var(--rep-green-line); }
+
+/* 吊り下げ線（0.25mm）と丸点 */
+.hook path { fill: none; stroke-width: 0.25; }
+.hook--rose { fill: var(--rep-hook-rose); stroke: var(--rep-hook-rose); }
+.hook--green { fill: var(--rep-hook-green); stroke: var(--rep-hook-green); }
+.hook--orange { fill: var(--rep-hook-orange); stroke: var(--rep-hook-orange); }
+.hook circle { stroke: none; }
+
+.rail {
+  fill: none;
+  stroke: var(--rep-rail);
+  stroke-width: 0.25;
+}
+
+/* 地図（角を丸めるため同じ色の線を重ねる） */
+.map path {
+  fill: var(--rep-map);
+  stroke: var(--rep-map);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+/* 雲形の吹き出し: 線（見える太さの 2 倍）→ 塗りの順 */
+.cloud__line path { fill: none; stroke-width: 0.75; stroke-linejoin: round; }
+.cloud--peach .cloud__line path { stroke: var(--rep-peach-line); }
+.cloud--peach .cloud__fill path { fill: var(--rep-peach); }
+.cloud--blue .cloud__line path { stroke: var(--rep-blue-line); }
+.cloud--blue .cloud__fill path { fill: var(--rep-blue); }
+.cloud--sky .cloud__line path { stroke: var(--rep-sky-line); }
+.cloud--sky .cloud__fill path { fill: var(--rep-sky); }
+.cloud--lavender .cloud__line path { stroke: var(--rep-lavender-line); }
+.cloud--lavender .cloud__fill path { fill: var(--rep-lavender); }
+.cloud--pink .cloud__line path { stroke: var(--rep-pink-line); }
+.cloud--pink .cloud__fill path { fill: var(--rep-pink); }
+.cloud--white .cloud__line path { stroke: var(--rep-balloon-line); stroke-width: 0.6; }
+.cloud--white .cloud__fill path { fill: var(--rep-paper); }
+
+.silhouette { fill: var(--rep-silhouette); }
+
+.folio-ring {
+  fill: var(--rep-paper);
+  stroke: #e2b9c3;
+  stroke-width: 0.3;
+  stroke-dasharray: 0.3 0.55;
+}
+
+.folio-heart { fill: var(--rep-heart); }
+
+/* 色面ラベル（Layer 2 の面 + Layer 3 の文字） */
+.label {
+  position: absolute;
+  border-radius: 1.4mm;
+}
+
+.label--pink { left: 25mm; top: 54.1mm; width: 81.4mm; height: 19.9mm; background: var(--rep-pink-label); }
+.label--green { left: 25.6mm; top: 141.2mm; width: 99mm; height: 12.7mm; background: var(--rep-green-label); }
+.label--orange { left: 40.3mm; top: 205.5mm; width: 52.6mm; height: 24.6mm; background: var(--rep-orange-label); }
+.label--rose { left: 116mm; top: 205.2mm; width: 72.8mm; height: 29.2mm; background: var(--rep-rose-label); }
+
+/* 円形の写真（白いフチ 0.6mm。中身は Layer 1 の自社写真待ち） */
+.disc {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 0.6mm var(--rep-paper);
+}
+
+.disc .photo-frame { width: 100%; height: 100%; }
+
+.photo-frame__placeholder {
+  min-height: 0;
+  background: var(--rep-photo);
+  border: none;
+  font-size: 6.5pt;
+  color: #8d939c;
+}
+
+.disc--c1 { left: 131.25mm; top: 131.55mm; width: 31.5mm; height: 31.5mm; }
+.disc--c2 { left: 136.9mm; top: 167mm; width: 28mm; height: 28mm; }
+.disc--c3 { left: 162mm; top: 150.7mm; width: 28mm; height: 28mm; }
+.disc--c4 { left: 90mm; top: 202.9mm; width: 25mm; height: 25mm; }
+.disc--c5 { left: 169.7mm; top: 232.9mm; width: 28mm; height: 28mm; }
+.disc--c6 { left: 160.6mm; top: 261.4mm; width: 24mm; height: 24mm; }
+
+/* ---------- Layer 3: 文字 ---------- */
+
+p, h1, li { margin: 0; }
+
+/* 袋文字（フチは線を先に描いて外側だけ見せる） */
+.ol-cream,
+.ol-olive,
+.ol-gold,
+.ol-rose {
+  paint-order: stroke fill;
+  -webkit-text-stroke-width: 0.85mm;
+}
+
+.ol-cream { color: var(--rep-cream); -webkit-text-stroke-color: var(--rep-brown); text-shadow: 0.35mm 0.45mm 0 var(--rep-shadow-rose); }
+.ol-olive { color: var(--rep-cream); -webkit-text-stroke-color: var(--rep-olive); }
+.ol-gold { color: var(--rep-gold); -webkit-text-stroke-color: var(--rep-gold-line); }
+.ol-rose { color: var(--rep-cream); -webkit-text-stroke-color: var(--rep-brown); text-shadow: 0.3mm 0.35mm 0 var(--rep-shadow-rose); }
+
+/* 小リード（キラキラは SVG） */
+.lead-line {
+  position: absolute;
+  left: 68.4mm;
+  top: 19.7mm;
   font-size: 9pt;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+  color: var(--rep-ink-soft);
 }
 
-.head__title {
-  margin-top: 3mm;
-  font-size: 26pt;
-}
-
-/* 本文エリア（版面の内側） */
-.body {
+/* 大見出し: 紺の袋文字（白フチ＋紺の外フチ）・紺の小さい文字・クリームの袋文字 */
+.headline {
   position: absolute;
-  top: calc(var(--margin-top) + 58mm);
-  left: var(--margin-left);
-  right: var(--margin-right);
-  bottom: calc(var(--margin-bottom) + 10mm);
+  left: 49.3mm;
+  top: 28.3mm;
+  font-size: 33.5pt;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
 }
 
-.lead {
-  padding-left: 4mm;
-  border-left: 1.2mm solid var(--color-accent);
-  font-size: 11pt;
+.hl-navy {
+  color: var(--rep-navy);
+  paint-order: stroke fill;
+  -webkit-text-stroke: 1.1mm var(--rep-paper);
+  text-shadow:
+    0.55mm 0 0 var(--rep-navy-dark), -0.55mm 0 0 var(--rep-navy-dark),
+    0 0.55mm 0 var(--rep-navy-dark), 0 -0.55mm 0 var(--rep-navy-dark),
+    0.4mm 0.4mm 0 var(--rep-navy-dark), -0.4mm 0.4mm 0 var(--rep-navy-dark),
+    0.4mm -0.4mm 0 var(--rep-navy-dark), -0.4mm -0.4mm 0 var(--rep-navy-dark),
+    0.5mm 0.8mm 0.3mm rgba(45, 59, 100, 0.35);
+}
+
+.hl-small {
+  font-size: 29pt;
+  font-weight: 700;
+  color: var(--rep-navy);
+  margin-inline: 0.6mm;
+}
+
+.hl-cream {
+  color: var(--rep-cream);
+  paint-order: stroke fill;
+  -webkit-text-stroke: 1mm var(--rep-brown);
+  text-shadow: 0.45mm 0.6mm 0 var(--rep-shadow-rose);
+}
+
+/* 上のパネルのラベル（2 行、中央揃え） */
+.label-pink__l1 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.8mm;
+  font-size: 12.3pt;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+  color: var(--rep-ink-soft);
+}
+
+.label-pink__l2 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9.4mm;
+  font-size: 22pt;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+}
+
+.label-pink__small { font-size: 15pt; margin-left: 0.6mm; }
+
+/* 大数字（整数部 94pt、小数部と % は 54%） */
+.hero {
+  position: absolute;
+  left: 34.2mm;
+  top: 71.7mm;
+  font-size: 94pt;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-rose);
+}
+
+.hero__dec { font-size: 51pt; margin-left: 0.4mm; letter-spacing: 0.02em; }
+
+.hero-sub {
+  position: absolute;
+  left: 35.3mm;
+  top: 104.85mm;
+  font-size: 10pt;
   font-weight: 500;
-  line-height: 1.8;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+  color: var(--rep-ink);
 }
 
-/* Layer 2: パネル（2 段） */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--gutter);
-  margin-top: 10mm;
-}
+.hero-sub__mark { font-size: 6.5pt; vertical-align: 0.55em; margin-left: 0.4mm; }
 
-.card {
-  padding: 6mm;
-  background: var(--color-surface);
-  border-top: 1mm solid var(--color-primary);
-}
-
-.card__title {
-  font-size: 13pt;
-  color: var(--color-primary);
-}
-
-.card__text {
-  margin-top: 3mm;
-  font-size: 9.5pt;
-  line-height: 1.75;
-}
-
-/* Layer 3: ノンブル（小口側・安全領域の内側） */
-.page-folio {
+/* 注記（参考は 約 5pt。最小 6.5pt を守るため 1 行の字数を減らした） */
+.notes {
   position: absolute;
-  bottom: calc(var(--safe) + 4mm);
+  left: 25.7mm;
+  top: 111.1mm;
+  width: 80mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 1.32;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+.notes__indent { padding-left: 1em; }
+.notes__group { margin-top: 0.5mm; }
+
+/* 吹き出しの文字（中央揃え。参考の丸ゴシック 約 6.1〜6.8pt → 6.5〜6.8pt） */
+.cloud-text {
+  position: absolute;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+  transform: translateX(-50%);
+}
+
+.cloud-text--peach { left: 141.3mm; top: 53.55mm; font-size: 6.8pt; line-height: 1.5; color: var(--rep-peach-ink); }
+.cloud-text--blue { left: 126.6mm; top: 74.3mm; font-size: 6.5pt; line-height: 1.44; color: var(--rep-blue-ink); }
+.cloud-text--sky { left: 181.6mm; top: 85.4mm; font-size: 6.6pt; line-height: 1.52; color: var(--rep-sky-ink); transform: translateX(-50%) rotate(7deg); }
+.cloud-text--lavender { left: 144.9mm; top: 112.6mm; font-size: 6.5pt; line-height: 1.38; color: var(--rep-lavender-ink); }
+.cloud-text--pink { left: 171.2mm; top: 107.6mm; font-size: 6.6pt; line-height: 1.4; color: var(--rep-pink-ink); transform: translateX(-50%) rotate(4deg); }
+
+/* ランキングのラベル（大小の文字が交互） */
+.label-green__text {
+  position: absolute;
+  left: 4.65mm;
+  top: 3.66mm;
+  font-size: 18.3pt;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+}
+
+.label-green__small {
+  font-size: 13.6pt;
+  font-weight: 700;
+  color: var(--rep-olive-ink);
+  margin-inline: 0.5mm;
+}
+
+/* ドットリーダー付きのランキング（行送り 5.78mm） */
+.rank {
+  position: absolute;
+  left: 27.8mm;
+  top: 155.68mm;
+  width: 96.2mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--rep-ink);
+}
+
+.rank__row {
+  position: relative;
   display: flex;
   align-items: baseline;
-  gap: 3mm;
-  font-size: 7.5pt;
-  color: var(--color-muted);
+  height: 5.78mm;
+  padding-left: 2.6mm;
 }
 
-.page-folio[data-side='right'] {
-  right: var(--margin-outside);
-  flex-direction: row-reverse;
+.rank__row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2.1mm;
+  width: 2mm;
+  height: 2mm;
+  border-radius: 50%;
+  background: var(--rep-hook-green);
 }
 
-.page-folio[data-side='left'] {
-  left: var(--margin-outside);
+.rank__name {
+  font-size: 9.8pt;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.page-folio__number {
-  font-size: 10pt;
+.rank__name small {
+  font-size: 7.4pt;
+  font-weight: 500;
+  margin-left: 0.3mm;
+}
+
+.rank__leader,
+.data__leader {
+  flex: 1;
+  align-self: center;
+  height: 0.5mm;
+  margin: 0 2.2mm 0 1.8mm;
+  background: radial-gradient(circle, #7a7778 0.2mm, transparent 0.24mm) 0 0 / 0.95mm 0.5mm repeat-x;
+}
+
+.rank__leader { position: relative; top: 0.25mm; }
+
+.rank__num {
+  font-size: 13.5pt;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.rank__num small { font-size: 12pt; font-weight: 500; }
+
+.rank-note {
+  position: absolute;
+  right: calc(210mm - 124mm);
+  top: 190.75mm;
+  font-size: 6.5pt;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+/* 人物の吹き出しの文字（参考は手書き風 約 4.8pt → 6.5pt。字数を減らした） */
+.balloon-text {
+  position: absolute;
+  left: 24.1mm;
+  top: 194.4mm;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 1.44;
+  text-align: center;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  color: var(--rep-ink);
+}
+
+/* 求人データのラベル（2 行。行送り 8mm） */
+.label-orange__l1,
+.label-orange__l2 {
+  position: absolute;
+  font-size: 17.9pt;
+  font-weight: 900;
+  line-height: 8mm;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+}
+
+.label-orange__l1 { left: 4.35mm; top: 4.65mm; }
+.label-orange__l2 { left: 3.35mm; top: 12.65mm; }
+.label-orange__small { font-size: 12.5pt; font-weight: 700; color: var(--rep-gold-ink); margin-inline: 0.4mm; }
+.label-orange__kana { font-weight: 700; color: var(--rep-gold-ink); }
+
+/* 求人データ 4 行（行送り 6.8mm） */
+.data {
+  position: absolute;
+  left: 41.9mm;
+  top: 234.77mm;
+  width: 61.1mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--rep-ink);
+}
+
+.data__row {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  height: 6.8mm;
+  padding-left: 2.6mm;
+}
+
+.data__row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2.45mm;
+  width: 1.8mm;
+  height: 1.8mm;
+  border-radius: 50%;
+  background: var(--rep-hook-orange);
+}
+
+.data__name {
+  font-size: 9.5pt;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.data__leader { position: relative; top: 0.6mm; margin: 0 2.6mm 0 2mm; }
+
+.data__num {
+  font-size: 14pt;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.data__num small { font-size: 9.5pt; margin-left: 0.4mm; }
+
+.data-source {
+  position: absolute;
+  right: calc(210mm - 103mm);
+  top: 264.37mm;
+  font-size: 6.5pt;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+.person-dept {
+  position: absolute;
+  left: 42mm;
+  top: 268.45mm;
+  font-size: 6.5pt;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+.person-name {
+  position: absolute;
+  left: 41.9mm;
+  top: 271.2mm;
+  font-size: 8.5pt;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+.person-name small { font-size: 6.5pt; }
+.person-name__from { font-size: 6.5pt; margin-left: 1.2mm; }
+
+/* 輩出数のラベル（3 行。行送り 8.5mm） */
+.label-rose__line {
+  position: absolute;
+  left: 4.1mm;
+  font-size: 18.4pt;
+  font-weight: 900;
+  line-height: 8.5mm;
+  white-space: nowrap;
+  font-feature-settings: 'palt' 1;
+}
+
+.label-rose__line:nth-child(1) { top: 2.1mm; }
+.label-rose__line:nth-child(2) { top: 10.6mm; }
+.label-rose__line:nth-child(3) { top: 19.1mm; }
+.label-rose__small { font-size: 11.4pt; font-weight: 700; color: var(--rep-rose-ink); margin-inline: 0.4mm; }
+
+.total-lead {
+  position: absolute;
+  left: 117.3mm;
+  top: 238.4mm;
+  font-size: 10.7pt;
+  font-weight: 500;
+  line-height: 1.38;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+.total {
+  position: absolute;
+  left: 116.3mm;
+  top: 249.4mm;
+  font-size: 38pt;
   font-weight: 700;
-  color: var(--color-primary);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-rose);
+}
+
+/* 参考の数字は字幅の狭い丸ゴシック。Noto Sans JP を横 85% に縮めて字幅を合わせる */
+.total__num { display: inline-block; transform: scaleX(0.85); transform-origin: left center; margin-right: -5.4mm; }
+.total__unit { font-size: 20pt; }
+.total__suffix { font-size: 10pt; margin-left: 0.4mm; }
+
+.total-source {
+  position: absolute;
+  left: 117.9mm;
+  top: 264.57mm;
+  font-size: 6.5pt;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+/* ノンブル（ハートの中の白抜き。7pt・700） */
+.folio {
+  position: absolute;
+  left: 14.1mm;
+  top: 282.5mm;
+  width: 5mm;
+  font-size: 7pt;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  color: #ffffff;
 }

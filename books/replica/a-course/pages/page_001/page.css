@@ -15,7 +15,7 @@
   --rep-sub: #55545a;           /* 肩書・欧文の小さな行 */
   --rep-emph: #383b80;          /* ステップ表の区分見出し（紺） */
   --rep-rule: #a3a3a3;          /* 講師段の縦罫・ピックアップの横罫 */
-  --rep-shade: #e9e9ec;         /* 中段のグラデーションの上端 */
+  --rep-shade: #efeff1;         /* 中段のグラデーションの上端 */
   --rep-paper: #ffffff;
 
   /* ステップ表: 矢羽根（年次が進むほど濃い）と淡色パネル（上 → 下のグラデーション） */
@@ -41,7 +41,7 @@
 
   /* 講師段（5 段） */
   --lect-x0: var(--margin-left);
-  --lect-pitch: 55.5mm;
+  --lect-pitch: 55.4mm;
   --lect-w: 41.5mm;
 }
 
@@ -52,7 +52,7 @@
   position: absolute;
   top: 113.4mm;
   height: 14mm;
-  background: linear-gradient(180deg, var(--rep-shade) 0%, rgb(233 233 236 / 0.45) 45%, rgb(255 255 255 / 0) 100%);
+  background: linear-gradient(180deg, var(--rep-shade) 0%, var(--rep-shade) 35%, rgb(255 255 255 / 0) 100%);
 }
 
 /* =========================================================
@@ -66,14 +66,14 @@
   height: 8.3mm;
   display: flex;
   align-items: center;
-  padding: 0 0 1mm 4.9mm;
+  padding: 0 0 1mm 4.2mm;
   background: var(--rep-navy);
   clip-path: polygon(0 0, calc(100% - 2.3mm) 0, 100% 2.3mm, 100% 100%, 2.2mm 100%, 0 calc(100% - 1.8mm));
   color: var(--rep-paper);
   font-size: 14pt;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.072em;
   white-space: nowrap;
 }
 
@@ -153,7 +153,7 @@
 /* Layer 2 + 3: マーカー状のキャプション（行ごとに濃色地。写真の下端に重なる） */
 .lect__cap {
   position: absolute;
-  top: 57.5mm;
+  top: 57.3mm;
   left: 0;
   z-index: 1;
   display: flex;
@@ -176,7 +176,7 @@
 /* ロゴ枠（正式なロゴデータがないため面だけ。大きさは参考の各ロゴの外接矩形） */
 .lect__logo {
   position: absolute;
-  left: calc(20.5mm - var(--logo-w) / 2);
+  left: calc(19.6mm - var(--logo-w) / 2);
   top: var(--logo-y);
   width: var(--logo-w);
   height: var(--logo-h);
@@ -189,10 +189,10 @@
 .lect--4 .lect__logo { --logo-w: 15mm;   --logo-h: 11.5mm; --logo-y: 69.5mm; }
 .lect--5 .lect__logo { --logo-w: 32.5mm; --logo-h: 4.5mm; --logo-y: 73.1mm; }
 
-/* Layer 3: 所属・肩書・氏名（所属 1 行の段は 83.85mm、2 行の段は 84.65mm から） */
+/* Layer 3: 所属・肩書・氏名（所属 1 行の段は 83.3mm、2 行の段は 84.4mm から） */
 .lect__info {
   position: absolute;
-  top: 83.85mm;
+  top: 83.3mm;
   left: 0;
   width: 100%;
   color: var(--rep-ink);
@@ -201,7 +201,7 @@
 .lect--3 .lect__info,
 .lect--4 .lect__info,
 .lect--5 .lect__info {
-  top: 84.65mm;
+  top: 84.4mm;
 }
 
 .lect__info p {
@@ -217,19 +217,21 @@
 
 /* 欧文の社名は和文より大きく組まれている（参考の字面に合わせる） */
 .lect--3 .lect__org {
-  font-size: 9.3pt;
+  font-size: 10.5pt;
   font-weight: 500;
+  line-height: 3.4mm;
 }
 
 .lect--5 .lect__org + .lect__org {
   font-size: 9.6pt;
   font-weight: 500;
+  letter-spacing: 0.15em;
 }
 
 .lect__role {
   font-size: 6.5pt;          /* 参考は約 5.8pt。最小サイズ 6.5pt を守る（review.md【要確認】） */
   font-weight: 500;
-  line-height: 2.8mm;
+  line-height: 3mm;
   color: var(--rep-sub);
 }
 
@@ -238,12 +240,13 @@
 }
 
 .lect__name {
-  margin-top: 0.44mm;
+  margin-top: 0.55mm;
   font-family: var(--font-serif);
-  font-size: 12.5pt;
+  font-size: 13pt;
   font-weight: 400;
   line-height: 5mm;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.06em;
+  word-spacing: 1.8mm;       /* 姓と名の間（半角スペース＋1.8mm。参考は全角より狭い） */
 }
 
 /* =========================================================
@@ -285,10 +288,10 @@
 
 .rep-pick__title {
   position: absolute;
-  top: 130.1mm;
+  top: 129.6mm;
   left: 6.7mm;
   color: var(--rep-ink);
-  font-size: 13pt;
+  font-size: 14pt;
   font-weight: 700;
   line-height: 5.5mm;
   letter-spacing: 0;
@@ -309,13 +312,13 @@
 /* 本文（5 行。1 行 28 字） */
 .rep-pick__body {
   position: absolute;
-  top: 142.4mm;
+  top: 142mm;
   left: 6.9mm;
   width: 74.8mm;
   color: var(--rep-text);
   font-size: 7pt;
   font-weight: 500;
-  line-height: 3.56mm;
+  line-height: 3.62mm;
   letter-spacing: 0.075em;
 }
 
@@ -351,17 +354,17 @@
   font-size: 15.5pt;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.085em;
   white-space: nowrap;
 }
 
 /* 行頭の右向き三角 */
 .rep-steps__mark {
   position: absolute;
-  top: 2.1mm;
-  left: -3.6mm;
-  width: 1.6mm;
-  height: 2.8mm;
+  top: 1.2mm;
+  left: -3.5mm;
+  width: 1.5mm;
+  height: 2.9mm;
   background: var(--rep-ink);
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
@@ -372,7 +375,7 @@
   top: 176.2mm;
   left: var(--margin-left);
   right: var(--margin-right);
-  height: 107.6mm;
+  height: 108.3mm;
   display: grid;
   grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
   column-gap: var(--gutter);
@@ -436,7 +439,7 @@
 
 .rep-step__panel {
   flex: 1 1 auto;
-  padding: 1.7mm 3.2mm 0;
+  padding: 1.4mm 3.2mm 0;
   background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
 }
 
@@ -456,11 +459,10 @@
 
 .rep-step__desc {
   width: 58.6mm;
-  margin-top: 0.3mm;
   color: var(--rep-text);
   font-size: 6.9pt;
   font-weight: 500;
-  line-height: 3.75mm;
+  line-height: 3.8mm;
 }
 
 /* 区分見出し（紺） */
@@ -476,7 +478,12 @@
 
 /* 3 段目は項目が多く、区分の間を詰めている */
 .rep-step--3 .rep-step__list + .rep-step__group {
-  margin-top: 0.5mm;
+  margin-top: 0.9mm;
+}
+
+/* 4 段目は専攻名が 2 行で説明が長く、最初の区分の前を少し広く取っている */
+.rep-step--4 .rep-step__intro + .rep-step__group {
+  margin-top: 4.2mm;
 }
 
 /* 箇条書き（黒丸 1.6mm、行送り 4.02mm。2 行目は文字の頭にそろえる） */
@@ -514,7 +521,7 @@
  * ========================================================= */
 .rep-note {
   position: absolute;
-  top: 285.6mm;
+  top: 285.2mm;
   left: var(--margin-left);
   color: var(--rep-text);
   font-size: 6.5pt;           /* 参考は約 5.7pt。最小サイズ 6.5pt を守り文字数を減らした（review.md【要確認】） */
@@ -528,12 +535,12 @@
 .rep-running {
   position: absolute;
   top: 13.4mm;
-  left: 281.6mm;
+  left: 282.5mm;
   width: 4.4mm;
   writing-mode: vertical-rl;
   text-orientation: sideways;
   color: var(--rep-text);
-  font-size: 8.4pt;
+  font-size: 8.2pt;
   font-weight: 700;
   line-height: 4.4mm;
   letter-spacing: 0.02em;
@@ -543,7 +550,7 @@
 
 .rep-running__key {
   color: var(--rep-ink);
-  font-size: 12pt;
+  font-size: 11pt;
   font-weight: 900;
 }
 
