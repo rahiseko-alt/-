@@ -38,6 +38,7 @@
   --adm-fs-body: 9.5pt;        /* 【 】ラベルの段落 */
   --adm-fs-cell: 9.5pt;        /* 入れ子の表のセル */
   --adm-label-w: 17.2mm;       /* 【 】ラベルの幅（後続行はこの幅だけ字下げ） */
+  --adm-fw-text: 500;          /* 本文・セルのウェイト（参考の書体は Noto Sans JP 400 より濃い。見出し行・ラベルは 700） */
 }
 
 .adm-red {
@@ -50,6 +51,7 @@
   top: 26.8mm;
   left: 4.6mm;
   font-size: 9.65pt;
+  font-weight: var(--adm-fw-text);
   line-height: 1;
   white-space: nowrap;
   color: var(--rep-ink);
@@ -125,7 +127,7 @@
   border-collapse: collapse;
   border: var(--adm-rule-sub) solid var(--rep-ink);
   font-size: var(--adm-fs-cell);
-  font-weight: 400;
+  font-weight: var(--adm-fw-text);
   line-height: 1.2;
 }
 
@@ -136,7 +138,7 @@
   border: var(--adm-rule-sub-inner) solid var(--rep-ink);
   padding: 0;
   vertical-align: middle;
-  font-weight: 400;
+  font-weight: var(--adm-fw-text);
   white-space: normal;
 }
 
@@ -148,8 +150,8 @@
 .adm-sched--a thead th:nth-child(2) { letter-spacing: 0.18mm; padding-left: 2.4mm; }
 .adm-sched--a tbody th { height: 4.55mm; text-align: center; letter-spacing: 0.8mm; padding-left: 0.8mm; }
 .adm-sched--a tbody td { padding-left: 2.4mm; text-align: left; letter-spacing: 0.26mm; }
-.adm-sched--a tbody td:nth-child(3) { padding-left: 1.4mm; letter-spacing: 0.5mm; }
-.adm-sched--a tbody td:nth-child(4) { padding-left: 0.4mm; letter-spacing: 0.55mm; }
+.adm-sched--a tbody td:nth-child(3) { padding-left: 1.4mm; letter-spacing: 0.42mm; }
+.adm-sched--a tbody td:nth-child(4) { padding-left: 0.4mm; letter-spacing: 0.45mm; }
 
 /* 日程表 B（第 4 行）: 区分＋受付期間 | 試験日 | 発表日 */
 .adm-sched--b .adm-sched__c1 { width: 94mm; }
@@ -225,6 +227,7 @@
 .adm-items {
   margin-top: var(--adm-items-gap);
   font-size: var(--adm-fs-body);
+  font-weight: var(--adm-fw-text);
   line-height: var(--adm-lh);
 }
 

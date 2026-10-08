@@ -235,19 +235,19 @@
   top: 33.1mm;
   left: 58.7mm;
   font-size: 96pt;
-  letter-spacing: -0.004em;
+  letter-spacing: 0.005em;
   font-feature-settings: normal;   /* 参考は漢字 3 字の等幅の字送り。ダミーのかなを palt で詰めない */
 }
 
 .title__l2 {
   top: 73.9mm;
-  left: 19.1mm;
+  left: 18.5mm;
   font-size: 80pt;
   letter-spacing: -0.07em;
   font-feature-settings: 'palt' 1;
-  /* 参考の 2 行目は字幅の狭い極太丸ゴシック（小書きのかな・長音を含む）。ダミーの全角かなで行長を合わせるため長体 91.5% にする
+  /* 参考の 2 行目は字幅の狭い極太丸ゴシック（小書きのかな・長音を含む）。ダミーの全角かなで行長を合わせるため長体 92% にする
      （字間を詰めすぎると字形が重なるため） */
-  transform: scaleX(0.915);
+  transform: scaleX(0.92);
   transform-origin: left center;
 }
 

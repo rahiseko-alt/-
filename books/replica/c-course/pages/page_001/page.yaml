@@ -4,5 +4,19 @@ title: "学科紹介（完コピ検証）"
 # type: cover | toc | message | course | interview | data | access | back-cover | other
 type: course
 # Layer 1（BASE VISUAL）: 全面背景はなし（参考は白地）。写真は page.html の photo-frame（プレースホルダ）
-status: draft              # draft | review | approved
-notes: ""
+status: review             # draft | review | approved
+notes: |
+  - Phase 5 完コピ検証（3 ラウンド。reviews/page_001/review.md）。参考 references/kokusai-igaku-gijutsu/brochure/page_006.jpg の見開きの左ページ
+    （比較は prep/page_006-l.yaml で正立・単ページ・台形補正）。A4 縦・左ページ（小口 = 左）・塗り足し 3mm
+  - グリッド（mm、仕上がり基準）: 版面 15.3〜197.5（小口 15.3・ノド 12.5）。上部の写真 0〜81（天・小口・ノドは塗り足しまで）、学科名のタブ 0〜65.2 × 69.9〜81。
+    本文 2 段 = 段 1 15.3〜100.9 / 段 2 112.8〜197.7、縦棒見出しの上端 91.1。本文 8.75pt・字送り 3.51mm（1 行 24 字）・行送り 5.657mm、
+    先頭 5 行は全幅、6 行目から写真（48.8 × 35.5）を回り込んで 1 行 9 字。科目リスト = ラベル 177.5・細罫 182.2・帯（高さ 4mm）187.3 / 218.3、
+    左の段 15.3〜103.5（3 列、行送り 5.98）・右の段 111.5〜197.5（2 列、行送り 5.723）。ノンブル 左下 x 9.2
+  - Layer 1: Layer 1 生成待ち。上部の裁ち落とし写真（仕上がり 210 × 81mm）と本文に回り込ませる写真 2 点（各 48.8 × 35.5mm）は photo-frame のプレースホルダ
+    （参考の各写真の平均の明るさに合わせた灰色）。全面背景なし（白地）
+  - Layer 2: 学科名のタブ（写真の左下の白い切り欠き）・縦棒・細罫・帯見出しの色帯・丸い行頭記号（page.css）。写真の回り込みは float（矩形。shape-outside なし）で、本文の高さは固定しない
+  - Layer 3: 文字はすべてダミー（参考と同じ行数・改行位置。漢字を含むダミーで字面の濃さを寄せた）。数字は 0。ノンブルは page.number
+  - 部品: books/replica/c-course/components/（dept-header・bar-heading・wrap-text・band-list）。shared/ へ移す候補
+  - 色: 参考の実測色を page.css 冒頭の --rep-* に集約。学科色は --rep-dept の 1 つだけで、縦棒・行頭記号・ラベル・学科名の色は color-mix で作る
+    （同型の別学科のページは --rep-dept の差し替えで色が再現できることを確認済み）。書体は Noto Sans JP / Noto Serif JP（参考の書体の代用）
+  - 残差と次の作業: review.md の「ラウンド 3」と「次にやること」
