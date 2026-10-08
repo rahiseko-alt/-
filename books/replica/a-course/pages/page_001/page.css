@@ -348,7 +348,7 @@
  * ========================================================= */
 .rep-steps__title {
   position: absolute;
-  top: 167.5mm;
+  top: 167.65mm;
   left: 10.2mm;
   color: var(--rep-ink);
   font-size: 15.5pt;
@@ -425,6 +425,11 @@
   clip-path: polygon(0 0, calc(100% - 6.4mm) 0, calc(100% - 0.5mm) 50%, calc(100% - 6.4mm) 100%, 0 100%);
 }
 
+/* 1 段目の年次ラベルは参考でも段の中央より 1.6mm 左に置かれている */
+.rep-step--1 .rep-step__head {
+  padding-right: 9.1mm;
+}
+
 /* 最後の段は矢羽根なし（版面の右端で止める） */
 .rep-step--4 .rep-step__head {
   margin-right: 0;
@@ -467,23 +472,23 @@
 
 /* 区分見出し（紺） */
 .rep-step__group {
-  margin-top: 3mm;
+  margin-top: 2.85mm;
   color: var(--rep-emph);
   font-size: 7.1pt;
   font-weight: 700;
-  line-height: 4.02mm;
+  line-height: 4.3mm;
   letter-spacing: 0;
   font-feature-settings: normal;
 }
 
 /* 3 段目は項目が多く、区分の間を詰めている */
 .rep-step--3 .rep-step__list + .rep-step__group {
-  margin-top: 0.9mm;
+  margin-top: 0.75mm;
 }
 
 /* 4 段目は専攻名が 2 行で説明が長く、最初の区分の前を少し広く取っている */
 .rep-step--4 .rep-step__intro + .rep-step__group {
-  margin-top: 4.2mm;
+  margin-top: 4.05mm;
 }
 
 /* 箇条書き（黒丸 1.6mm、行送り 4.02mm。2 行目は文字の頭にそろえる） */
