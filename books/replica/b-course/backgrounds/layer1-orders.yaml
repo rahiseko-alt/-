@@ -2,7 +2,7 @@
 # 対象: books/replica/b-course/pages/page_001（選択コース紹介の片ページ。大写真＋授業写真 3 点＋アイコンの蝶の線画）
 # 寸法の測り方（2026-10-08, claude-code）:
 #   size_mm … page.css の値を、出力 PNG（150dpi・1276×1789px = 塗り足し 3mm 込みの 216×303mm）上のプレースホルダの外接矩形で確認（差は 1px = 0.17mm 以内）
-#   crop_mm … 補正後の参考ページ（npm run ref:prep → .cache/ref-prep/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.png、1414×2000px = 210×297mm）を
+#   crop_mm … 補正後の参考ページ（reference_prep を npm run ref:prep で補正した画像。1414×2000px = 210×297mm）を
 #             切り出して目視確認。授業写真 3 点は枠と同じ位置。大写真とアイコンは、補正画像の上端を撮影範囲の端で止めたこと（prep の notes）と天側の紙の反りのため、
 #             参考の写真・円が枠より上に写っているので、補正画像上の実測位置を書いた（各 notes）
 #   色 … 参考写真の実測（撮影の白飛びを含む推定値）と page.css の --rep-*
