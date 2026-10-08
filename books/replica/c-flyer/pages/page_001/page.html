@@ -1,0 +1,102 @@
+{{!--
+  page_001: 完コピ検証（チラシ裏面）
+  参考: references/kokusai-igaku-gijutsu/flyers/prep/page_002.yaml（撮影画像を正立・台形補正して比較）
+  解析: references/kokusai-igaku-gijutsu/flyers/analysis/page_002.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : 写真・切り抜き写真・イラストはすべて photo-frame のプレースホルダ（生成待ち）。全面背景はなし（白地）
+    Layer 2 STRUCTURE   : タイトル帯と細帯・番号の円・補足ボックス（角丸 + 影）・フッター帯・ピル型バッジ（page.css）
+    Layer 3 CONTENT     : タイトル・番号・見出し・本文・補足・フッター。文字はダミー（参考と同じ文字数・改行位置）。
+                          学校名だけ company-data の値。数字は 0（番号の円の 1〜4 は並び順の番号）
+
+  - 座標は .trim（仕上がり線の左上が原点、mm）。行モジュールの各段の top は参考の実測値
+  - 行モジュール（.feat）は shared/components へ移す候補（reviews/page_001/review.md「次にやること」）
+--}}
+
+{{!-- Layer 2: タイトル帯（天・左右は塗り足しまで）と下の細帯 2 段 --}}
+<div class="title-band bleed-top bleed-left bleed-right" aria-hidden="true"></div>
+<div class="title-band__strip title-band__strip--1 bleed-left bleed-right" aria-hidden="true"></div>
+<div class="title-band__strip title-band__strip--2 bleed-left bleed-right" aria-hidden="true"></div>
+
+{{!-- Layer 3: タイトル（参考は「（学校名）の（数）つの（語）」。同じ字数の全角ダミーで字送りを合わせる。数字は 0） --}}
+<h1 class="band-title"><span class="band-title__main">ダミー見出しテキストの</span><span class="band-title__num">0</span><span class="band-title__num2">ダ</span><span class="band-title__tail">ミー文</span></h1>
+
+{{!-- ===== 特長 1（見出し 2 行・本文 3 行・補足ボックス・切り抜き写真 2 点） ===== --}}
+<section class="feat" style="top: 34.9mm">
+  <div class="feat__num" aria-hidden="true"><span class="feat__no-label">ダミ</span><span class="feat__no">1</span></div>
+  <div class="feat__text" style="top: -1.18mm">
+    <h2 class="feat__title feat__title--loose">ダミー見出し文字列（0000年0月）<br>見出しダミー＋ダミー＋テキストです!</h2>
+    <p class="feat__body" style="margin-top: 2.6mm">
+      <span class="ln">ダミーテキストダミーテキストダミーテキストダミーテキストダミ。</span>
+      <span class="ln ln--full">ダミ<b>ーテキストダミーテキ</b>ストダミー<b>テキ</b>ストダミーテキスト<b>ダミーテキ</b></span>
+      <span class="ln"><b>ダミーテキス</b>トダミーテキストダ。</span>
+    </p>
+    <div class="feat__note feat__note--1">
+      <p class="feat__note-label">【ダミー用語】ラベル</p>
+      <p class="feat__note-text">ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテ。</p>
+    </div>
+  </div>
+  <div class="media media--cutout media--cutout-1" style="left: 161mm; top: -3.4mm; width: 42mm; height: 26.5mm">{{> photo-frame}}</div>
+  <div class="media media--cutout media--cutout-2" style="left: 176mm; top: 20.1mm; width: 20mm; height: 19mm">{{> photo-frame}}</div>
+</section>
+
+{{!-- ===== 特長 2（見出し 1 行・本文 2 行・補足ボックス・切り抜き写真 1 点） ===== --}}
+<section class="feat" style="top: 89.85mm">
+  <div class="feat__num" aria-hidden="true"><span class="feat__no-label">ダミ</span><span class="feat__no">2</span></div>
+  <div class="feat__text" style="top: -0.9mm">
+    <h2 class="feat__title">ダミー見出しテキストをダミー表示!</h2>
+    <p class="feat__body" style="margin-top: 3mm">
+      <span class="ln ln--full">ダミーテキストダミーテキストダミーテキストダ<b>ミーテキスト</b>ダミーテ</span>
+      <span class="ln">ダミーテキ<b>ストダミーテキストダミー</b>テキスト。</span>
+    </p>
+    <div class="feat__note">
+      <p class="feat__note-label">【ダミーの用語】ラベル</p>
+      <p class="feat__note-text feat__note-text--tight">ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキス。</p>
+    </div>
+  </div>
+  <div class="media media--cutout media--cutout-vr" style="left: 163mm; top: -1.35mm; width: 38mm; height: 19.5mm">{{> photo-frame}}</div>
+</section>
+
+{{!-- ===== 特長 3（見出し 2 行・本文 3 行・イラスト・写真） ===== --}}
+<section class="feat" style="top: 130.8mm">
+  <div class="feat__num" aria-hidden="true"><span class="feat__no-label">ダミ</span><span class="feat__no">3</span></div>
+  <div class="feat__text" style="top: -0.71mm">
+    <h2 class="feat__title">見出しダミーテキストです<br>ダミーテキスト</h2>
+    <p class="feat__body" style="margin-top: 2.1mm">
+      <span class="ln">ダミーテキストダミーテキストダミーテ<b>キストダミーテキ</b>ストダ。</span>
+      <span class="ln ln--full">ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキ、</span>
+      <span class="ln"><b>ダミーテキストダミーテ</b>キスト。</span>
+    </p>
+  </div>
+  <div class="media media--illust media--illust-3" style="left: 131mm; top: -4.3mm; width: 29mm; height: 20.5mm">{{> photo-frame}}</div>
+  <div class="media media--photo-3" style="left: 164.6mm; top: 0.25mm; width: 35.2mm; height: 29.85mm">{{> photo-frame}}</div>
+</section>
+
+{{!-- ===== 特長 4（見出し 1 行 + 横にイラスト・本文 4 行・写真） ===== --}}
+<section class="feat" style="top: 170mm">
+  <div class="feat__num" aria-hidden="true"><span class="feat__no-label">ダミ</span><span class="feat__no">4</span></div>
+  <div class="feat__text" style="top: 2.12mm">
+    <h2 class="feat__title">ダミー見出し文字</h2>
+    <p class="feat__body" style="margin-top: 2.35mm">
+      <span class="ln ln--full">ダミーテキストダミーテキ（ダミ0〜0文字）ストダミーテキストダミー</span>
+      <span class="ln">ダミーテキストダミーテキストダミ。</span>
+      <span class="ln ln--full">ダミーテキストダミーテキストダミーテキストダミーテキストダミーテ</span>
+      <span class="ln"><b>ダミー0ダミ、ダミーテ0ダミーテ000ダミ</b>ーテキストダミ。</span>
+    </p>
+  </div>
+  <div class="media media--illust media--illust-4" style="left: 104mm; top: -6.5mm; width: 21.5mm; height: 16.5mm">{{> photo-frame}}</div>
+  <div class="media media--photo-4" style="left: 164.6mm; top: 0.3mm; width: 35.2mm; height: 29.6mm">{{> photo-frame}}</div>
+</section>
+
+{{!-- Layer 1（素材）+ Layer 2（枠）: 下部の全幅写真（左右は塗り足しまで。フッター帯に接する） --}}
+<div class="photo-bottom bleed-left bleed-right">{{> photo-frame}}</div>
+
+{{!-- Layer 2: フッター帯（地・左右は塗り足しまで） --}}
+<div class="footer-band bleed-bottom bleed-left bleed-right" aria-hidden="true"></div>
+
+{{!-- Layer 3: フッター（法人名はダミー。学校名は company-data。バッジはダミー） --}}
+<footer class="footer">
+  <span class="footer__corp">法人名ダミー表記</span>
+  <span class="footer__school">{{facts.school.name}}</span>
+  <span class="footer__badge">バッジダミー表記文</span>
+</footer>

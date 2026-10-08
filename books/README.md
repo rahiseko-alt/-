@@ -3,7 +3,7 @@
 BOOK は実際に制作する成果物の単位です（パンフレット、募集要項、チラシ、ポスターなど。docs/concept.md §6）。
 `config/book.yaml` を持つディレクトリが 1 つの BOOK になり、ネストもできます（例: `books/flyers/open-campus/`）。
 
-現在は空です（BOOK は Phase 5 以降に `npm run new:book` で作ります）。
+現在は Phase 5（完コピ検証）用の `replica/` だけです（`replica/a-brochure`・`replica/b-web-it`・`replica/c-flyer`。文字はダミー、写真は枠のみ。比較の記録と次にやることは各 `reviews/page_001/review.md`）。自社の BOOK は Phase 8 以降に `npm run new:book` で作ります。
 
 ## 作り方
 

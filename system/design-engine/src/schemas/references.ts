@@ -2,6 +2,7 @@
 // - books/<bookId>/references.yaml（BOOK が使う参考資料の指定）
 // - references/<source>/<kind>/source.yaml（参考資料の出自・禁止語）
 // - references/<source>/<kind>/analysis/*.yaml（解析結果）
+// - references/<source>/<kind>/prep/*.yaml（比較用にページ画像を正立・単ページ化する指定）
 import { z } from 'zod';
 import { NonEmpty, NumOrText, PAGE_ID_RE, RelPath, listOf, requiredListOf } from './common.ts';
 
@@ -89,3 +90,21 @@ export const AnalysisSchema = z.preprocess(
   z.looseObject(Object.fromEntries(ANALYSIS_KEYS.map((k) => [k, z.unknown().optional()])) as Record<(typeof ANALYSIS_KEYS)[number], z.ZodOptional<z.ZodUnknown>>),
 );
 export type Analysis = z.output<typeof AnalysisSchema>;
+
+/** 0〜1 の比率 */
+const Ratio = z.number().min(0).max(1);
+
+/**
+ * references/<source>/<kind>/prep/<name>.yaml
+ * 写真・スキャンのページ画像を、比較（npm run compare）用に正立・単ページ・台形補正した画像にする指定。
+ * corners は rotate を適用した後の画像における、ページの 左上・右上・右下・左下（幅・高さに対する比率）。
+ */
+export const ReferencePrepSchema = z.looseObject({
+  image: RelPath,
+  rotate: z.union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)], { message: 'rotate は 0 / 90 / 180 / 270（時計回り）です' }).default(0),
+  corners: z.array(z.tuple([Ratio, Ratio])).length(4, { message: 'corners は 左上・右上・右下・左下 の 4 点です' }),
+  aspect: z.number().positive({ message: 'aspect（出力の 幅 / 高さ）は正の数です' }),
+  height_px: z.number().int().min(100).max(8000).default(2000),
+  notes: z.string().nullish(),
+});
+export type ReferencePrep = z.output<typeof ReferencePrepSchema>;

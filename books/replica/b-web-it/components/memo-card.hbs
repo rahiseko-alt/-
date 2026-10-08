@@ -1,0 +1,21 @@
+{{!--
+  memo-card: 画鋲で留めたメモ風カード（Layer 2 の紙・斜線の影・折れ角・画鋲 + Layer 3 の中身）
+  この BOOK 専用（完コピ検証）。他の BOOK でも使うことになったら shared/components/ への移動を検討する（review.md「次にやること」）
+  パラメータ:
+    mod   必須  位置・大きさ・傾き・文字色を決める page.css の修飾子（.memo--<mod>）
+    photo 任意  写真枠の縦横比（例 "37 / 20"）。指定すると上部に photo-frame のプレースホルダを置く
+  中身（職種名・説明）はブロックで渡す:
+    {{#> book/memo-card mod="c1" photo="37.5 / 20.5"}}
+      <h3 class="memo__title">…</h3>
+      <p class="memo__text">…</p>
+    {{/book/memo-card}}
+--}}
+<div class="memo memo--{{mod}}">
+  <div class="memo__hatch" aria-hidden="true"></div>
+  <div class="memo__paper">
+    {{#if photo}}<div class="memo__photo">{{> photo-frame ratio=photo}}</div>{{/if}}
+    {{> @partial-block}}
+  </div>
+  <svg class="memo__fold" viewBox="0 0 3.6 3.6" aria-hidden="true"><path d="M0 3.6 L3.6 0 L0.8 0.8 Z"/></svg>
+  <svg class="memo__pin" viewBox="0 0 4 6" aria-hidden="true"><circle cx="1.5" cy="1.5" r="1.2"/><path d="M2.05 2.6 L2.75 4.9"/><circle class="memo__pin-dot" cx="2.75" cy="4.95" r="0.35"/></svg>
+</div>

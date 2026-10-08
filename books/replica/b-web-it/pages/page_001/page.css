@@ -1,0 +1,552 @@
+/*
+ * page_001 専用のスタイル（compose が @scope でこのページだけに限定する）
+ * 完コピ検証: 参考ページ（補正後の比較画像）から実測した値。寸法は .trim 基準の mm、文字は pt
+ * 色は参考ページの推定値を --rep-* に置く（撮影画像からの推定。Phase 8 でブランドカラー var(--color-*) に置き換える）
+ */
+
+:scope {
+  /* 地・面 */
+  --rep-ground: #e2ecf6;        /* 淡い水色の地 */
+  --rep-yellow: #fcf49c;        /* チャートの大きな円 */
+  --rep-white: #ffffff;         /* 見出しの円・カード・ボックス */
+  /* 見出し */
+  --rep-head-blue: #3d6aa8;     /* 大見出し 1 行目 */
+  --rep-head-brown: #a5621c;    /* 大見出し 2〜3 行目 */
+  --rep-lead-start: #4f5d73;    /* リードの帯の線と文字（左: 青灰） */
+  --rep-lead-end: #7b5236;      /* 同（右: 茶） */
+  /* 軸（4 方向の色分け） */
+  --rep-navy: #4d5a9c;          /* 縦軸の上・上のラベル */
+  --rep-axis-blue: #4a86ca;     /* 軸の中央 */
+  --rep-axis-teal: #4d89ad;
+  --rep-axis-olive: #6f9150;
+  --rep-green: #7c9734;         /* 縦軸の下・下のラベル */
+  --rep-orange: #b8690c;        /* 横軸の左・左のラベル */
+  --rep-axis-mid: #85907f;
+  --rep-axis-mauve: #938597;
+  --rep-rose: #b9667c;          /* 横軸の右・右のラベル */
+  /* 部品 */
+  --rep-tab: #3a7fca;           /* タブラベル */
+  --rep-clip: #86a2c8;          /* タブの × 型クリップ */
+  --rep-hatch: rgba(120, 112, 70, 0.45);   /* メモカードの斜線の影 */
+  --rep-hatch-dark: #4a5878;    /* タブの斜線の影 */
+  --rep-line: #4a4d58;          /* メモカードの枠・画鋲・吹き出しの線 */
+  --rep-box-line: #4e5b73;      /* 卒業生ボックスの枠 */
+  --rep-folio: #4176b4;         /* ノンブルの円 */
+  /* 文字 */
+  --rep-ink: #3c3c44;           /* 本文 */
+  --rep-bubble-ink: #4c586a;
+  --rep-title-slate: #585b6c;   /* メモカードの職種名（色は位置で少しずつ違う） */
+  --rep-title-brown: #86603f;
+  --rep-title-rose: #9c5c70;
+  --rep-title-mauve: #78636e;
+  --rep-title-grey: #66695f;
+  /* プレースホルダ（Layer 1 の写真待ち） */
+  --rep-photo: #c9ced6;
+  --rep-silhouette: #b7bdc6;
+}
+
+/* ---------- Layer 2: 地と背面の図形 ---------- */
+
+.ground {
+  background: var(--rep-ground);
+}
+
+.backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 297mm;
+  overflow: visible;
+}
+
+.stop-lead-start { stop-color: var(--rep-lead-start); }
+.stop-lead-end { stop-color: var(--rep-lead-end); }
+.stop-navy { stop-color: var(--rep-navy); }
+.stop-axis-blue { stop-color: var(--rep-axis-blue); }
+.stop-axis-teal { stop-color: var(--rep-axis-teal); }
+.stop-axis-olive { stop-color: var(--rep-axis-olive); }
+.stop-green { stop-color: var(--rep-green); }
+.stop-orange { stop-color: var(--rep-orange); }
+.stop-axis-mid { stop-color: var(--rep-axis-mid); }
+.stop-axis-mauve { stop-color: var(--rep-axis-mauve); }
+.stop-rose { stop-color: var(--rep-rose); }
+
+.disc-yellow { fill: var(--rep-yellow); }
+.disc-white { fill: var(--rep-white); }
+
+/* リードの帯: 太い線（stroke）で弧のピルを描く。幅 10.2mm、両端は丸 */
+.lead-halo,
+.lead-border,
+.lead-fill {
+  fill: none;
+  stroke-linecap: round;
+}
+.lead-halo { stroke: var(--rep-white); stroke-width: 13.6; opacity: 0.75; }
+.lead-border { stroke: url(#bwi-lead-grad); stroke-width: 10.6; }
+.lead-fill { stroke: var(--rep-white); stroke-width: 9.9; }
+
+.lead-text {
+  fill: url(#bwi-lead-grad);
+  font-family: var(--font-heading);
+  font-size: 4.4px;             /* viewBox の 1 単位 = 1mm → 4.4mm ≒ 12.5pt */
+  font-weight: 500;
+  letter-spacing: 0.42px;
+  font-feature-settings: 'palt' 1;
+}
+
+/* 吹き出し */
+.cloud-halo { fill: var(--rep-white); stroke: var(--rep-white); stroke-width: 3.2; opacity: 0.7; }
+.cloud-outline { fill: var(--rep-white); stroke: var(--rep-line); stroke-width: 0.8; }
+.cloud-fill { fill: var(--rep-white); stroke: none; }
+
+/* 軸の矢印 */
+.axis-h { fill: url(#bwi-h-grad); }
+.axis-v { fill: url(#bwi-v-grad); }
+
+/* 切り抜き人物のプレースホルダ */
+.silhouette { fill: var(--rep-silhouette); }
+
+/* ---------- Layer 3: 大見出し ---------- */
+
+.headline {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.headline > span {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.headline__l1 {
+  left: 13.6mm;
+  top: 33.4mm;
+  font-size: 30pt;
+  letter-spacing: -0.012em;
+  color: var(--rep-head-blue);
+  /* 参考は 1 行目だけ右上がり（約 3°。リードの帯の弧に呼応） */
+  transform: rotate(-3.2deg);
+  transform-origin: left center;
+}
+
+.headline__l2,
+.headline__l3 {
+  left: 12.8mm;
+  color: var(--rep-head-brown);
+}
+
+.headline__l2 { top: 45.4mm; font-size: 46pt; letter-spacing: -0.02em; }
+.headline__l3 { top: 63.7mm; font-size: 47pt; letter-spacing: -0.06em; }
+
+/* 吹き出しの文 */
+.bubble-text {
+  position: absolute;
+  left: 140mm;
+  top: 34.4mm;
+  width: 40mm;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 12.5pt;
+  font-weight: 500;
+  line-height: 6mm;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: var(--rep-bubble-ink);
+}
+
+/* 切り抜き人物の名前 */
+.person-caption {
+  position: absolute;
+  margin: 0;
+  color: var(--rep-ink);
+  text-align: left;
+}
+
+.person-caption--tr { left: 150mm; top: 60.5mm; }
+.person-caption--bl { left: 34mm; top: 212.3mm; }
+
+.person-caption__name {
+  display: block;
+  font-size: 9pt;
+  font-weight: 500;
+  line-height: 4mm;
+}
+
+.person-caption__name small {
+  margin-left: 0.3mm;
+  font-size: 6.5pt;
+}
+
+.person-caption__aff {
+  display: block;
+  margin-top: 0.3mm;
+  font-size: 6.5pt;
+  line-height: 2.6mm;
+}
+
+/* ---------- Layer 2 + 3: 軸のラベル ---------- */
+
+.axis-label {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 1.2mm;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--rep-white);
+  line-height: 1;
+  font-feature-settings: 'palt' 1;
+}
+
+.axis-label--top {
+  left: 90mm;
+  top: 51mm;
+  width: 25.5mm;
+  height: 11mm;
+  background: var(--rep-navy);
+  font-size: 17pt;
+  letter-spacing: 0.03em;
+}
+
+.axis-label--bottom {
+  left: 89.5mm;
+  top: 214mm;
+  width: 26mm;
+  height: 10.4mm;
+  background: var(--rep-green);
+  font-size: 17pt;
+}
+
+.axis-label--left,
+.axis-label--right {
+  writing-mode: vertical-rl;
+  font-size: 14.5pt;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  font-feature-settings: 'vpal' 1;
+}
+
+.axis-label--left {
+  left: 18.5mm;
+  top: 120mm;
+  width: 9.5mm;
+  height: 42.5mm;
+  background: var(--rep-orange);
+}
+
+.axis-label--right {
+  left: 183.5mm;
+  top: 120.5mm;
+  width: 9mm;
+  height: 40.5mm;
+  background: var(--rep-rose);
+}
+
+/* ---------- Layer 2 + 3: メモカード（books/replica/b-web-it/components/memo-card.hbs） ---------- */
+
+.memo {
+  position: absolute;
+  transform: rotate(var(--rot, 0deg));
+  transform-origin: center;
+}
+
+/* 右と下にのぞく斜線の影 */
+.memo__hatch {
+  position: absolute;
+  left: 1.4mm;
+  top: 1.4mm;
+  right: -1.3mm;
+  bottom: -1.3mm;
+  background: repeating-linear-gradient(135deg, var(--rep-hatch) 0 0.28mm, transparent 0.28mm 0.8mm);
+}
+
+/* 紙（右下の角を切り落とし、折れ角を重ねる） */
+.memo__paper {
+  position: absolute;
+  inset: 0;
+  background: var(--rep-white);
+  border: 0.3mm solid var(--rep-line);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3.6mm), calc(100% - 3.6mm) 100%, 0 100%);
+}
+
+.memo__fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 3.6mm;
+  height: 3.6mm;
+  overflow: visible;
+  fill: var(--rep-white);
+  stroke: var(--rep-line);
+  stroke-width: 0.28;
+  stroke-linejoin: round;
+}
+
+/* 画鋲（上辺の中央やや左、紙の上にはみ出す） */
+.memo__pin {
+  position: absolute;
+  left: calc(45% - 1.5mm);
+  top: -3.5mm;
+  width: 4mm;
+  height: 6mm;
+  overflow: visible;
+  fill: none;
+  stroke: var(--rep-line);
+  stroke-width: 0.3;
+  stroke-linecap: round;
+}
+
+.memo__pin .memo__pin-dot {
+  fill: var(--rep-line);
+  stroke: none;
+}
+
+.memo__photo {
+  position: absolute;
+  left: var(--photo-l);
+  top: var(--photo-t);
+  width: var(--photo-w);
+}
+
+.memo__title {
+  position: absolute;
+  left: 0.6mm;
+  right: 0.6mm;
+  top: var(--title-t);
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 8.8pt;
+  font-weight: 700;
+  line-height: var(--title-lh, 3.6mm);
+  text-align: center;
+  color: var(--title-c, var(--rep-title-slate));
+}
+
+.memo__text {
+  position: absolute;
+  left: 1.4mm;
+  right: 1mm;
+  top: var(--body-t);
+  margin: 0;
+  font-size: 6.5pt;
+  font-weight: 500;
+  line-height: 2.6mm;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+/* 文字だけの小さいカード（c3〜c5）の職種名は 2 行を 1 行ずつ収める */
+.memo--c3 .memo__title,
+.memo--c4 .memo__title,
+.memo--c5 .memo__title {
+  font-size: 7.8pt;
+  white-space: nowrap;
+}
+
+/* 位置・大きさ・傾き（参考ページの実測） */
+.memo--c1 {
+  left: 49.6mm; top: 89.6mm; width: 41.2mm; height: 37.2mm; --rot: -1.5deg;
+  --photo-l: 1.4mm; --photo-t: 2.9mm; --photo-w: 37.5mm; --title-t: 23.7mm; --body-t: 28.4mm;
+}
+
+.memo--c2 {
+  left: 109.9mm; top: 76.2mm; width: 43.4mm; height: 36.7mm; --rot: -0.3deg;
+  --photo-l: 3.4mm; --photo-t: 2.5mm; --photo-w: 37.1mm; --title-t: 23.5mm; --body-t: 27.9mm;
+}
+
+.memo--c3 {
+  left: 49.6mm; top: 131.6mm; width: 24mm; height: 24.6mm; --rot: -1.5deg;
+  --title-t: 2.7mm; --title-lh: 4mm; --body-t: 12.5mm; --title-c: var(--rep-title-brown);
+}
+
+.memo--c4 {
+  left: 110.2mm; top: 122.6mm; width: 24.8mm; height: 29.6mm; --rot: -1.2deg;
+  --title-t: 1.7mm; --title-lh: 4mm; --body-t: 11.5mm;
+}
+
+.memo--c5 {
+  left: 138.6mm; top: 122.5mm; width: 25.3mm; height: 27mm; --rot: -1deg;
+  --title-t: 1.3mm; --title-lh: 4mm; --body-t: 11.6mm;
+}
+
+.memo--c5 .memo__title-a { color: var(--rep-title-mauve); }
+.memo--c5 .memo__title-b { color: var(--rep-title-rose); }
+
+.memo--c6 {
+  left: 137.1mm; top: 153mm; width: 43mm; height: 36.7mm; --rot: 0.6deg;
+  --photo-l: 3.3mm; --photo-t: 2.8mm; --photo-w: 36.9mm; --title-t: 23.6mm; --body-t: 27.8mm; --title-c: var(--rep-title-mauve);
+}
+
+.memo--c7 {
+  left: 136.9mm; top: 194.8mm; width: 43.2mm; height: 36.9mm;
+  --photo-l: 3.5mm; --photo-t: 3.1mm; --photo-w: 36.9mm; --title-t: 23.5mm; --body-t: 28.4mm; --title-c: var(--rep-title-grey);
+}
+
+/* 写真のプレースホルダ（Layer 1 の自社写真待ち。中間調の灰色で面の重さだけ合わせる） */
+.photo-frame__placeholder {
+  min-height: 0;
+  background: var(--rep-photo);
+  border: none;
+  font-size: 6.5pt;
+  color: #8d939c;
+}
+
+/* ---------- Layer 3: 本文 ---------- */
+
+.body-copy {
+  position: absolute;
+  left: 34mm;
+  top: 169.8mm;
+  margin: 0;
+  font-size: 9.2pt;
+  font-weight: 500;
+  line-height: 4.7mm;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--rep-ink);
+}
+
+/* ---------- Layer 2 + 3: タブラベル ---------- */
+
+.tab-clip {
+  position: absolute;
+  left: 4mm;
+  top: 226mm;
+  width: 12mm;
+  height: 13mm;
+  overflow: visible;
+  fill: none;
+  stroke: var(--rep-clip);
+  stroke-width: 0.75;
+  stroke-linecap: round;
+}
+
+.tab-hatch {
+  position: absolute;
+  left: 14.6mm;
+  top: 229.2mm;
+  width: 65.4mm;
+  height: 10.1mm;
+  background: repeating-linear-gradient(135deg, var(--rep-hatch-dark) 0 0.3mm, transparent 0.3mm 1mm);
+}
+
+.tab {
+  position: absolute;
+  left: 12.85mm;
+  top: 226.9mm;
+  width: 65.45mm;
+  height: 9.9mm;
+  margin: 0;
+  padding-left: 7.75mm;
+  border-radius: 1.5mm;
+  background: var(--rep-tab);
+  font-family: var(--font-heading);
+  font-size: 13.5pt;
+  font-weight: 700;
+  line-height: 9.9mm;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: var(--rep-white);
+}
+
+/* クリップの輪（タブの左端に掛かる白い小さな輪） */
+.tab::before {
+  content: '';
+  position: absolute;
+  left: 2.4mm;
+  top: 4.1mm;
+  width: 1.3mm;
+  height: 1.3mm;
+  border: 0.35mm solid var(--rep-white);
+  border-left-color: transparent;
+  border-radius: 50%;
+}
+
+/* ---------- Layer 2 + 3: 卒業生ボックス ---------- */
+
+.grad {
+  position: absolute;
+  top: 240.9mm;
+  height: 42.1mm;
+  background: var(--rep-white);
+  border: 0.35mm solid var(--rep-box-line);
+}
+
+.grad--l { left: 13.9mm; width: 85.5mm; --photo-l: 4.3mm; --photo-w: 28.8mm; --text-l: 37.6mm; }
+.grad--r { left: 105mm; width: 91.5mm; --photo-l: 5mm; --photo-w: 33.5mm; --text-l: 42.5mm; }
+
+.grad__photo {
+  position: absolute;
+  left: var(--photo-l);
+  top: 5.1mm;
+  width: var(--photo-w);
+}
+
+.grad__text {
+  position: absolute;
+  left: var(--text-l);
+  top: 4.8mm;
+  right: 2mm;
+  color: var(--rep-ink);
+}
+
+.grad__name {
+  margin: 0;
+  font-size: 9.5pt;
+  font-weight: 500;
+  line-height: 4.4mm;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.grad__name small {
+  margin-left: 0.3mm;
+  font-size: 6.5pt;
+}
+
+.grad__aff {
+  font-size: 6.5pt;
+}
+
+.grad__org {
+  margin: 0;
+  font-size: 8.5pt;
+  font-weight: 500;
+  line-height: 4.4mm;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.grad__body {
+  margin: 2.1mm 0 0;
+  font-size: 7.2pt;
+  line-height: 3.95mm;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ---------- Layer 2 + 3: ノンブル ---------- */
+
+.folio-dot {
+  position: absolute;
+  left: 6.35mm;
+  top: 288mm;
+  width: 4.3mm;
+  height: 4.3mm;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rep-folio);
+  font-family: var(--font-number);
+  font-size: 7pt;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--rep-white);
+}

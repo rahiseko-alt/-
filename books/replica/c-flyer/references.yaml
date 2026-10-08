@@ -1,0 +1,8 @@
+# このBOOKが使う参考資料（docs/concept.md §5 ／ system/rules/references.md）
+# - 参考資料はコピーしない。references/<source>/<kind>/ 以下をリポジトリルート相対パスで指定する
+# - layout_reference には撮影画像そのものではなく、正立・台形補正の指定ファイル（prep/*.yaml）を書く（compare が自動で補正する）
+# - 参考画像はページに直接貼らない（背景・{{asset}} に指定しない）。比較・目視・画像生成の参照入力に使う
+references:
+  - references/kokusai-igaku-gijutsu/flyers/
+page_001:
+  layout_reference: [references/kokusai-igaku-gijutsu/flyers/prep/page_002.yaml]

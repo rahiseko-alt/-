@@ -5,6 +5,7 @@ import { parseArgs } from 'node:util';
 import fg from 'fast-glob';
 import {
   AnalysisSchema,
+  ReferencePrepSchema,
   BackgroundPromptSchema,
   PAGE_ID_RE,
   StudioError,
@@ -261,6 +262,18 @@ function checkReferences(root: string, s: CheckSection): Array<{ dir: string; so
     const terms = source.forbidden_terms.filter((t) => t.trim() !== '' && !t.startsWith('TODO'));
     if (terms.length === 0) push(s.warnings, `${dir}/source.yaml: forbidden_terms が空です（他校の学校名・固有コピーなどを必ず登録する）`);
     if (source.original && !exists(root, source.original)) push(s.errors, `${dir}/source.yaml: original のファイルがありません: ${source.original}`);
+    const prepDir = path.join(root, dir, 'prep');
+    if (fs.existsSync(prepDir)) {
+      for (const f of fg.sync('*.{yaml,yml}', { cwd: prepDir, onlyFiles: true }).sort()) {
+        const rel = `${dir}/prep/${f}`;
+        try {
+          const prep = loadYamlWithSchema(path.join(prepDir, f), ReferencePrepSchema, rel);
+          if (!exists(root, prep.image)) push(s.errors, `${rel}: image のファイルがありません: ${prep.image}`);
+        } catch (err) {
+          push(s.errors, errorMessage(err));
+        }
+      }
+    }
     const analysisDir = path.join(root, dir, 'analysis');
     if (fs.existsSync(analysisDir)) {
       for (const f of fg.sync('*.{yaml,yml}', { cwd: analysisDir, onlyFiles: true }).sort()) {

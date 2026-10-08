@@ -114,9 +114,17 @@ page_016:                                   # BOOK 側のページ ID
 
 `overview`（2 件）は資料一式の写真で、比較の対象ではない（構成と表紙の共通性の参考）。
 
+Phase 5 で完コピ検証したページ（いずれも 3 ラウンド。記録は各 BOOK の `reviews/page_001/review.md`）:
+
+| 資料・ページ | BOOK | 補正指定 |
+| --- | --- | --- |
+| `HAL-nagoya/brochure-1` page_015 左（学科一覧表） | `books/replica/a-brochure` | `prep/page_015-l.yaml` |
+| `nagoya-iryo-hisho-it/brochure-web-it` page_003 左（職種の 2 軸図） | `books/replica/b-web-it` | `prep/page_003-l.yaml` |
+| `kokusai-igaku-gijutsu/flyers` page_002（チラシ裏面） | `books/replica/c-flyer` | `prep/page_002.yaml` |
+
 Phase 5 の前に必要なこと（全資料共通）:
 
-- ページ画像は印刷物の写真で、多くは**反時計回りに 90° 倒れた見開き**。`npm run compare` には回転・切り出しの機能がないため、比較用に「正立・単ページ・台形補正済み」の画像を作り、`--reference` で渡す（作業用の画像は `references/` や `books/` ではなく一時ディレクトリに置く）
+- ページ画像は印刷物の写真で、多くは**反時計回りに 90° 倒れた見開き**。比較の前に `prep/<name>.yaml`（回転・ページの四隅・縦横比）を書き、`npm run ref:prep` で正立・単ページ・台形補正する。`layout_reference` / `--reference` に指定ファイルを書けば `compare` が自動で補正する（補正画像は `.cache/ref-prep/` に作られ、コミットしない）
 - 写真のゆがみ・照明むら・ノドの湾曲があるため、`mismatch_ratio` は高く出る。合否は位置・大きさの目視比較を主にする
 - 撮影されていないページがある（各 `book.yaml` の `page_type` / `page_map` に記載）
 - ライセンスキャラクター・他社ロゴ・実績バッジは、どの層でも再利用しない（各解析の `notes` に記載）
