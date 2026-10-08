@@ -1,0 +1,3 @@
+# この Dockerfile はリポジトリのファイルを COPY しないため、ビルドコンテキストは空でよい
+# （node_modules や LFS の大容量ファイルを Docker に送らない）
+*
