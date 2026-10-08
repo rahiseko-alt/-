@@ -8,7 +8,7 @@
   /* 地 */
   --rep-band: #dde9f5;          /* 外周帯（淡い水色） */
   --rep-paper: #ffffff;         /* 地紙 */
-  --rep-grid: #e6e7ec;          /* 方眼（3mm） */
+  --rep-grid: #ececf0;          /* 方眼（3mm） */
   /* パネル・ラベル */
   --rep-rose-line: #c78b9c;     /* 上のパネルの枠 */
   --rep-rose-panel: #fffbfc;    /* 上のパネルの地 */
@@ -93,7 +93,7 @@
 
 .lead-ribbon {
   fill: none;
-  stroke: #e3e3e8;
+  stroke: #ebebef;
   stroke-width: 0.35;
 }
 
@@ -218,8 +218,8 @@ p, h1, li { margin: 0; }
 .lead-line {
   position: absolute;
   left: 68.4mm;
-  top: 19.7mm;
-  font-size: 9pt;
+  top: 19.75mm;
+  font-size: 9.9pt;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -230,13 +230,13 @@ p, h1, li { margin: 0; }
 /* 大見出し: 紺の袋文字（白フチ＋紺の外フチ）・紺の小さい文字・クリームの袋文字 */
 .headline {
   position: absolute;
-  left: 49.3mm;
+  left: 49.9mm;
   top: 28.3mm;
   font-size: 33.5pt;
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
 }
 
 .hl-navy {
@@ -270,8 +270,8 @@ p, h1, li { margin: 0; }
   position: absolute;
   left: 0;
   right: 0;
-  top: 2.8mm;
-  font-size: 12.3pt;
+  top: 2.72mm;
+  font-size: 13.8pt;
   font-weight: 700;
   line-height: 1;
   text-align: center;
@@ -284,7 +284,7 @@ p, h1, li { margin: 0; }
   position: absolute;
   left: 0;
   right: 0;
-  top: 9.4mm;
+  top: 9.75mm;
   font-size: 22pt;
   font-weight: 900;
   line-height: 1;
@@ -298,21 +298,22 @@ p, h1, li { margin: 0; }
 /* 大数字（整数部 94pt、小数部と % は 54%） */
 .hero {
   position: absolute;
-  left: 34.2mm;
-  top: 71.7mm;
-  font-size: 94pt;
+  left: 34.66mm;
+  top: 72.35mm;
+  font-size: 90pt;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
   color: var(--rep-rose);
 }
 
-.hero__dec { font-size: 51pt; margin-left: 0.4mm; letter-spacing: 0.02em; }
+/* 小数部と %: 参考は字幅の狭い丸ゴシック。横 86% に縮めて字幅を合わせる */
+.hero__dec { display: inline-block; font-size: 48.6pt; transform: scaleX(0.86); transform-origin: left bottom; }
 
 .hero-sub {
   position: absolute;
   left: 35.3mm;
-  top: 104.85mm;
+  top: 104.47mm;
   font-size: 10pt;
   font-weight: 500;
   line-height: 1;
@@ -327,7 +328,7 @@ p, h1, li { margin: 0; }
 .notes {
   position: absolute;
   left: 25.7mm;
-  top: 111.1mm;
+  top: 110.7mm;
   width: 80mm;
   font-size: 6.5pt;
   font-weight: 500;
@@ -358,9 +359,9 @@ p, h1, li { margin: 0; }
 /* ランキングのラベル（大小の文字が交互） */
 .label-green__text {
   position: absolute;
-  left: 4.65mm;
-  top: 3.66mm;
-  font-size: 18.3pt;
+  left: 5.35mm;
+  top: 3.79mm;
+  font-size: 17.6pt;
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
@@ -368,7 +369,7 @@ p, h1, li { margin: 0; }
 }
 
 .label-green__small {
-  font-size: 13.6pt;
+  font-size: 13.1pt;
   font-weight: 700;
   color: var(--rep-olive-ink);
   margin-inline: 0.5mm;
@@ -378,7 +379,7 @@ p, h1, li { margin: 0; }
 .rank {
   position: absolute;
   left: 27.8mm;
-  top: 155.68mm;
+  top: 155.45mm;
   width: 96.2mm;
   margin: 0;
   padding: 0;
@@ -430,13 +431,13 @@ p, h1, li { margin: 0; }
 .rank__leader { position: relative; top: 0.25mm; }
 
 .rank__num {
-  font-size: 13.5pt;
+  font-size: 12.5pt;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
 }
 
-.rank__num small { font-size: 12pt; font-weight: 500; }
+.rank__num small { font-size: 11.5pt; font-weight: 500; }
 
 .rank-note {
   position: absolute;
@@ -482,7 +483,7 @@ p, h1, li { margin: 0; }
 .data {
   position: absolute;
   left: 41.9mm;
-  top: 234.77mm;
+  top: 234.57mm;
   width: 61.1mm;
   margin: 0;
   padding: 0;
@@ -519,7 +520,7 @@ p, h1, li { margin: 0; }
 .data__leader { position: relative; top: 0.6mm; margin: 0 2.6mm 0 2mm; }
 
 .data__num {
-  font-size: 14pt;
+  font-size: 12.8pt;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -530,7 +531,7 @@ p, h1, li { margin: 0; }
 .data-source {
   position: absolute;
   right: calc(210mm - 103mm);
-  top: 264.37mm;
+  top: 263.67mm;
   font-size: 6.5pt;
   line-height: 1;
   white-space: nowrap;
@@ -580,7 +581,7 @@ p, h1, li { margin: 0; }
 .total-lead {
   position: absolute;
   left: 117.3mm;
-  top: 238.4mm;
+  top: 238.1mm;
   font-size: 10.7pt;
   font-weight: 500;
   line-height: 1.38;
@@ -590,9 +591,9 @@ p, h1, li { margin: 0; }
 
 .total {
   position: absolute;
-  left: 116.3mm;
-  top: 249.4mm;
-  font-size: 38pt;
+  left: 116.6mm;
+  top: 250.16mm;
+  font-size: 34pt;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -600,9 +601,9 @@ p, h1, li { margin: 0; }
 }
 
 /* 参考の数字は字幅の狭い丸ゴシック。Noto Sans JP を横 85% に縮めて字幅を合わせる */
-.total__num { display: inline-block; transform: scaleX(0.85); transform-origin: left center; margin-right: -5.4mm; }
+.total__num { display: inline-block; transform: scaleX(0.874); transform-origin: left center; margin-right: -4.6mm; }
 .total__unit { font-size: 20pt; }
-.total__suffix { font-size: 10pt; margin-left: 0.4mm; }
+.total__suffix { font-size: 9.2pt; margin-left: 0.4mm; }
 
 .total-source {
   position: absolute;
