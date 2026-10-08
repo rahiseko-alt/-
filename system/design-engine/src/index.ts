@@ -82,6 +82,7 @@ export {
   type TemplateContext,
 } from './compose.ts';
 export { ENGINE_URL_PREFIX, FONT_PACKAGES, engineStylesheets, fontsourceDir, resolveEngineRequest } from './engine-assets.ts';
+export { contentTypeOf } from './content-types.ts';
 export { writeTempHtml, type HtmlFile } from './html-file.ts';
 export { findReferenceUrls, isReferencePath, resolvePageUrl } from './reference-guard.ts';
 export { parsePreviewPath, studioPlugin, type StudioPluginOptions } from './vite-plugin.ts';

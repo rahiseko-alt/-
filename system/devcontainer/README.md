@@ -64,6 +64,20 @@ Linux ホストでは、コンテナ内の `pwuser` の UID がホストのユ�
 通常の文字はシステムフォントの有無で結果が変わりません。ただし Noto Sans JP / Noto Serif JP にない文字（ギリシャ文字・ローマ数字 Ⅰ〜Ⅹ・≒ など）は
 システムフォントで代わりに描かれ、環境ごとに字形が変わります。`npm run render` が警告し（`--release` では失敗）、紙面では使わないルールです（system/rules/typography-ja.md §7）。
 
+## 指定版の Chromium を取得できない環境
+
+Playwright 指定版の Chromium（`npx playwright install chromium`。既定の headless 起動で使う headless shell）を通信制限などで取得できない環境では、手元の Chromium の実行ファイルを環境変数 `STUDIO_CHROMIUM_PATH` に指定すると `render` / `doctor` / `setup.sh` がそれを使います。
+
+```bash
+export STUDIO_CHROMIUM_PATH=/usr/bin/chromium
+npm run doctor   # 「Chromium 起動」が WARN（指定版ではない）になる
+```
+
+- 版が違うと字形・行送りがわずかに変わることがあるため、`render` は警告を出し、`--release`（入稿・公開用）は失敗します。正式な出力は指定版で行います
+- 指定版とみなすのは headless shell（そのシンボリックリンクを含む）だけです。同じビルドのフル版（`chrome`）も、描画がわずかに違うことがあるため指定版としては扱いません
+- `render` は Chromium に `file://` を読ませない（127.0.0.1 の HTTP 配信）ので、`file://` を禁止したブラウザでも出力できます
+- テスト（`npm run test`）は指定版の Chromium を前提にしています
+
 ## setup.sh の動作
 
 何度実行しても安全です。各手順が失敗しても警告して続行し、最後の `npm run doctor` の結果を終了コードとして返します。
@@ -71,7 +85,7 @@ Linux ホストでは、コンテナ内の `pwuser` の UID がホストのユ�
 1. `git lfs install --local`、未取得の LFS ファイルがあれば `git lfs pull`（失敗は警告のみ）
 2. `node_modules` がない／`package-lock.json` の方が新しい／依存を読み込めないときだけ `npm ci`
 3. Playwright の Chromium が起動できなければ `npx playwright install chromium`
-   （`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` のときはスキップ）
+   （`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` のときはスキップ。環境変数 `STUDIO_CHROMIUM_PATH` があればその Chromium で起動を確認）
 4. `pdfinfo` / `pdftoppm` がなければ `apt-get install poppler-utils`（root かパスワードなし sudo のときだけ）
 5. `npm run doctor` で環境診断
 
@@ -88,8 +102,8 @@ npm run doctor                        # 診断だけ実行
 | Node.js | はい | 22 以上 |
 | playwright パッケージ | はい | `package.json` で固定したバージョンと一致 |
 | @fontsource フォント | はい | Noto Sans JP（400/500/700/900）・Noto Serif JP（400/700）の CSS と woff2 |
-| Chromium 起動 | はい | Playwright で Chromium を起動できる |
-| 日本語描画 | はい | `@fontsource` の CSS を `file://` で読み込み、`document.fonts.check` と実際の描画フォントで Noto を確認 |
+| Chromium 起動 | はい | Playwright で Chromium を起動できる（`STUDIO_CHROMIUM_PATH` を指定したときはその Chromium。指定版でなければ WARN） |
+| 日本語描画 | はい | `@fontsource` の CSS を 127.0.0.1 の HTTP 配信で読み込み（render と同じく `file://` を使わない）、`document.fonts.check` と実際の描画フォントで Noto を確認 |
 | sharp | はい | 画像処理ライブラリが動く |
 | システム日本語フォント | いいえ | `fc-list :lang=ja` の結果（参考情報。Noto Sans JP / Serif JP にない文字の代替にだけ使われる） |
 | git-lfs / LFS 実体 | いいえ | git-lfs の有無、ポインタのままのファイル数 |

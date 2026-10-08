@@ -36,7 +36,7 @@ PNG/PDF 出力（`npm run render`）、検証（`npm run validate`）、プレ�
 
 ### 文書の `<head>`（この順に読み込まれる）
 
-1. `<base href>` — render: `file://<root>/`、preview: `/`。アセット参照はすべて**ルート相対・先頭スラッシュなし**なので両モードで同じ HTML が使える
+1. `<base href>` — render: `baseUrl` を渡せばその URL（`npm run render` は 127.0.0.1 の HTTP 配信）、なければ `file://<root>/`、preview: `/`。アセット参照はすべて**ルート相対・先頭スラッシュなし**なので両モードで同じ HTML が使える
 2. フォント — `@fontsource/noto-sans-jp`（400/500/700/900）・`@fontsource/noto-serif-jp`（400/700）。ネットワーク不要
 3. `src/assets/base.css` — リセット、ページ・レイヤー、和文組版の既定、ガイド
 4. `<style id="studio-vars">` — `@page { size: (W+2b)mm (H+2b)mm }` と `:root` の CSS 変数（ブランド色・書体 → 判型 → `book.yaml` の `theme`）
@@ -124,17 +124,17 @@ import {
   loadCompanyData, loadBook, loadPage, listBooks, loadReferences, // 読み込み
   pageGeometry, renderPixelSize, renderViewport,                 // 判型
   findRepoRoot, resolveStudioRoot, resolveInRoot,                // パス
-  writeTempHtml,                                                  // Playwright 用
+  writeTempHtml,                                                  // Playwright 用（baseUrl なしで合成したとき）
 } from '../design-engine/src/index.ts';
 ```
 
 ### 合成
 
 ```ts
-composePage({ root, bookId, pageId, mode: 'render' | 'preview', guides?: boolean }): { html: string; warnings: string[] }
-composeBook({ root, bookId, pageIds?, mode, guides? }): { html: string; warnings: string[]; pageIds: string[] }
+composePage({ root, bookId, pageId, mode: 'render' | 'preview', guides?: boolean, baseUrl?: string }): { html: string; warnings: string[] }
+composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? }): { html: string; warnings: string[]; pageIds: string[] }
 buildTemplateContext(company, bookConfig, pageConfig, pageNumber): TemplateContext
-baseHref(root, mode): string
+baseHref(root, mode, baseUrl?): string
 ```
 
 - 同期関数。データ・テンプレートの問題は `StudioError`（`issues` 付き）／`TemplateError`（`book` `page` `file` `key` `line` 付き）を投げる。
@@ -196,8 +196,10 @@ isReferencePath(rel) / findReferenceUrls(htmlOrCss, root, { baseDir?, css? })  /
 
 ## Playwright で描画するとき（render モード）
 
-render モードの HTML は `file://` のフォント・画像を参照するため、**`page.setContent()` では読み込めません**。
-`writeTempHtml(html)` でファイルに書き出し、`page.goto(file.url)` で開いてください。
+`npm run render` は `baseUrl` を付けて合成し、127.0.0.1 の HTTP サーバー（`system/scripts/lib/studio-server.ts`）経由で開きます（`file://` を使わない。`file://` を禁止したブラウザでも同じ出力）。
+
+`baseUrl` なしで合成した render モードの HTML は `file://` のフォント・画像を参照するため、**`page.setContent()` では読み込めません**。
+`writeTempHtml(html)` でファイルに書き出し、`page.goto(file.url)` で開いてください（design-engine のテストはこの方法）。
 
 ```ts
 const { html } = composePage({ root, bookId, pageId, mode: 'render' });

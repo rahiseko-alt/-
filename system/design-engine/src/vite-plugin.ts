@@ -10,6 +10,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import path from 'node:path';
 import type { Plugin, ViteDevServer } from 'vite';
 import { composeBook, composePage, escapeHtml } from './compose.ts';
+import { contentTypeOf } from './content-types.ts';
 import { ENGINE_URL_PREFIX, resolveEngineRequest } from './engine-assets.ts';
 import { errorMessage } from './errors.ts';
 import { listBooks, loadBook, loadPage } from './load.ts';
@@ -22,20 +23,6 @@ export interface StudioPluginOptions {
 
 const VITE_CLIENT = '<script type="module" src="/@vite/client"></script>';
 const WATCH_DIRS = ['company-data', 'books', 'shared'];
-
-const CONTENT_TYPES: Record<string, string> = {
-  '.css': 'text/css; charset=utf-8',
-  '.woff2': 'font/woff2',
-  '.woff': 'font/woff',
-  '.ttf': 'font/ttf',
-  '.otf': 'font/otf',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.gif': 'image/gif',
-};
 
 function injectClient(html: string): string {
   return html.includes('</head>') ? html.replace('</head>', `${VITE_CLIENT}\n</head>`) : VITE_CLIENT + html;
@@ -160,8 +147,7 @@ function handlePreview(root: string, url: URL, res: ServerResponse): void {
 function handleEngineAsset(pathname: string, res: ServerResponse): boolean {
   const file = resolveEngineRequest(pathname);
   if (!file) return false;
-  const type = CONTENT_TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream';
-  send(res, 200, fs.readFileSync(file), type);
+  send(res, 200, fs.readFileSync(file), contentTypeOf(file));
   return true;
 }
 
@@ -184,7 +170,7 @@ function handleEncodedRootFile(root: string, pathname: string, res: ServerRespon
     return false;
   }
   if (!fs.existsSync(file) || !fs.statSync(file).isFile()) return false;
-  send(res, 200, fs.readFileSync(file), CONTENT_TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream');
+  send(res, 200, fs.readFileSync(file), contentTypeOf(file));
   return true;
 }
 

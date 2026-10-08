@@ -48,9 +48,13 @@ export function engineStylesheets(): EngineAssetRef[] {
   return refs;
 }
 
-/** モードに応じたエンジンアセットの URL（render: file:// 絶対 URL、preview: /@engine/...） */
-export function engineAssetUrl(ref: EngineAssetRef, mode: 'render' | 'preview'): string {
-  return mode === 'render' ? pathToFileURL(ref.file).href : ENGINE_URL_PREFIX + ref.urlPath;
+/**
+ * モードに応じたエンジンアセットの URL
+ * （render: file:// 絶対 URL、render で baseUrl あり: <baseUrl>@engine/...、preview: /@engine/...）
+ */
+export function engineAssetUrl(ref: EngineAssetRef, mode: 'render' | 'preview', baseUrl?: string): string {
+  if (mode === 'preview') return ENGINE_URL_PREFIX + ref.urlPath;
+  return baseUrl ? baseUrl + ENGINE_URL_PREFIX.slice(1) + ref.urlPath : pathToFileURL(ref.file).href;
 }
 
 /**
@@ -74,7 +78,7 @@ export function resolveEngineRequest(urlPath: string): string | null {
     sub = rest.slice('assets/'.length);
   } else if (rest.startsWith('fonts/')) {
     const [pkg, ...tail] = rest.slice('fonts/'.length).split('/');
-    if (!pkg || !(pkg in FONT_PACKAGES) || tail.length === 0) return null;
+    if (!pkg || !Object.hasOwn(FONT_PACKAGES, pkg) || tail.length === 0) return null;
     base = fontsourceDir(pkg);
     sub = tail.join('/');
   } else {

@@ -150,17 +150,23 @@ fi
 # ---------- 3. Playwright Chromium ----------
 
 # Chromium を実際に起動して確認する（失敗理由は chromium_error に入る）
+# STUDIO_CHROMIUM_PATH があればその Chromium（指定版を取得できない環境の代替。system/devcontainer/README.md）
 chromium_error=""
 chromium_launches() {
   chromium_error="$(node -e "
-    require('playwright').chromium.launch({ timeout: 60000 })
+    const p = (process.env.STUDIO_CHROMIUM_PATH || '').trim();
+    require('playwright').chromium.launch(p ? { timeout: 60000, executablePath: p } : { timeout: 60000 })
       .then((b) => b.close())
       .then(() => process.exit(0), (e) => { console.error(String((e && e.message) || e).split('\n')[0]); process.exit(1); });
   " 2>&1 >/dev/null)"
 }
 
 if chromium_launches; then
-  log "Playwright Chromium: 起動できます"
+  if [ -n "${STUDIO_CHROMIUM_PATH:-}" ]; then
+    warn "STUDIO_CHROMIUM_PATH の Chromium で起動できます（$STUDIO_CHROMIUM_PATH。指定版でなければ render --release は使えません）"
+  else
+    log "Playwright Chromium: 起動できます"
+  fi
 elif [ "${PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD:-}" = "1" ]; then
   warn "Chromium を起動できませんが、PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 のためインストールをスキップします（$chromium_error）"
 else

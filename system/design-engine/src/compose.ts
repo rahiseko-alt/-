@@ -24,6 +24,8 @@ export interface ComposePageOptions {
   mode: ComposeMode;
   /** ガイド（仕上がり線・塗り足し・安全領域・マージン・段組）を重ねる */
   guides?: boolean;
+  /** render で HTTP 配信するときのルート URL（末尾 /。render の studio-server）。省略時は file://<root>/ */
+  baseUrl?: string;
 }
 
 export interface ComposeBookOptions {
@@ -33,6 +35,7 @@ export interface ComposeBookOptions {
   pageIds?: string[];
   mode: ComposeMode;
   guides?: boolean;
+  baseUrl?: string;
 }
 
 export interface ComposeResult {
@@ -70,6 +73,7 @@ interface BookSession {
   root: string;
   mode: ComposeMode;
   guides: boolean;
+  baseUrl: string | undefined;
   company: CompanyData;
   book: LoadedBook;
   geometry: PageGeometry;
@@ -77,8 +81,11 @@ interface BookSession {
   warnings: string[];
 }
 
-function openBook(root: string, bookId: string, mode: ComposeMode, guides: boolean): BookSession {
+function openBook(root: string, bookId: string, mode: ComposeMode, guides: boolean, baseUrl?: string): BookSession {
   if (mode !== 'render' && mode !== 'preview') throw new StudioError(`mode は "render" か "preview" です（"${String(mode)}"）`);
+  if (baseUrl !== undefined && (mode !== 'render' || !/^https?:\/\/[^/]+\/$/.test(baseUrl))) {
+    throw new StudioError(`baseUrl は render で "http://<ホスト>/" の形です（"${baseUrl}"）`);
+  }
   const absRoot = path.resolve(root);
   const warnings: string[] = [];
   const company = loadCompanyData(absRoot);
@@ -86,7 +93,7 @@ function openBook(root: string, bookId: string, mode: ComposeMode, guides: boole
   warnings.push(...book.warnings);
   const geometry = pageGeometry(book.config.format);
   const env = createTemplateEnv({ root: absRoot, bookId, company, warnings });
-  return { root: absRoot, mode, guides, company, book, geometry, env, warnings };
+  return { root: absRoot, mode, guides, baseUrl, company, book, geometry, env, warnings };
 }
 
 /** テンプレートの描画コンテキストを作る */
@@ -250,9 +257,10 @@ function composeSection(s: BookSession, pageId: string): PageSection {
   return { pageId, title: page.config.title, html, css };
 }
 
-/** <base href> の値 */
-export function baseHref(root: string, mode: ComposeMode): string {
+/** <base href> の値（render で baseUrl があれば HTTP 配信のルート URL） */
+export function baseHref(root: string, mode: ComposeMode, baseUrl?: string): string {
   if (mode === 'preview') return '/';
+  if (baseUrl) return baseUrl;
   const href = pathToFileURL(path.resolve(root)).href;
   return href.endsWith('/') ? href : `${href}/`;
 }
@@ -260,12 +268,12 @@ export function baseHref(root: string, mode: ComposeMode): string {
 function buildDocument(s: BookSession, title: string, sections: PageSection[]): string {
   const head: string[] = [
     '<meta charset="utf-8">',
-    `<base href="${escapeHtml(baseHref(s.root, s.mode))}">`,
+    `<base href="${escapeHtml(baseHref(s.root, s.mode, s.baseUrl))}">`,
     `<title>${escapeHtml(title)}</title>`,
     '<meta name="generator" content="publishing-studio design-engine">',
   ];
   for (const ref of engineStylesheets()) {
-    head.push(`<link rel="stylesheet" href="${escapeHtml(engineAssetUrl(ref, s.mode))}">`);
+    head.push(`<link rel="stylesheet" href="${escapeHtml(engineAssetUrl(ref, s.mode, s.baseUrl))}">`);
   }
   head.push(`<style id="studio-vars">\n${rootVarsCss(s)}</style>`);
   for (const style of s.book.config.styles) {
@@ -295,7 +303,7 @@ function buildDocument(s: BookSession, title: string, sections: PageSection[]): 
 
 /** 1 ページを HTML 文書に合成する */
 export function composePage(opts: ComposePageOptions): ComposeResult {
-  const s = openBook(opts.root, opts.bookId, opts.mode, opts.guides ?? false);
+  const s = openBook(opts.root, opts.bookId, opts.mode, opts.guides ?? false, opts.baseUrl);
   const section = composeSection(s, opts.pageId);
   const html = buildDocument(s, `${s.book.config.title} - ${section.pageId} ${section.title}`, [section]);
   return { html, warnings: dedupe(s.warnings) };
@@ -303,7 +311,7 @@ export function composePage(opts: ComposePageOptions): ComposeResult {
 
 /** BOOK の複数ページを 1 つの HTML 文書に合成する（ページごとに CSS 改ページ。PDF 用） */
 export function composeBook(opts: ComposeBookOptions): ComposeBookResult {
-  const s = openBook(opts.root, opts.bookId, opts.mode, opts.guides ?? false);
+  const s = openBook(opts.root, opts.bookId, opts.mode, opts.guides ?? false, opts.baseUrl);
   const all = s.book.config.pages;
   const requested = opts.pageIds && opts.pageIds.length > 0 ? [...new Set(opts.pageIds)] : all;
   for (const id of requested) {

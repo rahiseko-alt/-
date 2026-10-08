@@ -15,7 +15,8 @@ import {
   renderViewport,
   type PageGeometry,
 } from '../../design-engine/src/index.ts';
-import { launchBrowser, openComposed } from './browser.ts';
+import { CHROMIUM_PATH_ENV, chromiumOverrideNote, launchBrowser, openComposed } from './browser.ts';
+import { startStudioServer, type StudioServer } from './studio-server.ts';
 import {
   CliError,
   UsageError,
@@ -42,7 +43,7 @@ export const RENDER_USAGE = `使い方: npm run render -- --book <id> [オプシ
   --dpi <N>               PNG の解像度（既定: book.yaml の output.png_dpi）
   --guides                ガイド（仕上がり線・塗り足し・安全領域・マージン・段組）を重ねる
   --release               入稿・公開用。描画結果に "TODO" が残っている、6.5pt 未満（白抜きは 7pt 未満）や安全領域の外の文字がある、
-                          またはガイドが有効なら失敗する（通常の出力では警告）
+                          ガイドが有効、または STUDIO_CHROMIUM_PATH で指定版以外の Chromium を使っていると失敗する（通常の出力では警告）
   --out <dir>             出力先（既定: books/<id>/output。その下に png/ と pdf/ を作る）
   --root <dir>            スタジオのルート（既定: リポジトリルート）
 例:
@@ -144,13 +145,38 @@ export async function renderBook(opts: RenderOptions, io: Io = consoleIo): Promi
     for (const w of list) if (!warnings.includes(w)) warnings.push(w);
   };
 
+  // Chromium には file:// ではなく、render の間だけ起動する HTTP サーバー経由で読ませる
+  const server = await startStudioServer(root);
+  try {
+    return await renderWithServer(server, opts, io, { root, allPages, pageIds, geometry, dpi, outDir, wantPng, wantPdf, warnings, addWarnings });
+  } finally {
+    await server.close();
+  }
+}
+
+interface RenderPlan {
+  root: string;
+  allPages: string[];
+  pageIds: string[];
+  geometry: PageGeometry;
+  dpi: number;
+  outDir: string;
+  wantPng: boolean;
+  wantPdf: boolean;
+  warnings: string[];
+  addWarnings: (w: string[]) => void;
+}
+
+async function renderWithServer(server: StudioServer, opts: RenderOptions, io: Io, plan: RenderPlan): Promise<RenderResult> {
+  const { root, allPages, pageIds, geometry, dpi, outDir, wantPng, wantPdf, warnings, addWarnings } = plan;
+  const baseUrl = server.baseUrl;
   // 1. 合成（テンプレートエラーはここで止まる）
   const pages = pageIds.map((pageId) => {
-    const r = composePage({ root, bookId: opts.bookId, pageId, mode: 'render', guides: opts.guides ?? false });
+    const r = composePage({ root, bookId: opts.bookId, pageId, mode: 'render', guides: opts.guides ?? false, baseUrl });
     addWarnings(r.warnings);
     return { pageId, html: r.html };
   });
-  const bookDoc = wantPdf ? composeBook({ root, bookId: opts.bookId, pageIds, mode: 'render', guides: opts.guides ?? false }) : null;
+  const bookDoc = wantPdf ? composeBook({ root, bookId: opts.bookId, pageIds, mode: 'render', guides: opts.guides ?? false, baseUrl }) : null;
   if (bookDoc) addWarnings(bookDoc.warnings);
 
   // 2. --release: 何も書き出す前に TODO を確認する
@@ -172,10 +198,11 @@ export async function renderBook(opts: RenderOptions, io: Io = consoleIo): Promi
   const result: RenderResult = { dpi, geometry, pageIds, outDir, png: [], pdf: null, warnings };
   const browser = await launchBrowser();
   try {
+    checkBrowser(browser, opts.release ?? false, addWarnings);
     if (wantPng) {
       fs.mkdirSync(path.join(outDir, 'png'), { recursive: true });
       for (const p of pages) {
-        const png = await renderPng(browser, root, p.pageId, p.html, geometry, dpi, path.join(outDir, 'png', `${p.pageId}.png`), opts.release ?? false, addWarnings);
+        const png = await renderPng(browser, server, p.pageId, p.html, geometry, dpi, path.join(outDir, 'png', `${p.pageId}.png`), opts.release ?? false, addWarnings);
         result.png.push(png);
         io.log(`  PNG  ${show(root, png.file)}（${png.width}×${png.height}px）`);
       }
@@ -183,7 +210,7 @@ export async function renderBook(opts: RenderOptions, io: Io = consoleIo): Promi
     if (wantPdf && bookDoc) {
       fs.mkdirSync(path.join(outDir, 'pdf'), { recursive: true });
       const file = path.join(outDir, 'pdf', pdfFileName(opts.bookId, pageIds, allPages));
-      await renderPdf(browser, root, bookDoc.html, geometry, file, opts.release ?? false, addWarnings, !wantPng);
+      await renderPdf(browser, server, bookDoc.html, geometry, file, opts.release ?? false, addWarnings, !wantPng);
       result.pdf = { file, pages: pageIds.length };
       io.log(`  PDF  ${show(root, file)}（${pageIds.length} ページ）`);
     }
@@ -191,6 +218,16 @@ export async function renderBook(opts: RenderOptions, io: Io = consoleIo): Promi
     await browser.close().catch(() => undefined);
   }
   return result;
+}
+
+/** 指定版ではない Chromium: 通常は警告、--release では出力が環境によって変わるためエラー */
+function checkBrowser(browser: Browser, release: boolean, addWarnings: (w: string[]) => void): void {
+  const note = chromiumOverrideNote(browser);
+  if (!note) return;
+  if (release) {
+    throw new CliError(`--release: ${note}`, `${CHROMIUM_PATH_ENV} を外し、Playwright 指定版の Chromium で出力してください（npx playwright install chromium）`);
+  }
+  addWarnings([note]);
 }
 
 /** 一時ファイルに書いてから置き換える（失敗時に壊れた出力を残さない） */
@@ -263,7 +300,7 @@ function firstLineOf(err: Error): string {
 
 async function renderPng(
   browser: Browser,
-  root: string,
+  server: StudioServer,
   pageId: string,
   html: string,
   geometry: PageGeometry,
@@ -282,7 +319,7 @@ async function renderPng(
     deviceScaleFactor,
   });
   try {
-    const doc = await openComposed(context, html, pageId, { root, checkFonts: true });
+    const doc = await openComposed(server, context, html, pageId, { checkFonts: true });
     try {
       addWarnings(doc.problems);
       assertNoReferenceRequests(pageId, doc.referenceRequests);
@@ -312,7 +349,7 @@ async function renderPng(
 
 async function renderPdf(
   browser: Browser,
-  root: string,
+  server: StudioServer,
   html: string,
   geometry: PageGeometry,
   file: string,
@@ -324,7 +361,7 @@ async function renderPdf(
   const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
   try {
     // PNG も書き出すときは PNG 側で調べ済み
-    const doc = await openComposed(context, html, 'PDF', { root, checkFonts });
+    const doc = await openComposed(server, context, html, 'PDF', { checkFonts });
     try {
       addWarnings(doc.problems);
       assertNoReferenceRequests('PDF', doc.referenceRequests);
