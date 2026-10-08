@@ -3,7 +3,7 @@
 # source / kind は references/<source>/<kind>/ と同じ
 source: nagoya-iryo-hisho-it
 kind: overview
-title: "TODO: 資料の正式名称を記入"
+title: "配布資料一式（6点）の集合写真"
 # 入手日（YYYY-MM-DD）
 obtained: null
 # 元資料（PDF）のパス。画像だけで取り込んだ場合は null
@@ -19,9 +19,55 @@ usage: reference-only
 #   発行元のディレクトリ名（nagoya-iryo-hisho-it）が他校名そのものなら、それも登録する
 #   （references/nagoya-iryo-hisho-it/... の形のパスは照合から除外されるので、references.yaml や生成記録の reference_inputs・source_refs の参照には影響しない）
 #   npm run validate は books/・company-data/・shared/ に出現するとエラーにする
-forbidden_terms: []
-#  - "（他校の学校名）"
-#  - "（他校の略称・英語名）"
-#  - "（固有のキャッチコピー）"
+forbidden_terms:
+  - "名古屋医療秘書福祉&IT専門学校"
+  - "名古屋医療秘書福祉"
+  - "医療秘書福祉&IT"
+  - "ナゴヤイリョウヒショフクシアンドアイティセンモンガッコウ"
+  - "nagoya-iryo-hisho-it"
+  - "学校法人三幸学園"
+  - "三幸学園"
+  - "サンコウガクエン"
+  - "SANKO GAKUEN"
+  - "SANKO Gakuen"
+  - "SANKO GROUP"
+  - "日本教育クリエイト"
+  - "sanko.ac.jp"
+  - "nagoya-med"
+  - "info-nagoya-med@sanko.ac.jp"
+  - "@nagoya-med35"
+  - "sanko_med_nagoya"
+  - "medical_nagoya"
+  - "sanko.nagoya"
+  - "0120-16-1148"
+  - "052-561-1148"
+  - "052-561-1147"
+  - "名駅2-27-28"
+  - "一生役立つ資格、ずっと頼られる仕事"
+  - "広がるわたしの未来"
+  - "MY MELODY"
+  - "マイメロディ"
+  - "SANRIO"
+  - "検定ウィーク"
+  - "Wフォローアップ"
+  - "ふるさと就職サポート制度"
+  - "sanko link"
+  - "Sanko Link"
+  - "Student Real Voice"
+  - "三幸フェスティバル"
+  - "三幸福祉カレッジ"
+  - "小田原短期大学"
+  - "名古屋リゾート&スポーツ専門学校"
+  - "名古屋ビューティーアート専門学校"
+  - "名古屋こども専門学校"
+  - "名古屋ウェディング&ブライダル専門学校"
+  - "名古屋ブライダル&ホテル観光専門学校"
+  - "名古屋スイーツ&カフェ専門学校"
+  - "名古屋辻学園調理専門学校"
+  - "ひとり暮らし応援BOOK"
+  - "ここで見つけるなりたい自分"
 # 入手経路・利用上の注意・見開きの扱い（例: page_002 は 2〜3 ページの見開き）
-notes: ""
+notes: |
+  Google Drive「専門学校パンフレット参考資料」の「名古屋医療秘書福祉&IT専門学校.pdf」（https://drive.google.com/file/d/1tF7RauOxJ3mgX1iKw4rJDg0YRzFAohgp/view）を 2026-10-08 に取り込み。Drive への格納日は 2026-10-07。実際の入手日は【要確認】
+  元 PDF は印刷物の写真・スキャン（文字情報なし、埋め込み画像は 72ppi）。ページ画像は同じ解像度の 72dpi・JPEG（品質 85）
+  ページ: 1枚。机上に配布資料6点（ひとり暮らし応援BOOK表紙、Halloween eventチラシ、Open Campusチラシ表、SCHOOL GUIDE 2027表紙、募集要項表紙、WEBデザイン・ITプログラミング科パンフ表紙）を並べて撮った写真。画像は反時計回りに90°倒れている（時計回り90°で正立、横長）。内容は他の資料の表紙と重複。

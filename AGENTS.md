@@ -46,7 +46,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | Phase 9 | 日常編集 | 未着手 |
 
 - `company-data/` は学校名（AIビジネス専門学校）以外すべて `"TODO: ..."` のプレースホルダ、ブランドカラーは仮の値（`status: provisional`）
-- `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`analysis/` は雛形のまま
+- `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`source.yaml` の `forbidden_terms` 記入済み。`analysis/` は資料一式写真（`overview`）2 件だけ解析済みで、他は雛形のまま
 - `books/` は README のみ（実データなし）
 - フェーズが進んだら、この表を同じコミットで更新する
 

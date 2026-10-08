@@ -3,7 +3,7 @@
 # source / kind は references/<source>/<kind>/ と同じ
 source: HAL-nagoya
 kind: overview
-title: "TODO: 資料の正式名称を記入"
+title: "HAL名古屋 2027年度 配布物一式の集合写真（入学要項2種・学費サポートBOOK・学校案内表紙・チラシ2種・保護者向け冊子）"
 # 入手日（YYYY-MM-DD）
 obtained: null
 # 元資料（PDF）のパス。画像だけで取り込んだ場合は null
@@ -19,9 +19,55 @@ usage: reference-only
 #   発行元のディレクトリ名（HAL-nagoya）が他校名そのものなら、それも登録する
 #   （references/HAL-nagoya/... の形のパスは照合から除外されるので、references.yaml や生成記録の reference_inputs・source_refs の参照には影響しない）
 #   npm run validate は books/・company-data/・shared/ に出現するとエラーにする
-forbidden_terms: []
-#  - "（他校の学校名）"
-#  - "（他校の略称・英語名）"
-#  - "（固有のキャッチコピー）"
+forbidden_terms:
+  - "HAL名古屋"
+  - "HAL NAGOYA"
+  - "HAL東京"
+  - "HAL大阪"
+  - "日本教育財団"
+  - "hal.ac.jp"
+  - "nyugaku.nagoya@hal.ac.jp"
+  - "052-551-1001"
+  - "名駅4-27-1"
+  - "スパイラルタワーズ"
+  - "総合校舎スパイラルタワーズ"
+  - "モード学園"
+  - "名古屋モード学園"
+  - "国際工科専門職大学"
+  - "東京通信大学"
+  - "ZERO→PRO"
+  - "ZERO to PRO"
+  - "3大保証制度"
+  - "就職・資格・給与の3大保証制度"
+  - "給与保証制度"
+  - "完全就職保証制度"
+  - "合格保証制度"
+  - "就職ならHAL"
+  - "ゲームから未来まで"
+  - "選ぶ前に見る。決める前に聞く。"
+  - "産学直結ケーススタディ"
+  - "科目別フリープラン"
+  - "未来創造展"
+  - "HAL EVENT WEEK"
+  - "CROSS HAL"
+  - "谷まさる"
+  - "学費・住まいのサポートBOOK"
+  - "HALの約束"
+  - "HALの"
+  - "HALは"
+  - "HALで"
+  - "HALが"
+  - "HALなら"
+  - "HALだから"
+  - "HALを"
+  - "HALに"
+  - "好きから逃げない人の勝ち。"
+  - "大卒以上の給与も保証する"
+  - "HAL NAGOYA 2027"
 # 入手経路・利用上の注意・見開きの扱い（例: page_002 は 2〜3 ページの見開き）
-notes: ""
+notes: |
+  Google Drive「専門学校パンフレット参考資料」の「HAL名古屋.pdf」（https://drive.google.com/file/d/16TAsaTdTMEOErzK4qZrIEVJZVDosyK7a/view）を 2026-10-08 に取り込み。Drive への格納日は 2026-10-07。実際の入手日は【要確認】
+  元 PDF は印刷物の写真・スキャン（文字情報なし、埋め込み画像は 72ppi）。ページ画像は同じ解像度の 72dpi・JPEG（品質 85）
+  ページ: 1枚の写真（テーブル上に7点の印刷物を並べて撮影）。画像全体が90°反時計回り（読むには時計回り90°）。写っているもの: ①入学要項 夜間部・土曜コース 表紙（CONTENTS） ②学費・住まいのサポートBOOK 表紙 ③入学要項 昼間部 表紙（CONTENTS） ④学校案内「>PRO」表紙（brochure-1と同じ） ⑤チラシ「ZERO to PRO 就職ならHAL」就職内定報告 ⑥チラシ「10/1(木) 推薦入試・一般入試 願書受付スタート!」 ⑦保護者向け冊子「保護者の皆さまへ HALの約束」表紙。各片の周縁はやや切れ・斜め。
+  禁止語に未登録の企業名（就職先・提携先。自社でも使う可能性があるため人間が判断）【要確認】: Microsoft（チラシ「MicrosoftのAIツールを全学生に導入」）
+  禁止語に未登録の候補（一般名詞と重なるため人間が判断）【要確認】: 学費援助システム（サポートBOOKの制度名。やや一般的で自社の学費案内でも使いうる）、保護者の皆さまへ（保護者向け冊子の表題だが一般的な語。登録しない方がよい）、見学・相談毎日!（チラシの定型表現で一般的）、HAL（学校の短縮ブランドのため school_terms に入れたが、大文字の英単語 CHALLENGE / HALF / HALL / SHALL / EXHALE などに部分一致する（HAL自身の紙面にも『RACING CHALLENGE』がある）。英字見出しで誤検出が出たら、HAL名古屋・HAL NAGOYA など長い形だけに絞ることを検討）、ハル（ロゴのルビ（HAL＝ハル）。2文字で『ハルシネーション』（AI用語）などに部分一致するため登録しない方がよい）
