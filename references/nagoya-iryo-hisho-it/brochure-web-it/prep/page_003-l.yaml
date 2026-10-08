@@ -1,0 +1,13 @@
+# 比較用の補正指定（npm run ref:prep。system/rules/references.md §4）
+# 見開きの写真（90° 反時計回りに保存）を正立させ、左ページ（本文 3 ページ）だけを切り出す
+image: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
+rotate: 90
+# 左上・右上・右下・左下（回転後の画像に対する比率）
+corners:
+  - [0.0095, 0.0018]
+  - [0.4935, 0.0035]
+  - [0.4935, 0.9982]
+  - [0.0, 0.9953]
+aspect: 0.7071
+height_px: 2000
+notes: "初回の推定"

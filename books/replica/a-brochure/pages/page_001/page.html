@@ -1,0 +1,161 @@
+{{!--
+  page_001「学科一覧（インデックス表）」— Phase 5 完コピ検証（見開きの左ページ）
+  参考: references/HAL-nagoya/brochure-1/page_015.jpg（補正指定 references/HAL-nagoya/brochure-1/prep/page_015-l.yaml）
+  解析: references/HAL-nagoya/brochure-1/analysis/page_015.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（このページは写真・生成背景を使わない。上部の帯は単色なので Layer 2）
+    Layer 2 STRUCTURE   : 上部の紺帯、斜線ハッチ、金の称号バッジ、枠付きラベル、表（学部ごとの色面・学年の淡色→濃色・罫線）
+    Layer 3 CONTENT     : 見出し・説明文・学部/学科/専攻名・参照ページ・ノンブル
+
+  - 文字はすべてダミー（参考と同じ文字数・改行位置）。数字は 0。参考資料の文字は書き写していない
+  - 表は学部ごとの <section class="rep-dept"> で、列は page.css の grid-template-columns（mm）。
+    行の高さは学部ごとに参考の実測値（page.css の .rep-dept--d1〜d5）。セルの結合は grid-row の span
+  - 色は page.css 冒頭の --rep-*（Phase 8 でブランドカラー・学部色の変数に置き換える）
+--}}
+
+{{!-- Layer 2: 上部の紺帯（上・左・右は塗り足しまで） --}}
+<div class="rep-band bleed-top bleed-left bleed-right" aria-hidden="true"></div>
+
+{{!-- Layer 3: 小見出し＋大見出し（白抜き・斜体風） --}}
+<header class="rep-head">
+  <p class="rep-kicker">XX・ダミー文字列ダミー文字列ダミ！</p>
+  <h1 class="rep-title">ダミ・ダミ・ダミー文字列ダミ</h1>
+</header>
+
+{{!-- Layer 2 + 3: 区分見出し（斜線ハッチのアイコン＋ラベル） --}}
+<div class="rep-system">
+  <span class="rep-hatch" aria-hidden="true"></span>
+  <span class="rep-system__label">ダミー 0ダミ</span>
+</div>
+
+{{!-- Layer 2 + 3: 称号の式（金のバッジ ＝ 枠付きラベル ＋ 枠付きラベル）と説明文 --}}
+<div class="rep-badge">
+  <p class="rep-badge__l1">ダミ</p>
+  <p class="rep-badge__l2">ダミー</p>
+  <span class="rep-badge__rule" aria-hidden="true"></span>
+  <p class="rep-badge__note">0ダミー文字<br>ダミー文字列ダ</p>
+</div>
+<span class="rep-op rep-op--eq" aria-hidden="true">＝</span>
+<p class="rep-box rep-box--1">ダミー文</p>
+<span class="rep-op rep-op--plus" aria-hidden="true">＋</span>
+<p class="rep-box rep-box--2">ダミー文字列ダミー文</p>
+<p class="rep-desc">「ダミー文字」ダミー文字列ダミー文字列、ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー。<br>ダミ・ダミー文0字列ダミー文字列ダミー文字列ダミ、ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー、<br>ダミー文字列ダミー、ダミー文字列ダミー文字列ダ。ダミー文字列ダミー文字列。</p>
+
+{{!-- Layer 2 + 3: インデックス表 --}}
+<div class="rep-table">
+  <div class="rep-thead" aria-hidden="true">
+    <span class="rep-th rep-th--dept">ダミー</span>
+    <span class="rep-th rep-th--course">ダミ・ダミー文</span>
+    <span class="rep-th rep-th--y1"><b>0</b>ダミ</span>
+    <span class="rep-th rep-th--y2"><b>0</b>ダミ</span>
+    <span class="rep-th rep-th--y3"><b>0</b>ダミ</span>
+    <span class="rep-th rep-th--y4"><b>0</b>ダミ</span>
+  </div>
+
+  <section class="rep-dept rep-dept--d1">
+    <div class="rep-dept__name"><p class="rep-dept__title">ダミー文字</p><span class="rep-dept__ref">P.00</span></div>
+    <p class="rep-dept__label">ダミー0文字列ダ</p>
+    <div class="rep-course" style="grid-row: 1"><p class="rep-course__name">ダミー文字列ダ<br>ダミー</p><span class="rep-course__ref">P.00</span></div>
+    <div class="rep-course rep-sep" style="grid-row: 2"><p class="rep-course__name">ダミー文字列ダミ<br>0・0</p><span class="rep-course__ref">P.00</span></div>
+    <div class="rep-course rep-sep" style="grid-row: 3"><p class="rep-course__name">ダミー文字列ダミ<br>0・0</p><span class="rep-course__ref">P.00</span></div>
+    <p class="rep-cell rep-cell--y1" style="grid-row: 1">ダミー文字列ダミー</p>
+    <p class="rep-cell rep-cell--y1 rep-sep" style="grid-row: 2 / span 2">ダミー文字</p>
+    <p class="rep-cell rep-cell--y2" style="grid-row: 1">ダミー文字列ダミー</p>
+    <p class="rep-cell rep-cell--y2 rep-sep" style="grid-row: 2 / span 2">ダミー文字</p>
+    <p class="rep-cell rep-cell--y3" style="grid-row: 1">ダミー文字列ダミー</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 2">ダミー文字列ダ</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 3">ダミー文字列ダ</p>
+    <ul class="rep-majors">
+      <li>ダミー文字列ダミー文</li>
+      <li>0Xダミー文字列ダミー文字列ダ</li>
+      <li>ダミー文字列ダミー文字列ダミー文字</li>
+      <li>ダミー文字列ダミー文</li>
+      <li>ダミー文字列ダミー文字列ダ</li>
+      <li>ダミー文字列ダミー文字</li>
+      <li>0X・XXダミー文字列ダミー文字</li>
+      <li>ダミー文字列ダミー文字列ダミー文</li>
+      <li>XXダミー文字列ダミ</li>
+    </ul>
+  </section>
+  <section class="rep-dept rep-dept--d2">
+    <div class="rep-dept__name"><p class="rep-dept__title">XXダミ</p><span class="rep-dept__ref">P.00</span></div>
+    <p class="rep-dept__label rep-dept__label--small">XX・ダミー文・ダミー0文字列ダ</p>
+    <div class="rep-course" style="grid-row: 1"><p class="rep-course__name">XXダミー文字<br>0・0</p><span class="rep-course__ref">P.00</span></div>
+    <div class="rep-course rep-sep" style="grid-row: 2"><p class="rep-course__name">ダミー文字列ダミー文<br>・ダミー文字列ダ0・0</p><span class="rep-course__ref">P.00</span></div>
+    <div class="rep-course rep-sep" style="grid-row: 3"><p class="rep-course__name">ダミー文字列ダ<br>ダミー0・0</p><span class="rep-course__ref">P.00</span></div>
+    <p class="rep-cell rep-cell--y1" style="grid-row: 1 / span 2">XXダミ</p>
+    <p class="rep-cell rep-cell--y1 rep-sep" style="grid-row: 3">ダミー文字列ダミー</p>
+    <p class="rep-cell rep-cell--y2" style="grid-row: 1">XXダミー文</p>
+    <p class="rep-cell rep-cell--y2 rep-sep" style="grid-row: 2">ダミー文字列ダミー文<br>・ダミー文字列</p>
+    <p class="rep-cell rep-cell--y2 rep-sep" style="grid-row: 3">ダミー文字列ダミー</p>
+    <p class="rep-cell rep-cell--y3" style="grid-row: 1">XXダミー文</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 2">ダミー文字列ダミー文<br>・ダミー文字列</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 3">ダミー文字列ダミー</p>
+    <ul class="rep-majors">
+      <li>0XXXダミー文字列ダミ</li>
+      <li>XXXダミー文字列ダミ</li>
+      <li>XXダミー文字列ダ</li>
+      <li>ダミー文字列ダミー文</li>
+      <li>ダミー文字列ダミ</li>
+      <li>XXダミー文字列ダミ</li>
+    </ul>
+  </section>
+  <section class="rep-dept rep-dept--d3 rep-dept--nolabel">
+    <div class="rep-dept__name"><p class="rep-dept__title">ダミー文字列<br>ダミ</p><span class="rep-dept__ref">P.00</span></div>
+    <div class="rep-course" style="grid-row: 1 / span 3"><p class="rep-course__name">ダミー文字列ダミ</p><span class="rep-course__ref">P.00</span></div>
+    <p class="rep-cell rep-cell--y1" style="grid-row: 1 / span 3">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y2" style="grid-row: 1 / span 3">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y3" style="grid-row: 1">ダミー文字列ダミー文字列</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 2">ダミー文字列ダミー文字</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 3">ダミー文字列ダミー文字列</p>
+    <ul class="rep-majors">
+      <li>ダミー文字列ダミー文字列</li>
+      <li>ダミー文字列ダミー文字</li>
+      <li>ダミー文字列ダミー文字</li>
+    </ul>
+  </section>
+  <section class="rep-dept rep-dept--d4 rep-dept--nolabel">
+    <div class="rep-dept__name"><p class="rep-dept__title">ダミー文字列<br>ダミ</p><span class="rep-dept__ref">P.00</span></div>
+    <div class="rep-course" style="grid-row: 1 / span 3"><p class="rep-course__name">ダミー文字列ダミ</p><span class="rep-course__ref">P.00</span></div>
+    <p class="rep-cell rep-cell--y1" style="grid-row: 1 / span 3">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y2" style="grid-row: 1">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y2 rep-sep" style="grid-row: 2">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y2 rep-sep" style="grid-row: 3">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y3" style="grid-row: 1">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 2">ダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 3">ダミー文字列ダミ</p>
+    <ul class="rep-majors">
+      <li>ダミー文字列ダミー</li>
+      <li>ダミー文字列ダミ</li>
+      <li>ダミー文字列ダミー文字列</li>
+    </ul>
+  </section>
+  <section class="rep-dept rep-dept--d5">
+    <div class="rep-dept__name"><p class="rep-dept__title">XXダミ</p><span class="rep-dept__ref">P.00</span></div>
+    <p class="rep-dept__label">ダミー文字列</p>
+    <div class="rep-course" style="grid-row: 1"><p class="rep-course__name">ダミXXー文字<br>0・0</p><span class="rep-course__ref">P.00</span></div>
+    <div class="rep-course rep-sep" style="grid-row: 2"><p class="rep-course__name">XXXダミー文字<br>0・0</p><span class="rep-course__ref">P.00</span></div>
+    <div class="rep-course rep-sep" style="grid-row: 3"><p class="rep-course__name">XXダミー文字列<br>ダミー0・0</p><span class="rep-course__ref">P.00</span></div>
+    <p class="rep-cell rep-cell--y1" style="grid-row: 1 / span 3">XXダミ</p>
+    <p class="rep-cell rep-cell--y2" style="grid-row: 1 / span 2">XXダミ</p>
+    <p class="rep-cell rep-cell--y2 rep-sep" style="grid-row: 3">XXダミー文字列ダミ</p>
+    <p class="rep-cell rep-cell--y3" style="grid-row: 1">ダミXXー文</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 2">XXXダミー文</p>
+    <p class="rep-cell rep-cell--y3 rep-sep" style="grid-row: 3">XXダミー文字列ダミ</p>
+    <ul class="rep-majors">
+      <li>ダミー文字列ダミー文字列ダ</li>
+      <li>XXXダミー文字列ダミ</li>
+      <li>ダミー文字列ダミー文字列</li>
+      <li>XXXダミー文字列ダ</li>
+      <li>XXXダミー文字列ダミー</li>
+      <li>ダミー文字列ダミー文字列ダミ</li>
+      <li>XXダミー文字列ダ</li>
+      <li>ダミー文字列ダミー文字</li>
+      <li>ダミー文字列ダミー文</li>
+    </ul>
+  </section>
+</div>
+
+{{!-- Layer 3: ノンブル（ページ番号は book.yaml の pages の並び順から。小口側 = 左下） --}}
+<p class="rep-folio num">{{page.number}}</p>

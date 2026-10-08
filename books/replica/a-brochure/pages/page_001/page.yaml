@@ -1,0 +1,8 @@
+# ページの設定（system/rules/page-layers.md）
+id: page_001
+title: "学科一覧（インデックス表）"
+# type: cover | toc | message | course | interview | data | access | back-cover | other
+type: toc
+# Layer 1（BASE VISUAL）: なし。参考ページの左ページは写真・生成背景を使わず、上部の帯も単色（Layer 2 の色面）
+status: draft              # draft | review | approved
+notes: "Phase 5 完コピ検証（作業中）"

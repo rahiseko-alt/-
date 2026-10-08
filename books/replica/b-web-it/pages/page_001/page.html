@@ -1,0 +1,180 @@
+{{!--
+  page_001「職種チャート（完コピ検証）」— Phase 5 完コピ検証
+
+  参考（レイアウト）: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml（見開きの左ページを補正したもの）
+  解析: references/nagoya-iryo-hisho-it/brochure-web-it/analysis/page_003.yaml
+
+  3 層構造（system/rules/page-layers.md）
+    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、写真・切り抜き人物はすべてプレースホルダ。地・円・軸は単色なので Layer 2）
+    Layer 2 STRUCTURE   : 地、大きな黄色の円、白い円、弧を描くリードの帯、雲形の吹き出し、縦横の軸矢印（SVG のグラデーション）、
+                          軸ラベルの色面、メモカード（book/memo-card）、本文、タブラベル、卒業生ボックス、ノンブルの円
+    Layer 3 CONTENT     : すべてダミーテキスト（参考資料の文字・職種名・人名・数値は書き写さない）。ノンブルは page.number
+
+  座標は .trim 基準の mm（実測値。page.css に集約）。色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーへ置き換える）
+--}}
+
+{{!-- Layer 2: 地（淡い水色。塗り足しまで） --}}
+<div class="ground bleed" aria-hidden="true"></div>
+
+{{!-- Layer 2: 背面の図形（viewBox はページの mm 座標そのまま） --}}
+<svg class="backdrop" viewBox="0 0 210 297" aria-hidden="true">
+  <defs>
+    <linearGradient id="bwi-lead-grad" gradientUnits="userSpaceOnUse" x1="12" y1="0" x2="197" y2="0">
+      <stop offset="0" class="stop-lead-start"/>
+      <stop offset="1" class="stop-lead-end"/>
+    </linearGradient>
+    <linearGradient id="bwi-v-grad" gradientUnits="userSpaceOnUse" x1="0" y1="64" x2="0" y2="212">
+      <stop offset="0" class="stop-navy"/>
+      <stop offset="0.3" class="stop-axis-blue"/>
+      <stop offset="0.55" class="stop-axis-blue"/>
+      <stop offset="0.7" class="stop-axis-teal"/>
+      <stop offset="0.86" class="stop-axis-olive"/>
+      <stop offset="1" class="stop-green"/>
+    </linearGradient>
+    <linearGradient id="bwi-h-grad" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="180" y2="0">
+      <stop offset="0" class="stop-orange"/>
+      <stop offset="0.12" class="stop-orange"/>
+      <stop offset="0.33" class="stop-axis-mid"/>
+      <stop offset="0.45" class="stop-axis-blue"/>
+      <stop offset="0.56" class="stop-axis-blue"/>
+      <stop offset="0.72" class="stop-axis-mauve"/>
+      <stop offset="0.9" class="stop-rose"/>
+      <stop offset="1" class="stop-rose"/>
+    </linearGradient>
+    <path id="bwi-lead-path" d="M17.4 21.05 C69.56 17.31 134.91 7.76 191.5 18.75" fill="none"/>
+    <g id="bwi-cloud">
+      <circle cx="158.5" cy="33.5" r="8.2"/>
+      <circle cx="147.5" cy="35" r="6.5"/>
+      <circle cx="170.5" cy="34.8" r="6.6"/>
+      <circle cx="146.5" cy="38.5" r="6.5"/>
+      <circle cx="147" cy="45" r="6.5"/>
+      <circle cx="151" cy="47.8" r="6.3"/>
+      <circle cx="160" cy="46.6" r="7.9"/>
+      <circle cx="170" cy="47.2" r="6.4"/>
+      <circle cx="173.5" cy="38" r="6.6"/>
+      <circle cx="173.4" cy="44.5" r="6.2"/>
+      <rect x="147" y="33" width="26" height="15"/>
+      <polygon points="170.5,51 173.8,57.6 176.3,49.5"/>
+    </g>
+  </defs>
+
+  {{!-- 大きな黄色の円（チャートの地）と、見出し用の白い円（左上で裁ち落とし） --}}
+  <circle class="disc-yellow" cx="104.7" cy="139" r="91.65"/>
+  <circle class="disc-white" cx="35" cy="51.2" r="44.5"/>
+
+  {{!-- リードの帯（ゆるい弧を描く横長ピル: 白いふち → 2 色の細線 → 白地） --}}
+  <use href="#bwi-lead-path" class="lead-halo"/>
+  <use href="#bwi-lead-path" class="lead-border"/>
+  <use href="#bwi-lead-path" class="lead-fill"/>
+  {{!-- Layer 3: リードの文（帯の弧に沿わせる） --}}
+  <text class="lead-text"><textPath href="#bwi-lead-path" startOffset="50%" text-anchor="middle" dominant-baseline="central">ABCダミーテ・DEのダミーテキストはダミー！ダミーの「ダミー！」をダミー。</textPath></text>
+
+  {{!-- 雲形の吹き出し（輪郭 → 白地の順に重ねて外周だけ線を残す） --}}
+  <use href="#bwi-cloud" class="cloud-halo"/>
+  <use href="#bwi-cloud" class="cloud-outline"/>
+  <use href="#bwi-cloud" class="cloud-fill"/>
+
+  {{!-- 横軸（左: オレンジ → 中央: 青 → 右: ローズ）。わずかに右上がり --}}
+  <polygon class="axis-h" transform="rotate(-0.77 104.8 139.2)"
+    points="30.1,139.2 39.6,130.4 39.6,136.1 169.6,136.1 169.6,130.6 179.5,139.2 169.6,147.8 169.6,142.3 39.6,142.3 39.6,148"/>
+  {{!-- 縦軸（上: 紺 → 中央: 青 → 下: 緑）。横軸の上に重ねる --}}
+  <polygon class="axis-v"
+    points="102.7,64 111.5,74.1 105.7,74.1 105.7,201.8 111.5,201.8 102.7,211.8 93.9,201.8 99.7,201.8 99.7,74.1 93.9,74.1"/>
+
+  {{!-- 切り抜き人物のプレースホルダ（灰色のシルエット。Layer 1 の自社写真待ち） --}}
+  <g class="silhouette">
+    <circle cx="187" cy="57.6" r="3.7"/>
+    <path d="M182.3 65.5 Q182.3 61.8 186 61.8 H188.6 Q192.3 61.8 192.3 65.5 L192.6 80 L194 104 L193.6 110.5 Q193.4 112 191.8 112 H181.5 Q179.8 112 180.2 110.4 L181 104 L182 80 Z"/>
+    <path d="M183 66.5 L179.7 61 Q179 59.7 180 59.2 Q181 58.8 181.6 60 L184.6 65 Z"/>
+  </g>
+  <g class="silhouette">
+    <circle cx="19.6" cy="174.6" r="3.8"/>
+    <path d="M14.2 182.5 Q14.2 179 17.6 179 H21.8 Q25.2 179 25.2 182.5 L25.6 200 L26 220.5 Q26 223 24 223 H15.4 Q13.4 223 13.4 220.5 L13.8 200 Z"/>
+    <path d="M24.4 183 L28.5 172.6 Q29.1 171.4 30 172 Q30.7 172.6 30.3 173.7 L26.6 184.6 Z"/>
+  </g>
+</svg>
+
+{{!-- Layer 3: 大見出し（3 行。1 行目は青、2〜3 行目は大きく茶） --}}
+<h1 class="headline">
+  <span class="headline__l1">ABCダミーズ・DEの</span>
+  <span class="headline__l2">見出し</span>
+  <span class="headline__l3">テキスト</span>
+</h1>
+
+{{!-- Layer 3: 吹き出しの文 --}}
+<p class="bubble-text">ダミー文章を<br>入れます！</p>
+
+{{!-- Layer 3: 切り抜き人物の名前（右上・左下） --}}
+<p class="person-caption person-caption--tr"><span class="person-caption__name">氏名 ダミ<small>さん</small></span><span class="person-caption__aff">（ダミーダミーダミー<br>ダミーダミー出身）</span></p>
+<p class="person-caption person-caption--bl"><span class="person-caption__name">氏名 ダミ<small>さん</small></span><span class="person-caption__aff">（ダミーダミーダミー<br>ダミーダミー出身）</span></p>
+
+{{!-- Layer 2 + 3: 軸のラベル（色面 + 白抜き文字。左右は縦書き） --}}
+<div class="axis-label axis-label--top">ABC</div>
+<div class="axis-label axis-label--bottom">DE</div>
+<div class="axis-label axis-label--left">ダミー・ラベル</div>
+<div class="axis-label axis-label--right">ラベル・ダミー</div>
+
+{{!-- Layer 2 + 3: 職種のメモカード 7 枚（写真つき 4 枚・文字だけ 3 枚） --}}
+{{#> book/memo-card mod="c1" photo="37.5 / 20.5"}}
+  <h3 class="memo__title">ABC職種ダミー</h3>
+  <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストダミーです。</p>
+{{/book/memo-card}}
+
+{{#> book/memo-card mod="c2" photo="37.1 / 20.8"}}
+  <h3 class="memo__title">職種名ダミーダミー</h3>
+  <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストがダミーです。</p>
+{{/book/memo-card}}
+
+{{#> book/memo-card mod="c3"}}
+  <h3 class="memo__title">ダミー名・<br>職種名ダミーダミ</h3>
+  <p class="memo__text">ダミーテキストダミ<br>ーテキストダミーテ<br>キストダミーテキス<br>トダミーです。</p>
+{{/book/memo-card}}
+
+{{#> book/memo-card mod="c4"}}
+  <h3 class="memo__title">ダミー名<br>職種ダミー</h3>
+  <p class="memo__text">ダミーテキストダミ<br>ーテキストダミーテ<br>キストダミーテキス<br>トダミーテキストダ<br>ミーテキストダミー<br>テキストです。</p>
+{{/book/memo-card}}
+
+{{#> book/memo-card mod="c5"}}
+  <h3 class="memo__title"><span class="memo__title-a">ダミー職</span><br><span class="memo__title-b">名前ダミー</span></h3>
+  <p class="memo__text">ダミーテキストダミ<br>ーテキストダミーテ<br>キストダミーテキス<br>トダミーテキストダ<br>ダミーです。</p>
+{{/book/memo-card}}
+
+{{#> book/memo-card mod="c6" photo="36.9 / 19.5"}}
+  <h3 class="memo__title">職種名ダミー</h3>
+  <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストをダミーします。</p>
+{{/book/memo-card}}
+
+{{#> book/memo-card mod="c7" photo="36.9 / 19.7"}}
+  <h3 class="memo__title">職種名ダミーダミー</h3>
+  <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストダミーです。</p>
+{{/book/memo-card}}
+
+{{!-- Layer 3: 本文（8 行。行末は参考と同じ位置で改行） --}}
+<p class="body-copy">ABCダミーテキストダミーテキストダ、<br>ダミーテキストなど、<br>ABCダミーテとDEのダミーテキを<br>ダミーテキストにダミーテキで<br>ダミーテキストダミーテキストダ、<br>ダミーテキストの文、ダミーテキストダミーを<br>ダミーテキストダミーテキストで<br>ダミーをダミーテキストにできます。</p>
+
+{{!-- Layer 2 + 3: タブラベル（× 型のクリップ記号 + 青い角丸 + 斜線の影） --}}
+<svg class="tab-clip" viewBox="4 226 12 13" aria-hidden="true"><path d="M5.9 228.2 L12.9 236.6 M5.9 236.8 L12.6 228.6"/></svg>
+<div class="tab-hatch" aria-hidden="true"></div>
+<h2 class="tab">ダミー見出しダミー！</h2>
+
+{{!-- Layer 2 + 3: 卒業生ボックス 2 つ（白地 + 細枠、左に写真、右に名前・所属・本文） --}}
+<section class="grad grad--l">
+  <div class="grad__photo">{{> photo-frame ratio="28.8 / 33"}}</div>
+  <div class="grad__text">
+    <p class="grad__name">氏名 ダミー<small>さん</small><span class="grad__aff">（ダミーダミーダミーダ出身）</span></p>
+    <p class="grad__org">ABダミーダミーダミー企業名</p>
+    <p class="grad__body">ダミーはABCダミーテキストとして<br>ダミーです。ダミーテキストから「ダミ<br>ー」「ダミーだよ」とダミーテキストの<br>時、ダミーのダミーテキストというダ<br>ミーを感じます。さらにダミーテキス<br>トにもなりダミーテキストがダミー！</p>
+  </div>
+</section>
+<section class="grad grad--r">
+  <div class="grad__photo">{{> photo-frame ratio="1 / 1"}}</div>
+  <div class="grad__text">
+    <p class="grad__name">氏名 ダミー<small>さん</small><span class="grad__aff">（ダミーダミー）</span></p>
+    <p class="grad__org">ダミーダミー企業名ダミー</p>
+    <p class="grad__body">ダミーはダミーテキストをしていま<br>す。ダミーがダミー・ダミーしたものが<br>ダミーになり、ダミーテキストのダミー<br>ダミーを感じています。ダミーの「ダミ<br>ー」や「ダミー」をダミーにしてね！</p>
+  </div>
+</section>
+
+{{!-- Layer 2 + 3: ノンブル（小口側の下。青い円に白抜きの数字） --}}
+<div class="folio-dot">{{page.number}}</div>
