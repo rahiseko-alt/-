@@ -1,0 +1,92 @@
+/* fixture 用の共通レイアウト（book.yaml の styles から読み込む） */
+.stat-card {
+  padding: 4mm;
+  background: var(--color-surface);
+  border-top: 1.2mm solid var(--color-accent);
+}
+
+.stat-card__label {
+  font-size: 8pt;
+  color: var(--color-muted);
+}
+
+.stat-card__value {
+  font-size: 22pt;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.stat-card__unit {
+  font-size: 10pt;
+  margin-left: 0.5mm;
+}
+
+.course-card {
+  padding: 4mm 5mm;
+  border: 0.3mm solid var(--color-primary);
+  background: #ffffff;
+}
+
+.course-card__name {
+  font-size: 13pt;
+  color: var(--color-primary);
+}
+
+.course-card__meta,
+.course-card__tags {
+  font-size: 8pt;
+  color: var(--color-muted);
+}
+
+.data-title {
+  font-size: 16pt;
+  color: var(--color-primary);
+  margin: 0 0 4mm;
+}
+
+.data-courses {
+  display: grid;
+  gap: 4mm;
+  margin-bottom: 10mm;
+}
+
+.data-metric {
+  grid-column: span 4;
+}
+
+.data-note {
+  margin-top: 6mm;
+  font-size: 8pt;
+  color: var(--color-muted);
+}
+
+.page-number {
+  position: absolute;
+  bottom: 8mm;
+  font-size: 8pt;
+  color: var(--color-muted);
+}
+
+.page-number[data-side='right'] {
+  right: var(--margin-outside);
+}
+
+.page-number[data-side='left'] {
+  left: var(--margin-outside);
+}
+
+.data-photo {
+  margin-bottom: 6mm;
+}
+
+.data-photo img {
+  width: 100%;
+  height: 40mm;
+  object-fit: cover;
+}
+
+.data-photo figcaption {
+  font-size: 7pt;
+  color: var(--color-muted);
+}

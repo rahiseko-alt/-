@@ -1,0 +1,9 @@
+id: page_001
+title: 表紙
+type: cover
+background:
+  image: books/smoke/backgrounds/page_001.svg
+  fit: cover
+  position: center
+  opacity: 1
+status: draft

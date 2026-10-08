@@ -1,0 +1,18 @@
+# 文書全体の解析（fixture）
+grid: { columns: 12, gutter_mm: 4 }
+margins: { top: 15, bottom: 15, inside: 18, outside: 15 }
+gutter: 4mm
+photo_ratios: ["3:2", "1:1"]
+heading_hierarchy:
+  - { level: h1, size_pt: 34, weight: 700 }
+  - { level: h2, size_pt: 16, weight: 700 }
+colors: { base: "#1f5a8a", accent: "#e76f51" }
+rules: 細い罫線を見出し下に使用
+cards: 角丸なしの白カード
+density: 中
+page_type: cover
+eye_flow: 左上 → 中央 → 右下
+background: 全面グラデーション
+image_crop: 全面裁ち落とし
+rhythm: 表紙のみ
+notes: テスト用の解析結果

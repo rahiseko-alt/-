@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 297" width="210mm" height="297mm">
+  <!-- 参考ページ画像の代用（レイアウトのみ、文字なし） -->
+  <rect width="210" height="297" fill="#1f5a8a"/>
+  <rect x="15" y="15" width="40" height="12" fill="#ffffff"/>
+  <rect x="15" y="105" width="150" height="16" fill="#ffffff"/>
+  <rect x="15" y="126" width="90" height="8" fill="#e0ecf5"/>
+  <rect x="0" y="249" width="210" height="48" fill="#ffffff"/>
+  <rect x="173" y="257" width="22" height="22" fill="#222222"/>
+</svg>

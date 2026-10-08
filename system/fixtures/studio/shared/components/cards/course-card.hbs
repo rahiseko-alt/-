@@ -1,0 +1,7 @@
+{{!-- 学科カード: コンテキストは courses.yaml の courses の 1 要素 --}}
+<article class="course-card" data-course="{{id}}">
+  <h3 class="course-card__name">{{name}}</h3>
+  <p class="course-card__meta"><span class="num">{{num years}}</span>年制・定員 <span class="num">{{num capacity}}</span>名</p>
+  <p class="course-card__desc">{{description}}</p>
+  {{#if tags}}<p class="course-card__tags">{{join tags " / "}}</p>{{/if}}
+</article>

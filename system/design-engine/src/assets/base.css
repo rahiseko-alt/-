@@ -1,0 +1,331 @@
+/*
+ * デザインエンジン基本スタイル（全 BOOK 共通）
+ * - 寸法・色・フォントは compose が :root に出力する CSS 変数を使う
+ *   色: --color-primary / secondary / accent / text / muted / background / surface
+ *   書体: --font-heading / body / serif / number
+ *   判型: --trim-w --trim-h --bleed --safe --page-w --page-h
+ *         --margin-top --margin-bottom --margin-inside --margin-outside --columns --gutter --column-w
+ *   ページ左右で決まる: --margin-left --margin-right（ノド/小口を振り分け済み）
+ * - @page の size はページごとに compose が出力する
+ */
+
+@page {
+  margin: 0;
+}
+
+/* ---- リセット ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---- 表示モード ---- */
+body.mode-render {
+  background: #ffffff;
+}
+
+body.mode-preview {
+  background: #5f6368;
+  padding: 24px 0;
+}
+
+body.mode-preview .page {
+  margin: 0 auto 24px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+@media print {
+  body.mode-preview {
+    background: none;
+    padding: 0;
+  }
+  body.mode-preview .page {
+    margin: 0;
+    box-shadow: none;
+  }
+}
+
+/* ---- ページ（仕上がり + 塗り足し） ---- */
+.page {
+  position: relative;
+  width: calc(var(--trim-w) + 2 * var(--bleed));
+  height: calc(var(--trim-h) + 2 * var(--bleed));
+  overflow: hidden;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 10pt;
+  line-height: 1.7;
+  break-after: page;
+  page-break-after: always;
+  break-inside: avoid;
+}
+
+.page:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+/* 右ページ: ノド = 左、左ページ: ノド = 右 */
+.page[data-side='right'] {
+  --margin-left: var(--margin-inside);
+  --margin-right: var(--margin-outside);
+}
+
+.page[data-side='left'] {
+  --margin-left: var(--margin-outside);
+  --margin-right: var(--margin-inside);
+}
+
+/* ---- レイヤー ---- */
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* Layer 1: BASE VISUAL（背景画像。塗り足しまで覆う） */
+.layer-base {
+  z-index: 0;
+  overflow: hidden;
+}
+
+.layer-base > .base-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Layer 2 + 3: STRUCTURE / CONTENT */
+.layer-main {
+  z-index: 1;
+}
+
+/* 仕上がり座標系（塗り足し分だけ内側）。著者はここを基準に配置する */
+.trim {
+  position: absolute;
+  top: var(--bleed);
+  left: var(--bleed);
+  width: var(--trim-w);
+  height: var(--trim-h);
+}
+
+/* 塗り足しまで広げる（.trim 内の絶対配置要素に付ける） */
+.bleed {
+  position: absolute;
+  inset: calc(var(--bleed) * -1);
+}
+
+.bleed-top {
+  top: calc(var(--bleed) * -1);
+}
+
+.bleed-bottom {
+  bottom: calc(var(--bleed) * -1);
+}
+
+.bleed-left {
+  left: calc(var(--bleed) * -1);
+}
+
+.bleed-right {
+  right: calc(var(--bleed) * -1);
+}
+
+/* 版面（マージン内）・安全領域・段組の補助クラス */
+.area-margins {
+  position: absolute;
+  top: var(--margin-top);
+  bottom: var(--margin-bottom);
+  left: var(--margin-left);
+  right: var(--margin-right);
+}
+
+.area-safe {
+  position: absolute;
+  inset: var(--safe);
+}
+
+.grid-columns {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+/* ---- 和文組版の既定 ---- */
+.page {
+  line-break: strict;
+  overflow-wrap: anywhere;
+  text-spacing-trim: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.35;
+  font-feature-settings: 'palt' 1;
+  letter-spacing: 0.02em;
+  /* 見出しは文節で改行（Chromium 119+、lang="ja" が必要） */
+  word-break: auto-phrase;
+  /* 行頭の始め括弧（「（ など）を半角に詰め、隣り合う約物も詰める。
+     trim-both は Chromium 141 では未対応（無視される）ため trim-start を使う */
+  text-spacing-trim: trim-start;
+}
+
+/* 見出し以外でも文節改行したい要素に付ける */
+.phrase {
+  word-break: auto-phrase;
+}
+
+/* 両端揃え。Chromium は和文を文字間に均等に割り付ける（text-justify: inter-character は未対応のため指定しない） */
+p,
+.body-text {
+  text-align: justify;
+}
+
+@supports (hanging-punctuation: allow-end) {
+  p,
+  .body-text {
+    hanging-punctuation: allow-end;
+  }
+}
+
+.serif {
+  font-family: var(--font-serif);
+}
+
+.num,
+.number {
+  font-family: var(--font-number);
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+.palt {
+  font-feature-settings: 'palt' 1;
+}
+
+/* ---- QR コード（{{qr}} ヘルパー） ---- */
+svg.qr {
+  display: block;
+}
+
+svg.qr:not([width]) {
+  width: 100%;
+  height: auto;
+}
+
+/* ---- ガイド（guides: true のとき） ---- */
+.layer-guides {
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.guide {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 塗り足し端 */
+.guide-bleed {
+  inset: 0;
+  outline: 1px dashed rgba(230, 0, 140, 0.9);
+  outline-offset: -1px;
+}
+
+/* 仕上がり線 */
+.guide-trim {
+  top: var(--bleed);
+  left: var(--bleed);
+  width: var(--trim-w);
+  height: var(--trim-h);
+  outline: 1px solid rgba(0, 150, 255, 0.95);
+}
+
+/* 安全領域 */
+.guide-safe {
+  top: calc(var(--bleed) + var(--safe));
+  left: calc(var(--bleed) + var(--safe));
+  right: calc(var(--bleed) + var(--safe));
+  bottom: calc(var(--bleed) + var(--safe));
+  outline: 1px dashed rgba(0, 180, 110, 0.9);
+}
+
+/* マージン（版面） */
+.guide-margins,
+.guide-columns {
+  top: calc(var(--bleed) + var(--margin-top));
+  bottom: calc(var(--bleed) + var(--margin-bottom));
+  left: calc(var(--bleed) + var(--margin-left));
+  right: calc(var(--bleed) + var(--margin-right));
+}
+
+.guide-margins {
+  outline: 1px solid rgba(255, 140, 0, 0.9);
+}
+
+/* 段組 */
+.guide-columns {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+.guide-col {
+  background: rgba(0, 150, 255, 0.07);
+  box-shadow:
+    inset 1px 0 0 rgba(0, 150, 255, 0.35),
+    inset -1px 0 0 rgba(0, 150, 255, 0.35);
+}

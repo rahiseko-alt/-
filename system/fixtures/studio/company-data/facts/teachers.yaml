@@ -1,0 +1,7 @@
+teachers:
+  - id: t-yamada
+    name: 見本 太郎
+    name_kana: みほん たろう
+    title: 学科長
+    course_ids: [ai-system]
+    profile: 架空のプロフィール文です。

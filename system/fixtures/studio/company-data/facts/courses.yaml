@@ -1,0 +1,22 @@
+courses:
+  - id: ai-system
+    name: AIシステム学科
+    name_en: AI Systems
+    years: 2
+    capacity: 40
+    description: 機械学習の基礎からアプリケーション開発までを実習中心で学ぶ架空の学科です。
+    tags: [AI, プログラミング]
+    curriculum:
+      - Python基礎
+      - 機械学習演習
+    qualifications:
+      - 架空情報技術検定
+    careers:
+      - AIエンジニア
+    photo: campus
+  - id: data-business
+    name: データビジネス学科
+    years: 2
+    capacity: 1200
+    description: データ分析とビジネス企画を組み合わせて学ぶ架空の学科です。
+    tags: [データ分析, 企画]
