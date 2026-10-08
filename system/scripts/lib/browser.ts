@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { chromium, type Browser, type BrowserContext, type CDPSession, type Page, type Request } from 'playwright';
-import { isReferencePath } from '../../design-engine/src/index.ts';
 import { CliError, firstLine } from './cli.ts';
 import type { StudioServer } from './studio-server.ts';
 
@@ -118,12 +117,10 @@ export async function openComposed(
   const problems: string[] = [];
   const referenceRequests: string[] = [];
   // 合成時の検査（design-engine の reference-guard）をすり抜けた参照も、実際の読み込みで捕まえる。
-  // URL はエンコードされたまま届く（references%2F... など）ので、デコードしたルート相対パスで判定する
+  // URL はエンコードされたまま届く（references%2F... など）ので、デコードしたルート相対パスと、シンボリックリンクの実体で判定する
   page.on('request', (req) => {
-    const url = req.url();
-    if (!url.startsWith(server.baseUrl)) return;
-    const rel = server.displayPath(url.replace(/[?#].*$/, ''));
-    if (isReferencePath(rel)) referenceRequests.push(rel);
+    const ref = server.referencePathOf(req.url());
+    if (ref) referenceRequests.push(ref);
   });
   // HTTP では存在しないファイルも「失敗」にならず 404 の応答になるので、応答の状態で調べる。
   // CSS・フォントは 404 のあと読み込みが中止（requestfailed）にもなるので、二重に報告しない

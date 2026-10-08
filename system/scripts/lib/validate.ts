@@ -3,11 +3,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import fg from 'fast-glob';
+import sharp from 'sharp';
 import {
   AnalysisSchema,
   ReferencePrepSchema,
   BackgroundPromptSchema,
   Layer1OrdersSchema,
+  REQUIRED_NEGATIVE_TERMS,
+  type Layer1OrderItem,
   type Layer1Orders,
   PAGE_ID_RE,
   StudioError,
@@ -34,6 +37,7 @@ import {
   type ReferenceSource,
 } from '../../design-engine/src/index.ts';
 import { consoleIo, parseCli, resolveRoot, runCommand, type Command, type Io } from './cli.ts';
+import { pxAt } from './gen-inputs.ts';
 import { charLength, lineAt, stripHandlebars } from './text.ts';
 
 export const VALIDATE_USAGE = `使い方: npm run validate -- [--strict] [--root <dir>]
@@ -462,7 +466,7 @@ function checkForbiddenTerms(root: string, sources: Array<{ dir: string; source:
 // ---------------------------------------------------------------------------
 // 7. 背景画像の生成記録
 
-function checkBackgrounds(root: string, bookIds: string[], s: CheckSection): void {
+async function checkBackgrounds(root: string, bookIds: string[], s: CheckSection): Promise<void> {
   let images = 0;
   let orders = 0;
   for (const bookId of bookIds) {
@@ -482,7 +486,7 @@ function checkBackgrounds(root: string, bookIds: string[], s: CheckSection): voi
           push(s.errors, errorMessage(err));
         }
       } else if (name === LAYER1_ORDERS_FILE) {
-        orders += checkLayer1Orders(root, bookId, dir, names, rel, s);
+        orders += await checkLayer1Orders(root, bookId, dir, names, rel, s);
       }
     }
   }
@@ -490,8 +494,47 @@ function checkBackgrounds(root: string, bookIds: string[], s: CheckSection): voi
   if (orders > 0) s.info.push(`Layer 1 の生成指示 ${orders} 件`);
 }
 
-/** layer1-orders.yaml の形式・参照先を確かめ、未生成の件数を警告する。指示の件数を返す */
-function checkLayer1Orders(root: string, bookId: string, dir: string, names: string[], rel: string, s: CheckSection): number {
+/** 生成画像と生成指示の縦横比の差の許容（object-fit で切れる・伸びるのが目立たない範囲） */
+const LAYER1_RATIO_TOLERANCE = 0.02;
+
+/** 生成済みの画像 1 枚: BOOK の png_dpi で足りる画素数か、枠と同じ縦横比か、切り抜きに透明部分があるか */
+async function checkLayer1Image(root: string, file: string, item: Layer1OrderItem, dpi: number | null, s: CheckSection): Promise<void> {
+  const imgRel = relFromRoot(root, file);
+  let width: number;
+  let height: number;
+  let hasAlpha: boolean;
+  try {
+    const meta = await sharp(file).metadata();
+    // EXIF の向きで縦横が入れ替わるもの（5〜8）は、表示される向きで比べる
+    const swap = (meta.orientation ?? 1) >= 5;
+    width = (swap ? meta.height : meta.width) ?? 0;
+    height = (swap ? meta.width : meta.height) ?? 0;
+    hasAlpha = meta.hasAlpha ?? false;
+  } catch (err) {
+    push(s.errors, `${imgRel}: 画像を読めません（${errorMessage(err).split('\n')[0]}）`);
+    return;
+  }
+  const [wMm, hMm] = item.size_mm;
+  if (dpi != null) {
+    const need = [pxAt(wMm, dpi), pxAt(hMm, dpi)] as const;
+    if (width < need[0] || height < need[1]) {
+      push(s.warnings, `${imgRel}: 解像度が足りません（${wMm}×${hMm}mm を ${dpi}dpi で出すには ${need[0]}×${need[1]}px 必要、画像は ${width}×${height}px）`);
+    }
+  }
+  const diff = width / height / (wMm / hMm) - 1;
+  if (Math.abs(diff) > LAYER1_RATIO_TOLERANCE) {
+    push(
+      s.warnings,
+      `${imgRel}: 縦横比が枠と違います（枠 ${wMm}×${hMm}mm、画像 ${width}×${height}px、${diff > 0 ? '横' : '縦'}に ${Math.round(Math.abs(diff) * 1000) / 10}% 長い）。枠に合わせて切れるか伸びます`,
+    );
+  }
+  if (item.kind === 'cutout' && !hasAlpha) {
+    push(s.warnings, `${imgRel}: 切り抜き（cutout）なのに透明部分がありません。背景を透過した PNG か WebP で保存してください`);
+  }
+}
+
+/** layer1-orders.yaml の形式・参照先を確かめ、未生成の件数と、生成済みの画像の大きさ・透過・記録を調べる。指示の件数を返す */
+async function checkLayer1Orders(root: string, bookId: string, dir: string, names: string[], rel: string, s: CheckSection): Promise<number> {
   let orders: Layer1Orders;
   try {
     orders = loadYamlWithSchema(path.join(dir, LAYER1_ORDERS_FILE), Layer1OrdersSchema, rel);
@@ -503,19 +546,47 @@ function checkLayer1Orders(root: string, bookId: string, dir: string, names: str
   for (const ref of [orders.reference_image, orders.reference_prep]) {
     if (ref && !fs.existsSync(path.join(root, ref))) push(s.errors, `${rel}: 参照先がありません: ${ref}`);
   }
-  const pending = orders.items.filter((item) => !names.some((n) => BACKGROUND_IMAGE_RE.test(n) && n.replace(/\.[^.]+$/, '') === item.id));
+  const imagesOf = (id: string) => names.filter((n) => BACKGROUND_IMAGE_RE.test(n) && n.replace(/\.[^.]+$/, '') === id).sort();
+  const pending = orders.items.filter((item) => imagesOf(item.id).length === 0);
   if (pending.length > 0) {
     const required = pending.filter((item) => !item.optional).length;
     push(s.warnings, `${rel}: Layer 1 が未生成 ${pending.length} 件（必須 ${required}・任意 ${pending.length - required}）: ${pending.map((i) => i.id).join(', ')}`);
   } else if (orders.status !== 'generated') {
     push(s.warnings, `${rel}: 全件の画像があります。status を generated にしてください`);
   }
+
+  // 生成済みの画像: BOOK の png_dpi で足りる画素数か、枠と同じ縦横比か、切り抜きに透明部分があるか、記録に文字の除外があるか
+  let dpi: number | null = null;
+  try {
+    dpi = loadBook(root, bookId).config.output.png_dpi;
+  } catch {
+    // book.yaml の問題は [2] で報告済み。画素数だけ調べない
+  }
+  for (const item of orders.items) {
+    const files = imagesOf(item.id);
+    if (files.length === 0) continue;
+    if (files.length > 1) push(s.warnings, `${rel}: ${item.id} の画像が複数あります（${files.join(', ')}）。どれを使うか分からないので 1 枚にしてください`);
+    for (const name of files) await checkLayer1Image(root, path.join(dir, name), item, dpi, s);
+    const recordFile = path.join(dir, `${item.id}.prompt.yaml`);
+    if (fs.existsSync(recordFile)) {
+      let negative = '';
+      try {
+        negative = loadYamlWithSchema(recordFile, BackgroundPromptSchema, relFromRoot(root, recordFile)).negative_prompt ?? '';
+      } catch {
+        // 形式の誤りは上でエラーにしている
+      }
+      const missing = REQUIRED_NEGATIVE_TERMS.filter((t) => !negative.toLowerCase().includes(t.toLowerCase()));
+      if (missing.length > 0) {
+        push(s.warnings, `${relFromRoot(root, recordFile)}: negative_prompt に ${missing.join(', ')} がありません（生成画像に文字・ロゴを入れない。system/rules/image-generation.md §3）`);
+      }
+    }
+  }
   return orders.items.length;
 }
 
 // ---------------------------------------------------------------------------
 
-export function validateStudio(root: string, opts: { strict?: boolean } = {}): ValidateReport {
+export async function validateStudio(root: string, opts: { strict?: boolean } = {}): Promise<ValidateReport> {
   const strict = opts.strict ?? false;
   const s1 = section(1, 'company-data（スキーマ・TODO）');
   const s2 = section(2, 'BOOK の設定（book.yaml・ページ・背景・styles・references.yaml）');
@@ -539,7 +610,7 @@ export function validateStudio(root: string, opts: { strict?: boolean } = {}): V
   checkCompose(root, books, company != null, strict, s4, new Set([...s2.warnings, ...s2.errors]));
   checkHardcodedFacts(root, company, s5);
   checkForbiddenTerms(root, sources, s6);
-  checkBackgrounds(root, bookIds, s7);
+  await checkBackgrounds(root, bookIds, s7);
 
   const sections = [s1, s2, s3, s4, s5, s6, s7];
   return {
@@ -583,7 +654,7 @@ export const validateCommand: Command = (argv, io: Io = consoleIo) =>
       return 0;
     }
     const root = resolveRoot(values.root);
-    const report = validateStudio(root, { strict: values.strict });
+    const report = await validateStudio(root, { strict: values.strict });
     printReport(report, io);
     return report.errorCount > 0 ? 1 : 0;
   });

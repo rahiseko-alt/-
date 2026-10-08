@@ -111,6 +111,41 @@ describe('validate: layer1-orders.yaml', () => {
     expect(v.text).toContain('status を generated にしてください');
   });
 
+  it('生成済みの画像の解像度・縦横比・切り抜きの透過・記録の除外語・重複を調べる', async () => {
+    const root = copyFixture();
+    await writeReference(root);
+    const cutout = item('page_001-person', '[0, 0, 30, 30]').replace('kind: photo', 'kind: cutout').replace('size_mm: [50, 40]', 'size_mm: [30, 30]');
+    writeFile(root, ORDERS, orders(item('page_001-top', '[10, 10, 50, 40]') + item('page_001-edge', '[-5, 280, 30, 30]').replace('size_mm: [50, 40]', 'size_mm: [30, 30]') + cutout));
+    const bg = 'books/smoke/backgrounds';
+    const solid = (w: number, h: number, alpha = false) =>
+      sharp({ create: { width: w, height: h, channels: alpha ? 4 : 3, background: alpha ? { ...RED, alpha: 0 } : RED } }).png().toBuffer();
+    const record = (negative: string) => `tool: test\nprompt: |\n  test\nnegative_prompt: "${negative}"\n`;
+    // smoke は png_dpi 350: 50×40mm → 689×551px、30×30mm → 413×413px
+    writeFile(root, `${bg}/page_001-top.png`, await solid(100, 80)); // 縦横比は合うが小さい
+    writeFile(root, `${bg}/page_001-top.prompt.yaml`, record(NEGATIVE));
+    writeFile(root, `${bg}/page_001-edge.png`, await solid(600, 413)); // 画素は足りるが横長
+    writeFile(root, `${bg}/page_001-edge.jpg`, await sharp(await solid(413, 413)).jpeg().toBuffer()); // 同じ ID の画像が 2 枚
+    writeFile(root, `${bg}/page_001-edge.prompt.yaml`, record('text, logo'));
+    writeFile(root, `${bg}/page_001-person.png`, await solid(413, 413)); // 切り抜きなのに透明部分がない
+    writeFile(root, `${bg}/page_001-person.prompt.yaml`, record(NEGATIVE));
+
+    const v = await run(validateCommand, ['--root', root]);
+    expect(v.code, v.text).toBe(0);
+    expect(v.out).toContain(`${bg}/page_001-top.png: 解像度が足りません（50×40mm を 350dpi で出すには 689×551px 必要、画像は 100×80px）`);
+    expect(v.out).not.toContain('page_001-top.png: 縦横比');
+    expect(v.out).toContain(`${bg}/page_001-edge.png: 縦横比が枠と違います（枠 30×30mm、画像 600×413px、横に 45.3% 長い）`);
+    expect(v.out).not.toContain('page_001-edge.png: 解像度');
+    expect(v.out).toContain('page_001-edge の画像が複数あります（page_001-edge.jpg, page_001-edge.png）');
+    expect(v.out).toContain(`${bg}/page_001-edge.prompt.yaml: negative_prompt に letters, typography, words, numbers, watermark, signature, QR code, caption がありません`);
+    expect(v.out).toContain(`${bg}/page_001-person.png: 切り抜き（cutout）なのに透明部分がありません`);
+    expect(v.out).not.toContain('page_001-top.prompt.yaml: negative_prompt');
+
+    // 透過した切り抜きは警告しない
+    writeFile(root, `${bg}/page_001-person.png`, await solid(413, 413, true));
+    const v2 = await run(validateCommand, ['--root', root]);
+    expect(v2.out).not.toContain('切り抜き（cutout）なのに');
+  });
+
   it('形式の誤り・BOOK の不一致・参照先の欠落はエラー', async () => {
     const root = copyFixture();
     await writeReference(root);

@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
-import { ENGINE_URL_PREFIX, contentTypeOf, isReferencePath, resolveEngineRequest, resolveInRoot } from '../../design-engine/src/index.ts';
+import { ENGINE_URL_PREFIX, contentTypeOf, isReferencePath, resolveEngineRequest, resolveInRoot, toPosix } from '../../design-engine/src/index.ts';
 
 /** 合成した HTML 文書を配信する URL 接頭辞 */
 const DOC_PREFIX = '/@doc/';
@@ -25,6 +25,11 @@ export interface StudioServer {
   addDocument(html: string, name?: string): ServedDocument;
   /** このサーバーの URL を表示用のルート相対パスに戻す（ほかの URL はそのまま） */
   displayPath(url: string): string;
+  /**
+   * このサーバーの URL が参考資料（references/・.cache/・比較出力。シンボリックリンクの先を含む）を指すなら、
+   * 表示用のルート相対パス。指さなければ null。サーバーはこれらを配信しない
+   */
+  referencePathOf(url: string): string | null;
   close(): Promise<void>;
 }
 
@@ -44,7 +49,24 @@ function resolveRootFile(root: string, rel: string): string | null {
   return fs.existsSync(file) && fs.statSync(file).isFile() ? file : null;
 }
 
-function handle(absRoot: string, docs: Map<string, string>, req: http.IncomingMessage, res: http.ServerResponse): void {
+/**
+ * ルート相対パスが参考資料を指すなら表示用のパス（シンボリックリンクなら「パス（→ 実体）」）、指さなければ null。
+ * パスそのものと、シンボリックリンクを解決した実体の両方で判定する
+ */
+function referencePath(absRoot: string, realRoot: string, rel: string): string | null {
+  if (isReferencePath(rel)) return rel;
+  const file = resolveRootFile(absRoot, rel);
+  if (!file) return null;
+  let real: string;
+  try {
+    real = toPosix(path.relative(realRoot, fs.realpathSync(file)));
+  } catch {
+    return null;
+  }
+  return isReferencePath(real) ? `${rel}（→ ${real}）` : null;
+}
+
+function handle(absRoot: string, realRoot: string, docs: Map<string, string>, req: http.IncomingMessage, res: http.ServerResponse): void {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.writeHead(405, { Allow: 'GET, HEAD' });
     res.end();
@@ -74,7 +96,7 @@ function handle(absRoot: string, docs: Map<string, string>, req: http.IncomingMe
   } else {
     const rel = decoded.replace(/^\/+/, '');
     // 参考資料は描画に使わない（読み込もうとしたこと自体は openComposed が記録し、render が失敗する）
-    file = isReferencePath(rel) ? null : resolveRootFile(absRoot, rel);
+    file = referencePath(absRoot, realRoot, rel) ? null : resolveRootFile(absRoot, rel);
   }
   if (!file) return notFound(res);
   const size = fs.statSync(file).size;
@@ -90,12 +112,13 @@ function handle(absRoot: string, docs: Map<string, string>, req: http.IncomingMe
 
 export async function startStudioServer(root: string): Promise<StudioServer> {
   const absRoot = path.resolve(root);
+  const realRoot = fs.realpathSync(absRoot);
   const docs = new Map<string, string>();
 
   const server = http.createServer((req, res) => {
     // 想定外の例外で render ごと落ちないよう、応答のエラーにする
     try {
-      handle(absRoot, docs, req, res);
+      handle(absRoot, realRoot, docs, req, res);
     } catch {
       if (res.headersSent) {
         res.destroy();
@@ -132,6 +155,17 @@ export async function startStudioServer(root: string): Promise<StudioServer> {
       } catch {
         return rest;
       }
+    },
+    referencePathOf(url) {
+      if (!url.startsWith(baseUrl)) return null;
+      const rest = url.slice(baseUrl.length).split(/[?#]/, 1)[0] ?? '';
+      let rel: string;
+      try {
+        rel = decodeURIComponent(rest).replace(/^\/+/, '');
+      } catch {
+        return null;
+      }
+      return referencePath(absRoot, realRoot, rel);
     },
     close() {
       return new Promise<void>((resolve) => {

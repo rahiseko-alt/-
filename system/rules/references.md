@@ -103,7 +103,7 @@ notes: "入手経路・利用上の注意"
 - 再現するのはレイアウトと構造。**参考資料の文字をページに書き写さない。参考資料の写真・ロゴをそのまま貼らない・切り出さない**（Layer 1 の画像生成に参考ページ画像を入力するのは可。下の「画像生成」）
 - 文字はダミー（同じ文字数・行数のダミーテキスト）か company-data の値で置き、サイズ・行送り・位置だけを合わせる
 - 写真は参考資料から切り出さない。写真枠はプレースホルダ（`{{> photo-frame ratio="..."}}`）か、自社写真・生成画像で埋める
-- 参考ページ画像は、比較（`npm run compare`）・目視・画像生成の参照入力に使ってよい。参考画像そのものをページに貼ること（`{{asset "references/..."}}`、`background.image: references/...`、`<img src="references/...">`、パーシャルの `src=`、CSS の `url()` など、書き方を問わない）は禁止。`npm run validate`（試し合成）と `npm run render` がエラーにする。背景が必要なら参考画像を入力して生成し、結果を `books/<id>/backgrounds/` に置く
+- 参考ページ画像は、比較（`npm run compare`）・目視・画像生成の参照入力に使ってよい。参考画像そのものをページに貼ること（`{{asset "references/..."}}`、`background.image: references/...`、`<img src="references/...">`、パーシャルの `src=`、CSS の `url()` など、書き方を問わない）は禁止。`npm run validate`（試し合成）と `npm run render` がエラーにする。参考ページの画素を含む派生物（`.cache/` の補正画像・生成入力の切り出し、`books/<id>/reviews/<pageId>/compare-<日時>/` の比較画像）と、参考資料を指すシンボリックリンクも同じ扱い（`render` は配信せず、読み込もうとしたら失敗する）。背景が必要なら参考画像を入力して生成し、結果を `books/<id>/backgrounds/` に置く
 
 ### 画像生成
 
