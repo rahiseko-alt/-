@@ -23,7 +23,7 @@ book: replica/a-course
 page: page_001
 reference_image: references/HAL-nagoya/brochure-2/page_001.jpg
 reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
-status: pending
+status: generated
 items:
   - id: page_001-lect-1
     kind: photo

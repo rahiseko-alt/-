@@ -97,3 +97,12 @@
   - ノンブルだけを出す folio（今の folio パーシャルは学校名が必須。参考は番号のみ）→ folio の school を任意にする案
 - 金のバッジの質感を上げる場合は Layer 1 素材（文字なしの金属プレート）を生成して shared/generated-assets/ に置く（今は CSS のグラデーション）
 - Layer 1 の生成指示: backgrounds/layer1-orders.yaml（1 件・すべて任意、人物を含む 0 件。金の称号バッジの金属プレート page_001-badge-plate。写真・人物・イラストの枠はない）
+
+## Layer 1 追加確認（2026-10-08, codex・正式render前）
+
+- 追加: page_001-badge-plate.png（512×512px）と生成記録。生成前に参考の文字4行と中央罫線を金色で塗りつぶした。
+- 配置: .rep-badgeの背景だけを画像に交換。border幅・文字位置・罫線・右下の厚みと影は維持。
+- 確認: ViteのHTTPプレビューをシステムChromium 151で表示。日本語フォント20サブセットが読み込まれ、リソース失敗0。白抜き文字と横罫が読め、縁に光沢が加わった。
+- 比較: compare-20261008-132623/。mismatch_ratio 0.219768。side-by-side → overlay → diffを目視。表・大見出しの既存配置を維持し、差分はダミー文字・参考の紙の反り・金属の質感に集中。
+- 制限: 比較入力は150dpi相当のHTTPプレビューPNG。指定版Chromium 1194が未取得のため、npm run renderは失敗。正式出力PNG・PDFは更新していない。この確認は正式render後の比較ラウンドの代替・承認ではない。
+- 次: ブラウザ取得後、doctor → check → render → compareで正式出力の文字位置と金属の可読性を再確認する。

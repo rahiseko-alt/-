@@ -8,10 +8,11 @@
     org1  必須  所属 1 行目              org2         任意  所属 2 行目
     role1 任意  肩書 1 行目              role2        任意  肩書 2 行目
     name  必須  氏名
+    photo 任意  Layer 1画像のリポジトリルート相対パス
     cutout 任意 "1" で切り抜き写真の枠（矩形の写真ではなく人物の輪郭で抜く素材）
 --}}
 <section class="lect lect--{{col}}{{#if cutout}} lect--cutout{{/if}}">
-  <div class="lect__photo">{{> photo-frame}}</div>
+  <div class="lect__photo">{{#if photo}}{{> photo-frame src=photo}}{{else}}{{> photo-frame}}{{/if}}</div>
   <p class="lect__cap">
     <span class="lect__cap-line">{{cap1}}</span>
     {{#if cap2}}<span class="lect__cap-line">{{cap2}}</span>{{/if}}

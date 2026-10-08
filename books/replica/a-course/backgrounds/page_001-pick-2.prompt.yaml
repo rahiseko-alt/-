@@ -1,0 +1,30 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Wide 118.4:45.3 (about 2.6:1) diptych of two original photorealistic 3DCG still-life renders placed edge to edge with a hard vertical seam at 49.7% of the width and no gap or border.
+  Left panel (cool blue tone): an antique vanity table in front of a tall multi-pane window; outside, soft out-of-focus snowy trees in pale blue-grey light (#a0a6ad) fill the upper half. On the table, left to right: an ornate dark metal lantern with a faint blue glow at the far left edge rising to the top; a clear crystal slipper-shaped glass ornament and a few deep navy roses at the lower left; a faceted pale-blue crystal perfume bottle with a dark square stopper; a tall cobalt-blue perfume bottle (#3048a8) with a round disc stopper in the centre; a second cobalt bottle topped with small blue glass flowers; a short stack of dark blank books; a small ornate silver jewellery box; an upright white porcelain plate with a blue floral pattern at the right. Overall tone #7a7e87 with cobalt accents.
+  Right panel (warm rose-magenta tone): a close, slightly high-angle view of a vintage dressing table: a large silver tray with blue-and-white floral porcelain pieces filling the lower right; a round porcelain trinket box with a floral lid at the centre-left; a stemmed glass goblet holding dried flowers; in the soft background a dark red gift box with a deep red rose, draped pink fabrics and blurred shelves, and a pale lace curtain at the upper right. Overall tone #907c83, shadows plum #7a5c68, highlights soft pink-white #e8d8dc.
+  Lighting: soft window light, gentle bloom, rich detail and dense textures in both panels; no empty areas are needed (no text is placed over this image).
+  Style: high-end photorealistic 3D render, shallow depth of field, cinematic colour grading, sharp mid-ground detail.
+
+  Use the supplied masked reference only for spatial composition and lighting, not for identity or replication of existing artwork. Invent a distinct fictional person or original generic artwork. The deliberately blanked areas contain no intended graphic elements; reconstruct natural material there. Match the requested aspect ratio exactly.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, label text, perfume label, book titles, readable lettering, brand, trademark, monogram, signage, people, hands, faces, white gap between panels, border, frame
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, label text, perfume label, book titles, readable lettering, brand, trademark, monogram, signage, people, hands, faces, white gap between panels, border, frame
+seed: null
+size: 1631x624
+created: 2026-10-08T13:24:51.981Z
+author: codex
+reference_inputs:
+  - path: references/HAL-nagoya/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 153
+      - 121.5
+      - 118.4
+      - 45.3
+    reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。指定のキャプション・ラベルを周囲色で塗り、商品写真の文字状の細部をsharp blur(2.5px)で匿名化した。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力2027×776pxからsharpのLanczos3で1631×624pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。原作品の図柄は流用せず、構図・色調を参考にした独自の汎用素材。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

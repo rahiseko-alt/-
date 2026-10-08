@@ -1,0 +1,30 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Portrait-format 33:37 head-and-shoulders photograph of one generic man in his late 50s, East Asian, thick tousled salt-and-pepper grey hair, thin rectangular metal-frame glasses, calm serious expression, looking straight into the camera, wearing a dark charcoal suit jacket over a white open-collar shirt, no tie.
+  Composition: the face is centred horizontally (face centre at about 48% of the width), the top of the hair about 5% below the top edge, the eyes at about 43% of the height and the chin at about 67%; the hair spans roughly 12% to 82% of the width. The suit shoulders fill the bottom 28% and run off both sides. The bottom 15% of the frame will be covered by two dark navy caption bars, so keep only plain suit and shirt there.
+  Background: a flat, evenly lit off-white wall with a very gentle warm gradient, slightly darker on the left (#d3cec1) and lighter on the right (#ebe9d8), no texture, no objects.
+  Lighting: soft, even frontal studio light, no glare on the glasses, natural warm skin tones (about #ac806b in the print), grey hair around #8a8a86 to #7f685b, suit #2f3040 to #747699.
+  Style: photorealistic corporate headshot, 85mm lens at eye level, sharp focus. A fictional person who does not resemble any real or famous individual.
+
+  Use the supplied masked reference only for spatial composition and lighting, not for identity or replication of existing artwork. Invent a distinct fictional person or original generic artwork. The deliberately blanked areas contain no intended graphic elements; reconstruct natural material there. Match the requested aspect ratio exactly.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, lapel pin, name tag, badge, signage, screen text, reflections in glasses, celebrity likeness, famous person, multiple people, hands, patterned background, border, frame, deformed face
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, lapel pin, name tag, badge, signage, screen text, reflections in glasses, celebrity likeness, famous person, multiple people, hands, patterned background, border, frame, deformed face
+seed: null
+size: 455x510
+created: 2026-10-08T13:24:51.847Z
+author: codex
+reference_inputs:
+  - path: references/HAL-nagoya/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 177.1
+      - 26
+      - 33
+      - 37
+    reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。指定の顔内側を単色の肌色で完全に覆い、下端の文字付き帯を服の色（切り抜きは白）で覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1184×1328pxからsharpのLanczos3で455×510pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

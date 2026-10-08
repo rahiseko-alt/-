@@ -1,0 +1,30 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Portrait-format 33:35.5 outdoor head-and-shoulders snapshot of one generic man in his early 30s, East Asian, thick curly dark hair, big relaxed smile with eyes slightly narrowed, head tilted a little, looking toward the camera, wearing a plain black crew-neck T-shirt with a thin dark bag strap over one shoulder.
+  Composition: the face is centred slightly right of centre (face centre at about 54% of the width), the top of the hair about 6% below the top edge, the eyes at about 43% of the height and the chin at about 70%. The shoulders fill the bottom 18% and run off both sides. The bottom 12% of the frame will be covered by two dark navy caption bars, so keep only the plain black T-shirt there.
+  Background: the upper half is a pale, bright overcast sky (#eceadf); behind the shoulders, from about 52% of the height downward, an out-of-focus low residential building with a terracotta tiled roof and beige walls (#755a56 roof, light beige walls) on both sides of the head, softly blurred, no signs, no windows with readable details.
+  Lighting: soft daylight from an overcast sky, slightly backlit, face a little shadowed but readable (about #9c6e62 skin in the print), natural, casual travel-photo mood.
+  Style: photorealistic casual portrait taken with a 50mm lens at eye level, shallow depth of field, sharp focus on the face. A fictional person who does not resemble any real or famous individual.
+
+  Use the supplied masked reference only for spatial composition and lighting, not for identity or replication of existing artwork. Invent a distinct fictional person or original generic artwork. The deliberately blanked areas contain no intended graphic elements; reconstruct natural material there. Match the requested aspect ratio exactly.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, print on clothing, signage, shop sign, street sign, licence plate, screen text, name tag, celebrity likeness, famous person, multiple people, crowd, hands, glasses, border, frame, deformed face
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, print on clothing, signage, shop sign, street sign, licence plate, screen text, name tag, celebrity likeness, famous person, multiple people, crowd, hands, glasses, border, frame, deformed face
+seed: null
+size: 455x489
+created: 2026-10-08T13:24:51.880Z
+author: codex
+reference_inputs:
+  - path: references/HAL-nagoya/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 232.5
+      - 26
+      - 33
+      - 35.5
+    reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。指定の顔内側を単色の肌色で完全に覆い、下端の文字付き帯を服の色（切り抜きは白）で覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1211×1299pxからsharpのLanczos3で455×489pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

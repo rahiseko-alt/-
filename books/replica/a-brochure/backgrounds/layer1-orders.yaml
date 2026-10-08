@@ -14,7 +14,7 @@ book: replica/a-brochure
 page: page_001
 reference_image: references/HAL-nagoya/brochure-1/page_015.jpg
 reference_prep: references/HAL-nagoya/brochure-1/prep/page_015-l.yaml
-status: pending
+status: generated
 items:
   - id: page_001-badge-plate
     kind: texture

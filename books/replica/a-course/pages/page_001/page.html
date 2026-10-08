@@ -4,7 +4,7 @@
   解析: references/HAL-nagoya/brochure-2/analysis/page_001.yaml
 
   3 層構造（system/rules/page-layers.md）
-    Layer 1 BASE VISUAL : 講師写真 4 枚・切り抜き人物 1 点・ピックアップの作品写真 2 枚 → すべて photo-frame のプレースホルダ（生成待ち）。
+    Layer 1 BASE VISUAL : 講師写真 4 枚・切り抜き人物 1 点・ピックアップの作品写真 2 枚 → 生成画像を photo-frame に配置（生成記録は backgrounds/*.prompt.yaml）。
                           全面背景なし（白地）
     Layer 2 STRUCTURE   : 帯見出し（面取りの濃色帯）、講師段の縦罫、キャプションの濃色地、ロゴ枠、ピックアップのタグ（吹き出し）と罫、
                           中段の淡いグラデーションの面、ステップ表（右向きの矢羽根 4 段＋淡色パネル 4 枚）、柱
@@ -23,11 +23,11 @@
 
 {{!-- Layer 1（写真）+ 2 + 3: 講師 5 段（段の間に縦罫。部品は components/lecturer-card.hbs） --}}
 <div class="rep-lects">
-  {{> book/lecturer-card col="1" cap1="ダミー文字列ダミ" cap2="ダミー文字列ダミー文字列" org1="ダミー文字列ダ" role1="Xxxxx Xxxxxxxx Xxxxx" role2="ダミー文字列ダミ" name="氏名 氏"}}
-  {{> book/lecturer-card col="2" cap1="ダミー文字列ダミー文字列ダミー" cap2="ダミー文字列ダミー文字列" org1="ダミー文字列ダミー" role1="ダミー文字列ダミー" role2="ダミー文字" name="氏名 氏名"}}
-  {{> book/lecturer-card col="3" cutout="1" cap1="ダミー文字列ダミ" cap2="ダミー文字列ダミー文" cap3="ダミー文字列ダミー文" org1="Xxxxxxx Xxxxxxxxxx" org2="Xxxxxダミー文" role1="ダミー文字列ダミー" name="氏名 氏名"}}
-  {{> book/lecturer-card col="4" cap1="ダミー文字列ダ" cap2="ダミー文字列ダミー文字列ダ" org1="ダミー文" org2="ダミー文字列ダミー文" role1="ダミー文字列ダミー文" name="氏名 氏名"}}
-  {{> book/lecturer-card col="5" cap1="ダミー文字列ダミー文" cap2="ダミー文字列ダミー文字列ダ?" org1="ダミー文" org2="XXXXXXXX" role1="XXダミXダミー" name="氏名 氏名"}}
+  {{> book/lecturer-card col="1" photo="books/replica/a-course/backgrounds/page_001-lect-1.jpg" cap1="ダミー文字列ダミ" cap2="ダミー文字列ダミー文字列" org1="ダミー文字列ダ" role1="Xxxxx Xxxxxxxx Xxxxx" role2="ダミー文字列ダミ" name="氏名 氏"}}
+  {{> book/lecturer-card col="2" photo="books/replica/a-course/backgrounds/page_001-lect-2.jpg" cap1="ダミー文字列ダミー文字列ダミー" cap2="ダミー文字列ダミー文字列" org1="ダミー文字列ダミー" role1="ダミー文字列ダミー" role2="ダミー文字" name="氏名 氏名"}}
+  {{> book/lecturer-card col="3" photo="books/replica/a-course/backgrounds/page_001-lect-3-cutout.png" cutout="1" cap1="ダミー文字列ダミ" cap2="ダミー文字列ダミー文" cap3="ダミー文字列ダミー文" org1="Xxxxxxx Xxxxxxxxxx" org2="Xxxxxダミー文" role1="ダミー文字列ダミー" name="氏名 氏名"}}
+  {{> book/lecturer-card col="4" photo="books/replica/a-course/backgrounds/page_001-lect-4.jpg" cap1="ダミー文字列ダ" cap2="ダミー文字列ダミー文字列ダ" org1="ダミー文" org2="ダミー文字列ダミー文" role1="ダミー文字列ダミー文" name="氏名 氏名"}}
+  {{> book/lecturer-card col="5" photo="books/replica/a-course/backgrounds/page_001-lect-5.jpg" cap1="ダミー文字列ダミー文" cap2="ダミー文字列ダミー文字列ダ?" org1="ダミー文" org2="XXXXXXXX" role1="XXダミXダミー" name="氏名 氏名"}}
 </div>
 
 {{!-- Layer 2 + 3: ピックアップ授業（吹き出しのタグ・見出し・罫・本文） --}}
@@ -36,9 +36,9 @@
 <hr class="rep-pick__rule">
 <p class="rep-pick__body">ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー、ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミ。ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー、ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文字列ダミー文。</p>
 
-{{!-- Layer 1: ピックアップの作品写真 2 枚（プレースホルダ） --}}
-<div class="rep-ph rep-ph--pick1">{{> photo-frame}}</div>
-<div class="rep-ph rep-ph--pick2">{{> photo-frame}}</div>
+{{!-- Layer 1: ピックアップの作品写真 2 枚（生成素材） --}}
+<div class="rep-ph rep-ph--pick1">{{> photo-frame src="books/replica/a-course/backgrounds/page_001-pick-1.jpg"}}</div>
+<div class="rep-ph rep-ph--pick2">{{> photo-frame src="books/replica/a-course/backgrounds/page_001-pick-2.jpg"}}</div>
 
 {{!-- Layer 2 + 3: ステップ表の見出し（三角の行頭記号） --}}
 <h3 class="rep-steps__title"><span class="rep-steps__mark" aria-hidden="true"></span>XXXX→XXXダミー文字列ダミー文字列</h3>

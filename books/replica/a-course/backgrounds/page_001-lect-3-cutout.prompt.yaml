@@ -1,0 +1,30 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Portrait-format 28:34 head-and-shoulders cut-out photograph of one generic man in his mid-30s, East Asian, short dark hair swept up and back, neatly trimmed moustache and short stubble beard, broad friendly smile showing teeth, looking straight into the camera, wearing a crisp white open-collar shirt with no tie.
+  Isolated subject on a plain pure white background (#ffffff), no shadow on the background, no floor, no props, with clean, crisp edges around the hair and shoulders so it can be cut out to a transparent PNG.
+  Composition: the top of the hair just touches the top edge; the face is centred slightly right of centre (face centre at about 54% of the width), the eyes at about 39% of the height and the chin at about 69%; the ears at roughly 20% and 88% of the width. The neck and the start of the shoulders fill the bottom 30%; the shoulders slope outward and run off the bottom and right edges. The bottom 12% of the frame (left 85%) will be covered by dark navy caption bars, so nothing important there.
+  Lighting: bright, soft, high-key frontal studio light, even exposure, natural warm tan skin tones (about #9c733f to #a6776a in the print), hair near #181417, shirt bright white #f2f1f0 with soft grey folds so it still separates from the white background.
+  Style: photorealistic corporate headshot for a cut-out, 85mm lens at eye level, sharp focus. A fictional person who does not resemble any real or famous individual.
+
+  Use the supplied masked reference only for spatial composition and lighting, not for identity or replication of existing artwork. Invent a distinct fictional person or original generic artwork. The deliberately blanked areas contain no intended graphic elements; reconstruct natural material there. Match the requested aspect ratio exactly.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, background scenery, coloured background, gradient background, cast shadow, vignette, name tag, badge, celebrity likeness, famous person, multiple people, hands, glasses, border, frame, deformed face
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, background scenery, coloured background, gradient background, cast shadow, vignette, name tag, badge, celebrity likeness, famous person, multiple people, hands, glasses, border, frame, deformed face
+seed: null
+size: 386x469
+created: 2026-10-08T13:24:51.812Z
+author: codex
+reference_inputs:
+  - path: references/HAL-nagoya/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 122.3
+      - 27.5
+      - 28
+      - 34
+    reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。指定の顔内側を単色の肌色で完全に覆い、下端の文字付き帯を服の色（切り抜きは白）で覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: true
+source_refs: []
+notes: "生成出力1140×1380pxからsharpのLanczos3で386×469pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。ツールの透過背景生成を使用し、白地からの手動切り抜きは行っていない。PNGのアルファを保持。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

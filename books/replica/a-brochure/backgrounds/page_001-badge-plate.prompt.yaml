@@ -1,0 +1,31 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Square 1:1, perfectly straight-on orthographic view of the face of a single blank metallic gold plaque that fills the entire frame edge to edge, with no background, no perspective and no visible side thickness or drop shadow (the 3D edge and shadow are drawn separately in CSS).
+  Composition: along all four edges a narrow raised bevelled rim about 3% of the width, catching a soft bright highlight on the top and left edges and slightly deeper on the bottom and right; just inside it a thin darker recessed groove, then one fine light embossed inner border line about 5% in from the edge. Everything inside that inner border is one flat, even, calm field with no ornament, no emblem, no engraving, no pattern and no centre line: bold white lettering will be placed over the whole central area later, so the field must stay mid-to-dark in tone with low contrast and no hotspots.
+  Material: satin brushed gold metal with very fine, subtle horizontal hairline brushing, a gentle warm tonal falloff from slightly lighter upper-left to slightly deeper lower-right, clean surface without scratches, dents, fingerprints or dust.
+  Lighting: soft diffuse studio light from the upper left, a soft sheen only along the rim, no specular glare or reflections of objects in the field.
+  Palette: field deep amber gold #93630f to #a8802c, rim highlight #d4b05a to #edcb6b, rim shadow and groove #7b5512, darkest accent #6a4a10.
+  Style: photorealistic product macro of a metal nameplate blank, sharp focus, high resolution, sRGB.
+
+  Reference is a masked, low-resolution MATERIAL/STYLE sample only. Replace its coarse photographed finish with clean high-resolution satin gold and keep only the edge bevel arrangement. The plaque must fill the entire square image.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, kanji, characters, symbols, emblem, crest, seal, engraving, ornament, pattern, centre line, divider, brand, perspective, tilted, drop shadow, side thickness, background, frame of a picture, glare, scratches, fingerprints
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, kanji, characters, symbols, emblem, crest, seal, engraving, ornament, pattern, centre line, divider, brand, perspective, tilted, drop shadow, side thickness, background, frame of a picture, glare, scratches, fingerprints
+seed: null
+size: 512x512
+created: 2026-10-08T13:15:12.371Z
+author: codex
+reference_inputs:
+  - path: references/HAL-nagoya/brochure-1/page_015.jpg
+    usage: style
+    note: ref:prep補正後、crop_mm [63.3,49.4,29.5,29.5]で199×199pxに切り出し。内側12px〜187pxを#93630fで塗りつぶし、参考の文字4行と中央横罫を除去。外周の面取りだけ残した画像を入力。
+    crop_mm:
+      - 63.3
+      - 49.4
+      - 29.5
+      - 29.5
+    reference_prep: references/HAL-nagoya/brochure-1/prep/page_015-l.yaml
+params:
+  transparent_background: false
+source_refs: []
+notes: 生成出力1254×1254pxをsharpのLanczos3で512×512pxへ縮小。29.4mm四方の350dpi必要画素405×405px以上。文字・数字・ロゴ・中央罫線がなく、内側が低コントラストで白抜き文字を載せられるため採用。参考は金属の質感・縁のスタイルだけに使用。紙面への文字・横罫・厚み・影は既存HTML/CSSで維持。モデル名・seedはツールから未提供。

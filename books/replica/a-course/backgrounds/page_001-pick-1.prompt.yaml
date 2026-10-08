@@ -1,0 +1,30 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Landscape 59.6:40.1 (about 3:2) image of a student graphic-design portfolio presentation board: a flat matte black board (#0d0b0e) holding six small product photographs in a neat grid of 3 columns by 2 rows, nothing else.
+  Composition: a solid black band across the top 13% of the frame; the six photos are equal rectangles about 30% of the width and 34% of the height each; columns at about 1%-31%, 35%-64% and 68%-98% of the width (narrow black gutters, almost no margin on the left); rows at about 14%-48% and 55%-88% of the height; plain black below each row and along the bottom 12%. No captions under the photos.
+  Each photo: a studio product shot on a seamless warm light-grey backdrop (#b3a399 to #d8d0c8) with a few faint scattered pale petals, showing packaging and print mock-ups decorated with original abstract dark-fantasy artwork in deep brown, black and glowing amber gold (#3a2a1e, #8a5a20, #e0a040): 1) a gallery wall with three framed dark-amber panels under a white shelf, 2) a sculptural folded black-and-brown gift box, 3) a long dark booklet above a small printed card, 4) a set of disc cases, an open booklet and a disc, 5) two printed folders fanned out, 6) a smartphone mock-up with a blank dark screen beside an art print. All artwork is abstract and pictorial only.
+  Lighting: soft even studio light, gentle contact shadows, slightly warm.
+  Style: photorealistic product photography composited onto a presentation board, crisp edges, high resolution.
+
+  Use the supplied masked reference only for spatial composition and lighting, not for identity or replication of existing artwork. Invent a distinct fictional person or original generic artwork. The deliberately blanked areas contain no intended graphic elements; reconstruct natural material there. Match the requested aspect ratio exactly.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, title lettering, labels, barcode, brand, trademark, readable screen, UI text, people, hands, faces, white border, frame around the board
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, title lettering, labels, barcode, brand, trademark, readable screen, UI text, people, hands, faces, white border, frame around the board
+seed: null
+size: 821x553
+created: 2026-10-08T13:24:51.929Z
+author: codex
+reference_inputs:
+  - path: references/HAL-nagoya/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 89.1
+      - 120.8
+      - 59.6
+      - 40.1
+    reference_prep: references/HAL-nagoya/brochure-2/prep/page_001-r.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。指定のキャプション・ラベルを周囲色で塗り、商品写真の文字状の細部をsharp blur(2.5px)で匿名化した。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1529×1029pxからsharpのLanczos3で821×553pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。原作品の図柄は流用せず、構図・色調を参考にした独自の汎用素材。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

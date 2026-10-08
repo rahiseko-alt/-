@@ -96,7 +96,7 @@
   color: var(--rep-ink);
 }
 
-/* ---- Layer 2 + 3: 金の称号バッジ（グラデーションと縁は CSS。金属の質感を上げるなら Layer 1 素材に差し替え） ---- */
+/* ---- Layer 2 + 3: 金の称号バッジ（金属の面・縁は Layer 1。厚み・影・横罫は CSS） ---- */
 .rep-badge {
   position: absolute;
   top: 49mm;
@@ -104,8 +104,8 @@
   width: 29.4mm;
   height: 29.4mm;
   padding-top: 3.6mm;
-  border: 0.7mm solid var(--rep-gold-lo);
-  background: linear-gradient(160deg, var(--rep-gold-hi) 0%, var(--rep-gold) 45%, var(--rep-gold-lo) 100%);
+  border: 0.7mm solid transparent;
+  background: url("../../backgrounds/page_001-badge-plate.png") border-box center / 100% 100% no-repeat;
   box-shadow: 0.9mm 0.9mm 0 var(--rep-gold-edge), 1.6mm 1.6mm 0.8mm rgb(0 0 0 / 0.3);
   color: var(--rep-paper);
   text-align: center;
