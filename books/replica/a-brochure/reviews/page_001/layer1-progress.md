@@ -1,6 +1,7 @@
 # Layer 1 制作の着手・引き継ぎ
 
-更新日: 2026-10-08。作業ブランチ: `codex/layer1-replica`。開始時のmain: `d2d377e`。
+更新日: 2026-10-08。作業ブランチ: `codex/layer1-replica`。開始時のmain: `d2d377e`。取り込み済みmain: `4048897`。
+専用ワークツリー: `/workspace/DTP-codex-layer1`。連絡は `docs/agent-coordination.md` と `docs/coordination/codex.md` に残す。
 
 ## 今回の担当
 
@@ -37,8 +38,8 @@
 
 ## Claudeとの分担・PR #10
 
-PR #10のcompany-dataは別担当。未マージのデータを上書き・取り込まない。
-マージ後にmainを取り込み、`a-admissions`、`b-living`、`b-flyer` を再出力する。公式URLによるQRの差分は正常な更新としてレビューする。
+PR #10はマージ済みでmain `4048897` を取り込んだ。company-dataへの独自の変更は行わない。
+`a-admissions`、`b-living`、`b-flyer` の再出力は未完了。公式URLによるQRの差分は正常な更新としてレビューする。
 写真IDのみの `class-card`、`lecturer-card`、`memo-card`、`dept-header`、`wrap-text` はBOOK固有部品に存在する。src引数の追加は担当範囲内で行える。
 参考と枠の位置の差は、引き継ぎ記載とplacementを照合し、必要なページだけを最小修正する。
 
