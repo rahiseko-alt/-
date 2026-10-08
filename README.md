@@ -107,6 +107,8 @@ npm run compare -- --book brochure --page page_016
 
 ### 検証する
 
+GitHub Actions の CI は使いません。commit / push の前に、作業セッション内（ローカル / Dev Container / Claude Code / Codex）で `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視を行います。
+
 ```bash
 npm run validate              # データ形式、BOOK の整合性、テンプレート、直書きの事実、禁止語、生成記録
 npm run validate -- --strict  # TODO の残りもエラーにする（入稿・公開前）
@@ -140,5 +142,5 @@ npm run doctor                # 環境診断
 - 書体は同梱の Noto Sans JP（400/500/700/900）と Noto Serif JP（400/700）だけです。他の書体はライセンスを確認したうえで追加作業が必要です。
 - 画像生成ツールは組み込んでいません。外部ツールで生成し、画像と生成記録（`.prompt.yaml`）をリポジトリに入れます。
 - `npm run compare` は画素単位の比較です。デザインの良し悪しは、出力を画像として見る目視レビューで判断します。
-- 保護機構（読み取り専用化・PreToolUse フック・CI のパス監視）は Phase 7 で導入予定で、現在は未導入です（[system/rules/protection.md](system/rules/protection.md)）。
+- 保護機構（読み取り専用化・PreToolUse フック・Git 差分チェック）は Phase 7 で導入予定で、現在は未導入です（[system/rules/protection.md](system/rules/protection.md)）。
 - 参考資料を含むため、リポジトリは非公開で運用してください。【要確認】

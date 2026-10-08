@@ -30,7 +30,7 @@ docs/concept.md §9 Phase 7 の例:
 | --- | --- | --- |
 | 1. Filesystem Permission | 保護対象のファイルを書き込み不可にする | `setup.sh` で保護対象に読み取り専用属性を付ける／コンテナのマウント設定 |
 | 2. PreToolUse Hook | エージェントのファイル編集・コマンド実行の前に、保護対象への書き込みを拒否する | Claude Code: `.claude/settings.json` の `PreToolUse` フック。Codex: 同等の承認・サンドボックス設定 |
-| 3. Git 差分チェック / CI | 保護対象の変更を含むプルリクエストを CI で失敗させる | `.github/workflows/ci.yml` にパス監視のジョブを追加。メンテナンス用のラベル・承認がある場合だけ通す |
+| 3. Git 差分チェック | 保護対象の変更を含むコミットを止める | GitHub Actions の CI は使わないため、セッション内で commit 前に実行する差分チェック（例: `npm run check` に保護対象パスの差分検査を加える、Git の pre-commit フック）。メンテナンス権限での作業時だけ通す |
 
 ## 4. 現在の状態
 
@@ -38,7 +38,7 @@ docs/concept.md §9 Phase 7 の例:
 | --- | --- |
 | Filesystem Permission | 未導入 |
 | PreToolUse Hook | 未導入（`.claude/settings.json` には `SessionStart` フックで `setup.sh` を実行する設定だけがある） |
-| CI のパス監視 | 未導入（CI は doctor・check・スモークレンダリングのみ） |
+| Git 差分チェック | 未導入（GitHub Actions の CI は使わない。検証はセッション内の doctor・check・render・目視） |
 
 導入前の運用（人間とエージェントの約束）:
 
