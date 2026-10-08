@@ -58,7 +58,7 @@ ID とパスは、スクリプト・テンプレート・レビュー記録か�
 | ディレクトリ | `references/<source>/<kind>/` | `references/HAL/brochure/` |
 | `<source>` | 発行元の通称、または中立な識別名（英数字・ハイフン。大文字可）。パス `references/<source>/...` は禁止語の照合から除外される（system/rules/references.md §2） | `HAL`、`A-school`、`school-a` |
 | `<kind>` | 資料の種別（英小文字） | `brochure`、`admissions`、`flyers` |
-| ページ画像 | `page_` + 3 桁 + 拡張子。番号は**元資料のページ順**（1 始まり） | `page_001.png` |
+| ページ画像 | `page_` + 3 桁 + 拡張子（PDF からの取り込みは既定で `.jpg`）。番号は**元資料のページ順**（1 始まり） | `page_001.jpg` |
 | 元資料 | `original/` に元のファイル名のまま（空白・日本語は置換してよい） | `original/brochure-2026.pdf` |
 | 解析 | `analysis/book.yaml`、`analysis/page_NNN.yaml`（ページ画像と同じ番号） | `analysis/page_016.yaml` |
 

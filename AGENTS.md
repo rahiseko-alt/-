@@ -87,7 +87,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | `npm run dev` | プレビュー（Vite）。`/` に BOOK・ページ一覧、`/preview/<bookId>/<pageId>`（`?guides=1` でガイド）、`/preview/<bookId>` で BOOK 全体 |
 | `npm run new:book -- <bookId> [--kind brochure] [--title "..."] [--size A4] [--orientation portrait] [--pages 4]` | BOOK を作成 |
 | `npm run new:page -- --book <id> [--after <pageId>] [--type other] [--title "..."]` | ページを追加 |
-| `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150]` | 参考資料を取り込み |
+| `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150] [--format jpg\|png]` | 参考資料を取り込み（PDF のページ画像は既定 JPEG） |
 | `npm run render -- --book <id> [--page <id> ...] [--format png\|pdf\|both] [--dpi N] [--guides] [--release] [--out <dir>]` | PNG / PDF 出力 |
 | `npm run compare -- --book <id> --page <id> [--reference <path>] [--rendered <png>] [--threshold 0.1]` | 参考ページとの比較（diff / side-by-side / overlay / report.yaml） |
 | `npm run validate [-- --strict]` | データ・BOOK・参考資料・テンプレートの検証、直書き・禁止語・生成記録の確認 |

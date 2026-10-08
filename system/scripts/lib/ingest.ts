@@ -28,15 +28,20 @@ const execFileAsync = promisify(execFile);
 export const INGEST_USAGE = `使い方: npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> | --images <dir>) [オプション]
   --source <name>    発行元の通称（例: HAL, A-school）。references/<source>/
   --kind <kind>      資料の種別（例: brochure, admissions, flyers）。references/<source>/<kind>/
-  --pdf <file>       元の PDF。original/ にコピーし、pdftoppm でページごとの PNG（page_NNN.png）にする
+  --pdf <file>       元の PDF。original/ にコピーし、pdftoppm でページごとの画像（page_NNN.jpg）にする
   --images <dir>     ページ画像のディレクトリ。ファイル名の自然順に page_NNN.<拡張子> として取り込む
   --dpi <N>          PDF をページ画像にする解像度（既定: 150）
+  --format <jpg|png> PDF から作るページ画像の形式（既定: jpg。品質 85。png は約 6 倍の容量になる）
   --force            既存のページ画像（page_NNN.*）を削除して取り込み直す
   --root <dir>       スタジオのルート（既定: リポジトリルート）
 source.yaml と analysis/book.yaml はなければ雛形から作ります（既存のものは変更しません）。
 例:
   npm run ref:ingest -- --source HAL --kind brochure --pdf ~/Downloads/hal-brochure.pdf
   npm run ref:ingest -- --source A-school --kind flyers --images ~/scans/a-school-flyer`;
+
+/** PDF から作るページ画像の形式。Git LFS の容量・転送量を抑えるため既定は JPEG */
+export type PageFormat = 'jpg' | 'png';
+const JPEG_QUALITY = 85;
 
 /** 発行元・種別の名前（英数字で始まり、英数字・-・_） */
 const NAME_RE = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
@@ -56,6 +61,8 @@ export interface IngestOptions {
   /** 絶対パス */
   images?: string;
   dpi?: number;
+  /** PDF から作るページ画像の形式（既定: jpg） */
+  format?: PageFormat;
   force?: boolean;
   date?: string;
 }
@@ -112,6 +119,7 @@ export async function ingestReference(opts: IngestOptions): Promise<IngestResult
   if (!NAME_RE.test(kind)) throw new CliError(`--kind は英数字・-・_ で指定してください（"${kind}"）`);
   if (!!opts.pdf === !!opts.images) throw new CliError('--pdf か --images のどちらか一方を指定してください');
   const dpi = opts.dpi ?? 150;
+  const format = opts.format ?? 'jpg';
   const date = opts.date ?? formatDate();
   const dir = path.join(root, 'references', source, kind);
   const warnings: string[] = [];
@@ -154,18 +162,19 @@ export async function ingestReference(opts: IngestOptions): Promise<IngestResult
     if (opts.pdf) {
       const count = await pdfPageCount(opts.pdf);
       if (count > 999) throw new CliError(`ページ数が多すぎます（${count} ページ。page_NNN は 999 まで）`);
-      // pdftoppm でページ画像に変換（p-N.png → page_NNN.png）
+      // pdftoppm でページ画像に変換（p-N.jpg → page_NNN.jpg）
       const rawDir = path.join(tmp, 'raw');
       fs.mkdirSync(rawDir);
-      await runTool('pdftoppm', ['-png', '-r', String(dpi), opts.pdf, path.join(rawDir, 'p')]);
+      const formatArgs = format === 'png' ? ['-png'] : ['-jpeg', '-jpegopt', `quality=${JPEG_QUALITY}`];
+      await runTool('pdftoppm', [...formatArgs, '-r', String(dpi), opts.pdf, path.join(rawDir, 'p')]);
       const outs = fs
         .readdirSync(rawDir)
-        .map((n) => ({ n, m: /^p-(\d+)\.png$/.exec(n) }))
+        .map((n) => ({ n, m: /^p-(\d+)\.(?:png|jpg)$/.exec(n) }))
         .filter((x): x is { n: string; m: RegExpExecArray } => x.m != null)
         .sort((a, b) => Number(a.m[1]) - Number(b.m[1]));
       if (outs.length === 0) throw new CliError('pdftoppm がページ画像を出力しませんでした');
       for (const o of outs) {
-        const name = pageName(Number(o.m[1]), '.png');
+        const name = pageName(Number(o.m[1]), `.${format}`);
         fs.renameSync(path.join(rawDir, o.n), path.join(tmp, name));
         staged.push(name);
       }
@@ -238,6 +247,7 @@ export const ingestCommand: Command = (argv, io: Io = consoleIo) =>
           pdf: { type: 'string' },
           images: { type: 'string' },
           dpi: { type: 'string' },
+          format: { type: 'string' },
           force: { type: 'boolean', default: false },
           root: { type: 'string' },
           help: { type: 'boolean', short: 'h', default: false },
@@ -255,6 +265,8 @@ export const ingestCommand: Command = (argv, io: Io = consoleIo) =>
     if (values.pdf && values.images) throw new UsageError('--pdf と --images は同時に指定できません');
     const dpi = parsePositiveNumber('--dpi', values.dpi, { integer: true, max: 1200 });
     if (dpi != null && values.images) io.log('（--dpi は --pdf のときだけ使います。画像はそのまま取り込みます）');
+    if (values.format != null && values.format !== 'jpg' && values.format !== 'png') throw new UsageError(`--format は jpg か png で指定してください（"${values.format}"）`);
+    if (values.format != null && values.images) io.log('（--format は --pdf のときだけ使います。画像はそのまま取り込みます）');
     const root = resolveRoot(values.root);
     const r = await ingestReference({
       root,
@@ -263,6 +275,7 @@ export const ingestCommand: Command = (argv, io: Io = consoleIo) =>
       pdf: values.pdf ? userPath(values.pdf) : undefined,
       images: values.images ? userPath(values.images) : undefined,
       dpi,
+      format: values.format as PageFormat | undefined,
       force: values.force,
     });
     const rel = show(root, r.dir);

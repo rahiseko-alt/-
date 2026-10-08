@@ -8,8 +8,8 @@
 ```text
 references/<source>/<kind>/
 ├─ source.yaml          出自・用途・禁止語（必須）
-├─ page_001.png         ページ画像（3 桁連番。元資料のページ番号と一致させる）
-├─ page_002.png
+├─ page_001.jpg         ページ画像（3 桁連番。元資料のページ番号と一致させる）
+├─ page_002.jpg
 ├─ ...
 ├─ original/            元の PDF
 │  └─ <ファイル名>.pdf
@@ -20,6 +20,7 @@ references/<source>/<kind>/
 
 - `<source>`: 発行元の識別名（例: `HAL`、`A-school`）。`<kind>`: 資料の種別（例: `brochure`、`admissions`、`flyers`）。命名は system/rules/naming.md
 - 取り込みは `npm run ref:ingest` で行う（PDF からページ画像を作り、source.yaml と analysis/book.yaml の雛形を置く）
+- PDF のページ画像は既定で JPEG（150dpi・品質 85）。PNG（`--format png`）は約 6 倍の容量になり、Git LFS の無料枠（容量・転送量 各 10 GiB／月）を圧迫するため、特別な理由がなければ使わない
 
 ```bash
 npm run ref:ingest -- --source HAL --kind brochure --pdf ~/Downloads/hal-brochure.pdf

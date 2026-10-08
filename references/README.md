@@ -15,7 +15,7 @@ references/
 └─ <source>/                 発行元（例: HAL、A-school、B-school）
    └─ <kind>/                資料の種別（例: brochure、admissions、flyers）
       ├─ source.yaml         出自・用途・禁止語（必須）
-      ├─ page_001.png        ページ画像（3 桁連番 = 元資料のページ順）
+      ├─ page_001.jpg        ページ画像（3 桁連番 = 元資料のページ順）
       ├─ page_002.png
       ├─ …
       ├─ original/           元の PDF
@@ -27,7 +27,7 @@ references/
 ## 取り込み
 
 ```bash
-# PDF から（pdftoppm で page_NNN.png を作る。--dpi 既定 150）
+# PDF から（pdftoppm で page_NNN.jpg を作る。--dpi 既定 150。--format png で PNG。PNG は約 6 倍の容量で Git LFS の容量・転送量を圧迫する）
 npm run ref:ingest -- --source HAL --kind brochure --pdf ~/Downloads/hal-brochure.pdf
 
 # スキャン画像・ページ画像のディレクトリから（page_NNN.<拡張子> に正規化）
