@@ -360,7 +360,7 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 
 | # | 検査 | 結果 |
 | --- | --- | --- |
-| 1 | company-data のスキーマ。`TODO` プレースホルダ | スキーマ違反はエラー。TODO は警告（`--strict` でエラー） |
+| 1 | company-data のスキーマ（`facts/admissions.yaml` の学費の合計を含む）。`TODO` プレースホルダ | スキーマ違反・合計の食い違いはエラー。TODO は警告（`--strict` でエラー） |
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |

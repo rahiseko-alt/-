@@ -114,6 +114,91 @@ export const ContactsFileSchema = z.looseObject({
 });
 export type ContactsFile = z.output<typeof ContactsFileSchema>;
 
+// ---- facts/admissions.yaml（募集要項。学費の合計だけ検査し、ほかは自由形式） ----
+const yen = (v: unknown) => (typeof v === 'number' ? v : null);
+const fmtYen = (n: number) => n.toLocaleString('ja-JP');
+
+export const TuitionTermSchema = z.looseObject({
+  term: Str.optional(),
+  tuition: NumOrText.optional(),
+  expenses: NumOrText.optional(),
+  total: NumOrText.optional(),
+});
+
+export const TuitionYearSchema = z.looseObject({
+  year: z.number().int().positive(),
+  terms: z.array(TuitionTermSchema).optional(),
+  total: NumOrText.optional(),
+});
+
+/**
+ * 学費（円）。金額がすべて数値のときだけ合計を検査する（"TODO: ..." は対象外）:
+ * 各期の total = tuition + expenses、年次の total = 各期の total の和（1 年次は入学金 entrance_fee を含む）、
+ * grand_total = 年次の total の和。募集要項の金額を一部だけ直したときの食い違いを見つける
+ */
+export const TuitionSchema = z
+  .looseObject({
+    entrance_fee: NumOrText.optional(),
+    years: z.array(TuitionYearSchema).optional(),
+    grand_total: NumOrText.optional(),
+  })
+  .superRefine((t, ctx) => {
+    const years = t.years ?? [];
+    const entrance = yen(t.entrance_fee);
+    const yearTotals: Array<number | null> = [];
+    years.forEach((y, yi) => {
+      const terms = y.terms ?? [];
+      const termTotals: Array<number | null> = [];
+      terms.forEach((term, ti) => {
+        const [tuition, expenses, total] = [yen(term.tuition), yen(term.expenses), yen(term.total)];
+        termTotals.push(total);
+        if (tuition != null && expenses != null && total != null && tuition + expenses !== total) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['years', yi, 'terms', ti, 'total'],
+            message: `${y.year} 年次 ${term.term ?? ''}: total ${fmtYen(total)} が tuition ${fmtYen(tuition)} + expenses ${fmtYen(expenses)} = ${fmtYen(tuition + expenses)} と一致しません`,
+          });
+        }
+      });
+      const total = yen(y.total);
+      yearTotals.push(total);
+      if (total == null || termTotals.length === 0 || termTotals.some((v) => v == null)) return;
+      const sum = (termTotals as number[]).reduce((a, b) => a + b, 0);
+      if (y.year === 1) {
+        if (entrance == null) return;
+        if (sum + entrance !== total) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['years', yi, 'total'],
+            message: `1 年次の total ${fmtYen(total)} が各期の合計 ${fmtYen(sum)} + 入学金 ${fmtYen(entrance)} = ${fmtYen(sum + entrance)} と一致しません（1 年次の total は入学金を含める）`,
+          });
+        }
+      } else if (sum !== total) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['years', yi, 'total'],
+          message: `${y.year} 年次の total ${fmtYen(total)} が各期の合計 ${fmtYen(sum)} と一致しません`,
+        });
+      }
+    });
+    const grand = yen(t.grand_total);
+    if (grand == null || yearTotals.length === 0 || yearTotals.some((v) => v == null)) return;
+    const sum = (yearTotals as number[]).reduce((a, b) => a + b, 0);
+    if (sum !== grand) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['grand_total'],
+        message: `grand_total ${fmtYen(grand)} が年次の total の和 ${fmtYen(sum)} と一致しません`,
+      });
+    }
+  });
+
+export const AdmissionsFileSchema = z.looseObject({
+  exam_fee: NumOrText.optional(),
+  tuition: TuitionSchema.optional(),
+});
+export type AdmissionsFile = z.output<typeof AdmissionsFileSchema>;
+
 /** facts/<basename>.yaml ごとのスキーマ。ここにない basename は自由形式として読み込む */
 export const FACT_SCHEMAS = {
   school: SchoolSchema,
@@ -121,6 +206,7 @@ export const FACT_SCHEMAS = {
   teachers: TeachersFileSchema,
   results: ResultsFileSchema,
   contacts: ContactsFileSchema,
+  admissions: AdmissionsFileSchema,
 } as const;
 
 export const FreeFormSchema = z.preprocess((v) => (v == null ? {} : v), z.record(z.string(), z.unknown()));
