@@ -26,6 +26,8 @@
        layout_reference: [references/HAL/brochure/page_016.png]
      ```
 
+   - 参考ページが写真・スキャン（倒れた見開き・台形ゆがみ）なら、`references/<source>/<kind>/prep/page_NNN[-l|-r].yaml` に回転・ページの四隅（比率）・縦横比を書き、`npm run ref:prep -- --spec <指定ファイル>` で作った `.cache/ref-prep/...png` を開いて、ページだけが正立して切り出されているか確認する。`layout_reference` には画像ではなくこの指定ファイルを書く（`compare` が自動で補正する）
+
    - `book.yaml` の `format`（判型・マージン・段数・ガター）を解析結果に合わせる。BOOK 全体に影響する変更は他ページへの影響を確認する
 2. 参考画像を画像として開き、解析結果と見比べて Layer 1 / 2 / 3 に分解する（何を背景で、何をコードで作るか）
 3. Layer 1: 背景が必要なら system/prompts/generate-background.md に従って生成する（参考ページ画像を生成モデルへ直接入力してよい）

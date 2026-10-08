@@ -61,6 +61,7 @@ ID とパスは、スクリプト・テンプレート・レビュー記録か�
 | ページ画像 | `page_` + 3 桁 + 拡張子（PDF からの取り込みは既定で `.jpg`）。番号は**元資料のページ順**（1 始まり） | `page_001.jpg` |
 | 元資料 | `original/` に元のファイル名のまま（空白・日本語は置換してよい） | `original/brochure-2026.pdf` |
 | 解析 | `analysis/book.yaml`、`analysis/page_NNN.yaml`（ページ画像と同じ番号） | `analysis/page_016.yaml` |
+| 比較用の補正指定 | `prep/page_NNN.yaml`（見開きの片側は `page_NNN-l.yaml` / `page_NNN-r.yaml`） | `prep/page_015-r.yaml` |
 
 見開きで 1 枚になっている資料は、取り込み時のページ画像の番号をそのまま使い、`source.yaml` の `notes` に「page_002 は 2〜3 ページの見開き」のように書く。
 

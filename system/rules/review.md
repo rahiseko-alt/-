@@ -38,6 +38,7 @@
 
    出力: `diff.png`（差分）、`side-by-side.png`（左右並び）、`overlay.png`（50% 重ね）、`report.yaml`（mismatch_pixels / mismatch_ratio など）。
    レンダリング画像は塗り足しを切り落とし、参考画像は同じ大きさに引き伸ばして比較する。縦横比が違う参考画像はゆがむので、ゆがみを差分と誤認しない
+   写真・スキャンの参考ページは `npm run ref:prep` の指定ファイル（`references/<source>/<kind>/prep/*.yaml`）で正立・単ページ・台形補正してから比較する（`--reference` / `layout_reference` に指定ファイルを書く）。写真のゆがみ・照明むらは残るので、`mismatch_ratio` よりも位置・大きさの目視比較を重視する
 
 3. 目視（`side-by-side.png` → `overlay.png` → `diff.png` の順に開く）。次の観点ごとに差を書き出す
    - グリッド・マージン・ガター（要素の左右端・上下端がそろっているか）

@@ -62,7 +62,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 │  ├─ rules/                 制作ルール（まず 00-principles.md）
 │  ├─ prompts/               作業用プロンプト（解析・背景生成・完コピ・変換・レビュー・日常編集）
 │  ├─ templates/             new:book / new:page / ref:ingest が使う雛形、review.md、background.prompt.yaml
-│  ├─ scripts/               CLI（render / compare / validate / new-book / new-page / ingest-reference / doctor / setup.sh）
+│  ├─ scripts/               CLI（render / compare / validate / new-book / new-page / ingest-reference / ref-prep / doctor / setup.sh）
 │  ├─ design-engine/         ページ合成・スキーマ・テンプレート（Handlebars）・Vite プレビュー
 │  ├─ devcontainer/          Dockerfile と環境の説明
 │  └─ fixtures/studio/       テスト用のミニスタジオ（架空の「サンプル学園」）
@@ -89,6 +89,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | `npm run new:book -- <bookId> [--kind brochure] [--title "..."] [--size A4] [--orientation portrait] [--pages 4]` | BOOK を作成 |
 | `npm run new:page -- --book <id> [--after <pageId>] [--type other] [--title "..."]` | ページを追加 |
 | `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150] [--format jpg\|png]` | 参考資料を取り込み（PDF のページ画像は既定 JPEG） |
+| `npm run ref:prep -- (--spec <references/.../prep/<name>.yaml> \| --all)` | 写真・スキャンの参考ページを比較用に正立・単ページ・台形補正（`.cache/ref-prep/` に出力。`compare` の参照に指定ファイルを書けば自動で行う） |
 | `npm run render -- --book <id> [--page <id> ...] [--format png\|pdf\|both] [--dpi N] [--guides] [--release] [--out <dir>]` | PNG / PDF 出力 |
 | `npm run compare -- --book <id> --page <id> [--reference <path>] [--rendered <png>] [--threshold 0.1]` | 参考ページとの比較（diff / side-by-side / overlay / report.yaml） |
 | `npm run validate [-- --strict]` | データ・BOOK・参考資料・テンプレートの検証、直書き・禁止語・生成記録の確認 |
@@ -159,6 +160,7 @@ docs/concept.md §14 の最重要原則（詳細と具体的な行動: system/ru
 | 参考資料（PDF・ページ画像） | `references/<source>/<kind>/` | `npm run ref:ingest` |
 | 参考資料の禁止語 | `references/<source>/<kind>/source.yaml` の `forbidden_terms` | |
 | 参考資料の解析結果 | `references/<source>/<kind>/analysis/{book,page_NNN}.yaml` | |
+| 比較用の補正指定（Phase 5） | `references/<source>/<kind>/prep/<name>.yaml` | `npm run ref:prep`。補正画像は `.cache/ref-prep/`（コミットしない） |
 | BOOK の設定・ページ順 | `books/<id>/config/book.yaml` | |
 | BOOK が使う参考資料 | `books/<id>/references.yaml` | パスで指定（コピーしない） |
 | ページの構造と文字 | `books/<id>/pages/<pageId>/page.html`（+ `page.css`、`page.yaml`） | |

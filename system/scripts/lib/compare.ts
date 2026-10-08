@@ -29,12 +29,15 @@ import {
   type Command,
   type Io,
 } from './cli.ts';
+import { isPrepSpec, prepareReference } from './prep.ts';
 import { fillTemplate, templatePath } from './templates.ts';
 
 export const COMPARE_USAGE = `使い方: npm run compare -- --book <id> --page <id> [オプション]
   --book <id>          対象 BOOK（必須）
   --page <id>          対象ページ（必須）
-  --reference <path>   参考画像（既定: references.yaml の <page>.layout_reference の先頭）
+  --reference <path>   参考画像（既定: references.yaml の <page>.layout_reference の先頭）。
+                       ref:prep の指定ファイル（references/<source>/<kind>/prep/<name>.yaml）も指定でき、
+                       そのときは正立・単ページ・台形補正した画像を作ってから比較する
   --rendered <png>     レンダリング画像（既定: books/<id>/output/png/<page>.png）
   --no-crop-bleed      レンダリング画像の塗り足しを切り落とさない（既定は切り落とす）
   --threshold <0〜1>   pixelmatch のしきい値（既定: 0.1。大きいほど差に寛容）
@@ -146,6 +149,12 @@ export async function comparePage(opts: CompareOptions): Promise<CompareResult> 
     reference = resolveInRoot(root, first);
   }
   if (!fs.existsSync(reference) || !fs.statSync(reference).isFile()) throw new CliError(`参考画像が見つかりません: ${show(root, reference)}`);
+  // ref:prep の指定ファイルなら、比較用の画像を作ってそれを使う（report には指定ファイルを記録する）
+  const referenceLabel = show(root, reference);
+  if (isPrepSpec(reference)) {
+    const rel = path.relative(root, reference).split(path.sep).join('/');
+    reference = (await prepareReference(root, rel)).out;
+  }
 
   // レンダリング画像
   const rendered = opts.rendered ?? path.join(book.dir, 'output', 'png', `${pageId}.png`);
@@ -234,7 +243,7 @@ export async function comparePage(opts: CompareOptions): Promise<CompareResult> 
   const report: CompareReport = {
     book: bookId,
     page: pageId,
-    reference: show(root, reference),
+    reference: referenceLabel,
     rendered: show(root, rendered),
     width,
     height,

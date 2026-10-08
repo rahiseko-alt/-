@@ -13,7 +13,8 @@ references/<source>/<kind>/
 ├─ ...
 ├─ original/            元の PDF
 │  └─ <ファイル名>.pdf
-└─ analysis/            解析結果（Phase 4）
+├─ analysis/            解析結果（Phase 4）
+└─ prep/                比較用の補正指定（Phase 5。npm run ref:prep）
    ├─ book.yaml         資料全体の解析
    └─ page_NNN.yaml     ページ単位の解析
 ```
@@ -98,6 +99,7 @@ notes: "入手経路・利用上の注意"
 
 ### 完コピ検証（Phase 5）
 
+- 写真・スキャンの参考ページ（倒れた見開き・台形ゆがみ）は、`references/<source>/<kind>/prep/<name>.yaml`（回転・ページの四隅・縦横比）を書いて `npm run ref:prep` で正立・単ページ・台形補正した比較用画像を作る。`references.yaml` の `layout_reference` や `--reference` にこの指定ファイル（`.yaml`）を書けば、`compare` が自動で補正してから比較する（補正画像は `.cache/ref-prep/` に作られ、コミットしない）
 - 再現するのはレイアウトと構造。**参考資料の文字をページに書き写さない。参考資料の写真・ロゴをそのまま貼らない・切り出さない**（Layer 1 の画像生成に参考ページ画像を入力するのは可。下の「画像生成」）
 - 文字はダミー（同じ文字数・行数のダミーテキスト）か company-data の値で置き、サイズ・行送り・位置だけを合わせる
 - 写真は参考資料から切り出さない。写真枠はプレースホルダ（`{{> photo-frame ratio="..."}}`）か、自社写真・生成画像で埋める
