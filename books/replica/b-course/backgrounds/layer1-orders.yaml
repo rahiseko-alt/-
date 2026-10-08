@@ -1,0 +1,124 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# 対象: books/replica/b-course/pages/page_001（選択コース紹介の片ページ。大写真＋授業写真 3 点＋アイコンの蝶の線画）
+# 寸法の測り方（2026-10-08, claude-code）:
+#   size_mm … page.css の値を、出力 PNG（150dpi・1276×1789px = 塗り足し 3mm 込みの 216×303mm）上のプレースホルダの外接矩形で確認（差は 1px = 0.17mm 以内）
+#   crop_mm … 補正後の参考ページ（npm run ref:prep → .cache/ref-prep/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.png、1414×2000px = 210×297mm）を
+#             切り出して目視確認。授業写真 3 点は枠と同じ位置。大写真とアイコンは、補正画像の上端を撮影範囲の端で止めたこと（prep の notes）と天側の紙の反りのため、
+#             参考の写真・円が枠より上に写っているので、補正画像上の実測位置を書いた（各 notes）
+#   色 … 参考写真の実測（撮影の白飛びを含む推定値）と page.css の --rep-*
+# 不採用: 外周の帯・白パネル・情報ボックスとカードの淡色グラデーション・円バッジ・ピル・紐飾り・マーカー・ハートは単色・単純図形なので Layer 2（生成しない）。全面背景も不要
+book: replica/b-course
+page: page_001
+reference_image: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
+reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
+status: pending
+items:
+  - id: page_001-hero
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [196.0, 117.0]       # 仕上がり内 193mm ＋ ノド側の塗り足し 3mm
+    bleed: true                   # ノド側（右）だけ塗り足しまで裁ち落とし
+    crop_mm: [17.0, 41.7, 196.0, 117.0]   # 補正画像上の参考写真の実測（上端 41.7mm）。x 210〜213mm は参考の外
+    placement: "page.html の .hero（left 17mm・top 43mm・right -3mm・height 117mm）の {{> photo-frame}} を {{> photo-frame src=\"books/replica/b-course/backgrounds/page_001-hero.jpg\"}} にする（object-fit: cover、position は center）。角丸は今 .hero .photo-frame__placeholder にだけ掛かっているので、page.css に .hero .photo-frame__img { border-radius: 4mm 0 0 0; } を足す（小口側の上角だけ角丸 4mm、ほかの 3 角は直角）"
+    reference_usage: composition
+    mask: "参考の文字・ラベル類を周囲の色で塗りつぶしてから入力する: 掲げている絵カードの印刷面（楕円の図と下の文字 4 行。x 149〜192mm, y 96〜130mm。無地の白いカードにする）、左の水色の柱に貼られた黄色の注意書きシール（x 54〜60mm, y 41.7〜73mm）と小さな黄色の札（x 55〜61mm, y 104〜110mm）、胸ポケットの名札（x 138〜148mm, y 106〜111mm）、左袖のワッペン（x 92〜102mm, y 122〜126mm）、右端の淡い黄緑の板の薄い文字（x 192〜210mm, y 116〜125mm）。左下のベッドに寝ている子どもの頭（x 35〜69mm, y 135〜159mm）も寝具の色で塗る。x 210mm より右は参考の外（白）"
+    prompt: |
+      Horizontal photograph, aspect ratio 196:117 (about 5:3), bright high-key indoor scene in a childcare training room.
+      COMPOSITION: one young adult woman in her early twenties (generic person, not resembling any real individual) stands slightly right of center, shown from the waist up. The top of her head almost touches the upper edge; her face is at about 52% from the left and 25% from the top, smiling warmly with her eyes turned down toward the board she holds. Her torso occupies about 37-70% of the width and is cut off by the bottom edge.
+      She holds a plain white square picture board with both hands, arms extended to the right; the board sits at about 67-89% of the width and 48-75% from the top, tilted slightly toward the viewer, its face completely blank except for one soft pale lavender circle (#c9cbe6).
+      LEFT 35%: two thick pale-blue painted vertical posts (#b9d5eb) at about 4-8% and 13-20% of the width, running the full height, in front of a row of thin white vertical crib slats (22-44% of the width) with a beige wall (#e8dbc9) behind them.
+      RIGHT BACKGROUND: a white crib headboard with pale mint vertical slats (#bcd0d0) spans 42-88% of the width, its top rail at 18-33% from the top; above it a white wall and a white sheer curtain. The right-most 10% is a plain white wall with a pale yellow-green panel (#fafcd5).
+      Keep the right 8% (it runs into the binding and the trim bleed) simple, plain and free of faces, hands or important detail. Keep the top-left corner plain wall (it is clipped by a rounded corner).
+      BOTTOM: soft white and pale blue bedding (#e5e8f0) along the bottom edge; an empty crib with a folded pale blanket at the lower left. No child, no baby.
+      WARDROBE: a red short-sleeve zip-neck polo-style work shirt (#be2e38, shadow tones #9c463f) with a plain chest pocket; no name tag, no badge, no patch, no print. Dark hair tied back with bangs.
+      LIGHT: soft diffuse daylight from the front-left, high-key, low contrast, airy pastel palette of white, pale blue, mint and beige with the red shirt as the single strong accent; natural warm skin tones.
+      STYLE: natural candid documentary photograph for a school brochure, eye-level, 35mm-equivalent lens, f/2.8, sharp focus on the face, background slightly soft, realistic color, no heavy retouching.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, labels, stickers, name tag, badge, printed board, screen text, child, baby, celebrity likeness, extra fingers, deformed hands, frame, border"
+    summary: "ベビーベッドのある明るい実習室で、赤いポロシャツの若い女性（腰上・中央右寄り）が無地の白いボードを右へ掲げて微笑む横長写真"
+    notes: "参考写真の人物の顔・容姿に似せない（composition 参照のみ。img2img や顔を保つ参照は使わない）。人物は生成人物の使用可否【要確認】の対象。crop_mm の y は補正画像上の実測（上端 41.7mm）で、枠の位置（y 43mm）より 1.3mm 上（補正画像の上端を撮影範囲の端で止めたためのずれ。prep/page_016-l.yaml の notes）。参考はノドの谷線（x 210mm）までなので、ノド側の塗り足し 3mm は生成で背景を延長する。必要画素数: 350dpi で 2701×1612px（150dpi で 1157×691px）。Phase 8 では company-data/photos の自社写真に差し替える（学校の写真に生成画像は使えない）"
+
+  - id: page_001-class-1
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [59.5, 38.7]
+    bleed: false
+    crop_mm: [17.0, 208.0, 59.5, 38.7]
+    placement: "page.html の授業カード 1 枚目（.class-row の左。x 17mm・y 208mm、写真の高さ --photo-h 38.7mm）。components/class-card.hbs は photo（company-data の ID）しか受けないので src 引数を足し（{{else if src}}{{> photo-frame src=src}}）、1 枚目の {{> book/class-card ...}} に src=\"books/replica/b-course/backgrounds/page_001-class-1.jpg\" を渡す。page.css に .class-card__photo .photo-frame__img { border-radius: 1.2mm 1.2mm 0 0; } を足す（上の 2 角だけ角丸 1.2mm）"
+    reference_usage: composition
+    mask: "左下の小さなキャラクター状の飾り（x 22〜27mm, y 242〜246.7mm）を周囲の色で塗りつぶす"
+    prompt: |
+      Horizontal photograph, aspect ratio 59.5:38.7 (about 3:2).
+      COMPOSITION: two young adult women stand side by side, cropped at mid-thigh, filling the frame: the left person at about 8-45% of the width, the right person at about 57-100%; their heads at about 15-55% from the top, both tilted playfully toward each other.
+      Each holds a pair of plain white paper cut-out goggles (a simple card band with two round eye holes and a small nose notch, no printing) in front of her eyes with both hands, so the eyes are hidden; cheerful smiles below.
+      Left person: olive-mustard long-sleeve top (#948337) under a pale yellow gingham apron (#f4e67c). Right person: oversized light grey hoodie (#cdcdd6) with pale pink bottoms (#b08991).
+      BACKGROUND: a flat sage-green painted wall (#9db591, shadows #84967a) with large soft pale-blue painted circles (#c5d1e4): one in the top-left corner (0-25% width, 0-20% height) and one behind the right person's head (62-92% width, 0-40% height); a small pale yellow ball (#eee5a4) between them at mid-height and a pale pink ball at the lower left.
+      LIGHT: soft even indoor light, slightly warm, low contrast.
+      STYLE: candid classroom snapshot, eye-level, 35mm-equivalent lens, moderate depth of field, natural colors with the slight softness of a printed brochure photo. Faces largely hidden behind the paper goggles (not identifiable).
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, character mascot, badge, printed pattern with letters, celebrity likeness, extra fingers, deformed hands, frame, border"
+    summary: "緑の壁と淡い水色の丸の前で、若い女性 2 人が白い紙のゴーグルを目に当ててポーズをとる授業写真"
+    notes: "参考写真の人物に似せない（composition 参照のみ）。人物は生成人物の使用可否【要確認】の対象。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
+
+  - id: page_001-class-2
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [59.5, 38.7]
+    bleed: false
+    crop_mm: [80.4, 208.0, 59.5, 38.7]
+    placement: "page.html の授業カード 2 枚目（.class-row の中央。x 80.4mm・y 208mm、高さ 38.7mm）。class-card.hbs に src 引数を足したうえで（page_001-class-1 と同じ）、2 枚目の {{> book/class-card ...}} に src=\"books/replica/b-course/backgrounds/page_001-class-2.jpg\" を渡す。角丸は page_001-class-1 と同じ CSS（上の 2 角だけ 1.2mm）"
+    reference_usage: composition
+    mask: "中央奥の人物のトレーナーの胸のロゴ文字（x 104〜110mm, y 215〜220mm）を服の色で、床の印刷物（x 103〜111mm, y 225〜232mm）を白紙に、右上奥の床の紙（x 133〜140mm, y 216〜221mm）を床の色で塗りつぶす"
+    prompt: |
+      Horizontal photograph, aspect ratio 59.5:38.7 (about 3:2). High-angle view, camera looking down at about 45 degrees.
+      COMPOSITION: five young adult students kneel on a light grey floor (#dcdbdd) around two baby-sized CPR training manikins, practicing chest compressions.
+      Foreground left (0-35% of the width, full height): a student seen from the side and slightly behind in a navy jacket (#3d4a6b) with an orange-tan shoulder panel (#c1692c), reaching toward a manikin dressed in pale pink (#d8aac5) lying at the lower center (35-50% width, 60-100% height).
+      Center: a second manikin in a pale blue suit (50-65% width, 45-85% height); a student in a black long-sleeve top with a light-brown ponytail (55-75% width, upper half) pressing on it; behind, a student in a plain grey sweatshirt wearing a white face mask (35-50% width, upper half).
+      Foreground right (65-100% width, 40-100% height): the back of a dark-haired head, out of focus.
+      A blank white sheet of paper lies on the floor at the center; a small red carry case without any markings sits at the bottom center; a few blurred people and bags in the upper-right background.
+      LIGHT: bright overhead fluorescent light, cool neutral tones, low contrast.
+      STYLE: candid documentary snapshot, 28mm-equivalent lens, natural colors, slight softness. Faces turned away or partially hidden; no identifiable people.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, printed handout, clothing print, screen text, celebrity likeness, extra fingers, deformed hands, frame, border"
+    summary: "床にひざをついた学生 5 人が乳児サイズの訓練用人形 2 体で胸骨圧迫を練習する様子を斜め上から写した授業写真"
+    notes: "参考写真の人物に似せない（composition 参照のみ）。人物は生成人物の使用可否【要確認】の対象。訓練用人形は人物ではないが、本物の乳児に見えないこと。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
+
+  - id: page_001-class-3
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [59.5, 38.7]
+    bleed: false
+    crop_mm: [143.8, 208.0, 59.5, 38.7]
+    placement: "page.html の授業カード 3 枚目（.class-row の右。x 143.8mm・y 208mm、高さ 38.7mm）。class-card.hbs に src 引数を足したうえで（page_001-class-1 と同じ）、3 枚目の {{> book/class-card ...}} に src=\"books/replica/b-course/backgrounds/page_001-class-3.jpg\" を渡す。角丸は page_001-class-1 と同じ CSS（上の 2 角だけ 1.2mm）"
+    reference_usage: composition
+    mask: "なし"
+    prompt: |
+      Horizontal photograph, aspect ratio 59.5:38.7 (about 3:2). Bright classroom with white vertical blinds and curtains (#fafbfb) filling the background.
+      COMPOSITION: foreground left (5-45% of the width, 25-100% of the height): a young adult woman with long straight dark hair, seen in three-quarter view from behind, wearing a plain white T-shirt (#f4f8fb) and a white disposable face mask, facing right.
+      Center-right (55-100% width, 15-95% height): a young adult woman with dark hair in a low ponytail and bangs, wearing a white disposable face mask and a black short-sleeve blouse with a white round floral polka pattern (#191919 base), seated at a white desk (#e5e8ef) with her hands resting on it, smiling eyes, facing the first woman in conversation.
+      Background left (0-30% width, upper half): two more students seated at desks, softly out of focus.
+      LIGHT: soft, bright, diffuse daylight through the blinds, high-key, low contrast, black and white clothing as the main tonal contrast.
+      STYLE: candid group-work snapshot, eye-level, 50mm-equivalent lens, shallow depth of field, natural colors. No papers, notebooks or screens with visible writing.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, notebook writing, screen text, celebrity likeness, extra fingers, deformed hands, frame, border"
+    summary: "白いブラインドの明るい教室で、マスクの学生 2 人が机をはさんで話し合うグループワークの授業写真"
+    notes: "参考写真の人物に似せない（composition 参照のみ）。人物は生成人物の使用可否【要確認】の対象。必要画素数: 350dpi で 820×533px（150dpi で 351×229px）。Phase 8 では自社写真に差し替える"
+
+  - id: page_001-butterflies
+    kind: illustration
+    people: false
+    optional: true
+    size_mm: [19.8, 19.8]         # アイコンの円（.icon、直径 19.8mm）の外接正方形
+    bleed: false
+    crop_mm: [16.8, 17.5, 19.8, 19.8]   # 補正画像上の円の実測（中心 26.7, 27.4mm）。枠（中心 26.8, 29.1mm）より 1.7mm 上
+    placement: "page.html の svg.icon（left 16.9mm・top 19.2mm・19.8mm 角、viewBox 0 0 20 20）の中の 2 つの <g class=\"icon__fly\">（Layer 2 の仮の線画）を <image href=\"{{asset 'books/replica/b-course/backgrounds/page_001-butterflies.png'}}\" x=\"0\" y=\"0\" width=\"20\" height=\"20\"/> に置き換える。淡黄の円 .icon__disc（Layer 2）はそのまま残し、その上に透過 PNG を重ねる"
+    reference_usage: style
+    mask: "淡黄の円の地（Layer 2 の SVG 円で描く）を白で塗りつぶし、蝶 2 匹の線画だけを残して入力する。文字・ロゴはなし"
+    prompt: |
+      Square illustration, 1:1, on a plain pure white background (#ffffff) for cut-out, with no circle, no frame and no shadow.
+      COMPOSITION: two small hand-drawn doodle butterflies in a cute, simple picture-book style. A larger butterfly in the upper right occupies about 45-82% of the width and 12-58% of the height, tilted slightly to the left, with two curled antennae; its wings are filled flat lemon yellow (#f3e66c) with a few tiny dark dots. A smaller butterfly in the lower left occupies about 21-53% of the width and 58-86% of the height, tilted slightly, with pale lilac-pink wings (#d4abd0) and tiny dots.
+      LINE: wobbly dark olive-brown outline (#4b4a2c), about 2% of the image width, slightly uneven like a felt-tip pen; flat fills with a faint crayon-like unevenness, no gradients, no 3D shading.
+      Keep at least 10% empty margin on every side; nothing else in the image.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, character mascot, face on butterflies, circle background, frame, border, shadow, gradient, photorealistic"
+    summary: "淡黄の円に重ねる、黄色（右上・大）と薄紫（左下・小）の手描き風の蝶 2 匹の線画イラスト（白地で生成して透過に切り抜く）"
+    notes: "参考の蝶は手描きの線（線の揺れ・塗りのむら）のイラストで、Layer 2 の SVG（仮の図柄）でも構造と色は合っているため optional とした。生成する場合は参考のイラストをなぞらない（style 参照のみ。配置と線の調子だけを合わせる）。白地で生成して透過 PNG に切り抜く（手順を .prompt.yaml の notes に書く）。必要画素数: 350dpi で 273×273px（150dpi で 117×117px）。自社版では自社のイラスト（文字なし）に差し替えるか置かない（review.md の「次にやること」）"
