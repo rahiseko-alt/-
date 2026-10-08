@@ -32,7 +32,7 @@
 2. 参考画像を画像として開き、解析結果と見比べて Layer 1 / 2 / 3 に分解する（何を背景で、何をコードで作るか）
 3. Layer 1: 背景が必要なら system/prompts/generate-background.md に従って生成する（参考ページ画像を生成モデルへ直接入力してよい）
 4. Layer 2: グリッド（`shared/layouts/grid.css`）、枠・カード・罫線・色面を `page.html` / `page.css` で作る。色はブランドカラーの変数
-   - `page.css` のクラス名は `shared/layouts/components.css` の名前（`.panel` `.folio` など）と重ねない。重なると共通の装飾・位置がかかって崩れる（ページ固有の接頭辞を付ける）
+   - `page.css` のクラス名は `shared/layouts/components.css` の名前（`.panel` `.folio` など）と重ねない。重なると共通の装飾・位置がかかって崩れる（ページ固有の接頭辞を付ける。`npm run validate` が警告する）
 5. Layer 3: テキストを配置する
    - **参考資料の文字をページに書き写さない。** ダミーテキスト（同じ文字数・行数）か company-data の値を使う
    - サイズ・行送り・字間・位置を参考に合わせる

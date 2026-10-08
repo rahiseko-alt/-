@@ -94,6 +94,21 @@ describe('validate', () => {
     expect(r.out).toMatch(/company-data\/copy\/brochure\.yaml:\d+: 禁止語「サンプル他校」/);
   });
 
+  it('page.css で共通 CSS（styles）のクラス名をページの要素に使っていたら警告（共通パーシャルの上書きだけなら対象外）', async () => {
+    const root = copyFixture();
+    // stat-card は styles（shared/layouts/fixture.css）のクラスで、page_002 には直接書かれていない（パーシャルの上書き）
+    appendFile(root, 'books/smoke/pages/page_002/page.css', '\n/* 共通部品の上書き */\n.stat-card { border-radius: 2mm; }\n');
+    let r = await run(validateCommand, ['--root', root]);
+    expect(r.out).not.toContain('共通 CSS');
+
+    // data-title は page_002 に直接書かれている要素。共通 CSS と同じ名前で装飾すると警告
+    appendFile(root, 'books/smoke/pages/page_002/page.css', '\n.data-title { position: absolute; top: 10mm; }\n');
+    r = await run(validateCommand, ['--root', root]);
+    expect(r.code, r.text).toBe(0);
+    expect(r.out).toContain('books/smoke/pages/page_002/page.css: 共通 CSS（shared/layouts/fixture.css）と同じクラス名 .data-title を、ページで書いた要素に使って装飾しています');
+    expect(r.out).not.toContain('.stat-card');
+  });
+
   it('事実の直書きは警告（{{...}} の中・コメントは対象外）', async () => {
     const root = copyFixture();
     appendFile(root, 'books/smoke/pages/page_002/page.html', '\n{{!-- サンプル学園 の説明 --}}\n<p>{{#if facts.school.name}}ok{{/if}}</p>\n<p>サンプル学園へようこそ。TEL 00-0000-0000</p>\n');
