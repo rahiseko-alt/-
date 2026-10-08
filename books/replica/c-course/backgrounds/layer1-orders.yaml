@@ -1,0 +1,145 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 寸法はすべて仕上がり線（.trim）の左上を原点とする mm。A4 縦 210 × 297mm・塗り足し 3mm・左ページ（小口 = 左、ノド = 右）
+# - size_mm は page.css / components の枠を Chromium で実測した値（2026-10-08。150dpi の出力 PNG 1276 × 1789px でも確認）
+# - crop_mm は補正後の参考ページ（npm run ref:prep の出力 1414 × 2000px = 6.733px/mm）上の範囲。写真の端を濃淡の行・列の切り替わりで実測し、
+#   切り出して目視で確認した。上部の写真は参考では仕上がりの内側（0〜210 × 0〜81mm）しかないため、塗り足しの 3mm は参考の外（白）になる
+# - 入力の切り出し: npm run gen:inputs -- --book replica/c-course（.cache/gen-inputs/replica/c-course/<id>.png。mask のとおり塗ってから入力する）
+# - 必要な画素数: 上部の写真 1276 × 496px（png_dpi 150）／ 2976 × 1157px（350dpi）、回り込みの写真 各 288 × 210px（150dpi）／ 672 × 489px（350dpi）
+# - 3 点とも人物を含む【要確認: 生成人物の使用可否の方針】（system/rules/image-generation.md §2）。顔・名札・刺繍ロゴは入力前に塗る（mask）
+# - 参考の写真に写る実在の人物・制服のロゴ・施設を再現しない。生成するのはリハビリ・演習の場面の一般的な人物だけ（施設名・看板・掲示物なし）
+book: replica/c-course
+page: page_001
+reference_image: references/kokusai-igaku-gijutsu/brochure/page_006.jpg
+reference_prep: references/kokusai-igaku-gijutsu/brochure/prep/page_006-l.yaml
+status: pending
+items:
+  # ---------------------------------------------------------------------------
+  # 1. 上部の裁ち落とし写真（天・小口・ノドの 3 方向に塗り足し）
+  # ---------------------------------------------------------------------------
+  - id: page_001-header
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [216.0, 84.0]          # 仕上がり 210 × 81mm + 塗り足し（天・小口・ノド各 3mm。地は白地の本文側なので塗り足しなし）
+    bleed: true
+    crop_mm: [-3.0, -3.0, 216.0, 84.0]   # 参考に写っているのは 0〜210 × 0〜81mm。外側の 3mm（天・左・右）は参考の外
+    placement: >-
+      components/dept-header.hbs の photo-frame（.dept-header__photo。x −3〜213 × y −3〜81mm の 216 × 84mm、
+      .photo-frame は height: 100%、画像は object-fit: cover）に src を渡す。部品はいま photo（company-data の写真 ID）しか受けないため、
+      src 引数を足して {{> photo-frame src=src}} とし、page.html の {{> book/dept-header name="学科名ダミー" src="books/replica/c-course/backgrounds/page_001-header.jpg"}} で指定する。
+      左下 x −3〜65.2 × y 69.9〜81mm（塗り足し込み 68.2 × 11.1mm）は学科名のタブ（.dept-header__notch の白い長方形）で隠れる
+    reference_usage: composition
+    mask: >-
+      参考の学科名のタブ（白い切り欠きと学科名の文字）: 仕上がり基準 x 0〜65.2 × y 69.9〜81.0mm（入力画像の中では左下 x 3〜68.2 × y 72.9〜84mm）を
+      周囲の肌色・淡い背景でなじませて塗るかマスクする。右端 x 209〜210mm のノドの影（撮影による暗い帯）も淡い背景色で塗る。
+      入力画像の天・左・右の外周 3mm の白い帯は参考の外（gen:inputs が白で埋めた部分）なので、写真を自然に延長させる（アウトペイント）
+    prompt: |
+      Ultra-wide horizontal photograph, aspect ratio 216:84 (about 2.57:1), used as a full-bleed banner across the top of a printed brochure page.
+      Composition: an extreme close-up of a physical rehabilitation session that shows only arms and hands - no faces anywhere in the frame.
+      From the left edge a therapist's bare forearm enters diagonally from the lower left; its hand (center-left, about 25-45% from the left, upper half)
+      gently but firmly grips the patient's forearm near the wrist. A second therapist arm reaches horizontally across the top of the frame (top 0-40%)
+      from left to right, and its open hand rests on the shoulder of the patient at the right (about 60-90% from the left), who wears a plain white
+      short-sleeved T-shirt. The patient's smooth bare upper arm runs diagonally from the white sleeve at the right down toward the bottom center with a
+      bent elbow, so the arms form a strong diagonal, triangular rhythm across the whole width. Subjects are cropped boldly by the top, left and right edges.
+      Keep the bottom-left area (left 32% of the width x bottom 17% of the height) free of any important detail: it will be covered by a white label panel,
+      so only soft out-of-focus skin or pale background may continue there. Keep the bottom-right area (right 40% x bottom 30%) a bright, almost white,
+      out-of-focus background. The outer edges (about 3.5% of the width on the left and right, 3.5% of the height at the top) will be trimmed, so extend
+      the scene naturally to every edge and keep the hands well inside.
+      Background: a bright, clean, airy room blurred into soft white and pale warm grey (#f8f8f8, #e6ddda, #b7a096 in the mid shadows), no objects,
+      no equipment, no signage.
+      Lighting: high-key soft daylight from the upper right, very gentle shadows, slightly overexposed creamy highlights on the skin.
+      Palette: warm natural skin tones from #864f3b (deep shadow) through #b07d6a and #b6846f to #e1cdc3 (highlight), white fabric #ebe8e9 to #f7f9f9.
+      Style: editorial school-brochure photography, photorealistic, 85mm lens, close-up at arm height, shallow depth of field (about f/2),
+      clean skin without jewelry or watches, plain clothing without any marks.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, name tag, badge, embroidery, face, faces, jewelry, wristwatch, frame, border, vignette, split image"
+    summary: "リハビリの場面の腕と手だけを大胆に切り取ったハイキーの超横長写真（顔なし。左下はタブで隠れるので空ける）"
+    notes: >-
+      参考は人物の腕と手を大胆に切ったハイキーのクローズアップ（顔は写っていない）。全体の平均色 #be9c90。参照の強さは 0.5〜0.7 程度を目安に構図・明るさを寄せ、
+      手や腕の形は作り直してよい。左下 65.2 × 11.1mm（仕上がり基準。小口側の塗り足しを含めると 68.2 × 11.1mm）は学科名のタブで隠れるため、
+      手指など重要なものを置かない。参考は見開きのノドで写真を止めているが、この BOOK はノド側も塗り足しまで写真を延ばす。
+      参考の写真の下端がノド寄り（x 175〜210mm）で 0.5〜1mm 波打つのは紙の反りで、生成画像の下端は CSS の枠で水平に切れる。
+      画像は 2976 × 1157px（350dpi）を目安に、最低 1276 × 496px（png_dpi 150）。写真調なので .jpg 可
+  # ---------------------------------------------------------------------------
+  # 2. 本文 1 段目に回り込ませる写真（演習の場面の上半身）
+  # ---------------------------------------------------------------------------
+  - id: page_001-wrap-1
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [48.8, 35.5]
+    bleed: false
+    crop_mm: [52.3, 132.3, 48.5, 35.4]   # 参考の写真 1 の実測（52.3〜100.8 × 132.3〜167.7mm）。出力の枠は 52.1〜100.9 × 132.3〜167.8mm
+    placement: >-
+      components/wrap-text.hbs の photo-frame（.wrap-text__photo。幅 48.8mm・aspect-ratio 48.8 / 35.5、本文の右に float。画像は object-fit: cover）に src を渡す。
+      部品はいま photo（company-data の写真 ID）しか受けないため、src 引数を足して {{> photo-frame src=src}} とし、page.html の .sec--1 の
+      {{> book/wrap-text title="…" body="…" src="books/replica/c-course/backgrounds/page_001-wrap-1.jpg"}} で指定する。
+      いまの描画位置は x 52.1〜100.9 × y 132.3〜167.8mm（先頭 5 行の下。本文量で上下する）
+    reference_usage: composition
+    mask: >-
+      胸の刺繍ロゴと黒い名札（仕上がり基準 x 79.5〜86.5 × y 160〜165mm）を白衣の色で塗る。
+      顔（x 67〜80 × y 135〜149mm）は実在の人物なので、似せないようにぼかすか塗りつぶしてから入力する（構図・ポーズ・明るさだけを参照する）
+    prompt: |
+      Horizontal photograph, aspect ratio 48.8:35.5 (about 1.37:1, close to 4:3), a small inset photo placed beside body text in a school brochure;
+      no text overlaps it, the edges are clean straight crops.
+      Composition: waist-up portrait of one young adult woman (Japanese, about 20 years old, a generic person who does not resemble any specific real
+      individual), slightly left of center: her face sits about 35-57% from the left in the top half, and the top of her head just touches the top edge.
+      She has dark hair tied back with soft bangs and is laughing naturally with squinting eyes. She wears a plain white short-sleeved medical scrub tunic
+      with no logo, no name tag and no embroidery (a thin dark trim on the chest pocket is acceptable). At chest level, in the lower center
+      (about 22-63% from the left, lower half), she holds with both hands a small anatomical model of a segment of the human spine (ivory vertebrae on a
+      small muted-yellow base), with no labels on it.
+      Background: on the left 0-20% a warm beige / peach curtain or wall (#e8d0b9); on the right 57-100% a plain, softly out-of-focus light grey-white wall
+      (#ebeaeb) with a soft vertical edge near 57% from the left. A bright practical-training room atmosphere with nothing legible anywhere, no posters,
+      no signage.
+      Lighting: soft, even indoor daylight, high-key, gentle shadows.
+      Palette: warm skin #af8c83 in mid-tone, dark hair #382c2e, white uniform #e7e7e7, spine model #bdaa99, base #cdb688; overall average about #cfc4be.
+      Style: candid editorial photo for a vocational school brochure, photorealistic, 50mm lens at eye level, shallow depth of field (about f/2.8),
+      subject sharp, background softly blurred.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, name tag, badge, embroidery, poster, label, celebrity likeness, frame, border, vignette"
+    summary: "白衣の若い女性が脊椎の模型を手に笑う、明るい演習室の上半身の写真（一般的な人物）"
+    notes: >-
+      参考は白衣の学生が脊椎の模型を持って笑う上半身（左に暖色の壁、右に明るい灰白の壁）。顔・名札・ロゴは参照させず、人物は別人として生成する。
+      参照の強さは 0.3〜0.5 程度（構図・明るさの参照にとどめる）。本文の 6〜12 行目がこの写真の左を回り込む（間隔 4.2mm）。
+      写真の下端 = 本文の最終行の字の下端。画像は 672 × 489px（350dpi）を目安に、最低 288 × 210px（png_dpi 150）
+  # ---------------------------------------------------------------------------
+  # 3. 本文 2 段目に回り込ませる写真（車いすの人を介助する場面）
+  # ---------------------------------------------------------------------------
+  - id: page_001-wrap-2
+    kind: photo
+    people: true
+    optional: false
+    size_mm: [48.8, 35.5]
+    bleed: false
+    crop_mm: [148.6, 131.4, 49.0, 35.6]  # 参考の写真 2 の実測（148.6〜197.6 × 131.4〜167.0mm）。出力の枠は 148.9〜197.7 × 132.3〜167.8mm（参考はノド側の紙の反りで 約 0.8mm 高く写る）
+    placement: >-
+      components/wrap-text.hbs の photo-frame（.wrap-text__photo。幅 48.8mm・aspect-ratio 48.8 / 35.5、本文の右に float。画像は object-fit: cover）に src を渡す。
+      部品はいま photo（company-data の写真 ID）しか受けないため、src 引数を足して {{> photo-frame src=src}} とし、page.html の .sec--2 の
+      {{> book/wrap-text title="…" body="…" src="books/replica/c-course/backgrounds/page_001-wrap-2.jpg"}} で指定する。
+      いまの描画位置は x 148.9〜197.7 × y 132.3〜167.8mm（先頭 5 行の下。本文量で上下する）
+    reference_usage: composition
+    mask: >-
+      胸の刺繍ロゴと黒い名札 2 か所（左の人物 x 160.5〜165 × y 138.5〜142.5mm、右の人物 x 190.5〜197 × y 156〜160.5mm）を白衣の色で塗る。
+      顔（右の人物 x 182〜194 × y 135〜149mm、左の人物の口元 x 150〜161 × y 131.4〜135mm）は実在の人物なので、ぼかすか塗りつぶしてから入力する（構図・ポーズ・明るさだけを参照する）
+    prompt: |
+      Horizontal photograph, aspect ratio 48.8:35.5 (about 1.37:1, close to 4:3), a small inset photo placed beside body text in a school brochure;
+      no text overlaps it, the edges are clean straight crops.
+      Composition: a rehabilitation practice scene with two generic people (Japanese young adults who do not resemble any specific real individuals).
+      Left 0-40%: a standing student therapist in a plain white short-sleeved scrub top, seen from the chest down to the hips, leaning slightly forward;
+      her face is cropped out by the top edge (at most the chin shows at the very top). Her arm reaches to the right and her hand gently holds the hand
+      and wrist of the seated person at about 25-37% from the left and 63-74% from the top.
+      Right 48-100%: a young man with short black hair and glasses, wearing a plain white short-sleeved scrub top with a dark V-neck trim, seated in a
+      wheelchair (its dark frame and armrest visible at the lower center, about 44-50% from the left), turning his head to the left and laughing toward
+      the standing student; his head is about 66-93% from the left and 10-55% from the top.
+      Middle background: a dark vertical window mullion / pillar at about 44-54% from the left in the upper half; behind the man, a large window with
+      bright daylight and softly out-of-focus green trees. No logos, name tags, badges or embroidery on the uniforms, no brand marks on the wheelchair,
+      no signage or posters.
+      Lighting: natural window light from the back right, soft and slightly backlit; overall a little cooler and darker than a high-key shot.
+      Palette: white uniforms in light shade #c1b8b8 to #c5c1c5, bright window #dadbd6, dark pillar #5c5858, wheelchair #3d3a3d, skin #826158 in shadow,
+      hair #494748, muted foliage green; overall average about #aba3a4.
+      Style: candid editorial photo for a vocational school brochure, photorealistic, 35-50mm lens at seated eye level, shallow depth of field,
+      people sharp, background softly blurred.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, name tag, badge, embroidery, poster, label, celebrity likeness, frame, border, vignette"
+    summary: "白衣の学生が車いすに座る人の手を取り、互いに笑い合う窓辺のリハビリ演習の写真（一般的な人物）"
+    notes: >-
+      参考は立っている白衣の学生（顔は上端で切れる）が車いすに座る白衣の男性（眼鏡）の手を取る場面。背景は暗い窓枠と木々の見える窓。
+      顔・名札・ロゴは参照させず、人物は別人として生成する。参照の強さは 0.3〜0.5 程度。写真 1 より全体に暗く寒色寄り（参考の平均 #aba3a4、写真 1 は #cfc4be）。
+      本文の 6〜12 行目がこの写真の左を回り込む（間隔 4.2mm）。画像は 672 × 489px（350dpi）を目安に、最低 288 × 210px（png_dpi 150）
