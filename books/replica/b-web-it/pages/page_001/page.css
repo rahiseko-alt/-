@@ -42,7 +42,7 @@
   --rep-title-grey: #66695f;
   /* プレースホルダ（Layer 1 の写真待ち） */
   --rep-photo: #c9ced6;
-  --rep-silhouette: #c3c8d0;
+  --rep-silhouette: #b7bdc6;
 }
 
 /* ---------- Layer 2: 地と背面の図形 ---------- */
@@ -126,31 +126,33 @@
 
 .headline__l1 {
   left: 13.6mm;
-  top: 33.7mm;
-  font-size: 27pt;
-  letter-spacing: 0.04em;
+  top: 33.4mm;
+  font-size: 30pt;
+  letter-spacing: -0.012em;
   color: var(--rep-head-blue);
+  /* 参考は 1 行目だけ右上がり（約 3°。リードの帯の弧に呼応） */
+  transform: rotate(-3.2deg);
+  transform-origin: left center;
 }
 
 .headline__l2,
 .headline__l3 {
   left: 12.8mm;
-  font-size: 44pt;
   color: var(--rep-head-brown);
 }
 
-.headline__l2 { top: 46.8mm; letter-spacing: 0.02em; }
-.headline__l3 { top: 64.8mm; letter-spacing: 0; }
+.headline__l2 { top: 45.4mm; font-size: 46pt; letter-spacing: -0.02em; }
+.headline__l3 { top: 63.7mm; font-size: 47pt; letter-spacing: -0.06em; }
 
 /* 吹き出しの文 */
 .bubble-text {
   position: absolute;
   left: 140mm;
-  top: 35.3mm;
+  top: 34.4mm;
   width: 40mm;
   margin: 0;
   font-family: var(--font-heading);
-  font-size: 12pt;
+  font-size: 12.5pt;
   font-weight: 500;
   line-height: 6mm;
   letter-spacing: 0.05em;
@@ -214,9 +216,9 @@
 
 .axis-label--bottom {
   left: 89.5mm;
-  top: 215.2mm;
+  top: 214mm;
   width: 26mm;
-  height: 10.1mm;
+  height: 10.4mm;
   background: var(--rep-green);
   font-size: 17pt;
 }
@@ -224,8 +226,10 @@
 .axis-label--left,
 .axis-label--right {
   writing-mode: vertical-rl;
-  font-size: 15.5pt;
-  letter-spacing: 0.06em;
+  font-size: 14.5pt;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  font-feature-settings: 'vpal' 1;
 }
 
 .axis-label--left {
@@ -332,10 +336,18 @@
   margin: 0;
   font-size: 6.5pt;
   font-weight: 500;
-  line-height: 2.8mm;
+  line-height: 2.6mm;
   text-align: left;
   white-space: nowrap;
   color: var(--rep-ink);
+}
+
+/* 文字だけの小さいカード（c3〜c5）の職種名は 2 行を 1 行ずつ収める */
+.memo--c3 .memo__title,
+.memo--c4 .memo__title,
+.memo--c5 .memo__title {
+  font-size: 7.8pt;
+  white-space: nowrap;
 }
 
 /* 位置・大きさ・傾き（参考ページの実測） */
@@ -346,7 +358,7 @@
 
 .memo--c2 {
   left: 109.9mm; top: 76.2mm; width: 43.4mm; height: 36.7mm; --rot: -0.3deg;
-  --photo-l: 3.4mm; --photo-t: 2.5mm; --photo-w: 37.1mm; --title-t: 23.9mm; --body-t: 28.5mm;
+  --photo-l: 3.4mm; --photo-t: 2.5mm; --photo-w: 37.1mm; --title-t: 23.5mm; --body-t: 27.9mm;
 }
 
 .memo--c3 {
@@ -369,12 +381,12 @@
 
 .memo--c6 {
   left: 137.1mm; top: 153mm; width: 43mm; height: 36.7mm; --rot: 0.6deg;
-  --photo-l: 3.3mm; --photo-t: 2.8mm; --photo-w: 36.9mm; --title-t: 23.9mm; --body-t: 28.4mm; --title-c: var(--rep-title-mauve);
+  --photo-l: 3.3mm; --photo-t: 2.8mm; --photo-w: 36.9mm; --title-t: 23.6mm; --body-t: 27.8mm; --title-c: var(--rep-title-mauve);
 }
 
 .memo--c7 {
   left: 136.9mm; top: 194.8mm; width: 43.2mm; height: 36.9mm;
-  --photo-l: 3.5mm; --photo-t: 3.1mm; --photo-w: 36.9mm; --title-t: 23.7mm; --body-t: 27.9mm; --title-c: var(--rep-title-grey);
+  --photo-l: 3.5mm; --photo-t: 3.1mm; --photo-w: 36.9mm; --title-t: 23.5mm; --body-t: 28.4mm; --title-c: var(--rep-title-grey);
 }
 
 /* 写真のプレースホルダ（Layer 1 の自社写真待ち。中間調の灰色で面の重さだけ合わせる） */
@@ -461,8 +473,8 @@
 
 .grad {
   position: absolute;
-  top: 241.3mm;
-  height: 40.9mm;
+  top: 240.9mm;
+  height: 42.1mm;
   background: var(--rep-white);
   border: 0.35mm solid var(--rep-box-line);
 }
@@ -473,14 +485,14 @@
 .grad__photo {
   position: absolute;
   left: var(--photo-l);
-  top: 4.7mm;
+  top: 5.1mm;
   width: var(--photo-w);
 }
 
 .grad__text {
   position: absolute;
   left: var(--text-l);
-  top: 4.4mm;
+  top: 4.8mm;
   right: 2mm;
   color: var(--rep-ink);
 }
