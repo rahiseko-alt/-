@@ -43,6 +43,7 @@
 .cover-lead {
   margin-top: 6mm;
   font-size: 9pt;
+  font-weight: 500; /* 白抜きの 12pt 未満はウェイト 500 以上（system/rules/typography-ja.md） */
 }
 
 .cover-foot {

@@ -304,6 +304,7 @@ function checkCompose(root: string, books: BookState[], companyOk: boolean, stri
   }
   let count = 0;
   for (const { book, okPages } of books) {
+    const shared = styleClasses(root, book.config.styles);
     for (const pageId of okPages) {
       count++;
       try {
@@ -315,9 +316,69 @@ function checkCompose(root: string, books: BookState[], companyOk: boolean, stri
       } catch (err) {
         push(s.errors, errorMessage(err));
       }
+      const collisions = pageClassCollisions(root, book.relDir, pageId, shared.classes);
+      if (collisions.length > 0) {
+        push(
+          s.warnings,
+          `${book.relDir}/pages/${pageId}/page.css: 共通 CSS（${shared.files.join('・')}）と同じクラス名 ${collisions.map((c) => `.${c}`).join('・')} を、ページで書いた要素に使って装飾しています。` +
+            '共通の装飾・位置も同時にかかるため、意図した上書きでなければページ固有の名前にしてください（system/prompts/replicate-page.md）',
+        );
+      }
     }
   }
   s.info.push(`${count} ページを合成`);
+}
+
+const CSS_CLASS_RE = /\.(-?[_a-zA-Z][\w-]*)/g;
+
+function stripCssComments(css: string): string {
+  return css.replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
+/** CSS のセレクタに出てくるクラス名 */
+export function cssSelectorClasses(css: string): Set<string> {
+  const out = new Set<string>();
+  for (const m of stripCssComments(css).matchAll(/([^{}]+)\{/g)) {
+    for (const c of m[1]!.matchAll(CSS_CLASS_RE)) out.add(c[1]!);
+  }
+  return out;
+}
+
+/** BOOK の styles（共通 CSS）が装飾しているクラス名。ここの名前をページで別の意味に使うと、共通の装飾・位置が重なってかかる */
+function styleClasses(root: string, styles: string[]): { files: string[]; classes: Set<string> } {
+  const classes = new Set<string>();
+  const files: string[] = [];
+  for (const style of styles) {
+    const css = readText(root, style);
+    if (css == null) continue;
+    files.push(style);
+    for (const c of cssSelectorClasses(css)) classes.add(c);
+  }
+  return { files, classes };
+}
+
+/**
+ * page.css で装飾しているクラスのうち、共通 CSS と同じ名前で、かつページ・BOOK 固有の部品の
+ * class 属性に直接書かれているもの（共通パーシャルが出力する要素を上書きするだけなら対象外）
+ */
+export function pageClassCollisions(root: string, bookRelDir: string, pageId: string, shared: Set<string>): string[] {
+  if (shared.size === 0) return [];
+  const pageDir = `${bookRelDir}/pages/${pageId}`;
+  const css = readText(root, `${pageDir}/page.css`);
+  if (css == null) return [];
+  const styled = cssSelectorClasses(css);
+  const markup = [readText(root, `${pageDir}/page.html`) ?? ''];
+  const compDir = path.join(root, bookRelDir, 'components');
+  if (fs.existsSync(compDir)) {
+    for (const f of fs.readdirSync(compDir).filter((n) => n.endsWith('.hbs')).sort()) markup.push(readText(root, `${bookRelDir}/components/${f}`) ?? '');
+  }
+  const written = new Set<string>();
+  for (const src of markup) {
+    for (const m of src.matchAll(/\bclass="([^"]*)"/g)) {
+      for (const token of m[1]!.split(/\s+/)) if (/^-?[_a-zA-Z][\w-]*$/.test(token)) written.add(token);
+    }
+  }
+  return [...styled].filter((c) => shared.has(c) && written.has(c)).sort();
 }
 
 // ---------------------------------------------------------------------------

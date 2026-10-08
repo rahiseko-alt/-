@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import sharp from 'sharp';
-import type { Browser } from 'playwright';
+import type { Browser, Page } from 'playwright';
 import {
   bookFileName,
   composeBook,
@@ -33,6 +33,7 @@ import {
   type Command,
   type Io,
 } from './cli.ts';
+import { collectPrintQa, formatPrintQa } from './print-qa.ts';
 import { htmlBodyText, todoSnippets } from './text.ts';
 
 export const RENDER_USAGE = `使い方: npm run render -- --book <id> [オプション]
@@ -41,8 +42,8 @@ export const RENDER_USAGE = `使い方: npm run render -- --book <id> [オプシ
   --format png|pdf|both   出力形式（既定: both）
   --dpi <N>               PNG の解像度（既定: book.yaml の output.png_dpi）
   --guides                ガイド（仕上がり線・塗り足し・安全領域・マージン・段組）を重ねる
-  --release               入稿・公開用。描画結果に "TODO" が残っている、ガイドが有効、
-                          または STUDIO_CHROMIUM_PATH で指定版以外の Chromium を使っていると失敗する
+  --release               入稿・公開用。描画結果に "TODO" が残っている、6.5pt 未満（白抜きは 7pt 未満）や安全領域の外の文字がある、
+                          ガイドが有効、または STUDIO_CHROMIUM_PATH で指定版以外の Chromium を使っていると失敗する（通常の出力では警告）
   --out <dir>             出力先（既定: books/<id>/output。その下に png/ と pdf/ を作る）
   --root <dir>            スタジオのルート（既定: リポジトリルート）
 例:
@@ -268,6 +269,19 @@ function checkFontFallbacks(release: boolean, fallbacks: string[], addWarnings: 
   addWarnings(fallbacks.map((f) => `${f}。${hint}`));
 }
 
+/** 文字の最小サイズ・安全領域: 通常は警告、--release では入稿できないためエラー */
+async function checkPrintQa(page: Page, geometry: PageGeometry, release: boolean, addWarnings: (w: string[]) => void): Promise<void> {
+  const issues = formatPrintQa(await collectPrintQa(page, geometry.safeMm), geometry);
+  if (issues.length === 0) return;
+  if (release) {
+    throw new CliError(
+      `--release: 印刷に向かない文字があります\n${issues.map((i) => `  - ${i}`).join('\n')}`,
+      '文字を大きくする・字数を減らす・位置を内側へ移す。読ませない装飾文字だけは data-print-qa="ignore" を付けて対象外にできる',
+    );
+  }
+  addWarnings(issues);
+}
+
 /** Playwright のタイムアウトを日本語のエラーにする */
 async function withTimeoutMessage<T>(label: string, run: () => Promise<T>): Promise<T> {
   try {
@@ -311,6 +325,7 @@ async function renderPng(
       assertNoReferenceRequests(pageId, doc.referenceRequests);
       checkFontFallbacks(release, doc.fontFallbacks, addWarnings);
       assertNoTodo(release, pageId, doc.text);
+      await checkPrintQa(doc.page, geometry, release, addWarnings);
       // 大きな画像ほど時間がかかる（1 億画素で 30 秒程度）ので、画素数に応じてタイムアウトを延ばす
       const timeout = 60_000 + Math.ceil((target.width * target.height) / 1000);
       const shot = await withTimeoutMessage(pageId, () => doc.page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', timeout }));
@@ -352,6 +367,7 @@ async function renderPdf(
       assertNoReferenceRequests('PDF', doc.referenceRequests);
       checkFontFallbacks(release, doc.fontFallbacks, addWarnings);
       assertNoTodo(release, 'PDF', doc.text);
+      if (checkFonts) await checkPrintQa(doc.page, geometry, release, addWarnings);
       const pdf = await doc.page.pdf({
         width: `${geometry.boxWidthMm}mm`,
         height: `${geometry.boxHeightMm}mm`,

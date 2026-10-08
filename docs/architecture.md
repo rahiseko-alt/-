@@ -321,6 +321,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 - `.bleed`（`.bleed-top` 等）を付けた要素は塗り足しの端まで広がる
 - `data-side` はページ番号と綴じ方向で決まる（左綴じ: 奇数 = 右、偶数 = 左／右綴じ: 逆／綴じなし: 常に右）。右ページはノドが左
 - 本文に `TODO` が残っていると警告（`render --release` ではエラー）
+- 描画結果の文字を走査し、6.5pt 未満の文字、白抜き（RGB がすべて 230 以上）で 7pt 未満または 12pt 未満でウェイト 500 未満の文字、安全領域（`safe_mm`）の外の文字を警告（`render --release` ではエラー）。字の大きさは CSS の transform・SVG の座標変換を含めた実寸、位置は文字の送り方向と直角の向きを 1em の枠で測る。`data-print-qa="ignore"` の中と写真枠のプレースホルダは対象外（`system/scripts/lib/print-qa.ts`）
 
 ### プレビュー（Vite）
 
@@ -361,6 +362,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |
+| 4 | `page.css` が、BOOK の `styles`（共通 CSS）と同じクラス名を、`page.html`・BOOK 固有の部品の `class` 属性に直接書いた要素に使って装飾している（共通パーシャルが出力する要素の上書きだけなら対象外） | 警告 |
 | 5 | 事実の直書き: company-data の文字列（4 文字以上、TODO 以外）が `books/**/page.html` やパーシャルにそのまま書かれている | 警告（`{{facts...}}` を使う） |
 | 6 | 禁止語: いずれかの `source.yaml` の `forbidden_terms` が `books/**`・`company-data/**`・`shared/**` のテキストファイルに出現 | エラー |
 | 7 | `backgrounds/*.{png,jpg,jpeg,webp}` に同じベース名の `.prompt.yaml` がない | 警告 |

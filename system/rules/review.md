@@ -105,7 +105,7 @@
 ## 6. 出力前（入稿・公開前）のレビュー
 
 - [ ] `npm run validate -- --strict` が通る（TODO が残っていない）
-- [ ] `npm run render -- --book <id> --release` が通る（TODO なし・ガイドなし）
+- [ ] `npm run render -- --book <id> --release` が通る（TODO なし・6.5pt 未満の文字なし・安全領域の外の文字なし・ガイドなし）
 - [ ] 全ページを PNG で目視（ページ順・左右・ノンブル）
 - [ ] PDF のページ数・ページサイズ（仕上がり + 塗り足し）を `pdfinfo` で確認
 - [ ] PDF に書体が埋め込まれていることを `pdffonts` で確認
