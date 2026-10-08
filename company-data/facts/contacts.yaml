@@ -1,0 +1,20 @@
+# 問い合わせ先・SNS（正本）
+# - BOOK からは {{#each facts.contacts.contacts}} ... {{label}} {{tel}} ... {{/each}} のように参照する
+# - 代表の住所・電話番号は facts/school.yaml。ここには窓口別の連絡先を書く
+# - URL を QR コードにする場合は {{qr url}} ／ {{> qr-block url=...}} を使う（URL を画像に焼き込まない）
+# - 下の contact-todo は記入例を兼ねたプレースホルダ。実際の窓口を記入したら削除する
+# 書き方: company-data/README.md ／ ルール: system/rules/company-data.md
+
+contacts:
+  - id: contact-todo
+    label: "TODO: 窓口名を記入"
+    tel: "TODO: 電話番号を記入"
+    email: "TODO: メールアドレスを記入"
+    url: "TODO: 窓口ページの URL を記入"
+    hours: "TODO: 受付時間を記入"
+    note: "TODO: 補足を記入（なければ行ごと削除）"
+
+# 公式 SNS（運用中のアカウントのみ）
+sns:
+  - service: "TODO: サービス名を記入"
+    url: "TODO: アカウントの URL を記入"

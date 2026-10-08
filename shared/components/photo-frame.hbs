@@ -1,0 +1,23 @@
+{{!--
+  photo-frame: 写真枠（Layer 2 の枠 + Layer 1 の画像素材）
+  画像の指定（どちらか一方。両方なければ「写真未設定」のプレースホルダ）:
+    id  : company-data/photos/photos.yaml の写真 ID（{{photo id}} で解決）
+    src : リポジトリルート相対の画像パス（shared/generated-assets/ など。{{asset src}} で解決）
+  任意: ratio（CSS aspect-ratio。例 "4 / 3"）, position（object-position。例 "50% 30%"）,
+        alt, caption, variant（"round" | "bleed"）
+  使い方:
+    {{> photo-frame id="campus-exterior" ratio="3 / 2" caption="TODO: キャプション"}}
+    {{> photo-frame src="shared/generated-assets/texture-paper-01.png" ratio="1 / 1"}}
+    {{> photo-frame ratio="4 / 3"}}   … 写真待ちのプレースホルダ（本文に TODO が出るため --release で止まる）
+  詳細: shared/components/README.md
+--}}
+<figure class="photo-frame{{#if variant}} photo-frame--{{variant}}{{/if}}"{{#if ratio}} style="aspect-ratio: {{ratio}}"{{/if}}>
+  {{#if id}}
+  <img class="photo-frame__img" src="{{photo id}}" alt="{{#if alt}}{{alt}}{{/if}}"{{#if position}} style="object-position: {{position}}"{{/if}}>
+  {{else}}{{#if src}}
+  <img class="photo-frame__img" src="{{asset src}}" alt="{{#if alt}}{{alt}}{{/if}}"{{#if position}} style="object-position: {{position}}"{{/if}}>
+  {{else}}
+  <div class="photo-frame__placeholder"><span>TODO: 写真未設定</span></div>
+  {{/if}}{{/if}}
+  {{#if caption}}<figcaption class="photo-frame__caption">{{caption}}</figcaption>{{/if}}
+</figure>

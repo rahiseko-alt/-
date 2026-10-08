@@ -1,0 +1,27 @@
+# 学校の基本情報（正本）
+# - BOOK からは {{facts.school.name}} のように参照する。BOOK 側に値を書き写さない
+# - 確定していない項目は "TODO: ..." のまま残す（推測・Web 検索で埋めない）
+# - 値を記入するときは、学校から受け取った資料にもとづき、出典をコミットメッセージに残す
+# 書き方: company-data/README.md ／ ルール: system/rules/company-data.md
+
+name: AIビジネス専門学校
+name_en: "TODO: 英語表記を記入"
+short_name: "TODO: 略称を記入（使わない場合は行ごと削除）"
+corporation: "TODO: 設置者（学校法人名など）を記入"
+established: "TODO: 設立年を数値で記入"
+
+address:
+  postal_code: "TODO: 郵便番号を記入（例の形式: 000-0000）"
+  prefecture: "TODO: 都道府県を記入"
+  city: "TODO: 市区町村を記入"
+  line1: "TODO: 番地を記入"
+  line2: "TODO: 建物名を記入（なければ行ごと削除）"
+
+tel: "TODO: 代表電話番号を記入"
+fax: "TODO: FAX 番号を記入（なければ行ごと削除）"
+email: "TODO: 代表メールアドレスを記入"
+url: "TODO: 公式サイトの URL を記入"
+
+# 最寄り駅などからの経路。1 行 1 経路
+access:
+  - "TODO: 最寄り駅からのアクセスを記入"

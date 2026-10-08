@@ -1,0 +1,12 @@
+# 共通コピー（正本）: 複数の BOOK で使い回す文章
+# - BOOK からは {{copy.main.<キー>}} で参照する（copy/<ファイル名>.yaml -> copy.<ファイル名>）
+# - キーは自由（英小文字・アンダースコア）。BOOK 固有の文章はここではなく各ページの page.html に書く
+# - 改行を含む文は YAML の | を使い、{{nl2br copy.main.<キー>}} で出力する
+# - 参考資料（references/）のコピーを流用・言い換えしない
+# - 確定していない文は "TODO: ..." のまま残す（--release 出力ではエラーになる）
+# ルール: system/rules/company-data.md
+
+tagline: "TODO: タグライン（学校名に添える短い一文）を記入"
+catchphrase: "TODO: メインキャッチコピーを記入"
+lead: "TODO: リード文を記入"
+closing: "TODO: 締めの一文を記入"

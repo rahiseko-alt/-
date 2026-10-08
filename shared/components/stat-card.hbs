@@ -1,0 +1,16 @@
+{{!--
+  stat-card: 数値カード（Layer 2 の枠 + Layer 3 の数値・ラベル）
+  必須: label, value
+  任意: unit, note, as_of, source, variant（"accent" | "inverse" | "outline"）
+  使い方:
+    {{#each facts.results.metrics}}{{> stat-card this}}{{/each}}
+    {{> stat-card label=facts.results.metrics.0.label value=facts.results.metrics.0.value}}
+  value は {{num}} で桁区切りする（数値以外はそのまま出力）
+  詳細: shared/components/README.md
+--}}
+<div class="stat-card{{#if variant}} stat-card--{{variant}}{{/if}}">
+  <p class="stat-card__label">{{label}}</p>
+  <p class="stat-card__value"><span class="stat-card__number num">{{num value}}</span>{{#if unit}}<span class="stat-card__unit">{{unit}}</span>{{/if}}</p>
+  {{#if note}}<p class="stat-card__note">{{note}}</p>{{/if}}
+  {{#if as_of}}<p class="stat-card__meta">{{as_of}}{{#if source}}／{{source}}{{/if}}</p>{{else}}{{#if source}}<p class="stat-card__meta">{{source}}</p>{{/if}}{{/if}}
+</div>

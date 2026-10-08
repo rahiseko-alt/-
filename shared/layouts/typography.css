@@ -1,0 +1,246 @@
+/*
+ * typography.css: 和文組版のクラス（全 BOOK 共通）
+ *
+ * 使い方: book.yaml の styles に shared/layouts/typography.css を入れる。
+ * - 基本設定（禁則 line-break: strict、見出しの palt・文節改行、本文の両端揃え）は
+ *   system/design-engine/src/assets/base.css が全ページに適用済み。ここは役割別のクラスだけを定義する
+ * - 文字サイズ・行間は CSS 変数で上書きできる。:root には定義せず var() の既定値で持つので、
+ *   book.yaml の theme（例: { "--fs-body": "9pt" }）や page.css で上書きする
+ * - 文字サイズは pt、配置は mm で指定する。最小サイズなどの規定: system/rules/typography-ja.md
+ * 詳細: shared/layouts/README.md
+ */
+
+/* ---- 役割別の文字スタイル ---- */
+
+/* 表紙・扉の大見出し */
+.t-display {
+  font-family: var(--font-heading);
+  font-size: var(--fs-display, 40pt);
+  font-weight: 900;
+  line-height: var(--lh-display, 1.2);
+  letter-spacing: var(--ls-display, 0.02em);
+  font-feature-settings: 'palt' 1;
+  word-break: auto-phrase;
+  text-spacing-trim: trim-start;
+}
+
+/* 大見出し（ページタイトル） */
+.t-h1 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h1, 24pt);
+  font-weight: 700;
+  line-height: var(--lh-h1, 1.3);
+  letter-spacing: var(--ls-h1, 0.04em);
+  font-feature-settings: 'palt' 1;
+  word-break: auto-phrase;
+  text-spacing-trim: trim-start;
+}
+
+/* 中見出し */
+.t-h2 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h2, 16pt);
+  font-weight: 700;
+  line-height: var(--lh-h2, 1.4);
+  letter-spacing: var(--ls-h2, 0.04em);
+  font-feature-settings: 'palt' 1;
+  word-break: auto-phrase;
+  text-spacing-trim: trim-start;
+}
+
+/* 小見出し */
+.t-h3 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3, 12pt);
+  font-weight: 700;
+  line-height: var(--lh-h3, 1.5);
+  letter-spacing: var(--ls-h3, 0.04em);
+  font-feature-settings: 'palt' 1;
+  word-break: auto-phrase;
+  text-spacing-trim: trim-start;
+}
+
+/* リード文（見出し直下の導入文） */
+.t-lead {
+  font-family: var(--font-body);
+  font-size: var(--fs-lead, 11pt);
+  font-weight: 500;
+  line-height: var(--lh-lead, 1.8);
+  letter-spacing: var(--ls-lead, 0.02em);
+  text-align: justify;
+}
+
+/* 本文（ベタ組み: palt を使わない） */
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body, 9.5pt);
+  font-weight: 400;
+  line-height: var(--lh-body, 1.75);
+  letter-spacing: var(--ls-body, 0);
+  text-align: justify;
+}
+
+/* 本文（明朝） */
+.t-body-serif {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body, 9.5pt);
+  font-weight: 400;
+  line-height: var(--lh-body, 1.75);
+  letter-spacing: var(--ls-body, 0);
+  text-align: justify;
+}
+
+/* キャプション（写真説明など） */
+.t-caption {
+  font-family: var(--font-body);
+  font-size: var(--fs-caption, 7.5pt);
+  font-weight: 400;
+  line-height: var(--lh-caption, 1.6);
+  color: var(--color-muted);
+}
+
+/* 注記・出典（最小サイズ。これより小さくしない） */
+.t-note {
+  font-family: var(--font-body);
+  font-size: var(--fs-note, 6.5pt);
+  font-weight: 400;
+  line-height: var(--lh-note, 1.5);
+  color: var(--color-muted);
+}
+
+/* 欧文ラベル（見出しに添える英字など） */
+.t-en {
+  font-family: var(--font-heading);
+  font-size: var(--fs-en, 9pt);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: var(--ls-en, 0.12em);
+  text-transform: uppercase;
+}
+
+/* 大きな数字（実績・データ） */
+.t-num-xl {
+  font-family: var(--font-number);
+  font-size: var(--fs-num-xl, 44pt);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+.t-num-l {
+  font-family: var(--font-number);
+  font-size: var(--fs-num-l, 28pt);
+  font-weight: 700;
+  line-height: 1.05;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+/* ---- 書体・ウェイト ---- */
+
+.ff-heading {
+  font-family: var(--font-heading);
+}
+
+.ff-body {
+  font-family: var(--font-body);
+}
+
+.ff-serif {
+  font-family: var(--font-serif);
+}
+
+.ff-number {
+  font-family: var(--font-number);
+}
+
+/* @fontsource で読み込み済みのウェイト: Sans 400/500/700/900、Serif 400/700 */
+.fw-regular {
+  font-weight: 400;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.fw-bold {
+  font-weight: 700;
+}
+
+.fw-black {
+  font-weight: 900;
+}
+
+/* ---- 文字詰め・改行 ---- */
+
+/* 本文に palt が継承されたときに戻す */
+.no-palt {
+  font-feature-settings: normal;
+}
+
+/* 改行させない（数字と単位、短い固有名詞など） */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* 見出しの行長をそろえる（2〜4 行の見出し向け） */
+.balance {
+  text-wrap: balance;
+}
+
+/* 最終行が 1〜2 文字だけになるのを避ける */
+.pretty {
+  text-wrap: pretty;
+}
+
+/* 左揃え・中央・右揃え（本文の既定は両端揃え） */
+.ta-left {
+  text-align: left;
+}
+
+.ta-center {
+  text-align: center;
+}
+
+.ta-right {
+  text-align: right;
+}
+
+/* ---- 縦組み ---- */
+
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* 縦中横（縦組み中の 2〜3 桁の数字など） */
+.tcy {
+  text-combine-upright: all;
+}
+
+/* ---- 文字色（ブランドカラー） ---- */
+
+.c-primary {
+  color: var(--color-primary);
+}
+
+.c-secondary {
+  color: var(--color-secondary);
+}
+
+.c-accent {
+  color: var(--color-accent);
+}
+
+.c-text {
+  color: var(--color-text);
+}
+
+.c-muted {
+  color: var(--color-muted);
+}
+
+/* 白抜き（濃い面の上）。7pt 以上・500 以上のウェイトで使う */
+.c-inverse {
+  color: var(--color-background);
+}

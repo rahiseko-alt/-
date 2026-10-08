@@ -1,0 +1,18 @@
+# ブランドカラー（正本）
+# - 各値は CSS 変数 --color-<役割> になる（例: primary -> var(--color-primary)）
+# - BOOK・shared の CSS では色を直書きせず var(--color-*) を使う
+# - 以下は描画確認用の【仮の値】で、学校の正式なブランドカラーではない
+#   正式な色が決まったら値を差し替え、status を final にする
+# - 16 進カラー（#RRGGBB）で記入する。印刷の色味は印刷会社と確認する（system/rules/output.md）
+# ルール: system/rules/company-data.md
+
+status: provisional
+
+colors:
+  primary: "#24476b"     # 主要色（見出し・帯・アクセント面）
+  secondary: "#4f6d8a"   # 補助色
+  accent: "#d9a21b"      # 強調色（数字・矢印・ポイント）
+  text: "#1f2328"        # 本文の文字色
+  muted: "#6b7280"       # キャプション・注記などの弱い文字色
+  background: "#ffffff"  # 紙面の地色
+  surface: "#f2f4f7"     # カード・パネルの面色

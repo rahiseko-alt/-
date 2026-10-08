@@ -1,0 +1,16 @@
+# 教員（正本）
+# - BOOK からは {{#each facts.teachers.teachers}} ... {{name}} ... {{/each}} のように参照する
+# - 掲載の同意を得た教員だけを記入する。氏名・肩書・経歴は本人確認済みのものに限る
+# - course_ids には facts/courses.yaml の id を書く
+# - photo を書く場合は company-data/photos/photos.yaml に存在する写真 ID を指定する
+# - 下の teacher-todo は記入例を兼ねたプレースホルダ。実際の教員を記入したら削除する
+# 書き方: company-data/README.md ／ ルール: system/rules/company-data.md
+
+teachers:
+  - id: teacher-todo
+    name: "TODO: 氏名を記入"
+    name_kana: "TODO: 氏名のふりがなを記入"
+    title: "TODO: 肩書を記入"
+    course_ids:
+      - course-todo
+    profile: "TODO: 経歴・紹介文を記入（本人確認済みの内容のみ）"

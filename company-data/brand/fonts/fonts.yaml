@@ -1,0 +1,12 @@
+# ブランド書体（正本）
+# - 各値は CSS 変数 --font-<役割> になる（heading / body / serif / number）
+# - 使える書体は、オフラインで読み込めるものだけ（現在は @fontsource の Noto Sans JP / Noto Serif JP）
+#   Google Fonts などネットワーク経由の書体は使わない
+# - 書体を追加・変更する場合はライセンスを確認し、system/rules/typography-ja.md の手順に従う
+# ルール: system/rules/typography-ja.md
+
+families:
+  heading: '"Noto Sans JP", sans-serif'
+  body: '"Noto Sans JP", sans-serif'
+  serif: '"Noto Serif JP", serif'
+  number: '"Noto Sans JP", sans-serif'
