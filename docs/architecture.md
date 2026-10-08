@@ -345,7 +345,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 | `validate` | `[--strict]` | 下表。エラーがあれば終了コード 1 |
 | `new:book` | `<bookId>` `[--kind brochure]` `[--title "..."]` `[--size A4]` `[--orientation portrait]` `[--pages 4]` | `system/templates/book/` から BOOK を作り、ページを `system/templates/page/` から作る。既存なら拒否。置換: `__BOOK_ID__` `__TITLE__` `__KIND__` `__SIZE__` `__ORIENTATION__` `__PAGE_ID__` `__PAGE_TYPE__` `__PAGE_TITLE__` `__DATE__` |
 | `new:page` | `--book <id>` `[--after <pageId>]` `[--type other]` `[--title "..."]` | 空いている次の `page_NNN` を作り、`book.yaml` の `pages` に挿入（コメント保持） |
-| `ref:ingest` | `--source <name>` `--kind <kind>` `(--pdf <file> \| --images <dir>)` `[--dpi 150]` | PDF を `original/` にコピーし `pdftoppm` で `page_NNN.png`、または画像を `page_NNN.<ext>` に正規化。`source.yaml` と `analysis/book.yaml` がなければ雛形から作成。次の手順（forbidden_terms の記入）を表示 |
+| `ref:ingest` | `--source <name>` `--kind <kind>` `(--pdf <file> \| --images <dir>)` `[--dpi 150]` `[--format jpg\|png]`（既定 jpg） | PDF を `original/` にコピーし `pdftoppm` で `page_NNN.jpg`（`--format png` で `.png`）、または画像を `page_NNN.<ext>` に正規化。`source.yaml` と `analysis/book.yaml` がなければ雛形から作成。次の手順（forbidden_terms の記入）を表示 |
 | `doctor` | `[--quiet]` | Node 22 以上、Chromium の起動、@fontsource、Noto での日本語描画、sharp、git-lfs、poppler（`pdfinfo` / `pdftoppm`。テストと PDF 取り込みに必要なので致命的）を確認。致命的な問題で終了コード 1 |
 | `setup` | `[--quiet]` | `system/scripts/setup.sh`: Git LFS（install --local / pull）、必要時のみ `npm ci`、Chromium の確認とインストール、`pdfinfo` / `pdftoppm` がなければ `apt-get install poppler-utils`（root かパスワードなし sudo のとき）、`npm run doctor`。冪等 |
 | `dev` | （環境変数 `STUDIO_ROOT=<dir>` `PORT=<番号>`） | Vite プレビュー（既定: リポジトリルート・ポート 5173）。`--root` は使えない |

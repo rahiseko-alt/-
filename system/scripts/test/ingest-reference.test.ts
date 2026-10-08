@@ -73,6 +73,7 @@ describe('ref:ingest --images', () => {
       [['--source', 'X', '--kind', 'flyers', '--images', images], '取り込める画像がありません'],
       [['--source', 'X', '--kind', 'flyers', '--images', path.join(images, 'none')], '画像のディレクトリが見つかりません'],
       [['--source', 'X', '--kind', 'flyers', '--pdf', path.join(images, 'none.pdf')], 'PDF が見つかりません'],
+      [['--source', 'X', '--kind', 'flyers', '--pdf', path.join(images, 'none.pdf'), '--format', 'gif'], '--format は jpg か png'],
     ];
     for (const [args, msg] of cases) {
       const r = await run(ingestCommand, [...args, '--root', root]);
@@ -83,7 +84,7 @@ describe('ref:ingest --images', () => {
 });
 
 describe('ref:ingest --pdf', () => {
-  it('original/ にコピーし、pdftoppm でページごとの PNG にする', async () => {
+  it('original/ にコピーし、pdftoppm でページごとの JPEG（既定）または PNG（--format png）にする', async () => {
     // 2 ページの PDF を Chromium で生成
     const work = tempDir();
     const pdf = path.join(work, 'other brochure.pdf');
@@ -102,9 +103,10 @@ describe('ref:ingest --pdf', () => {
     const r = await run(ingestCommand, ['--source', 'Pdf-school', '--kind', 'brochure', '--pdf', pdf, '--dpi', '36', '--root', root]);
     expect(r.code, r.text).toBe(0);
     const dir = path.join(root, 'references/Pdf-school/brochure');
-    expect(fs.readdirSync(dir).sort()).toEqual(['analysis', 'original', 'page_001.png', 'page_002.png', 'source.yaml']);
+    expect(fs.readdirSync(dir).sort()).toEqual(['analysis', 'original', 'page_001.jpg', 'page_002.jpg', 'source.yaml']);
     expect(fs.readdirSync(path.join(dir, 'original'))).toEqual(['other-brochure.pdf']);
-    const meta = await sharp(path.join(dir, 'page_001.png')).metadata();
+    const meta = await sharp(path.join(dir, 'page_001.jpg')).metadata();
+    expect(meta.format).toBe('jpeg');
     // 100mm × 140mm を 36dpi
     expect(Math.abs((meta.width ?? 0) - (100 / 25.4) * 36)).toBeLessThanOrEqual(1);
     expect(Math.abs((meta.height ?? 0) - (140 / 25.4) * 36)).toBeLessThanOrEqual(1);
@@ -113,6 +115,12 @@ describe('ref:ingest --pdf', () => {
 
     const v = await run(validateCommand, ['--root', root]);
     expect(v.code, v.text).toBe(0);
+
+    // --format png で取り込み直すと、既存の JPEG は置き換わる
+    const png = await run(ingestCommand, ['--source', 'Pdf-school', '--kind', 'brochure', '--pdf', pdf, '--dpi', '36', '--format', 'png', '--force', '--root', root]);
+    expect(png.code, png.text).toBe(0);
+    expect(fs.readdirSync(dir).filter((n) => n.startsWith('page_')).sort()).toEqual(['page_001.png', 'page_002.png']);
+    expect((await sharp(path.join(dir, 'page_001.png')).metadata()).format).toBe('png');
   });
 
   it('--force でも、新しい PDF の変換に失敗したら既存のページ画像を消さず、壊れた PDF も残さない', async () => {

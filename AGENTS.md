@@ -37,8 +37,8 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | --- | --- | --- |
 | Phase 1 | 基礎環境構築（モノレポ、Dev Container、Node/TypeScript、Vite、Playwright、レンダリング、日本語フォント、スクリプト、ルール、データ形式） | **完了** |
 | Phase 2 | 環境をテンプレート化（会社・BOOK ごとに複製せず、このモノレポに BOOK と参考資料を追加していく） | 方針として適用中 |
-| Phase 3 | 参考資料投入（`references/` へ PDF とページ画像を格納） | **次の作業** |
-| Phase 4 | 参考資料解析（`analysis/*.yaml`） | 未着手 |
+| Phase 3 | 参考資料投入（`references/` へ PDF とページ画像を格納） | **完了**（3 校・14 資料・157 ページ） |
+| Phase 4 | 参考資料解析（`analysis/*.yaml`） | **次の作業** |
 | Phase 5 | 完コピ検証（代表ページを 2 ラウンド以上比較・修正） | 未着手 |
 | Phase 6 | BASELINE 確定 | 未着手 |
 | Phase 7 | 保護機構（Filesystem Permission / PreToolUse Hook / Git 差分チェック） | 計画のみ・**未導入**（system/rules/protection.md） |
@@ -46,7 +46,8 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | Phase 9 | 日常編集 | 未着手 |
 
 - `company-data/` は学校名（AIビジネス専門学校）以外すべて `"TODO: ..."` のプレースホルダ、ブランドカラーは仮の値（`status: provisional`）
-- `references/` と `books/` は README のみ（実データなし）
+- `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`source.yaml` の `forbidden_terms` 記入済み。`analysis/` は資料一式写真（`overview`）2 件だけ解析済みで、他は雛形のまま
+- `books/` は README のみ（実データなし）
 - フェーズが進んだら、この表を同じコミットで更新する
 
 ## 4. ディレクトリマップ
@@ -87,7 +88,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | `npm run dev` | プレビュー（Vite）。`/` に BOOK・ページ一覧、`/preview/<bookId>/<pageId>`（`?guides=1` でガイド）、`/preview/<bookId>` で BOOK 全体 |
 | `npm run new:book -- <bookId> [--kind brochure] [--title "..."] [--size A4] [--orientation portrait] [--pages 4]` | BOOK を作成 |
 | `npm run new:page -- --book <id> [--after <pageId>] [--type other] [--title "..."]` | ページを追加 |
-| `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150]` | 参考資料を取り込み |
+| `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150] [--format jpg\|png]` | 参考資料を取り込み（PDF のページ画像は既定 JPEG） |
 | `npm run render -- --book <id> [--page <id> ...] [--format png\|pdf\|both] [--dpi N] [--guides] [--release] [--out <dir>]` | PNG / PDF 出力 |
 | `npm run compare -- --book <id> --page <id> [--reference <path>] [--rendered <png>] [--threshold 0.1]` | 参考ページとの比較（diff / side-by-side / overlay / report.yaml） |
 | `npm run validate [-- --strict]` | データ・BOOK・参考資料・テンプレートの検証、直書き・禁止語・生成記録の確認 |

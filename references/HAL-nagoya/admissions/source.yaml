@@ -1,0 +1,81 @@
+# 参考資料の出自（system/rules/references.md）
+# npm run ref:ingest で 2026-10-08 に作成。title / obtained / forbidden_terms / notes を人間が記入する
+# source / kind は references/<source>/<kind>/ と同じ
+source: HAL-nagoya
+kind: admissions
+title: "入学要項 昼間部（入学願書在中）HAL NAGOYA 2027"
+# 入手日（YYYY-MM-DD）
+obtained: null
+# 元資料（PDF）のパス。画像だけで取り込んだ場合は null
+original: "references/HAL-nagoya/admissions/original/HAL-nagoya-admissions.pdf"
+# ページ画像の枚数（page_001 〜）
+pages: 17
+# 固定値。制作の参考以外に使わない
+usage: reference-only
+# 【必須】自社の BOOK・company-data・shared に絶対に出てはいけない語。取り込み直後に必ず記入する
+#   学校名・法人名・略称・英語名、固有の学科名・コース名、固有のキャッチコピー、人物名、企業名、
+#   独自の制度名・イベント名、URL・ドメイン・電話番号の特徴的な部分 など
+#   一般的な語（「学科」「就職」「オープンキャンパス」など）は登録しない
+#   発行元のディレクトリ名（HAL-nagoya）が他校名そのものなら、それも登録する
+#   （references/HAL-nagoya/... の形のパスは照合から除外されるので、references.yaml や生成記録の reference_inputs・source_refs の参照には影響しない）
+#   npm run validate は books/・company-data/・shared/ に出現するとエラーにする
+forbidden_terms:
+  - "HAL名古屋"
+  - "HAL NAGOYA"
+  - "HAL東京"
+  - "HAL大阪"
+  - "日本教育財団"
+  - "hal.ac.jp"
+  - "nyugaku.nagoya@hal.ac.jp"
+  - "052-551-1001"
+  - "名駅4-27-1"
+  - "スパイラルタワーズ"
+  - "総合校舎スパイラルタワーズ"
+  - "モード学園"
+  - "名古屋モード学園"
+  - "国際工科専門職大学"
+  - "東京通信大学"
+  - "ZERO→PRO"
+  - "ZERO to PRO"
+  - "3大保証制度"
+  - "就職・資格・給与の3大保証制度"
+  - "給与保証制度"
+  - "完全就職保証制度"
+  - "合格保証制度"
+  - "就職ならHAL"
+  - "ゲームから未来まで"
+  - "選ぶ前に見る。決める前に聞く。"
+  - "産学直結ケーススタディ"
+  - "科目別フリープラン"
+  - "未来創造展"
+  - "HAL EVENT WEEK"
+  - "CROSS HAL"
+  - "谷まさる"
+  - "学費・住まいのサポートBOOK"
+  - "HALの約束"
+  - "HALの"
+  - "HALは"
+  - "HALで"
+  - "HALが"
+  - "HALなら"
+  - "HALだから"
+  - "HALを"
+  - "HALに"
+  - "偏差値や受験勉強は、HALに必要ありません。"
+  - "HALは自信を持って答えます。「心配ない!」と。"
+  - "それは偏差値に勝る素質であり、プロになるために一番必要なもの。"
+  - "HALはその素質を才能に変え、即戦力へと育て、プロ就職を実現させる学校なのです。"
+  - "「どうか自分自身で、HALを確かめてほしい」"
+  - "学びたい意欲がある人すべてに応える、HALだからできることです。"
+  - "HAL名古屋の留学生支援体制"
+  - "「就職ならHAL」"
+  - "通学社員制度"
+  - "通学社員・アルバイト進学制度"
+  - "HAL名古屋 入学相談室"
+# 入手経路・利用上の注意・見開きの扱い（例: page_002 は 2〜3 ページの見開き）
+notes: |
+  Google Drive「専門学校パンフレット参考資料」の「HAL名古屋入学要項 昼間部.pdf」（https://drive.google.com/file/d/1ecwWOdVa-12ZDIt71FfbG0MKFXju3wud/view）を 2026-10-08 に取り込み。Drive への格納日は 2026-10-07。実際の入手日は【要確認】
+  元 PDF は印刷物の写真・スキャン（文字情報なし、埋め込み画像は 72ppi）。ページ画像は同じ解像度の 72dpi・JPEG（品質 85）
+  ページ: グレースケール寄りのスキャン。全画像が90°反時計回り（読むには時計回り90°）。page_001=表紙（単ページ、CONTENTS）。page_002〜016=見開き（page_NNN=p.(2N-2)〜(2N-1)。例: page_002=p.2-3、page_016=p.30-31）。page_017=p.32（単ページ、留学生の願書記入例）。page_009左(p.16)とpage_016左(p.30)は白紙（裏写りのみ）。p.11-18・25-29は切り取り式の振込用紙・エントリーシート・入学願書・推薦書・課題作文用紙・出願用ラベル。p.19-24は留学生入学要項。
+  禁止語に未登録の企業名（就職先・提携先。自社でも使う可能性があるため人間が判断）【要確認】: 三井住友銀行（中央支店・振込先口座）、A&D、Actual Brain、aex inc、AGE Inc、Aiming、Alim、Alt Plus、AQUA、ASPECT、ASURA、ATLAS COMPUTER、AVANTEC、Aztecs、Binal、Blue Art、Borderless、BREASTO、CG-ARTS協会、CGCG Studio、CROSS FIELD、CyberConnect2、DeNA、DIGITAL Hearts、D-O、EST-Corporation、Fidelity証券、For it、Future Scope、GAME FREAK、Geo-Code、GMO ADPARTNERS、h.a.n.d、Humanity、iZ inc.、J-Payment、LANCARSE、Macbee International、Members、Moon Communications、Nagisa、NC-Network、Polygon Magic、QREAZY、SEGA Games、SF Graphics、SOLA DIGITAL ARTS、Super Appli、SY System、Total OA Systems、TriFort、UNIWORX、Virtual Communications、Vitor entertainment、V-Sync、Yoox、日南、BANDAI NAMCO Studios、CAPCOM、CyberAgent、DMM.com、DOCOMO Systems、FromSoftware、GMO Internet、INTELLIGENT SYSTEMS、KLab、KOEI TECMO HOLDINGS、KOJIMA PRODUCTIONS、Konami Amusement、Konami Digital Entertainment、LIXIL、LY Corporation、MAPPA、miHoYo（米哈遊）、SEGA、SQUARE ENIX、SUNRISE、TOYOTA自動車東日本、英雄互娯、小学館Music & Digital Entertainment、東映ZUKUN LABORATORY、日産自動車、日本一Software、日立(中国)有限公司、任天堂、博報堂i-studio、網易遊戯（NetEase Games）
+  禁止語に未登録の候補（一般名詞と重なるため人間が判断）【要確認】: 学内併願制度（HALの入試制度名だが一般的な語の組み合わせ）、入学前スキルアップ講座（HALの入学前講座名だが一般的）、海外特別入学許可制度（HALの留学生制度名。他校にも類似名あり）、渡日前入学許可制度（HALの留学生制度名。他校にも類似名あり）、名古屋出入国在留管理局（〒455-8601 名古屋市港区正保町5-18 / 0570-052259 / 0570-013904）（公的機関の連絡先。自社の留学生要項でも正当に記載しうるため登録しない方がよい（記録のみ））、李留学 / LI LIUXUE / 李学成 / LI XUECHENG（願書記入例の架空の見本氏名。実在人物ではないが、流用防止のため登録するかは人間が判断）

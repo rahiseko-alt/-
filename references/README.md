@@ -6,7 +6,7 @@ BOOK ごとに参考資料をコピーせず、各 BOOK の `references.yaml` �
 **参考資料は、デザイン構造の分析と、Layer 1 画像生成の視覚リファレンス（参考ページ画像の直接入力。system/rules/image-generation.md §3）に使います。学校名・実績・数字・人物・企業名・ロゴ・学科名・インタビュー・写真・固有コピーは、自社の BOOK に一切持ち込みません。**
 ルール: system/rules/references.md
 
-現在は空です（実際の参考資料は Phase 3 で投入します）。
+Phase 3 で 3 校分（`HAL-nagoya/`・`nagoya-iryo-hisho-it/`・`kokusai-igaku-gijutsu/`）を投入済みです。各資料の内容・形式は `source.yaml` の `title`・`notes` を参照してください。
 
 ## 構成
 
@@ -15,7 +15,7 @@ references/
 └─ <source>/                 発行元（例: HAL、A-school、B-school）
    └─ <kind>/                資料の種別（例: brochure、admissions、flyers）
       ├─ source.yaml         出自・用途・禁止語（必須）
-      ├─ page_001.png        ページ画像（3 桁連番 = 元資料のページ順）
+      ├─ page_001.jpg        ページ画像（3 桁連番 = 元資料のページ順）
       ├─ page_002.png
       ├─ …
       ├─ original/           元の PDF
@@ -27,7 +27,7 @@ references/
 ## 取り込み
 
 ```bash
-# PDF から（pdftoppm で page_NNN.png を作る。--dpi 既定 150）
+# PDF から（pdftoppm で page_NNN.jpg を作る。--dpi 既定 150。--format png で PNG。PNG は約 6 倍の容量で Git LFS の容量・転送量を圧迫する）
 npm run ref:ingest -- --source HAL --kind brochure --pdf ~/Downloads/hal-brochure.pdf
 
 # スキャン画像・ページ画像のディレクトリから（page_NNN.<拡張子> に正規化）

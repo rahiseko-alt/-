@@ -1,0 +1,73 @@
+# 参考資料の出自（system/rules/references.md）
+# npm run ref:ingest で 2026-10-08 に作成。title / obtained / forbidden_terms / notes を人間が記入する
+# source / kind は references/<source>/<kind>/ と同じ
+source: nagoya-iryo-hisho-it
+kind: flyers
+title: "オープンキャンパス・イベントチラシ（Halloween event／在校生ティーパーティー／Open Campus 表裏）"
+# 入手日（YYYY-MM-DD）
+obtained: null
+# 元資料（PDF）のパス。画像だけで取り込んだ場合は null
+original: "references/nagoya-iryo-hisho-it/flyers/original/nagoya-iryo-hisho-it-flyers.pdf"
+# ページ画像の枚数（page_001 〜）
+pages: 4
+# 固定値。制作の参考以外に使わない
+usage: reference-only
+# 【必須】自社の BOOK・company-data・shared に絶対に出てはいけない語。取り込み直後に必ず記入する
+#   学校名・法人名・略称・英語名、固有の学科名・コース名、固有のキャッチコピー、人物名、企業名、
+#   独自の制度名・イベント名、URL・ドメイン・電話番号の特徴的な部分 など
+#   一般的な語（「学科」「就職」「オープンキャンパス」など）は登録しない
+#   発行元のディレクトリ名（nagoya-iryo-hisho-it）が他校名そのものなら、それも登録する
+#   （references/nagoya-iryo-hisho-it/... の形のパスは照合から除外されるので、references.yaml や生成記録の reference_inputs・source_refs の参照には影響しない）
+#   npm run validate は books/・company-data/・shared/ に出現するとエラーにする
+forbidden_terms:
+  - "名古屋医療秘書福祉&IT専門学校"
+  - "名古屋医療秘書福祉"
+  - "医療秘書福祉&IT"
+  - "ナゴヤイリョウヒショフクシアンドアイティセンモンガッコウ"
+  - "nagoya-iryo-hisho-it"
+  - "学校法人三幸学園"
+  - "三幸学園"
+  - "サンコウガクエン"
+  - "SANKO GAKUEN"
+  - "SANKO Gakuen"
+  - "SANKO GROUP"
+  - "日本教育クリエイト"
+  - "sanko.ac.jp"
+  - "nagoya-med"
+  - "info-nagoya-med@sanko.ac.jp"
+  - "@nagoya-med35"
+  - "sanko_med_nagoya"
+  - "medical_nagoya"
+  - "sanko.nagoya"
+  - "0120-16-1148"
+  - "052-561-1148"
+  - "052-561-1147"
+  - "名駅2-27-28"
+  - "一生役立つ資格、ずっと頼られる仕事"
+  - "広がるわたしの未来"
+  - "MY MELODY"
+  - "マイメロディ"
+  - "SANRIO"
+  - "検定ウィーク"
+  - "Wフォローアップ"
+  - "ふるさと就職サポート制度"
+  - "sanko link"
+  - "Sanko Link"
+  - "Student Real Voice"
+  - "三幸フェスティバル"
+  - "三幸福祉カレッジ"
+  - "小田原短期大学"
+  - "名古屋リゾート&スポーツ専門学校"
+  - "名古屋ビューティーアート専門学校"
+  - "名古屋こども専門学校"
+  - "名古屋ウェディング&ブライダル専門学校"
+  - "名古屋ブライダル&ホテル観光専門学校"
+  - "名古屋スイーツ&カフェ専門学校"
+  - "名古屋辻学園調理専門学校"
+  - "医療業界を目指す総合専門学校"
+# 入手経路・利用上の注意・見開きの扱い（例: page_002 は 2〜3 ページの見開き）
+notes: |
+  Google Drive「専門学校パンフレット参考資料」の「名古屋医療秘書福祉&IT専門学校 オープンキャンパスチラシ.pdf」（https://drive.google.com/file/d/1a0S8oAbrjsArSpjfsoE4SdoOw-PrdRFa/view）を 2026-10-08 に取り込み。Drive への格納日は 2026-10-07。実際の入手日は【要確認】
+  元 PDF は印刷物の写真・スキャン（文字情報なし、埋め込み画像は 72ppi）。ページ画像は同じ解像度の 72dpi・JPEG（品質 85）
+  ページ: スキャン/撮影画像4枚。全画像が反時計回りに90°倒れている（時計回り90°で正立）。page_001=Halloween eventチラシ（回転後A4縦）、page_002=在校生ティーパーティーチラシ（回転後A4縦）、page_003=Open Campusチラシ表（回転後A4横）、page_004=同チラシ裏（回転後A4横。左半分=職業体験・ティーパーティー・校名、右半分=資格PR・SNS）。
+  禁止語に未登録の候補（一般名詞と重なるため人間が判断）【要確認】: リアルな学校生活が知れる（チラシ見出し。一般的な表現）、自分に合う学校選びをしよう（チラシ見出し。一般的な表現）、選べる職業体験（OC企画名だが一般的）、圧倒的なサポート体制で安心（訴求コピーだが一般的な表現）、最大資格取得数17個（数値入りの訴求。数字は流用禁止）、放課後に無料の手厚い個別補講を実施（訴求コピー。やや一般的）、在校生数No.1（『東海地区医療分野(事務関連)在校生数No.1』の一部。No.1表記自体は自社も使いうる）

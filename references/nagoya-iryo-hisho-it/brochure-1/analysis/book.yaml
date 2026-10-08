@@ -1,0 +1,37 @@
+# 参考資料の解析結果（Phase 4。system/rules/references.md §4）
+# - 資料全体: references/<source>/<kind>/analysis/book.yaml
+# - ページ単位: references/<source>/<kind>/analysis/page_NNN.yaml（ページ画像と同じ番号。この雛形を複製する）
+# - ページ画像を実際に開いて目視してから書く（OCR・テキスト抽出だけで判断しない）
+# - 構造を書く。参考資料の文章・固有名詞は書き写さない（必要なら「（学校名）」のように伏せる）
+# - 値の形は自由（文字列・数値・リスト・マップ）。分からない項目は null のまま
+
+# グリッド（段数・段間・基準線。例: { columns: 12, gutter_mm: 4 }）
+grid: null
+# 余白（mm。例: { top: 15, bottom: 15, inside: 18, outside: 15 }）
+margins: null
+# ガター・段間（例: 4mm）
+gutter: null
+# 写真の比率と使われ方（例: ["3:2 横位置が主", "1:1 人物"]）
+photo_ratios: null
+# 見出し階層（例: [{ level: h1, size_pt: 34, weight: 700 }, { level: h2, size_pt: 16, weight: 700 }]）
+heading_hierarchy: null
+# 色の役割と面積比（実際の色は自社のブランドカラーを使う。例: { base: "#1f5a8a", accent: "#e76f51", 面積: "地色 70% / 強調 5%" }）
+colors: null
+# 罫線（太さ・位置・種類）
+rules: null
+# カード（角丸・余白・影・枠）
+cards: null
+# 情報密度（低 / 中 / 高、1 ページの要素数・文字量の目安）
+density: null
+# ページタイプ（cover / toc / message / course / interview / data / access / back-cover / other）
+page_type: null
+# 視線誘導（最初に目に入る要素と読む順序。例: 左上 → 中央 → 右下）
+eye_flow: null
+# 背景表現（明暗の配置・質感・光・写真との融合）
+background: null
+# 画像のクロップ（裁ち落とし・余白・人物の切り方）
+image_crop: null
+# ページ間のリズム（見開きの構成、写真ページと文字ページの交互など）
+rhythm: null
+# その他の所見
+notes: null
