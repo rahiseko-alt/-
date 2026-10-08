@@ -92,3 +92,32 @@ page_016:                                   # BOOK 側のページ ID
 - 既存のページ画像・PDF は上書きしない（解析結果と `source.yaml` の追記は可）
 - Phase 7 で保護機構を導入した後は READ ONLY になる予定（system/rules/protection.md。現在は未導入）
 - 参考資料を含むため、リポジトリは非公開で運用する【要確認】
+
+## 解析済み資料と Phase 5 の候補（Phase 4 の結果）
+
+全 14 資料・157 ページを解析済み（`analysis/book.yaml` と `analysis/page_NNN.yaml`）。各資料の候補の理由・優先順位は `book.yaml` の `phase5_candidates`（または `notes.phase5_candidates`）にある。
+
+| 資料 | 第一候補 | 他の候補 |
+| --- | --- | --- |
+| `HAL-nagoya/brochure-1` | page_015（学科一覧表。ほぼ Layer 2/3） | page_018・016・008・002 |
+| `HAL-nagoya/brochure-2` | page_001（学科の標準見開き。7 見開きで共通） | page_017・023・004 |
+| `HAL-nagoya/admissions` | page_002（ラベル列＋本文、フロー） | page_004・006・007 |
+| `nagoya-iryo-hisho-it/brochure-1` | page_016（写真＋情報ボックス＋授業カード） | page_010・013・022・003 |
+| `nagoya-iryo-hisho-it/brochure-2` | page_001（大きな数字・地図・一覧） | page_003・007・005 |
+| `nagoya-iryo-hisho-it/brochure-web-it` | page_003（職種の 2 軸図＋データカード。IT 系の見せ方として最も参考になる） | page_002・005・001 |
+| `nagoya-iryo-hisho-it/admissions` | page_001（写真なしの表紙） | page_002・008 |
+| `nagoya-iryo-hisho-it/guide-living` | page_002（カード構成） | page_003・001 |
+| `nagoya-iryo-hisho-it/flyers` | page_002（基本的なチラシ構成） | page_003・001 |
+| `kokusai-igaku-gijutsu/brochure` | page_006（学科・実習ページ。page_008 と色違い） | page_004・007・005・013 |
+| `kokusai-igaku-gijutsu/admissions` | page_005（見開きの募集表） | page_001・008・013 |
+| `kokusai-igaku-gijutsu/flyers` | page_002（同じモジュールの 4 段繰り返し） | page_001 |
+
+`overview`（2 件）は資料一式の写真で、比較の対象ではない（構成と表紙の共通性の参考）。
+
+Phase 5 の前に必要なこと（全資料共通）:
+
+- ページ画像は印刷物の写真で、多くは**反時計回りに 90° 倒れた見開き**。`npm run compare` には回転・切り出しの機能がないため、比較用に「正立・単ページ・台形補正済み」の画像を作り、`--reference` で渡す（作業用の画像は `references/` や `books/` ではなく一時ディレクトリに置く）
+- 写真のゆがみ・照明むら・ノドの湾曲があるため、`mismatch_ratio` は高く出る。合否は位置・大きさの目視比較を主にする
+- 撮影されていないページがある（各 `book.yaml` の `page_type` / `page_map` に記載）
+- ライセンスキャラクター・他社ロゴ・実績バッジは、どの層でも再利用しない（各解析の `notes` に記載）
+

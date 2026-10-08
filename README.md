@@ -14,7 +14,7 @@ AIビジネス専門学校のパンフレット・募集要項・チラシ・ポ
 | [system/rules/](system/rules/README.md) | 制作ルール |
 | [system/prompts/](system/prompts/README.md) | 作業用プロンプト |
 
-**現在の状態**: Phase 1（基礎環境構築）と Phase 3（参考資料投入: 3 校・14 資料）が完了。次は Phase 4（参考資料解析）。`company-data/` は学校名以外がプレースホルダ（`TODO:`）、`books/` は空です。
+**現在の状態**: Phase 1（基礎環境構築）、Phase 3（参考資料投入: 3 校・14 資料）、Phase 4（参考資料解析: 157 ページ）が完了。次は Phase 5（完コピ検証）。`company-data/` は学校名以外がプレースホルダ（`TODO:`）、`books/` は空です。
 
 ## しくみの概要
 
