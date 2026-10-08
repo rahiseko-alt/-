@@ -17,7 +17,7 @@ usage: reference-only
 #   独自の制度名・イベント名、URL・ドメイン・電話番号の特徴的な部分 など
 #   一般的な語（「学科」「就職」「オープンキャンパス」など）は登録しない
 #   発行元のディレクトリ名（__SOURCE__）が他校名そのものなら、それも登録する
-#   （references/__SOURCE__/... の形のパスは照合から除外されるので、references.yaml の参照には影響しない）
+#   （references/__SOURCE__/... の形のパスは照合から除外されるので、references.yaml や生成記録の reference_inputs・source_refs の参照には影響しない）
 #   npm run validate は books/・company-data/・shared/ に出現するとエラーにする
 forbidden_terms: []
 #  - "（他校の学校名）"

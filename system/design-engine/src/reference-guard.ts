@@ -1,5 +1,5 @@
 // 参考資料（references/）をページの描画に使わせないための検査
-// 参考ページ画像は比較（npm run compare）と目視の参考専用（system/rules/references.md §4）。
+// 参考ページ画像は比較（npm run compare）・目視・画像生成の参照入力に使い、ページにそのまま貼らない（system/rules/references.md §4）。
 // 書き方（{{asset}}・<img src>・パーシャルの src=・CSS の url()・srcset など）に関係なく、
 // 合成した HTML / CSS の中の URL を解決して references/ を指すものを見つける。
 import path from 'node:path';

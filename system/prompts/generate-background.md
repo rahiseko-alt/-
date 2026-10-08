@@ -5,7 +5,7 @@
 ## 入力
 
 - 対象: `books/<bookId>` の `<pageId>`、または `shared/generated-assets/`（再利用素材）
-- 参考にするページ（任意）: `references/.../page_NNN.png`（構図・質感を言葉で読み取るため）
+- 参考にするページ（任意）: `references/.../page_NNN.png`（画像生成モデルへ直接入力してよい。構図・背景・質感・視覚密度の再現または参考に使う）
 - 文字・カードが載る領域（例: 「上 40% に見出し、下半分に 3 枚のカード」）
 - 使える生成ツール（人間が指定。ツールの利用規約・商用利用の可否を確認済みであること）
 
@@ -13,7 +13,7 @@
 
 - system/rules/image-generation.md（文字禁止・記録・解像度）
 - system/rules/page-layers.md（Layer 1 に入れてよいもの）
-- system/rules/references.md §4（参考画像を生成の入力にしない）
+- system/rules/references.md §4（参考ページ画像の使い方。画像生成への直接入力は可）
 
 ## 手順
 
@@ -22,14 +22,15 @@
 3. プロンプトを書く
    - 構図（空ける領域）→ 主題 → 光・質感 → 色（ブランドカラーの 16 進値を言葉と併記）の順
    - ネガティブ: `text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption`
-   - 参考資料の特徴は言葉で書く。参考画像を入力に使わない
+   - 参考ページ画像を使う場合は、ツールが対応する方式（image prompt / image reference / composition reference / style・visual reference / img2img 系など）で直接入力し、空ける領域・色・質感もプロンプトに言葉で書き添える
+   - 参考画像に写っている文字・数字・ロゴ・QR と、カード・枠・罫線・半透明パネル・単色の色面など Layer 2 で作る構造は生成結果に残さない（入力前に塗りつぶす・マスクする、プロンプトで除くなど）
 4. 生成する。候補が複数あれば、文字が載る領域の静かさ・ブランドカラーとの調和で選ぶ
 5. 採用画像を拡大して、文字状の模様・ロゴ状の形がないか確認する。あれば作り直すか該当部分を使わない
 6. 必要なら拡大・トリミング・色調整を行う（手順を記録する）
 7. 保存する
    - ページ背景: `books/<bookId>/backgrounds/<pageId>.png` と `<pageId>.prompt.yaml`
    - 再利用素材: `shared/generated-assets/<内容>-<特徴>-<連番>.png` と `.prompt.yaml`
-   - `.prompt.yaml` は `system/templates/background.prompt.yaml` をコピーして埋める（`tool` `model` `prompt` `negative_prompt` `seed` `size` `created` `author` `source_refs` `notes`）
+   - `.prompt.yaml` は `system/templates/background.prompt.yaml` をコピーして埋める（`tool` `model` `prompt` `negative_prompt` `seed` `size` `created` `author` `reference_inputs` `params` `source_refs` `notes`）。入力した参考画像は `reference_inputs` に方式（`usage`）と一緒に書く
 8. ページ背景の場合、`page.yaml` に設定する
 
    ```yaml
@@ -50,10 +51,10 @@
 
 - [ ] 画像に文字・数字・ロゴ・QR がない（拡大して確認）
 - [ ] 実在の学校・学生・教員に見える画像を「本校の写真」として使っていない
-- [ ] 参考資料の写真・人物・ロゴを再現していない（参考画像を入力にしていない）
+- [ ] 参考画像を入力した場合、生成結果に参考資料の文字・数字・ロゴ・QR、Layer 2 で作る構造、他校を特定できる要素が残っていない
 - [ ] 文字が載る領域で Layer 3 が読みやすい
 - [ ] 画素数が足りている、または拡大の記録が `notes` にある
-- [ ] `.prompt.yaml` がある（`source_refs` に参考ページ、`notes` に加工手順）
+- [ ] `.prompt.yaml` がある（`reference_inputs` に入力した参考画像と方式、`source_refs` に見て参考にしたページ、`notes` に加工手順）
 - [ ] `npm run validate` で背景の記録漏れの警告がない
 - [ ] 不採用案をコミットしていない
 - [ ] コミット: 画像と `.prompt.yaml` と `page.yaml` を同じコミットに、push 済み

@@ -10,3 +10,8 @@ system/fixtures/**/output/
 system/fixtures/**/reviews/
 # npm run compare の比較画像（参考ページの画素を含むため BOOK にはコミットしない。report.yaml と review.md はコミットする）
 books/**/reviews/**/compare-*/*.png
+# 秘密情報（API キー・トークン等）。共有用の雛形 .env.example だけはコミットする
+.env
+.env.*
+!.env.example
+secrets/

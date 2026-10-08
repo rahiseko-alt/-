@@ -286,7 +286,7 @@ function registerHelpers(hbs: HandlebarsEnv, opts: TemplateEnvOptions, warnings:
       throw helperError(name, errorMessage(err), options);
     }
     if (isReferencePath(p)) {
-      throw helperError(name, `参考資料（references/）はページの描画に使えません: ${p}（比較・目視の参考専用。system/rules/references.md §4）`, options);
+      throw helperError(name, `参考資料（references/）はページの描画に使えません: ${p}（比較・目視・画像生成の参照入力に使う。system/rules/references.md §4）`, options);
     }
     if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) throw helperError(name, `ファイルが見つかりません: ${p}`, options);
     return assetUrl(p);

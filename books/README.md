@@ -126,6 +126,6 @@ npm run validate                                             # 全 BOOK の検�
 ## してはいけないこと
 
 - company-data の値を BOOK に書き写す
-- 参考資料の画像・文章・固有名詞を BOOK に入れる（forbidden_terms は validate でエラー。参考画像をページの描画に使うのも validate / render でエラー。`npm run compare` の比較画像も参考ページの画素を含むため `.gitignore` 済みでコミットしない）
+- 参考資料の画像そのもの（コピー・切り出し）・文章・固有名詞を BOOK に入れる（参考ページ画像を画像生成の参照入力にして作った Layer 1 背景は可。system/rules/image-generation.md §3。forbidden_terms は validate でエラー。参考画像をページの描画に使うのも validate / render でエラー。`npm run compare` の比較画像も参考ページの画素を含むため `.gitignore` 済みでコミットしない）
 - BOOK ごとに company-data や参考資料をコピーする
 - 文字を含む画像を背景に使う

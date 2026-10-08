@@ -28,12 +28,12 @@
 
    - `book.yaml` の `format`（判型・マージン・段数・ガター）を解析結果に合わせる。BOOK 全体に影響する変更は他ページへの影響を確認する
 2. 参考画像を画像として開き、解析結果と見比べて Layer 1 / 2 / 3 に分解する（何を背景で、何をコードで作るか）
-3. Layer 1: 背景が必要なら system/prompts/generate-background.md に従って生成する
+3. Layer 1: 背景が必要なら system/prompts/generate-background.md に従って生成する（参考ページ画像を生成モデルへ直接入力してよい）
 4. Layer 2: グリッド（`shared/layouts/grid.css`）、枠・カード・罫線・色面を `page.html` / `page.css` で作る。色はブランドカラーの変数
 5. Layer 3: テキストを配置する
-   - **参考資料の文字は入力しない。** ダミーテキスト（同じ文字数・行数）か company-data の値を使う
+   - **参考資料の文字をページに書き写さない。** ダミーテキスト（同じ文字数・行数）か company-data の値を使う
    - サイズ・行送り・字間・位置を参考に合わせる
-   - 写真枠は `{{> photo-frame ratio="..."}}`（プレースホルダ）。参考資料の写真は使わない
+   - 写真枠は `{{> photo-frame ratio="..."}}`（プレースホルダ）。参考資料の写真をページに貼らない
 6. ラウンド 1
    ```bash
    npm run render -- --book <bookId> --page <pageId> --format png
@@ -56,7 +56,7 @@
 
 - [ ] 2 ラウンド以上の比較と修正を行い、`review.md` に記録した
 - [ ] 残差が「意図的な差」だけで、理由を書いた
-- [ ] 参考資料の文字・写真・ロゴを入力していない（`npm run validate` で forbidden_terms エラー 0）
+- [ ] 参考資料の文字をページに書き写していない・写真・ロゴをそのまま貼っていない（`npm run validate` で forbidden_terms エラー 0）
 - [ ] 背景画像に文字がなく、`.prompt.yaml` がある
 - [ ] 文章量で変わる要素が Layer 2 で作られている（背景に焼き込んでいない）
 - [ ] `npm run check` が通る

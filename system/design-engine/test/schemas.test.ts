@@ -26,7 +26,7 @@ import {
   readYamlFile,
   safeParseData,
 } from '../src/index.ts';
-import { FIXTURE_ROOT } from './helpers.ts';
+import { FIXTURE_ROOT, REPO_ROOT } from './helpers.ts';
 
 function fixtureYaml(rel: string): unknown {
   return readYamlFile(path.join(FIXTURE_ROOT, rel), rel);
@@ -134,6 +134,29 @@ describe('既定値', () => {
     const colors = { primary: 'TODO: 決定待ち', secondary: '#000', accent: '#000', text: '#000', muted: '#000', background: '#fff', surface: '#fff' };
     expect(issuesOf(ColorsFileSchema, { colors, status: 'provisional' })).toEqual([]);
   });
+
+  it('生成記録: 参考画像の直接入力（全方式）と生成条件を記録でき、省略時は空リスト', () => {
+    const usages = ['image_prompt', 'image_reference', 'composition', 'style', 'img2img', 'other'];
+    const record = parseData(
+      BackgroundPromptSchema,
+      {
+        tool: 't',
+        prompt: 'p',
+        created: '2026-10-07T14:30:00+09:00',
+        reference_inputs: usages.map((usage) => ({ path: 'references/HAL/brochure/page_016.png', usage, strength: 0.6 })),
+        params: { steps: 30, guidance: 7 },
+      },
+      'page_001.prompt.yaml',
+    );
+    expect(record.reference_inputs.map((r) => r.usage)).toEqual(usages);
+    expect(record.params).toEqual({ steps: 30, guidance: 7 });
+    expect(parseData(BackgroundPromptSchema, { tool: 't', prompt: 'p' }, 'x.prompt.yaml').reference_inputs).toEqual([]);
+  });
+
+  it('生成記録の雛形（system/templates/background.prompt.yaml）はスキーマに通る', () => {
+    const rel = 'system/templates/background.prompt.yaml';
+    expect(issuesOf(BackgroundPromptSchema, readYamlFile(path.join(REPO_ROOT, rel), rel))).toEqual([]);
+  });
 });
 
 describe('不正なデータを拒否する', () => {
@@ -187,6 +210,18 @@ describe('不正なデータを拒否する', () => {
     ],
     ['source: forbidden_terms なし', ReferenceSourceSchema, { source: 'HAL', title: 't', kind: 'brochure', usage: 'reference-only' }, 'forbidden_terms'],
     ['prompt: prompt なし', BackgroundPromptSchema, { tool: 'x' }, 'prompt'],
+    [
+      'prompt: reference_inputs の usage 不正',
+      BackgroundPromptSchema,
+      { tool: 'x', prompt: 'p', reference_inputs: [{ path: 'references/HAL/brochure/page_016.png', usage: 'copy' }] },
+      'reference_inputs.0.usage',
+    ],
+    [
+      'prompt: reference_inputs のパスが絶対パス',
+      BackgroundPromptSchema,
+      { tool: 'x', prompt: 'p', reference_inputs: [{ path: '/references/HAL/brochure/page_016.png', usage: 'img2img' }] },
+      'reference_inputs.0.path',
+    ],
     ['analysis: オブジェクトでない', AnalysisSchema, ['grid'], '(ルート)'],
   ];
   it.each(bad)('%s', (_name, schema, data, expected) => {

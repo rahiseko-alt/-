@@ -216,7 +216,7 @@ function assertNoReferenceRequests(label: string, urls: string[]): void {
   if (urls.length === 0) return;
   throw new CliError(
     `${label}: 参考資料（references/）のファイルがページの描画に読み込まれました: ${[...new Set(urls)].join(', ')}`,
-    '参考ページ画像は比較（npm run compare）と目視の参考専用です（system/rules/references.md §4）',
+    '参考ページ画像はそのままページに貼れません（比較・目視・画像生成の参照入力に使います）（system/rules/references.md §4）',
   );
 }
 

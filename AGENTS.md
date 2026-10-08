@@ -115,6 +115,7 @@ npm run validate -- --strict
 | Layer 3: CONTENT | HTML（コード） | 見出し、本文、数字、学科名、氏名、企業名、URL、ページ番号、QR、キャプション | `page.html`（事実は `{{facts...}}` で参照） |
 
 - 文字は画像に入れない。文章量で変わる枠は背景に焼き込まない
+- Layer 1 の生成では、参考ページ画像を画像生成モデルへ直接入力してよい（image prompt / image reference / composition reference / style・visual reference / img2img 系など）。構図・背景・質感・視覚密度を高精度に再現または参考にし、その上にコードで正確な文字を載せる（system/rules/image-generation.md §3）
 - 座標は `.trim`（仕上がり線基準、mm）。文字は安全領域の内側、色面・写真は塗り足しまで
 
 ## 7. 絶対に守るルール
@@ -135,8 +136,8 @@ docs/concept.md §14 の最重要原則（詳細と具体的な行動: system/ru
 このリポジトリでの追加ルール:
 
 - **事実を作らない**: company-data にない情報を推測・Web 検索・参考資料で補わない。不明な値は `"TODO: ..."` のまま残して人間に確認する。実績の数値には `as_of` と `source` を付ける
-- **参考資料の分離**: Phase 8 で流用禁止の 10 項目（学校名・実績・数字・人物・企業名・ロゴ・学科名・インタビュー・写真・固有コピー）は完コピ検証の段階から入力しない。参考資料ごとに `source.yaml` の `forbidden_terms` を必ず埋める（`npm run validate` が books / company-data / shared での出現をエラーにする）
-- **生成画像には記録**: 画像の隣に同じベース名の `.prompt.yaml`（system/rules/image-generation.md）
+- **参考資料の分離**: Phase 8 で流用禁止の 10 項目（学校名・実績・数字・人物・企業名・ロゴ・学科名・インタビュー・写真・固有コピー）は完コピ検証の段階からページ・company-data・shared に書き写さない（参考資料の写真・ロゴをそのまま貼る・切り出すのも不可。Layer 1 の画像生成への参考ページ画像の直接入力は可）。参考資料ごとに `source.yaml` の `forbidden_terms` を必ず埋める（`npm run validate` が books / company-data / shared での出現をエラーにする）
+- **生成画像には記録**: 画像の隣に同じベース名の `.prompt.yaml`。生成に入力した参考画像と方式は `reference_inputs` に書く（system/rules/image-generation.md）
 - **見て確認する**: 参考ページ・出力 PNG は画像として開いて目視する。OCR やテキスト抽出だけで判断しない
 - **完コピ検証は最低 2 ラウンド**: Phase 5 では `npm run compare` による視覚比較と修正を 2 回以上行い、`review.md` に記録する（system/rules/review.md）
 - **docs/concept.md を編集しない**
