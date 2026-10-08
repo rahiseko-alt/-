@@ -6,9 +6,9 @@ reference: references/kokusai-igaku-gijutsu/admissions/prep/page_005-r.yaml
 rendered: books/replica/c-admissions/output/png/page_001.png
 width: 1241
 height: 1754
-mismatch_pixels: 603627
-mismatch_ratio: 0.277311
+mismatch_pixels: 603494
+mismatch_ratio: 0.27725
 threshold: 0.1
 crop_bleed: true
 dpi: 150.05
-created: 2026-10-08T05:49:30+00:00
+created: 2026-10-08T05:51:51+00:00

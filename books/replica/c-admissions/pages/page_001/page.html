@@ -9,6 +9,7 @@
     Layer 3 CONTENT     : 注記・表の見出し・日程・流れ図の文字・【 】ラベルの段落・ノンブル
 
   - 文字はすべてダミー（参考と同じ文字数・改行位置）。数字は 0。参考資料の文字は書き写していない
+  - 丸数字 ①〜③ は表の行番号（左ページの縦書きの行見出し）を指す記号として残した（データではない）。「注）」「※」「〜」などの記号も同じ
   - 表は 1 列（見出し行＋4 行）の CSS Grid。行の高さは page.css の --adm-row-*（mm）。見開きの左ページを作るときも同じ変数を使う
   - 行の中は通常のフロー（入れ子の表 → 【 】ラベルの段落）。文字が増えると行が伸びる（あふれない）。対処は page.css 冒頭のコメント
   - 色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーの変数に置き換える）。赤は注意・条件の段落だけ
@@ -71,7 +72,7 @@
     <div class="adm-items adm-items--gap">
       <div class="adm-item"><span class="adm-item__label">【ダミー四】</span><p class="adm-item__text">ダミー文字列ダミー文字。（ダミー文字列ダミー文字列、ダミー文字列ダミー文字列ダミ。）</p></div>
       <div class="adm-item"><span class="adm-item__label">【ダミー三】</span><p class="adm-item__text">◎ダミー文字列　ダミー文①＋②＋③計00名　◎ダミー文字列：ダミー文①＋②＋③計00名</p></div>
-      <div class="adm-item adm-red"><span class="adm-item__label adm-item__label--spaced">【<span>ダミー</span>】</span><p class="adm-item__text">ダミー文字列ダミー文は0000年00月00日（0）にダミー文字。ダミー文字は00月0日（0）ダミー<br>ダミー文字列ダミ。ダミー文字列ダミー文字列ダミー文字、ダミー文字列ダミー文。<br>ダミー文字列ダミー文字列ダミー文字列ダミー文字。</p></div>
+      <div class="adm-item adm-red"><span class="adm-item__label adm-item__label--spaced">【<span>ダミー</span>】</span><p class="adm-item__text">ダミー文字列ダミー文は0000年00月00日（0）にダミー文字。ダミー文字は00月0日（0）ダミー<br>ダミー文字列ダミ。ダミー文字列ダミー文字列ダミー文字、ダミー文字列ダミー。<br>ダミー文字列ダミー文字列ダミー文字列ダミー文字。</p></div>
     </div>
   </section>
 

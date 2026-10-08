@@ -6,8 +6,10 @@
  *
  * 文字が増えたとき（あふれない仕組み）
  * - 行は grid-template-rows の minmax(--adm-row-N, auto)。文字が増えて収まらない行はあふれずに伸びる（下の行が押し下がる）
- * - 見開きの行をそろえたまま収めるには、まず --adm-fs-body / --adm-fs-cell を下げる（下限 7pt。typography-ja.md の最小 6.5pt より上で止める）。
- *   それでも収まらないときは --adm-row-* を左右ページで同じだけ増減して配分し直す
+ * - 見開きの行をそろえたまま収めるには、まず --adm-fs-body / --adm-fs-cell を下げる。行送りは倍率なので文字と一緒に詰まる。
+ *   確認済み: 段落・流れ図のセルが 2 割増えても 8pt にすれば --adm-row-* を変えずに収まる（9.5pt のままだと行が伸びる）。
+ *   下限は 7pt（typography-ja.md の最小 6.5pt より上で止める）。それでも収まらないときは --adm-row-* を左右ページで同じだけ増減して配分し直す
+ * - 日程表の日付のセルは字間（letter-spacing）で参考の字幅に合わせている。日付の書式が変わったら字間を 0 に戻してから合わせ直す
  */
 
 /* ---- 参考ページの色・寸法（色は Phase 8 でブランドカラーへ置き換える） ---- */
@@ -19,9 +21,9 @@
   /* 表の位置と行の高さ（各行の箱の高さ。罫の中心どうしの距離とは 0.1〜0.2mm 違う） */
   --adm-table-top: 30.8mm;     /* 上の外枠（太罫）の上端。中心 31.0mm */
   --adm-row-head: 7.2mm;       /* 見出し行（下の太罫を含む） */
-  --adm-row-1: 61.55mm;         /* 第 1 行: 日程表＋段落 */
+  --adm-row-1: 61.55mm;        /* 第 1 行: 日程表＋段落 */
   --adm-row-2: 60.8mm;         /* 第 2 行: 流れ図＋段落 */
-  --adm-row-3: 49.05mm;         /* 第 3 行: 流れ図＋段落 */
+  --adm-row-3: 49.05mm;        /* 第 3 行: 流れ図＋段落 */
   --adm-row-4: 64.2mm;         /* 第 4 行: 日程表＋段落 */
 
   /* 罫の太さ: 外枠・見出し行 > 行の区切り = 入れ子の外枠 > 入れ子の内罫 */
@@ -34,7 +36,7 @@
   --adm-in-left: 3.2mm;
   --adm-in-right: 190.4mm;
 
-  /* 文字（最小 7pt まで下げてよい。上のコメント） */
+  /* 文字（2 割増えたら 8pt、最小 7pt まで下げてよい。上のコメント） */
   --adm-fs-body: 9.5pt;        /* 【 】ラベルの段落 */
   --adm-fs-cell: 9.5pt;        /* 入れ子の表のセル */
   --adm-label-w: 17.2mm;       /* 【 】ラベルの幅（後続行はこの幅だけ字下げ） */
@@ -107,13 +109,14 @@
 .adm-row {
   display: flex;
   flex-direction: column;
-  padding: var(--adm-row-pad, 1mm) calc(var(--trim-w) - var(--margin-right) - var(--adm-in-right) - 0.42mm) 0 var(--adm-in-left);
+  padding: var(--adm-row-pad, 1mm) calc(var(--trim-w) - var(--margin-right) - var(--adm-in-right) - var(--adm-rule-outer)) 0 var(--adm-in-left);
 }
 
 .adm-row + .adm-row {
   border-top: var(--adm-rule-row) solid var(--rep-ink);
 }
 
+/* 行ごとの実測値: 入れ子の表の上の空き、段落の行送り（倍率。9.5pt で 4.05 / 4.5 / 4.9mm）、段落の上の空き、流れ図の段の高さと行送り */
 .adm-row--1 { --adm-row-pad: 1.04mm; --adm-lh: 1.21; --adm-items-gap: 1.4mm; }
 .adm-row--2 { --adm-row-pad: 2.05mm; --adm-lh: 1.343; --adm-items-gap: 0.55mm; --adm-flow-head: 5.05mm; --adm-flow-a: 14.85mm; --adm-flow-b: 13.85mm; --adm-flow-lh-a: 1.462; --adm-flow-lh-b: 1.343; }
 .adm-row--3 { --adm-row-pad: 0.6mm;  --adm-lh: 1.462; --adm-items-gap: 0.45mm; --adm-flow-head: 4.9mm; --adm-flow-a: 14.4mm; --adm-flow-b: 14.75mm; --adm-flow-lh-a: 1.403; --adm-flow-lh-b: 1.373; }
