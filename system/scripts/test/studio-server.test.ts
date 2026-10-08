@@ -68,9 +68,14 @@ describe('studio-server', () => {
 
     // ルートの外（実在するファイル）には届かない
     const outside = `${path.basename(root)}-outside.txt`;
-    fs.writeFileSync(path.join(path.dirname(root), outside), 'outside');
-    for (const p of [`/../${outside}`, `/books/../../${outside}`, `/%2e%2e/${outside}`, `/books/%2e%2e/%2e%2e/${outside}`]) {
-      expect(await rawGet(p), p).toBe(404);
+    const outsideFile = path.join(path.dirname(root), outside);
+    fs.writeFileSync(outsideFile, 'outside');
+    try {
+      for (const p of [`/../${outside}`, `/books/../../${outside}`, `/%2e%2e/${outside}`, `/books/%2e%2e/%2e%2e/${outside}`]) {
+        expect(await rawGet(p), p).toBe(404);
+      }
+    } finally {
+      fs.rmSync(outsideFile, { force: true });
     }
     // エンコードした区切り（%2F・%5C）は受け付けない。参考資料（references/）は配信しない
     expect(await rawGet('/books%2Fsmoke%2Fconfig%2Fbook.yaml')).toBe(404);
@@ -146,9 +151,9 @@ describe(`render: ${CHROMIUM_PATH_ENV}`, () => {
   const args = (out: string) => ['--book', 'smoke', '--page', 'page_001', '--format', 'png', '--dpi', '36', '--out', out, '--root', root];
 
   it('指定版以外の Chromium は警告して出力し、--release では失敗する。見つからなければ失敗する', async () => {
-    // 指定版を起動するだけのスクリプトを「別の Chromium」として使う（実体のパスが指定版と違う）
+    // 同じビルドのフル版へのシンボリックリンクを「別の Chromium」として使う（指定版は既定で起動する headless shell）
     const link = path.join(tempDir(), 'chrome');
-    fs.writeFileSync(link, `#!/bin/sh\nexec "${chromium.executablePath()}" "$@"\n`, { mode: 0o755 });
+    fs.symlinkSync(chromium.executablePath(), link);
     const out = tempDir();
     const ok = await withChromiumPath(link, () => run(renderCommand, args(out)));
     expect(ok.code, ok.text).toBe(0);
