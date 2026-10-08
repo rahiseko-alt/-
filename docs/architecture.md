@@ -47,7 +47,7 @@ publishing-studio の仕組み（データの流れ・データ形式・パス�
   - 例: `books/brochure/backgrounds/page_001.png`、`references/HAL/brochure/page_016.png`、`company-data/photos/campus-exterior.jpg`
   - `..`・絶対パス・`http:` などのスキーム・バックスラッシュは拒否される。シンボリックリンクでルート外を指すパスも拒否される
 - ページの HTML は `<base href>` をリポジトリルートに向けるため、同じ相対パスがプレビューでも出力でも有効
-  - `render` モード: `<base href="file://<root>/">`（Playwright）
+  - `render` モード: `<base href="http://127.0.0.1:<port>/">`（`npm run render` が出力の間だけ起動する HTTP サーバー `system/scripts/lib/studio-server.ts`。ルートのファイル・`/@engine/...`・合成した HTML を配信し、Chromium には `file://` を読ませない）。`baseUrl` を渡さずに合成したときは `file://<root>/`
   - `preview` モード: `<base href="/">`（Vite がリポジトリルートを配信）
 - `page.css` の中の相対 `url()` は、`page.css` の位置を基準にルート相対へ書き換えられる
 - 全 CLI は `--root <dir>` を受け付ける（`npm run dev` だけは環境変数 `STUDIO_ROOT=<dir>`）。既定はリポジトリルート（スクリプトの位置から上へ辿り、`package.json` の `name` が `publishing-studio` のディレクトリ）。テストは `--root system/fixtures/studio`
@@ -340,7 +340,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 
 | コマンド | 引数 | 動作 |
 | --- | --- | --- |
-| `render` | `--book <id>` `[--page <id> ...]` `[--format png\|pdf\|both]`（既定 both） `[--dpi N]`（既定 `png_dpi`） `[--guides]` `[--release]` `[--out <dir>]`（既定 `books/<id>/output`） | PNG: Playwright Chromium、ビューポート = ページボックス（CSS px）、`deviceScaleFactor = dpi / 96`（CSS px の丸めの分だけ微調整。§7）、フォントと画像の読み込み完了を待つ。PNG の画素数 = `round((W + 2b) / 25.4 × dpi)`。PDF: `composeBook` → `page.pdf`（塗り足し込みの mm、`printBackground`、`preferCSSPageSize`）。`--release` は TODO・ガイドがあると失敗。書き出したファイルを表示 |
+| `render` | `--book <id>` `[--page <id> ...]` `[--format png\|pdf\|both]`（既定 both） `[--dpi N]`（既定 `png_dpi`） `[--guides]` `[--release]` `[--out <dir>]`（既定 `books/<id>/output`） | 合成した HTML を 127.0.0.1 の HTTP サーバー経由で開く（`file://` を禁止したブラウザでも同じ出力。HTTP 404 も読み込み失敗として警告）。Chromium は Playwright 指定版。取得できない環境では環境変数 `STUDIO_CHROMIUM_PATH` に手元の Chromium を指定できる（警告つき。版が違うと字形・行送りがわずかに変わるため `--release` では失敗）。PNG: Playwright Chromium、ビューポート = ページボックス（CSS px）、`deviceScaleFactor = dpi / 96`（CSS px の丸めの分だけ微調整。§7）、フォントと画像の読み込み完了を待つ。PNG の画素数 = `round((W + 2b) / 25.4 × dpi)`。PDF: `composeBook` → `page.pdf`（塗り足し込みの mm、`printBackground`、`preferCSSPageSize`）。`--release` は TODO・ガイド・指定版以外の Chromium があると失敗。書き出したファイルを表示 |
 | `compare` | `--book <id>` `--page <id>` `[--reference <path>]` `[--rendered <png>]` `[--crop-bleed]`（既定 有効） `[--threshold 0.1]` | 参考画像（既定 `references.yaml` の `layout_reference[0]`）と出力 PNG（既定 `output/png/<page>.png`）を比較。出力の塗り足しを切り落とし、参考画像を同じ大きさに変形（fill）して pixelmatch。`diff.png` `side-by-side.png` `overlay.png` `report.yaml` を `books/<id>/reviews/<page>/compare-<YYYYMMDD-HHmmss>/` に出力（比較画像は参考ページの画素を含むため `.gitignore` 済み。コミットするのは `report.yaml`） |
 | `validate` | `[--strict]` | 下表。エラーがあれば終了コード 1 |
 | `new:book` | `<bookId>` `[--kind brochure]` `[--title "..."]` `[--size A4]` `[--orientation portrait]` `[--pages 4]` | `system/templates/book/` から BOOK を作り、ページを `system/templates/page/` から作る。既存なら拒否。置換: `__BOOK_ID__` `__TITLE__` `__KIND__` `__SIZE__` `__ORIENTATION__` `__PAGE_ID__` `__PAGE_TYPE__` `__PAGE_TITLE__` `__DATE__` |
@@ -348,7 +348,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 | `ref:ingest` | `--source <name>` `--kind <kind>` `(--pdf <file> \| --images <dir>)` `[--dpi 150]` `[--format jpg\|png]`（既定 jpg） | PDF を `original/` にコピーし `pdftoppm` で `page_NNN.jpg`（`--format png` で `.png`）、または画像を `page_NNN.<ext>` に正規化。`source.yaml` と `analysis/book.yaml` がなければ雛形から作成。次の手順（forbidden_terms の記入）を表示 |
 | `ref:prep` | `(--spec <path> ... \| --all)` | `references/<source>/<kind>/prep/<name>.yaml`（`image`・`rotate`（時計回り 0/90/180/270）・`corners`（正立後の 左上・右上・右下・左下、比率）・`aspect`（幅/高さ）・`height_px`）に従い、ページ画像を回転→射影変換（双線形補間）して `.cache/ref-prep/<source>/<kind>/prep/<name>.png` に出力。`compare` の参照（`--reference` / `layout_reference`）に指定ファイルを書くと自動で実行 |
 | `gen:inputs` | `(--book <id> ... \| --all)` | `books/<id>/backgrounds/layer1-orders.yaml`（Layer 1 の生成指示）を読み、補正後の参考ページ（`reference_prep`。なければ `reference_image`）から各素材の `crop_mm`（仕上がり線基準の mm）を切り出して `.cache/gen-inputs/<id>/<素材 id>.png` に出力（ページ外は白）。素材ごとに必要な画素数（BOOK の `png_dpi` と 350dpi）・人物の有無・生成済みかを表示 |
-| `doctor` | `[--quiet]` | Node 22 以上、Chromium の起動、@fontsource、Noto での日本語描画、sharp、git-lfs、poppler（`pdfinfo` / `pdftoppm`。テストと PDF 取り込みに必要なので致命的）を確認。致命的な問題で終了コード 1 |
+| `doctor` | `[--quiet]` | Node 22 以上、Chromium の起動（`STUDIO_CHROMIUM_PATH` があればその Chromium。指定版でなければ WARN）、@fontsource、Noto での日本語描画、sharp、git-lfs、poppler（`pdfinfo` / `pdftoppm`。テストと PDF 取り込みに必要なので致命的）を確認。致命的な問題で終了コード 1 |
 | `setup` | `[--quiet]` | `system/scripts/setup.sh`: Git LFS（install --local / pull）、必要時のみ `npm ci`、Chromium の確認とインストール、`pdfinfo` / `pdftoppm` がなければ `apt-get install poppler-utils`（root かパスワードなし sudo のとき）、`npm run doctor`。冪等 |
 | `dev` | （環境変数 `STUDIO_ROOT=<dir>` `PORT=<番号>`） | Vite プレビュー（既定: リポジトリルート・ポート 5173）。`--root` は使えない |
 | `typecheck` / `test` / `check` | | `tsc` / `vitest run` / typecheck → validate → test |

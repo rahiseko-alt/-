@@ -33,6 +33,18 @@ describe('composePage: 文書構造', () => {
     expect(page1Preview.html).toContain('<base href="/">');
   });
 
+  it('render で baseUrl を渡すと、base href とエンジンアセットがその URL になる（render の HTTP 配信）', () => {
+    const baseUrl = 'http://127.0.0.1:43210/';
+    const { html } = composePage({ root: FIXTURE_ROOT, bookId: 'smoke', pageId: 'page_001', mode: 'render', baseUrl });
+    expect(html).toContain(`<base href="${baseUrl}">`);
+    expect(html).toContain(`href="${baseUrl}@engine/fonts/noto-sans-jp/400.css"`);
+    expect(html).toContain(`href="${baseUrl}@engine/assets/base.css"`);
+    expect(html).not.toContain('file://');
+    for (const [mode, url] of [['render', 'http://127.0.0.1:43210'], ['render', 'file:///x/'], ['preview', baseUrl]] as const) {
+      expect(() => composePage({ root: FIXTURE_ROOT, bookId: 'smoke', pageId: 'page_001', mode, baseUrl: url })).toThrow(/baseUrl/);
+    }
+  });
+
   it('フォント（@fontsource のローカル CSS）と base.css を読み込む', () => {
     const sans = fontsourceDir('noto-sans-jp');
     for (const w of ['400', '500', '700', '900']) {

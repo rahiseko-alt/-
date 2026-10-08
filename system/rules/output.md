@@ -1,6 +1,7 @@
 # 出力（PNG / PDF）のルール
 
 出力は `npm run render` だけで行います（Playwright の Chromium で、プレビューと同じ HTML を描画）。
+正式な出力（`--release`）は Playwright 指定版の Chromium で行います。指定版を取得できない環境の代替（`STUDIO_CHROMIUM_PATH`。system/devcontainer/README.md）は確認用の出力に限ります。
 
 ## 1. 判型・塗り足し・安全領域
 

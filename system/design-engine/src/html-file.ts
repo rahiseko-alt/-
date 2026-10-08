@@ -1,6 +1,7 @@
-// 合成した HTML を一時ファイルに書き出す（Playwright 用）
+// 合成した HTML を一時ファイルに書き出す（design-engine のテストで Playwright に開かせる用）
 // 注意: Chromium は page.setContent() の about:blank 文書から file:// のフォント・画像を読めない。
-// render モードの HTML は必ずファイルに書き出して page.goto(url) で開くこと。
+// baseUrl なしの render モードの HTML は、ファイルに書き出して page.goto(url) で開くこと。
+// npm run render は file:// を使わず、HTTP で配信して開く（system/scripts/lib/studio-server.ts）。
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';

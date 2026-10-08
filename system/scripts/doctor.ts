@@ -9,11 +9,12 @@
  * 環境が壊れていても診断できるよう、他のプロジェクト内モジュールには依存しない。
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
-import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import type { AddressInfo } from 'node:net';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import type { Browser } from 'playwright';
 
@@ -194,20 +195,97 @@ function checkFontsourceFiles(): CheckResult {
   };
 }
 
+/** Playwright 指定版の代わりに使う Chromium（system/scripts/lib/browser.ts と同じ環境変数） */
+const CHROMIUM_PATH_ENV = 'STUDIO_CHROMIUM_PATH';
+
 async function checkChromium(): Promise<{ result: CheckResult; browser: Browser | null }> {
   const name = 'Chromium 起動 (Playwright)';
   const hint =
-    'npx playwright install chromium を実行してください（共有ライブラリ不足なら sudo npx playwright install-deps chromium）';
+    'npx playwright install chromium を実行してください（共有ライブラリ不足なら sudo npx playwright install-deps chromium）。' +
+    `取得できない環境では、手元の Chromium の実行ファイルを ${CHROMIUM_PATH_ENV} に指定できます`;
   try {
     const { chromium } = await import('playwright');
-    const browser = await withTimeout(chromium.launch({ timeout: 60_000 }), 90_000, 'Chromium の起動');
+    const value = process.env[CHROMIUM_PATH_ENV]?.trim();
+    let bundled = '';
+    try {
+      bundled = chromium.executablePath();
+    } catch {
+      // 指定版の場所が分からなくても、指定された実行ファイルで起動を試す
+    }
+    const override = value && resolve(value) !== (bundled && resolve(bundled)) ? value : null;
+    const launch = chromium.launch(override ? { timeout: 60_000, executablePath: override } : { timeout: 60_000 });
+    const browser = await withTimeout(launch, 90_000, 'Chromium の起動');
+    if (override) {
+      return {
+        result: {
+          name,
+          status: 'warn',
+          detail: `Chromium ${browser.version()}（${CHROMIUM_PATH_ENV}=${override}。Playwright 指定版ではありません）`,
+          critical: true,
+          hint: `出力の字形・行送りが指定版とわずかに違うことがあります。render --release は指定版でだけ出力できます（${CHROMIUM_PATH_ENV} を外して npx playwright install chromium）`,
+        },
+        browser,
+      };
+    }
     return {
       result: { name, status: 'ok', detail: `Chromium ${browser.version()}`, critical: true },
       browser,
     };
   } catch (err) {
-    return { result: { name, status: 'fail', detail: errorMessage(err), critical: true, hint }, browser: null };
+    const detail = process.env[CHROMIUM_PATH_ENV]?.trim() ? `${CHROMIUM_PATH_ENV}=${process.env[CHROMIUM_PATH_ENV]?.trim()}: ${errorMessage(err)}` : errorMessage(err);
+    return { result: { name, status: 'fail', detail, critical: true, hint }, browser: null };
   }
+}
+
+interface ProbeServer {
+  /** http://127.0.0.1:<port> */
+  origin: string;
+  /** /probe.html で返す HTML */
+  html: string;
+  close(): Promise<void>;
+}
+
+/**
+ * フォント確認用の HTTP サーバー（render と同じく file:// を使わない）。
+ * /probe.html と、@fontsource パッケージ内のファイル（/fonts/<pkg>/...）だけを配信する
+ */
+async function startProbeServer(): Promise<ProbeServer> {
+  const probe: ProbeServer = { origin: '', html: '', close: async () => undefined };
+  const server = createServer((req, res) => {
+    let pathname = '';
+    try {
+      pathname = decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname);
+    } catch {
+      // 不正なエンコードは 404
+    }
+    if (pathname === '/probe.html') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(probe.html);
+      return;
+    }
+    const m = /^\/fonts\/(@fontsource\/[^/]+)\/(.+)$/.exec(pathname);
+    const dir = m && FONT_PACKAGES.some((f) => f.pkg === m[1]) ? packageDir(m[1]!) : null;
+    const file = dir && m ? resolve(dir, m[2]!) : null;
+    const rel = dir && file ? relative(dir, file) : '';
+    if (!dir || !file || !rel || rel.startsWith('..') || isAbsolute(rel) || !existsSync(file) || !statSync(file).isFile()) {
+      res.writeHead(404);
+      res.end();
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': file.endsWith('.css') ? 'text/css; charset=utf-8' : file.endsWith('.woff2') ? 'font/woff2' : 'application/octet-stream' });
+    res.end(readFileSync(file));
+  });
+  await new Promise<void>((done, fail) => {
+    server.once('error', fail);
+    server.listen(0, '127.0.0.1', () => done());
+  });
+  probe.origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  probe.close = () =>
+    new Promise<void>((done) => {
+      server.closeAllConnections();
+      server.close(() => done());
+    });
+  return probe;
 }
 
 interface FontProbe {
@@ -216,31 +294,28 @@ interface FontProbe {
   check: boolean;
 }
 
-/** @fontsource の CSS を file:// で読み込み、Noto で日本語が描画されるか確認 */
+/** @fontsource の CSS を HTTP 配信で読み込み、Noto で日本語が描画されるか確認 */
 async function checkJapaneseRendering(browser: Browser | null): Promise<CheckResult[]> {
   const rows = FONT_PACKAGES.map(({ family }) => `日本語描画: ${family}`);
   if (!browser) {
     return rows.map((name) => ({ name, status: 'fail', detail: 'Chromium が起動できないため未確認', critical: true }));
   }
 
-  const links: string[] = [];
-  for (const { pkg } of FONT_PACKAGES) {
-    const dir = packageDir(pkg);
-    if (dir) links.push(`<link rel="stylesheet" href="${pathToFileURL(join(dir, '400.css')).href}">`);
-  }
-  const ids = FONT_PACKAGES.map((_, i) => `probe-${i}`);
-  const body = FONT_PACKAGES.map(
-    ({ family }, i) => `<p id="${ids[i]}" style="font-family: '${family}', monospace; font-size: 16px">${SAMPLE_TEXT}</p>`,
-  ).join('\n');
-  const html = `<!doctype html>\n<html lang="ja"><head><meta charset="utf-8">${links.join('')}</head><body>${body}</body></html>`;
-
-  const tmp = mkdtempSync(join(tmpdir(), 'ps-doctor-'));
+  let server: ProbeServer | null = null;
   const context = await browser.newContext();
   try {
-    const htmlPath = join(tmp, 'fonts.html');
-    writeFileSync(htmlPath, html, 'utf8');
+    server = await startProbeServer();
+    const links: string[] = [];
+    for (const { pkg } of FONT_PACKAGES) {
+      if (packageDir(pkg)) links.push(`<link rel="stylesheet" href="${server.origin}/fonts/${pkg}/400.css">`);
+    }
+    const ids = FONT_PACKAGES.map((_, i) => `probe-${i}`);
+    const body = FONT_PACKAGES.map(
+      ({ family }, i) => `<p id="${ids[i]}" style="font-family: '${family}', monospace; font-size: 16px">${SAMPLE_TEXT}</p>`,
+    ).join('\n');
+    server.html = `<!doctype html>\n<html lang="ja"><head><meta charset="utf-8">${links.join('')}</head><body>${body}</body></html>`;
     const page = await context.newPage();
-    await page.goto(pathToFileURL(htmlPath).href, { waitUntil: 'load', timeout: 30_000 });
+    await page.goto(`${server.origin}/probe.html`, { waitUntil: 'load', timeout: 30_000 });
 
     const probes = await withTimeout(
       page.evaluate(
@@ -301,7 +376,7 @@ async function checkJapaneseRendering(browser: Browser | null): Promise<CheckRes
         status: ok ? 'ok' : 'fail',
         detail: parts.join(', '),
         critical: true,
-        hint: ok ? undefined : 'npm ci で @fontsource を入れ直してください（file:// で node_modules を読める必要があります）',
+        hint: ok ? undefined : 'npm ci で @fontsource を入れ直してください',
       };
     });
   } catch (err) {
@@ -314,7 +389,7 @@ async function checkJapaneseRendering(browser: Browser | null): Promise<CheckRes
     }));
   } finally {
     await context.close().catch(() => undefined);
-    rmSync(tmp, { recursive: true, force: true });
+    await server?.close();
   }
 }
 
