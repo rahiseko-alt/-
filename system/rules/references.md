@@ -1,7 +1,7 @@
 # 参考資料（references）のルール
 
 他校・他社のパンフレット・募集要項・チラシ等は `references/` にだけ置きます（docs/concept.md §5）。
-参考資料は「デザイン構造を学ぶための資料」であり、内容を自社の BOOK に持ち込んではいけません。
+参考資料は「デザイン構造を学ぶための資料」であり、Layer 1 の画像生成では視覚リファレンスとして直接入力してもかまいません（§4）。ただし内容（固有情報）を自社の BOOK に持ち込んではいけません。
 
 ## 1. 格納のしかた
 
@@ -67,7 +67,7 @@ notes: "入手経路・利用上の注意"
 注意:
 
 - 検査対象はテキストファイル全体です。`books/`・`company-data/`・`shared/` の README・コメント・`notes` にも参考資料の固有名を書かないでください
-- BOOK の `references.yaml` や生成記録の `source_refs` は参考資料をパス（`references/<source>/...`）で参照します。`npm run validate` はこの形のパスを禁止語の照合から除外するため、`<source>` のディレクトリ名（例: `HAL`）を `forbidden_terms` に登録してもかまいません。パス以外の場所（コメント・`notes`・本文）に書いた発行元名は検出されます
+- BOOK の `references.yaml` や生成記録の `reference_inputs`（`path`）・`source_refs` は参考資料をパス（`references/<source>/...`）で参照します。`npm run validate` はこの形のパスを禁止語の照合から除外するため、`<source>` のディレクトリ名（例: `HAL`）を `forbidden_terms` に登録してもかまいません。パス以外の場所（コメント・`notes`・`reference_inputs` の `note`・本文）に書いた発行元名は検出されます
 
 ## 3. 流用してよいもの・いけないもの（Phase 8）
 
@@ -97,15 +97,16 @@ notes: "入手経路・利用上の注意"
 
 ### 完コピ検証（Phase 5）
 
-- 再現するのはレイアウトと構造。**参考資料の文字・写真・ロゴは入力しない**
+- 再現するのはレイアウトと構造。**参考資料の文字をページに書き写さない。参考資料の写真・ロゴをそのまま貼らない・切り出さない**（Layer 1 の画像生成に参考ページ画像を入力するのは可。下の「画像生成」）
 - 文字はダミー（同じ文字数・行数のダミーテキスト）か company-data の値で置き、サイズ・行送り・位置だけを合わせる
 - 写真は参考資料から切り出さない。写真枠はプレースホルダ（`{{> photo-frame ratio="..."}}`）か、自社写真・生成画像で埋める
-- 比較（`npm run compare`）のために参考ページ画像を参照するのは可。ページの描画に参考画像を使うこと（`{{asset "references/..."}}`、`background.image: references/...`、`<img src="references/...">`、パーシャルの `src=`、CSS の `url()` など、書き方を問わない）は禁止。`npm run validate`（試し合成）と `npm run render` がエラーにする
+- 参考ページ画像は、比較（`npm run compare`）・目視・画像生成の参照入力に使ってよい。参考画像そのものをページに貼ること（`{{asset "references/..."}}`、`background.image: references/...`、`<img src="references/...">`、パーシャルの `src=`、CSS の `url()` など、書き方を問わない）は禁止。`npm run validate`（試し合成）と `npm run render` がエラーにする。背景が必要なら参考画像を入力して生成し、結果を `books/<id>/backgrounds/` に置く
 
 ### 画像生成
 
-- 参考資料の画像を画像生成の入力（img2img、画像プロンプト、スタイル参照）にして、写真・人物・ロゴ・装飾を再現しない
-- 構図や質感は言葉で記述し、どの参考ページを見たかは `.prompt.yaml` の `source_refs` に記録する（system/rules/image-generation.md）
+- 参考ページ画像を画像生成モデルへ直接入力してよい（image prompt、image reference、composition reference、style / visual reference、img2img 系の参照など）。構図・背景・質感・視覚密度を高精度に再現または参考にするため、必要に応じて参考画像そのものを視覚リファレンスとして使う
+- 生成に任せるのは Layer 1 だけ。生成結果に参考資料の文字・数字・ロゴ・QR を焼き込まない（正確な文字は Layer 3 でコードが配置する）
+- 入力した参考画像と方式は `.prompt.yaml` の `reference_inputs` に、入力せず見て参考にしたページは `source_refs` に記録する（system/rules/image-generation.md）
 
 ### 自社版への変換（Phase 8）
 

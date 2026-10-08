@@ -3,7 +3,7 @@
 他校・他社のパンフレット・募集要項・チラシ等を集約する場所です（docs/concept.md §5）。
 BOOK ごとに参考資料をコピーせず、各 BOOK の `references.yaml` から「どの資料を使うか」だけを指定します。
 
-**参考資料はデザイン構造を学ぶためだけに使います。学校名・実績・数字・人物・企業名・ロゴ・学科名・インタビュー・写真・固有コピーは、自社の BOOK に一切持ち込みません。**
+**参考資料は、デザイン構造の分析と、Layer 1 画像生成の視覚リファレンス（参考ページ画像の直接入力。system/rules/image-generation.md §3）に使います。学校名・実績・数字・人物・企業名・ロゴ・学科名・インタビュー・写真・固有コピーは、自社の BOOK に一切持ち込みません。**
 ルール: system/rules/references.md
 
 現在は空です（実際の参考資料は Phase 3 で投入します）。
@@ -40,7 +40,7 @@ npm run ref:ingest -- --source A-school --kind flyers --images ~/scans/a-school-
 
 ## 取り込み後に必ずやること
 
-1. `source.yaml` の `forbidden_terms` を埋める（学校名・略称・英語名・学科名・固有コピー・人物名・企業名・URL など）。`<source>` のディレクトリ名（例: `HAL`）が他校名そのものなら、それも登録する。BOOK の `references.yaml` や生成記録の `source_refs` に書く `references/<source>/...` の形のパスは照合から除外されるので、登録しても参照の書き方には影響しない（system/rules/references.md §2）
+1. `source.yaml` の `forbidden_terms` を埋める（学校名・略称・英語名・学科名・固有コピー・人物名・企業名・URL など）。`<source>` のディレクトリ名（例: `HAL`）が他校名そのものなら、それも登録する。BOOK の `references.yaml` や生成記録の `reference_inputs`（`path`）・`source_refs` に書く `references/<source>/...` の形のパスは照合から除外されるので（`notes` などの文章は照合される）、登録しても参照の書き方には影響しない（system/rules/references.md §2）
 2. `npm run validate` を実行する（forbidden_terms が books / company-data / shared に出るとエラー）
 3. 解析する（system/prompts/analyze-reference.md）。結果は `analysis/` に保存し、会話にだけ残さない
 4. `git lfs ls-files` で画像・PDF が LFS 管理になっていることを確認してコミットする
@@ -85,7 +85,7 @@ page_016:                                   # BOOK 側のページ ID
   information_reference: [references/B-school/brochure/page_008.png]
 ```
 
-参考画像はページの描画には使いません（`npm run compare` での比較と、目視の参考専用）。
+参考画像はそのままページの描画には使いません。`npm run compare` での比較、目視、画像生成の参照入力（image prompt・img2img など。system/rules/image-generation.md）に使います。
 
 ## 注意
 

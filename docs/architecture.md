@@ -176,9 +176,12 @@ prompt: "..."
 negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption"
 seed: 123456
 size: 2976x4175
-created: 2026-10-07
+created: 2026-10-07T14:30:00+09:00
 author: codex
-source_refs: [references/HAL/brochure/page_016.png]
+reference_inputs:            # 生成モデルへ直接入力した参考画像と方式
+  - { path: references/HAL/brochure/page_016.png, usage: composition, strength: 0.6 }
+params: { steps: 30 }        # その他の生成条件
+source_refs: []              # 入力せず見て参考にしたページ
 notes: "拡大・加工の手順"
 ```
 

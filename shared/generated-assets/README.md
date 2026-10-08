@@ -12,7 +12,7 @@
 
 - 文字・数字・ロゴ・QR コードを含む画像（文字は Layer 3 で HTML として配置する）
 - 学校の写真（`company-data/photos/` に置く。AI 生成画像を実在の学校・学生・教員の写真として使わない）
-- 参考資料（`references/`）から切り出した画像、参考資料の画像を下敷き（img2img 等）にして再現した画像
+- 参考資料（`references/`）の画像を切り出しただけの画像（参考ページ画像を画像生成へ入力して作った Layer 1 素材は可。文字・数字・ロゴ・QR と、他校を特定できる写真・人物・装飾が残っていないことを確認し、`reference_inputs` に記録する。system/rules/image-generation.md §3）
 
 ## 生成記録（必須）
 
@@ -27,7 +27,7 @@ shared/generated-assets/
 ```
 
 `.prompt.yaml` の形式は `system/templates/background.prompt.yaml`（books/*/backgrounds/ と同じ）です。主なキー:
-`tool` `model` `prompt` `negative_prompt` `seed` `size` `created` `author` `source_refs` `notes`。
+`tool` `model` `prompt` `negative_prompt` `seed` `size` `created` `author` `reference_inputs` `params` `source_refs` `notes`。
 画像を加工（拡大・色調整・合成）した場合は、その手順を `notes` に書きます。
 
 `npm run validate` が記録の欠落を警告するのは `books/*/backgrounds/` だけです。このディレクトリはレビューで確認します（system/rules/image-generation.md）。

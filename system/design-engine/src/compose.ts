@@ -198,7 +198,7 @@ function backgroundHtml(s: BookSession, page: LoadedPage): string {
 function referenceUseError(where: string, paths: string[]): StudioError {
   return new StudioError(
     `${where}: 参考資料（references/）をページの描画に使っています: ${paths.join(', ')}\n` +
-      '参考ページ画像は比較（npm run compare）と目視の参考専用です。背景は生成して books/<id>/backgrounds/ に、写真・ロゴは company-data/ に置いてください（system/rules/references.md §4）',
+      '参考ページ画像はそのままページに貼れません（比較・目視・画像生成の参照入力に使います）。背景は参考画像を入力して生成し books/<id>/backgrounds/ に、写真・ロゴは company-data/ に置いてください（system/rules/references.md §4）',
   );
 }
 

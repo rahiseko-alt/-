@@ -186,7 +186,7 @@ function checkBooks(root: string, bookIds: string[], s: CheckSection): BookState
         if (bg) {
           // ページ本文・page.css・styles での参考資料の使用は 4.（試し合成）で検出する
           if (isReferencePath(bg.image)) {
-            push(s.errors, `${page.relDir}/page.yaml: 参考資料の画像を背景に使っています（${bg.image}）。参考画像は比較専用です`);
+            push(s.errors, `${page.relDir}/page.yaml: 参考資料の画像を背景に使っています（${bg.image}）。参考画像はそのまま背景にせず、画像生成の参照入力に使って生成した画像を置いてください`);
             ok = false;
           } else if (!exists(root, bg.image)) {
             push(s.errors, `${page.relDir}/page.yaml: 背景画像がありません: ${bg.image}`);
@@ -345,7 +345,7 @@ function checkHardcodedFacts(root: string, company: CompanyData | null, s: Check
 // 6. 禁止語
 
 /**
- * references/<...> のパス（BOOK の references.yaml・生成記録の source_refs など）は照合から除く。
+ * references/<...> のパス（BOOK の references.yaml・生成記録の reference_inputs / source_refs など）は照合から除く。
  * パスに使える文字（発行元・種別は英数字・-・_、ページ画像は page_NNN.<拡張子>）だけを伏せる。
  * 日本語の文章がパスの直後に続いても、そこから先は照合の対象に残す。
  */
