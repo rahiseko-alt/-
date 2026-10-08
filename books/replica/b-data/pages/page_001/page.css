@@ -108,10 +108,10 @@
 .spark { fill: var(--rep-spark); }
 .spark--rose { fill: var(--rep-rose); opacity: 0.85; }
 
-/* 角欠きパネル（枠 0.6mm） */
-.panel { stroke-width: 0.6; }
-.panel--rose { fill: var(--rep-rose-panel); stroke: var(--rep-rose-line); }
-.panel--green { fill: var(--rep-paper); stroke: var(--rep-green-line); }
+/* 角欠きパネル（枠 0.6mm。shared の .panel と名前が重ならないよう .frame） */
+.frame { stroke-width: 0.6; }
+.frame--rose { fill: var(--rep-rose-panel); stroke: var(--rep-rose-line); }
+.frame--green { fill: var(--rep-paper); stroke: var(--rep-green-line); }
 
 /* 吊り下げ線（0.25mm）と丸点 */
 .hook path { fill: none; stroke-width: 0.25; }
@@ -307,8 +307,8 @@ p, h1, li { margin: 0; }
   color: var(--rep-rose);
 }
 
-/* 小数部と %: 参考は字幅の狭い丸ゴシック。横 86% に縮めて字幅を合わせる */
-.hero__dec { display: inline-block; font-size: 48.6pt; transform: scaleX(0.86); transform-origin: left bottom; }
+/* 小数部と %: 参考は字幅の狭い丸ゴシック。横 77% に縮めて字幅を合わせる（ダミーの 0 は参考の 1 より広い） */
+.hero__dec { display: inline-block; font-size: 48.6pt; transform: scaleX(0.77); transform-origin: left bottom; }
 
 .hero-sub {
   position: absolute;
@@ -332,13 +332,13 @@ p, h1, li { margin: 0; }
   width: 80mm;
   font-size: 6.5pt;
   font-weight: 500;
-  line-height: 1.32;
+  line-height: 1.24;
   white-space: nowrap;
   color: var(--rep-ink);
 }
 
 .notes__indent { padding-left: 1em; }
-.notes__group { margin-top: 0.5mm; }
+.notes__group { margin-top: 0.3mm; }
 
 /* 吹き出しの文字（中央揃え。参考の丸ゴシック 約 6.1〜6.8pt → 6.5〜6.8pt） */
 .cloud-text {
@@ -350,9 +350,9 @@ p, h1, li { margin: 0; }
   transform: translateX(-50%);
 }
 
-.cloud-text--peach { left: 141.3mm; top: 53.55mm; font-size: 6.8pt; line-height: 1.5; color: var(--rep-peach-ink); }
+.cloud-text--peach { left: 140.9mm; top: 54.15mm; font-size: 6.8pt; line-height: 1.5; color: var(--rep-peach-ink); }
 .cloud-text--blue { left: 126.6mm; top: 74.3mm; font-size: 6.5pt; line-height: 1.44; color: var(--rep-blue-ink); }
-.cloud-text--sky { left: 181.6mm; top: 85.4mm; font-size: 6.6pt; line-height: 1.52; color: var(--rep-sky-ink); transform: translateX(-50%) rotate(7deg); }
+.cloud-text--sky { left: 181.6mm; top: 86.2mm; font-size: 6.6pt; line-height: 1.52; color: var(--rep-sky-ink); transform: translateX(-50%) rotate(7deg); }
 .cloud-text--lavender { left: 144.9mm; top: 112.6mm; font-size: 6.5pt; line-height: 1.38; color: var(--rep-lavender-ink); }
 .cloud-text--pink { left: 171.2mm; top: 107.6mm; font-size: 6.6pt; line-height: 1.4; color: var(--rep-pink-ink); transform: translateX(-50%) rotate(4deg); }
 
@@ -379,7 +379,7 @@ p, h1, li { margin: 0; }
 .rank {
   position: absolute;
   left: 27.8mm;
-  top: 155.45mm;
+  top: 155.95mm;
   width: 96.2mm;
   margin: 0;
   padding: 0;
@@ -474,16 +474,17 @@ p, h1, li { margin: 0; }
   font-feature-settings: 'palt' 1;
 }
 
-.label-orange__l1 { left: 4.35mm; top: 4.65mm; }
+.label-orange__l1 { left: 4.35mm; top: 3.75mm; font-size: 19.8pt; }
 .label-orange__l2 { left: 3.35mm; top: 12.65mm; }
 .label-orange__small { font-size: 12.5pt; font-weight: 700; color: var(--rep-gold-ink); margin-inline: 0.4mm; }
+.label-orange__l1 .label-orange__small { font-size: 13.6pt; }
 .label-orange__kana { font-weight: 700; color: var(--rep-gold-ink); }
 
 /* 求人データ 4 行（行送り 6.8mm） */
 .data {
   position: absolute;
   left: 41.9mm;
-  top: 234.57mm;
+  top: 234.97mm;
   width: 61.1mm;
   margin: 0;
   padding: 0;
@@ -566,7 +567,7 @@ p, h1, li { margin: 0; }
 .label-rose__line {
   position: absolute;
   left: 4.1mm;
-  font-size: 18.4pt;
+  font-size: 19pt;
   font-weight: 900;
   line-height: 8.5mm;
   white-space: nowrap;
@@ -576,7 +577,7 @@ p, h1, li { margin: 0; }
 .label-rose__line:nth-child(1) { top: 2.1mm; }
 .label-rose__line:nth-child(2) { top: 10.6mm; }
 .label-rose__line:nth-child(3) { top: 19.1mm; }
-.label-rose__small { font-size: 11.4pt; font-weight: 700; color: var(--rep-rose-ink); margin-inline: 0.4mm; }
+.label-rose__small { font-size: 12pt; font-weight: 700; letter-spacing: 0.04em; color: var(--rep-rose-ink); margin-inline: 0.4mm; }
 
 .total-lead {
   position: absolute;
@@ -601,7 +602,7 @@ p, h1, li { margin: 0; }
 }
 
 /* 参考の数字は字幅の狭い丸ゴシック。Noto Sans JP を横 85% に縮めて字幅を合わせる */
-.total__num { display: inline-block; transform: scaleX(0.874); transform-origin: left center; margin-right: -4.6mm; }
+.total__num { display: inline-block; transform: scaleX(0.874); transform-origin: left center; margin-right: -6.6mm; }
 .total__unit { font-size: 20pt; }
 .total__suffix { font-size: 9.2pt; margin-left: 0.4mm; }
 
@@ -615,8 +616,8 @@ p, h1, li { margin: 0; }
   color: var(--rep-ink);
 }
 
-/* ノンブル（ハートの中の白抜き。7pt・700） */
-.folio {
+/* ノンブル（ハートの中の白抜き。7pt・700。shared の .folio と名前が重ならないよう .folio-num） */
+.folio-num {
   position: absolute;
   left: 14.1mm;
   top: 282.5mm;
