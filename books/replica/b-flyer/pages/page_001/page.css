@@ -170,9 +170,57 @@
   font-weight: 900;
   line-height: 1;
   color: var(--rep-white);
-  -webkit-text-stroke: 4.6mm var(--rep-rose);
-  paint-order: stroke fill;
-  stroke-linejoin: round;
+  /* フチ取り: 参考のフチは角の丸い太いフチ（見える幅 約 2.3mm）。-webkit-text-stroke は角がとがる（stroke-linejoin が効かない）ため、
+     ずらした影を半径 2.3 / 1.55 / 0.8mm の円周上に並べて丸いフチを作る（影は文字の下に描かれる） */
+  text-shadow:
+    2.30mm 0mm 0 var(--rep-rose),
+    2.22mm 0.60mm 0 var(--rep-rose),
+    1.99mm 1.15mm 0 var(--rep-rose),
+    1.63mm 1.63mm 0 var(--rep-rose),
+    1.15mm 1.99mm 0 var(--rep-rose),
+    0.60mm 2.22mm 0 var(--rep-rose),
+    0mm 2.30mm 0 var(--rep-rose),
+    -0.60mm 2.22mm 0 var(--rep-rose),
+    -1.15mm 1.99mm 0 var(--rep-rose),
+    -1.63mm 1.63mm 0 var(--rep-rose),
+    -1.99mm 1.15mm 0 var(--rep-rose),
+    -2.22mm 0.60mm 0 var(--rep-rose),
+    -2.30mm 0mm 0 var(--rep-rose),
+    -2.22mm -0.60mm 0 var(--rep-rose),
+    -1.99mm -1.15mm 0 var(--rep-rose),
+    -1.63mm -1.63mm 0 var(--rep-rose),
+    -1.15mm -1.99mm 0 var(--rep-rose),
+    -0.60mm -2.22mm 0 var(--rep-rose),
+    0mm -2.30mm 0 var(--rep-rose),
+    0.60mm -2.22mm 0 var(--rep-rose),
+    1.15mm -1.99mm 0 var(--rep-rose),
+    1.63mm -1.63mm 0 var(--rep-rose),
+    1.99mm -1.15mm 0 var(--rep-rose),
+    2.22mm -0.60mm 0 var(--rep-rose),
+    1.55mm 0mm 0 var(--rep-rose),
+    1.43mm 0.59mm 0 var(--rep-rose),
+    1.10mm 1.10mm 0 var(--rep-rose),
+    0.59mm 1.43mm 0 var(--rep-rose),
+    0mm 1.55mm 0 var(--rep-rose),
+    -0.59mm 1.43mm 0 var(--rep-rose),
+    -1.10mm 1.10mm 0 var(--rep-rose),
+    -1.43mm 0.59mm 0 var(--rep-rose),
+    -1.55mm 0mm 0 var(--rep-rose),
+    -1.43mm -0.59mm 0 var(--rep-rose),
+    -1.10mm -1.10mm 0 var(--rep-rose),
+    -0.59mm -1.43mm 0 var(--rep-rose),
+    0mm -1.55mm 0 var(--rep-rose),
+    0.59mm -1.43mm 0 var(--rep-rose),
+    1.10mm -1.10mm 0 var(--rep-rose),
+    1.43mm -0.59mm 0 var(--rep-rose),
+    0.80mm 0mm 0 var(--rep-rose),
+    0.57mm 0.57mm 0 var(--rep-rose),
+    0mm 0.80mm 0 var(--rep-rose),
+    -0.57mm 0.57mm 0 var(--rep-rose),
+    -0.80mm 0mm 0 var(--rep-rose),
+    -0.57mm -0.57mm 0 var(--rep-rose),
+    0mm -0.80mm 0 var(--rep-rose),
+    0.57mm -0.57mm 0 var(--rep-rose);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -370,13 +418,13 @@
   font-feature-settings: 'palt' 1;
 }
 
-/* 白の細罫（左右 4mm 内側） */
+/* 白の細罫（参考は囲みごとに左右の余白が少し違う。囲み 1: 左 2.7 / 右 4.5mm、囲み 2: 左 4.1 / 右 3.5mm） */
 .datebox::after {
   content: '';
   position: absolute;
   top: 12.5mm;
-  left: 4mm;
-  right: 4mm;
+  left: var(--rule-left, 4mm);
+  right: var(--rule-right, 4mm);
   height: 0.6mm;
   background: var(--rep-white);
 }
@@ -395,8 +443,8 @@
   white-space: nowrap;
 }
 
-.datebox--1 { --date-right: 4.5mm; --date-gap: 4mm; }
-.datebox--2 { --date-right: 3.4mm; --date-gap: 2.8mm; }
+.datebox--1 { --date-right: 4.5mm; --date-gap: 4mm; --rule-left: 2.7mm; --rule-right: 4.5mm; }
+.datebox--2 { --date-right: 3.4mm; --date-gap: 2.8mm; --rule-left: 4.1mm; --rule-right: 3.5mm; }
 
 .datebox__md {
   font-size: 41pt;

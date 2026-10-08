@@ -6,7 +6,7 @@ id: replica/b-data
 title: "完コピ検証 B データページ"
 # kind: brochure | admissions | flyer | poster | guide | event | other
 kind: brochure
-description: ""
+description: "Phase 5 完コピ検証: データページ（大数字・地図と吹き出し・ドットリーダー付きランキング・求人データ・角欠きパネル・吊り下げラベル・方眼紙の地）の片ページを再現する。文字はすべてダミー、写真はプレースホルダ"
 format:
   # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
   size: A4
@@ -14,10 +14,10 @@ format:
   orientation: portrait
   bleed_mm: 3                   # 塗り足し（片側）
   safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
-  margins_mm: { top: 15, bottom: 15, inside: 18, outside: 15 }   # 版面のマージン（inside = ノド、outside = 小口）
+  margins_mm: { top: 18, bottom: 20, inside: 16.5, outside: 19.5 }   # 参考ページの実測（真の幾何に直した推定。要素の外端: 上 18（括弧の上端）・下 20（パネルの下端）・ノド側 16.5・小口側 19.5mm（外周帯 10mm を含む））。ページ内の要素は page.css で mm の絶対配置
   columns: 12                   # 段組の段数
   gutter_mm: 4                  # 段間
-  binding: left                 # left（左綴じ）| right（右綴じ）| none（一枚もの: チラシ・ポスター）
+  binding: right                # 参考ページは左綴じの見開きの左ページ。1 ページだけの BOOK で page_001 を左ページ（ノド = 右、ノンブル = 左下）として描くため right にしている（book.yaml の notes）
 # 共通 CSS（shared/layouts/README.md）。後ろほど優先。ページ固有のスタイルは pages/<pageId>/page.css に書く
 styles:
   - shared/layouts/grid.css
@@ -29,6 +29,14 @@ theme: {}
 pages:
   - page_001
 output:
-  png_dpi: 350                  # 印刷用 PNG の解像度（npm run render の既定）
+  png_dpi: 150                  # この完コピ検証 BOOK だけ 150（比較用。印刷用の BOOK は 350 のまま）
   preview_dpi: 150              # 作業確認用の目安（npm run render -- --dpi 150 --out /tmp/<確認用>。output/ には置かない）
-notes: ""
+notes: |
+  完コピ検証（Phase 5）用の 1 ページ BOOK。参考: references/nagoya-iryo-hisho-it/brochure-2/page_001.jpg の左ページ
+  （比較は references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml で正立・単ページ・台形補正した画像と行う）。
+  判型: A4 縦。同じ資料の裏表紙（page_009。紙の端が 4 辺とも写っている）の縦横比 0.685 を円の縦横比 0.96 で補正すると 0.71 になるため（【要確認】実物の判型）。
+  参考ページは見開きの左ページ（ノンブルは左下、ノドは右）。左綴じの資料だが、1 ページだけの BOOK で page_001 を左ページとして描くため binding を right にしている
+  （page.side = left、--margin-left = 小口 19.5mm、--margin-right = ノド 16.5mm）。要素はすべて .trim 基準の mm で絶対配置。
+  撮影画像は天地が写っておらず（外周帯の 約 4〜5%）、ノド側 約 15% が強く縮み、上半分に紙の反りによるせん断がある。
+  寸法は補正画像（prep）ではなく、外周帯 10mm・円形写真が正円という前提で直した「真の幾何」の推定値で決めた（reviews/page_001/review.md「比較の前提」）。
+  Layer 1: 画像生成ツールがないため、円形写真 6 点・切り抜き人物 1 体はプレースホルダ（photo-frame・灰色のシルエット）。方眼紙の地・外周帯は単色と罫線なので Layer 2（CSS）
