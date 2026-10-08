@@ -1,0 +1,12 @@
+# 背景画像の生成記録（fixture は手書き SVG のため実際の生成はしていない）
+tool: manual-svg
+model: null
+prompt: 青から緑へのグラデーション、右上に柔らかい光、左下に暖色の円。文字なし。
+negative_prompt: text, letters, numbers, logo
+seed: null
+size: 216x303mm
+created: "2026-01-01"
+author: fixture
+source_refs:
+  - references/Sample/brochure/page_001.svg
+notes: テスト用。画像に文字を入れない。

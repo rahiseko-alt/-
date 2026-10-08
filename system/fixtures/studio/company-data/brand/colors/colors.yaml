@@ -1,0 +1,9 @@
+colors:
+  primary: "#1d4e89"
+  secondary: "#2a9d8f"
+  accent: "#f4a261"
+  text: "#1f2933"
+  muted: "#6b7280"
+  background: "#ffffff"
+  surface: "#f3f6fa"
+status: final

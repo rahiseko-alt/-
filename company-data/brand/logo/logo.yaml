@@ -1,0 +1,16 @@
+# ロゴ（正本）
+# - 学校から正式に受け取ったロゴデータだけを登録する（自作・生成・トレース禁止）
+# - ファイルは company-data/brand/logo/ に置き、file はリポジトリルート相対で書く
+#   SVG を推奨。PNG/PDF は Git LFS で管理される
+# - BOOK からは <img src="{{asset brand.logo.<id>.file}}" alt="..."> のように参照する
+# - 参考資料（references/）のロゴは絶対に使わない
+#
+# 記入例（実データを受け取るまで空のまま）:
+# logos:
+#   - id: logo-main
+#     file: company-data/brand/logo/logo-main.svg
+#     variant: "TODO: 用途を記入（例の分類: 横組み / 縦組み / 白抜き）"
+#     note: "TODO: 最小サイズ・余白規定などを記入"
+# ルール: system/rules/company-data.md
+
+logos: []

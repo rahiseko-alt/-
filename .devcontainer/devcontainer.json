@@ -1,0 +1,32 @@
+// publishing-studio 開発コンテナ（VS Code Dev Containers / GitHub Codespaces 用）
+// 詳細: system/devcontainer/README.md
+{
+  "name": "publishing-studio",
+  "build": {
+    "dockerfile": "../system/devcontainer/Dockerfile",
+    "context": ".."
+  },
+  // Dockerfile の USER と同じ。ホストの UID に合わせて再マップされる
+  "remoteUser": "pwuser",
+  "updateRemoteUserUID": true,
+  // Chromium の共有メモリ不足によるクラッシュを防ぐ
+  "runArgs": ["--init", "--shm-size=1g"],
+  // 冪等な初期化（Git LFS / npm ci / Chromium 確認 / doctor）
+  "postCreateCommand": "bash system/scripts/setup.sh",
+  // npm run dev（Vite プレビュー）
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite プレビュー",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "editorconfig.editorconfig",
+        "redhat.vscode-yaml"
+      ]
+    }
+  }
+}

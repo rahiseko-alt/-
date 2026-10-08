@@ -1,0 +1,13 @@
+{{!--
+  folio: ノンブル（ページ番号）+ 学校名（Layer 3）
+  必須: number（ページ番号）, school（学校名。facts.school.name を渡す）
+  任意: side（"left" | "right"。page.side を渡すと小口側に寄せる）, variant（"inverse"）
+  使い方:
+    {{> folio number=page.number school=facts.school.name side=page.side}}
+  .trim の直下に置く（下端・小口側に絶対配置される）
+  詳細: shared/components/README.md
+--}}
+<div class="folio{{#if side}} folio--{{side}}{{/if}}{{#if variant}} folio--{{variant}}{{/if}}" aria-hidden="true">
+  <span class="folio__number num">{{number}}</span>
+  <span class="folio__name">{{school}}</span>
+</div>

@@ -1,0 +1,177 @@
+/*
+ * grid.css: 版面グリッドのユーティリティ（全 BOOK 共通）
+ *
+ * 使い方: book.yaml の styles に shared/layouts/grid.css を入れる。
+ * 寸法は compose が :root に出す判型変数を使う（book.yaml の format から決まる）:
+ *   --columns --gutter --column-w --margin-top --margin-bottom --margin-inside --margin-outside
+ *   --margin-left / --margin-right … ページの左右（data-side）に応じてノド・小口を振り分けた値（base.css）
+ * 段数が 12 以外の BOOK でも .col-N は「N 段分」の意味で使える（--columns を超える N は使わない）。
+ * 座標の基準は .trim（仕上がり線の左上 = 0,0）。詳細: shared/layouts/README.md
+ */
+
+/* ---- 版面グリッド ---- */
+
+/* .trim の直下に置く。マージン内いっぱいに --columns 段のグリッドを作る */
+.grid {
+  position: absolute;
+  top: var(--margin-top);
+  bottom: var(--margin-bottom);
+  left: var(--margin-left);
+  right: var(--margin-right);
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--row-gap, var(--gutter));
+  align-content: start;
+}
+
+/* 行も等分する（モジュラーグリッド）。行数は --grid-rows（既定 12） */
+.grid--rows {
+  grid-template-rows: repeat(var(--grid-rows, 12), minmax(0, 1fr));
+  align-content: stretch;
+}
+
+/* 版面の中で通常フローとして使う段組（高さは内容なり） */
+.grid-flow {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--row-gap, var(--gutter));
+}
+
+/* 入れ子のグリッド: 親の .col-N の中で同じ段間の N 段グリッドを作る（段数は --sub-columns） */
+.subgrid {
+  display: grid;
+  grid-template-columns: repeat(var(--sub-columns, 2), minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--row-gap, var(--gutter));
+}
+
+/* 段数（列幅）: grid-column-end: span N */
+.col-1 { grid-column-end: span 1; }
+.col-2 { grid-column-end: span 2; }
+.col-3 { grid-column-end: span 3; }
+.col-4 { grid-column-end: span 4; }
+.col-5 { grid-column-end: span 5; }
+.col-6 { grid-column-end: span 6; }
+.col-7 { grid-column-end: span 7; }
+.col-8 { grid-column-end: span 8; }
+.col-9 { grid-column-end: span 9; }
+.col-10 { grid-column-end: span 10; }
+.col-11 { grid-column-end: span 11; }
+.col-12 { grid-column-end: span 12; }
+.col-full { grid-column: 1 / -1; }
+
+/* 開始列: grid-column-start: N（.col-N と組み合わせる） */
+.start-1 { grid-column-start: 1; }
+.start-2 { grid-column-start: 2; }
+.start-3 { grid-column-start: 3; }
+.start-4 { grid-column-start: 4; }
+.start-5 { grid-column-start: 5; }
+.start-6 { grid-column-start: 6; }
+.start-7 { grid-column-start: 7; }
+.start-8 { grid-column-start: 8; }
+.start-9 { grid-column-start: 9; }
+.start-10 { grid-column-start: 10; }
+.start-11 { grid-column-start: 11; }
+.start-12 { grid-column-start: 12; }
+
+/* 行（.grid--rows のとき） */
+.row-1 { grid-row-end: span 1; }
+.row-2 { grid-row-end: span 2; }
+.row-3 { grid-row-end: span 3; }
+.row-4 { grid-row-end: span 4; }
+.row-5 { grid-row-end: span 5; }
+.row-6 { grid-row-end: span 6; }
+.row-7 { grid-row-end: span 7; }
+.row-8 { grid-row-end: span 8; }
+.row-9 { grid-row-end: span 9; }
+.row-10 { grid-row-end: span 10; }
+.row-11 { grid-row-end: span 11; }
+.row-12 { grid-row-end: span 12; }
+.row-start-1 { grid-row-start: 1; }
+.row-start-2 { grid-row-start: 2; }
+.row-start-3 { grid-row-start: 3; }
+.row-start-4 { grid-row-start: 4; }
+.row-start-5 { grid-row-start: 5; }
+.row-start-6 { grid-row-start: 6; }
+.row-start-7 { grid-row-start: 7; }
+.row-start-8 { grid-row-start: 8; }
+.row-start-9 { grid-row-start: 9; }
+.row-start-10 { grid-row-start: 10; }
+.row-start-11 { grid-row-start: 11; }
+.row-start-12 { grid-row-start: 12; }
+
+/* 絶対配置用: 幅を N 段分にする（段幅 + 段間） */
+.w-cols-1 { width: calc(1 * var(--column-w) + 0 * var(--gutter)); }
+.w-cols-2 { width: calc(2 * var(--column-w) + 1 * var(--gutter)); }
+.w-cols-3 { width: calc(3 * var(--column-w) + 2 * var(--gutter)); }
+.w-cols-4 { width: calc(4 * var(--column-w) + 3 * var(--gutter)); }
+.w-cols-5 { width: calc(5 * var(--column-w) + 4 * var(--gutter)); }
+.w-cols-6 { width: calc(6 * var(--column-w) + 5 * var(--gutter)); }
+.w-cols-7 { width: calc(7 * var(--column-w) + 6 * var(--gutter)); }
+.w-cols-8 { width: calc(8 * var(--column-w) + 7 * var(--gutter)); }
+.w-cols-9 { width: calc(9 * var(--column-w) + 8 * var(--gutter)); }
+.w-cols-10 { width: calc(10 * var(--column-w) + 9 * var(--gutter)); }
+.w-cols-11 { width: calc(11 * var(--column-w) + 10 * var(--gutter)); }
+.w-cols-12 { width: calc(12 * var(--column-w) + 11 * var(--gutter)); }
+
+/* 絶対配置用: 左端を N 段目の左端にそろえる（ページの左右に応じたマージン基準） */
+.x-col-1 { left: var(--margin-left); }
+.x-col-2 { left: calc(var(--margin-left) + 1 * (var(--column-w) + var(--gutter))); }
+.x-col-3 { left: calc(var(--margin-left) + 2 * (var(--column-w) + var(--gutter))); }
+.x-col-4 { left: calc(var(--margin-left) + 3 * (var(--column-w) + var(--gutter))); }
+.x-col-5 { left: calc(var(--margin-left) + 4 * (var(--column-w) + var(--gutter))); }
+.x-col-6 { left: calc(var(--margin-left) + 5 * (var(--column-w) + var(--gutter))); }
+.x-col-7 { left: calc(var(--margin-left) + 6 * (var(--column-w) + var(--gutter))); }
+.x-col-8 { left: calc(var(--margin-left) + 7 * (var(--column-w) + var(--gutter))); }
+.x-col-9 { left: calc(var(--margin-left) + 8 * (var(--column-w) + var(--gutter))); }
+.x-col-10 { left: calc(var(--margin-left) + 9 * (var(--column-w) + var(--gutter))); }
+.x-col-11 { left: calc(var(--margin-left) + 10 * (var(--column-w) + var(--gutter))); }
+.x-col-12 { left: calc(var(--margin-left) + 11 * (var(--column-w) + var(--gutter))); }
+
+/* ---- 絶対配置の補助 ---- */
+
+/* .trim 内で mm 座標を指定して置く要素（top/left 等はインラインや page.css で指定） */
+.abs {
+  position: absolute;
+}
+
+/* .trim 全面 */
+.fill {
+  position: absolute;
+  inset: 0;
+}
+
+/* 版面（マージン内）の上下端にそろえる */
+.y-margin-top {
+  top: var(--margin-top);
+}
+
+.y-margin-bottom {
+  bottom: var(--margin-bottom);
+}
+
+/* 安全領域（仕上がり線から --safe 内側）の内側に収める */
+.inset-safe {
+  position: absolute;
+  inset: var(--safe);
+}
+
+/* ---- 配置の微調整 ---- */
+
+.self-start {
+  align-self: start;
+}
+
+.self-center {
+  align-self: center;
+}
+
+.self-end {
+  align-self: end;
+}
+
+.self-stretch {
+  align-self: stretch;
+}

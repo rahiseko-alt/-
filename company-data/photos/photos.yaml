@@ -1,0 +1,19 @@
+# 写真（正本）
+# - 学校が権利を持つ（または使用許諾を得た）写真だけを登録する
+# - 参考資料（references/）から切り出した写真、AI 生成画像は登録しない
+#   AI 生成のビジュアルは books/<id>/backgrounds/ か shared/generated-assets/ に .prompt.yaml 付きで置く
+# - ファイルは company-data/photos/ 以下に置き、file はリポジトリルート相対で書く（Git LFS で管理）
+# - BOOK からは {{photo "<id>"}} で参照する（未登録の ID はエラーになる）
+# - rights には使用条件（期限・媒体の制限・肖像の同意状況など）を書く
+#
+# 記入例（実データを受け取るまで空のまま）:
+# photos:
+#   - id: campus-exterior
+#     file: company-data/photos/campus-exterior.jpg
+#     caption: "TODO: キャプションを記入"
+#     credit: "TODO: 撮影者・提供元を記入"
+#     rights: "TODO: 使用条件を記入"
+#     tags: [campus]
+# ルール: system/rules/company-data.md
+
+photos: []

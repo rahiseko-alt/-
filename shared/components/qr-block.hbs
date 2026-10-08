@@ -1,0 +1,15 @@
+{{!--
+  qr-block: QR コード + 説明（Layer 3。QR はコードで生成し、画像に焼き込まない）
+  必須: url（QR にする文字列。company-data の値を渡す）
+  任意: label（QR の説明）, caption（URL など補足の表示文字列）, size（mm。既定 20）
+  使い方:
+    {{> qr-block url=facts.school.url label="公式サイト" caption=facts.school.url}}
+    {{> qr-block url=facts.contacts.contacts.0.url size=18}}
+  印刷物では 15mm 以上を目安にする（system/rules/output.md）
+  詳細: shared/components/README.md
+--}}
+<div class="qr-block">
+  <div class="qr-block__code">{{#if size}}{{qr url size=size}}{{else}}{{qr url size=20}}{{/if}}</div>
+  {{#if label}}<p class="qr-block__label">{{label}}</p>{{/if}}
+  {{#if caption}}<p class="qr-block__caption">{{caption}}</p>{{/if}}
+</div>

@@ -1,0 +1,21 @@
+{{!-- データページ: {{#each}} + パーシャル + num ヘルパー --}}
+<div class="area-margins">
+  <h2 class="data-title">学科紹介</h2>
+  <figure class="data-photo">
+    <img src="{{photo "campus"}}" alt="">
+    <figcaption>{{photos.campus.caption}}</figcaption>
+  </figure>
+  <div class="data-courses">
+    {{#each facts.courses.courses}}
+    {{> cards/course-card}}
+    {{/each}}
+  </div>
+  <h2 class="data-title">数字で見る{{facts.school.short_name}}</h2>
+  <div class="data-metrics grid-columns">
+    {{#each facts.results.metrics}}
+    <div class="data-metric">{{> stat-card}}</div>
+    {{/each}}
+  </div>
+  <p class="data-note">卒業生 <span class="num">{{num facts.results.metrics.[1].value}}</span> 名（{{facts.results.metrics.[0].as_of}} 時点の就職率 {{facts.results.metrics.[0].value}}{{facts.results.metrics.[0].unit}}）</p>
+</div>
+{{> book/page-number}}

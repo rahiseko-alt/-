@@ -1,0 +1,61 @@
+/* page_001 専用（compose が @scope でこのページに限定する） */
+/* 帯は左右・下を塗り足しまで広げる（bottom/left/right は bleed-* クラスで指定） */
+.cover-band {
+  position: absolute;
+  height: 51mm;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.cover-head {
+  position: absolute;
+  top: var(--margin-top);
+  left: var(--margin-left);
+  right: var(--margin-right);
+  color: #ffffff;
+}
+
+.cover-logo {
+  width: 36mm;
+  height: auto;
+}
+
+.cover-catch {
+  margin-top: 8mm;
+  font-size: 20pt;
+}
+
+.cover-title {
+  position: absolute;
+  top: 110mm;
+  left: var(--margin-left);
+  right: var(--margin-right);
+  color: #ffffff;
+}
+
+.cover-title h1 {
+  font-size: 34pt;
+}
+
+.cover-sub {
+  font-size: 14pt;
+}
+
+.cover-lead {
+  margin-top: 6mm;
+  font-size: 9pt;
+}
+
+.cover-foot {
+  position: absolute;
+  left: var(--margin-left);
+  right: var(--margin-right);
+  bottom: var(--margin-bottom);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 8pt;
+}
+
+.cover-qr {
+  width: 22mm;
+}

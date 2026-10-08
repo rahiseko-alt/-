@@ -1,0 +1,7 @@
+photos:
+  - id: campus
+    file: company-data/photos/campus.svg
+    caption: 架空のキャンパス外観
+    credit: fixture
+    rights: テスト用（架空）
+    tags: [campus]

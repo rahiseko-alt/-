@@ -1,0 +1,18 @@
+# このBOOKが使う参考資料（docs/concept.md §5 ／ system/rules/references.md）
+# - 参考資料はコピーしない。references/<source>/<kind>/ 以下をリポジトリルート相対パスで指定する
+# - ページ単位の指定は「BOOK 側のページ ID」をキーにし、値に「参考資料側のページ画像」を書く
+#     layout_reference      レイアウト（npm run compare の既定の比較対象は先頭の 1 枚）
+#     visual_reference      写真・ビジュアルの見せ方
+#     information_reference 情報（数字・表）の見せ方
+# - 参考画像は比較専用。ページの描画（背景・{{asset}}）には使わない
+#
+# 記入例:
+# references:
+#   - references/HAL/brochure/
+#   - references/A-school/brochure/
+# page_001:
+#   layout_reference: [references/HAL/brochure/page_016.png]
+#   visual_reference: [references/A-school/brochure/page_031.png]
+#   information_reference: [references/B-school/brochure/page_008.png]
+
+references: []

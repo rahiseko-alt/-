@@ -1,0 +1,311 @@
+/*
+ * components.css: shared/components/*.hbs の既定スタイルと Layer 2（STRUCTURE）の部品
+ *
+ * 使い方: パーシャルを使う BOOK は book.yaml の styles に shared/layouts/components.css を入れる。
+ *   styles: [shared/layouts/grid.css, shared/layouts/typography.css, shared/layouts/components.css]
+ * - 色は var(--color-*)、書体は var(--font-*) だけを使う（直書きしない）
+ * - BOOK 固有の見た目は page.css（またはBOOK 独自の CSS）で上書きする。このファイルを BOOK 用に書き換えない
+ * パラメータ一覧: shared/components/README.md
+ */
+
+/* ---- Layer 2: 面・枠・罫線 ---- */
+
+/* 色面（カード・帯の背景） */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-paper {
+  background-color: var(--color-background);
+}
+
+/* 半透明パネル（背景画像の上に文字を載せる面）。濃さは --panel-opacity */
+.panel {
+  position: relative;
+  isolation: isolate;
+  padding: var(--panel-padding, 5mm);
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--panel-color, var(--color-background));
+  opacity: var(--panel-opacity, 0.88);
+}
+
+.panel--dark {
+  --panel-color: var(--color-primary);
+  color: var(--color-background);
+}
+
+/* 罫線 */
+.rule {
+  border: 0;
+  border-top: var(--rule-width, 0.25mm) solid var(--rule-color, var(--color-primary));
+}
+
+.rule--thin {
+  --rule-width: 0.1mm;
+}
+
+.rule--muted {
+  --rule-color: var(--color-muted);
+}
+
+/* ---- stat-card ---- */
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1mm;
+  padding: 4mm;
+  background-color: var(--color-surface);
+  border-top: 0.8mm solid var(--color-primary);
+}
+
+.stat-card__label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-stat-label, 9pt);
+  font-weight: 700;
+  line-height: 1.4;
+  font-feature-settings: 'palt' 1;
+  text-align: left;
+}
+
+.stat-card__value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8mm;
+  color: var(--color-primary);
+  text-align: left;
+  line-height: 1;
+}
+
+.stat-card__number {
+  font-family: var(--font-number);
+  font-size: var(--fs-stat-number, 32pt);
+  font-weight: 900;
+  line-height: 1;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+.stat-card__unit {
+  font-family: var(--font-heading);
+  font-size: var(--fs-stat-unit, 11pt);
+  font-weight: 700;
+}
+
+.stat-card__note,
+.stat-card__meta {
+  font-size: var(--fs-note, 6.5pt);
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-align: left;
+}
+
+.stat-card--accent {
+  border-top-color: var(--color-accent);
+}
+
+.stat-card--accent .stat-card__value {
+  color: var(--color-accent);
+}
+
+.stat-card--inverse {
+  background-color: var(--color-primary);
+  border-top-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+.stat-card--inverse .stat-card__value,
+.stat-card--inverse .stat-card__note,
+.stat-card--inverse .stat-card__meta {
+  color: var(--color-background);
+}
+
+.stat-card--outline {
+  background-color: transparent;
+  border: 0.3mm solid var(--color-primary);
+}
+
+/* ---- section-heading ---- */
+
+.section-heading {
+  display: grid;
+  gap: 1.5mm;
+}
+
+.section-heading__number {
+  font-family: var(--font-number);
+  font-size: var(--fs-section-number, 20pt);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.section-heading__en {
+  font-family: var(--font-heading);
+  font-size: var(--fs-en, 9pt);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-align: left;
+}
+
+.section-heading__title {
+  font-size: var(--fs-h1, 24pt);
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.section-heading__lead {
+  font-size: var(--fs-lead, 11pt);
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.section-heading--inverse .section-heading__en,
+.section-heading--inverse .section-heading__title,
+.section-heading--inverse .section-heading__lead {
+  color: var(--color-background);
+}
+
+.section-heading--center {
+  justify-items: center;
+  text-align: center;
+}
+
+.section-heading--center .section-heading__en,
+.section-heading--center .section-heading__lead {
+  text-align: center;
+}
+
+/* ---- photo-frame ---- */
+
+.photo-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+}
+
+.photo-frame__img,
+.photo-frame__placeholder {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.photo-frame__placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 20mm;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 3mm, rgba(0, 0, 0, 0.05) 3mm 6mm),
+    var(--color-surface);
+  border: 0.2mm dashed var(--color-muted);
+  font-size: 7pt;
+  color: var(--color-muted);
+}
+
+.photo-frame__caption {
+  flex: none;
+  font-size: var(--fs-caption, 7.5pt);
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.photo-frame--round .photo-frame__img,
+.photo-frame--round .photo-frame__placeholder {
+  border-radius: 3mm;
+}
+
+/* 塗り足しまで広げる写真（.trim 内の絶対配置要素に付ける。キャプションは別要素で置く） */
+.photo-frame--bleed {
+  position: absolute;
+  inset: calc(var(--bleed) * -1);
+}
+
+/* ---- qr-block ---- */
+
+.qr-block {
+  display: inline-grid;
+  justify-items: center;
+  gap: 1mm;
+}
+
+.qr-block__label {
+  font-family: var(--font-heading);
+  font-size: 7.5pt;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.qr-block__caption {
+  font-family: var(--font-number);
+  font-size: var(--fs-note, 6.5pt);
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ---- folio（ノンブル） ---- */
+
+.folio {
+  position: absolute;
+  bottom: var(--folio-bottom, 7mm);
+  display: flex;
+  align-items: baseline;
+  gap: 2.5mm;
+  font-size: 7pt;
+  line-height: 1;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+/* 右ページ: 小口 = 右 */
+.folio,
+.folio--right {
+  right: var(--margin-outside);
+  left: auto;
+  flex-direction: row-reverse;
+}
+
+/* 左ページ: 小口 = 左 */
+.folio--left {
+  left: var(--margin-outside);
+  right: auto;
+  flex-direction: row;
+}
+
+.folio__number {
+  font-family: var(--font-number);
+  font-size: 9pt;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.folio--inverse,
+.folio--inverse .folio__number {
+  color: var(--color-background);
+}

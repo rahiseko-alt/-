@@ -1,0 +1,15 @@
+{{!--
+  section-heading: セクション見出し（Layer 3）
+  必須: title（改行を含めると <br> になる）
+  任意: number（"01" など）, en（欧文の小見出し）, lead（リード文）, variant（"inverse" | "center"）
+  使い方:
+    {{> section-heading title=page.title en="COURSE" number="01"}}
+    {{> section-heading title=copy.main.catchphrase lead=copy.main.lead variant="inverse"}}
+  詳細: shared/components/README.md
+--}}
+<header class="section-heading{{#if variant}} section-heading--{{variant}}{{/if}}">
+  {{#if number}}<span class="section-heading__number num">{{number}}</span>{{/if}}
+  {{#if en}}<p class="section-heading__en">{{en}}</p>{{/if}}
+  <h2 class="section-heading__title">{{nl2br title}}</h2>
+  {{#if lead}}<p class="section-heading__lead">{{nl2br lead}}</p>{{/if}}
+</header>

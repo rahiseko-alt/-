@@ -1,0 +1,6 @@
+references:
+  - references/Sample/brochure/
+page_001:
+  layout_reference: [references/Sample/brochure/page_001.svg]
+  visual_reference: [references/Sample/brochure/page_001.svg]
+  information_reference: []

@@ -1,0 +1,23 @@
+# 学科・コース（正本）
+# - BOOK からは {{#each facts.courses.courses}} ... {{name}} ... {{/each}} のように参照する
+# - id は英小文字・数字・ハイフン（kebab-case）。一度 BOOK から参照したら変更しない
+# - years / capacity は数値で記入する（未確定の間は "TODO: ..." 文字列）
+# - photo を書く場合は company-data/photos/photos.yaml に存在する写真 ID を指定する
+# - 下の course-todo は記入例を兼ねたプレースホルダ。実際の学科を記入したら削除する
+# 書き方: company-data/README.md ／ ルール: system/rules/company-data.md
+
+courses:
+  - id: course-todo
+    name: "TODO: 学科名を記入"
+    name_en: "TODO: 学科名の英語表記を記入（なければ行ごと削除）"
+    years: "TODO: 修業年限を数値で記入"
+    capacity: "TODO: 定員を数値で記入（公表しない場合は行ごと削除）"
+    description: "TODO: 学科の紹介文を記入"
+    tags:
+      - "TODO: 分類タグを記入（なければ tags ごと削除）"
+    curriculum:
+      - "TODO: 主な授業科目を記入"
+    qualifications:
+      - "TODO: 目標とする資格を記入"
+    careers:
+      - "TODO: 目指す職種を記入"

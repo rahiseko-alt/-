@@ -1,0 +1,22 @@
+# 背景画像の生成記録（Layer 1: BASE VISUAL）
+# - 画像と同じベース名で隣に置く（例: books/brochure/backgrounds/page_001.png ↔ page_001.prompt.yaml）
+# - ルール: system/rules/image-generation.md ／ スキーマ: system/design-engine/src/schemas/background.ts
+#
+# 【必須ルール】生成画像に文字を入れない
+#   文字・数字・ロゴ・記号・QR コードを含む画像は使わない（看板・画面・黒板・書籍など文字が写り込む題材も避ける）。
+#   見出し・本文・数字・URL・QR コードは Layer 3（page.html）で配置する。
+#   生成後は画像を拡大して、文字や文字状の模様がないことを確認する。
+# - 参考資料の画像を生成の入力（img2img・画像プロンプト・スタイル参照）にしない。構図や質感は言葉で書く
+tool: "TODO: 生成ツール名"
+model: "TODO: モデル名・バージョン"
+prompt: |
+  TODO: 構図（見出し・本文が載る領域をどこに空けるか）、色（ブランドカラーの 16 進値を言葉と併記）、質感・光を書く。
+  文字・数字・ロゴは含めない。
+negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption"
+seed: null                       # 不明なら null
+size: "TODO: 配置した画像のピクセルサイズ（例: 2976x4175 = A4 + 塗り足し 3mm を 350dpi）"
+created: "TODO: 作成日（YYYY-MM-DD）"
+author: "TODO: 生成した人・エージェント"
+source_refs: []                  # 構図・質感の参考にしたページ（例: references/HAL/brochure/page_016.png）
+notes: |
+  TODO: 加工（拡大・トリミング・色調整・合成・部分修正）の手順と倍率、採用理由（例: 3 案中 2 案目を採用）。

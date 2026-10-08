@@ -1,0 +1,4 @@
+logos:
+  - id: main
+    file: company-data/brand/logo/logo.svg
+    variant: color

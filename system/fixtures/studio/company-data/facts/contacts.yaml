@@ -1,0 +1,10 @@
+contacts:
+  - id: admissions
+    label: 入学相談室
+    tel: 00-0000-0002
+    email: admissions@example.com
+    url: https://example.com/admissions/
+    hours: 平日 9:00〜18:00
+sns:
+  - service: Example SNS
+    url: https://example.com/sns

@@ -1,0 +1,19 @@
+# 架空の学校（テスト用）
+name: サンプル学園
+name_en: Sample Gakuen
+short_name: サンプル
+corporation: 学校法人サンプル学園
+established: 2001
+address:
+  postal_code: 000-0000
+  prefecture: 架空県
+  city: 見本市
+  line1: 例示町1-2-3
+  line2: サンプルビル
+tel: 00-0000-0000
+fax: 00-0000-0001
+email: info@example.com
+url: https://example.com/
+access:
+  - 見本駅 徒歩5分
+  - 例示バス停 徒歩2分

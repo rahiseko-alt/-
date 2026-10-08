@@ -1,0 +1,20 @@
+# テスト用 BOOK（A4・塗り足し 3mm・2 ページ）
+id: smoke
+title: スモークテスト
+kind: brochure
+format:
+  size: A4
+  orientation: portrait
+  bleed_mm: 3
+  safe_mm: 5
+  margins_mm: { top: 15, bottom: 15, inside: 18, outside: 15 }
+  columns: 12
+  gutter_mm: 4
+  binding: left
+styles: [shared/layouts/fixture.css]
+theme:
+  "--color-accent": "#e76f51"
+pages: [page_001, page_002]
+output:
+  png_dpi: 350
+  preview_dpi: 150

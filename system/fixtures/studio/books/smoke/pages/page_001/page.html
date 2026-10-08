@@ -1,0 +1,19 @@
+{{!-- 表紙: Layer 1 は page.yaml の background。ここは Layer 2（構造）+ Layer 3（文字） --}}
+<div class="cover-band bleed-left bleed-right bleed-bottom"></div>
+<header class="cover-head">
+  <img class="cover-logo" src="{{asset brand.logo.main.file}}" alt="">
+  <p class="cover-catch heading">{{copy.brochure.catch}}</p>
+</header>
+<section class="cover-title">
+  <h1>{{facts.school.name}}</h1>
+  <p class="cover-sub">{{book.title}}</p>
+  <p class="cover-lead">{{nl2br copy.brochure.lead}}</p>
+</section>
+<footer class="cover-foot">
+  <div class="cover-contact">
+    <p>{{facts.school.address.prefecture}}{{facts.school.address.city}}{{facts.school.address.line1}}</p>
+    <p>TEL <span class="num">{{facts.school.tel}}</span></p>
+    <p>{{facts.school.url}}</p>
+  </div>
+  <div class="cover-qr">{{qr facts.school.url size=22}}</div>
+</footer>

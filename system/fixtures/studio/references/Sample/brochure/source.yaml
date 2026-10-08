@@ -1,0 +1,12 @@
+# 参考資料の出自（fixture）
+source: Sample
+title: 架空の他校パンフレット（テスト用）
+kind: brochure
+obtained: "2026-01-01"
+original: null
+pages: 1
+usage: reference-only
+# 自社 BOOK・company-data・shared に出してはいけない語
+forbidden_terms:
+  - サンプル他校
+notes: テスト用。ページ画像は SVG で代用している。
