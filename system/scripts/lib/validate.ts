@@ -7,6 +7,8 @@ import {
   AnalysisSchema,
   ReferencePrepSchema,
   BackgroundPromptSchema,
+  Layer1OrdersSchema,
+  type Layer1Orders,
   PAGE_ID_RE,
   StudioError,
   allReferencePaths,
@@ -44,7 +46,7 @@ export const VALIDATE_USAGE = `使い方: npm run validate -- [--strict] [--root
   4. 全ページの試し合成（テンプレートの厳格モード・アセットの存在）
   5. 事実の直書き（company-data の値が page.html・パーシャルに直接書かれていないか）
   6. 禁止語（参考資料の forbidden_terms が books/・company-data/・shared/ に出ていないか）
-  7. 背景画像の生成記録（.prompt.yaml）
+  7. 背景画像の生成記録（.prompt.yaml）と Layer 1 の生成指示（layer1-orders.yaml。未生成は警告）
 エラーがあれば終了コード 1。`;
 
 export interface CheckSection {
@@ -68,6 +70,8 @@ export interface ValidateReport {
 const TEXT_EXT = new Set(['.yaml', '.yml', '.html', '.htm', '.hbs', '.css', '.md', '.txt', '.json', '.svg', '.csv', '.xml', '.js', '.mjs', '.ts']);
 const MAX_TEXT_BYTES = 5 * 1024 * 1024;
 const BACKGROUND_IMAGE_RE = /\.(png|jpe?g|webp)$/i;
+/** Layer 1 の生成指示（books/<bookId>/backgrounds/ に置く） */
+export const LAYER1_ORDERS_FILE = 'layer1-orders.yaml';
 /** 事実の直書きチェックで対象外にするキー（ID・ファイルパス等） */
 const NON_FACT_KEYS = new Set(['id', 'photo', 'course_ids', 'file', 'logo', 'variant']);
 const MIN_FACT_LENGTH = 4;
@@ -363,7 +367,8 @@ function checkHardcodedFacts(root: string, company: CompanyData | null, s: Check
  * 日本語の文章がパスの直後に続いても、そこから先は照合の対象に残す。
  */
 export function maskReferencePaths(text: string): string {
-  return text.replace(/references\/[A-Za-z0-9_.\/-]+/g, (m) => ' '.repeat(m.length));
+  // references/<source>/... と、その補正画像の置き場所 .cache/ref-prep/<source>/...（npm run ref:prep）
+  return text.replace(/(?:references|\.cache\/ref-prep)\/[A-Za-z0-9_.\/-]+/g, (m) => ' '.repeat(m.length));
 }
 
 function checkForbiddenTerms(root: string, sources: Array<{ dir: string; source: ReferenceSource }>, s: CheckSection): void {
@@ -398,6 +403,7 @@ function checkForbiddenTerms(root: string, sources: Array<{ dir: string; source:
 
 function checkBackgrounds(root: string, bookIds: string[], s: CheckSection): void {
   let images = 0;
+  let orders = 0;
   for (const bookId of bookIds) {
     const dir = path.join(root, 'books', bookId, 'backgrounds');
     if (!fs.existsSync(dir)) continue;
@@ -414,10 +420,36 @@ function checkBackgrounds(root: string, bookIds: string[], s: CheckSection): voi
         } catch (err) {
           push(s.errors, errorMessage(err));
         }
+      } else if (name === LAYER1_ORDERS_FILE) {
+        orders += checkLayer1Orders(root, bookId, dir, names, rel, s);
       }
     }
   }
   s.info.push(`背景画像 ${images} 枚`);
+  if (orders > 0) s.info.push(`Layer 1 の生成指示 ${orders} 件`);
+}
+
+/** layer1-orders.yaml の形式・参照先を確かめ、未生成の件数を警告する。指示の件数を返す */
+function checkLayer1Orders(root: string, bookId: string, dir: string, names: string[], rel: string, s: CheckSection): number {
+  let orders: Layer1Orders;
+  try {
+    orders = loadYamlWithSchema(path.join(dir, LAYER1_ORDERS_FILE), Layer1OrdersSchema, rel);
+  } catch (err) {
+    push(s.errors, errorMessage(err));
+    return 0;
+  }
+  if (orders.book !== bookId) push(s.errors, `${rel}: book "${orders.book}" が BOOK ID "${bookId}" と一致しません`);
+  for (const ref of [orders.reference_image, orders.reference_prep]) {
+    if (ref && !fs.existsSync(path.join(root, ref))) push(s.errors, `${rel}: 参照先がありません: ${ref}`);
+  }
+  const pending = orders.items.filter((item) => !names.some((n) => BACKGROUND_IMAGE_RE.test(n) && n.replace(/\.[^.]+$/, '') === item.id));
+  if (pending.length > 0) {
+    const required = pending.filter((item) => !item.optional).length;
+    push(s.warnings, `${rel}: Layer 1 が未生成 ${pending.length} 件（必須 ${required}・任意 ${pending.length - required}）: ${pending.map((i) => i.id).join(', ')}`);
+  } else if (orders.status !== 'generated') {
+    push(s.warnings, `${rel}: 全件の画像があります。status を generated にしてください`);
+  }
+  return orders.items.length;
 }
 
 // ---------------------------------------------------------------------------

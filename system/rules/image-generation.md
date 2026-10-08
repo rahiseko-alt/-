@@ -72,6 +72,17 @@ notes: |
 - 不採用案はコミットしない（容量削減）。採用理由を `notes` に 1 行残す
 - `npm run validate` は `books/*/backgrounds/` の画像に `.prompt.yaml` がないと警告する。`shared/generated-assets/` はレビューで確認する
 
+### 生成指示（layer1-orders.yaml）
+
+生成する人・エージェントと、ページを作る人・エージェントが分かれるときは、ページ側が先に**生成指示**を書く（生成前の注文書。生成記録 `.prompt.yaml` とは別）。
+
+- 置き場所: `books/<bookId>/backgrounds/layer1-orders.yaml`（ページ 1 枚につき 1 ファイル）。スキーマ: `system/design-engine/src/schemas/background.ts` の `Layer1OrdersSchema`
+- 書くこと: `book`・`page`・`reference_image`（入力する参考ページ）・`reference_prep`（補正指定）・`status`（`pending` / `generated`）と、素材ごとの `id`（`<pageId>-<用途>`。生成画像のベース名）・`kind`（photo / cutout / illustration / texture / decoration）・`people`（人物を含むか）・`optional`・`size_mm`・`bleed`・`crop_mm`（補正後の参考ページ上の範囲。仕上がり線基準の mm）・`placement`（どの枠にどう入れるか）・`reference_usage`・`mask`（入力前に塗りつぶす部分）・`prompt`・`negative_prompt`（§3 の 10 語を必ず含む）・`summary`
+- ロゴ・QR・文字・単純なアイコンは生成指示に入れない（ロゴは正式データ、ほかは Layer 2/3）
+- `npm run gen:inputs -- --book <bookId>` で、各素材の参考の切り出し（`.cache/gen-inputs/`。コミットしない）と必要な画素数の一覧を作る
+- 生成した画像は `backgrounds/<素材 id>.png`（写真調は `.jpg` も可）と `<素材 id>.prompt.yaml` に置き、`placement` の枠（`photo-frame` の `src` など）から参照する。全件そろったら `status: generated` にする
+- `npm run validate` は、画像がまだない素材を「Layer 1 が未生成」として警告する（必須・任意の件数つき）
+
 ## 5. ファイルの置き場所と名前
 
 | 用途 | 置き場所 | 名前 |

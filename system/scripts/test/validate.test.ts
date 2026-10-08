@@ -74,6 +74,7 @@ describe('validate', () => {
       'source: Hoge-school\ntitle: テスト\nkind: brochure\nusage: reference-only\nforbidden_terms: [Hoge-school]\n',
     );
     edit(root, 'books/smoke/references.yaml', (s) => s.replace('references:\n', 'references:\n  - references/Hoge-school/brochure/\n'));
+    appendFile(root, 'books/smoke/references.yaml', '# 補正画像: .cache/ref-prep/Hoge-school/brochure/prep/page_001.png\n');
     const ok = await run(validateCommand, ['--root', root]);
     expect(ok.code, ok.text).toBe(0);
 

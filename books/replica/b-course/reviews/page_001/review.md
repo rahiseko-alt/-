@@ -87,6 +87,7 @@
 
 ## 次にやること
 
+- Layer 1 の生成指示: books/replica/b-course/backgrounds/layer1-orders.yaml（5 件、人物を含む 4 件。うち蝶の線画 1 件は optional）。生成ツールが決まったら system/prompts/generate-background.md の「生成指示から生成する」で生成する
 - Layer 1 の素材（自社写真。company-data/photos/ に登録後、photo-frame に id を渡す。授業カードは book/class-card の photo 引数）:
   - 大写真 1 点: 193×117mm（x 17mm〜ノド側の塗り足しまで、y 43〜160mm。小口側の上角だけ角丸 4mm）。人物 1〜2 人の上半身、顔は写真の上 1/3・中央右寄せ（解析 image_crop）
   - 授業写真 3 点: 各 59.5×38.7mm（上の 2 角だけ角丸 1.2mm）。2〜4 人の活動場面

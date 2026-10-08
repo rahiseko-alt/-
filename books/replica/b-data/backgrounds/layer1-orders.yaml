@@ -1,0 +1,185 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - size_mm・placement の座標は仕上がり（.trim、210×297mm、左上原点）の mm。出力 PNG（150dpi、塗り足し 3mm 込み 1276×1789px）で枠の位置・直径を確認済み
+# - crop_mm は補正後の参考ページ（npm run ref:prep の .cache/ref-prep/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.png、1414×2000px、1mm = 6.733px）上の範囲。
+#   切り出しは npm run gen:inputs -- --book replica/b-data（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
+# - 【重要】このページの補正画像は真のページとずれている（reviews/page_001/review.md「比較の前提」）。撮影で天 約 5mm・地 約 7mm が写っておらず、
+#   ノド側 約 15% が強く縮み、上半分に紙の反りによる縦のせん断があるため、補正画像は縦に 約 4.5%・中央で横に 約 7% 引き伸ばされている。
+#   ページ（page.css）は「真の幾何」で組んだので、crop_mm は枠の位置と一致しない。crop_mm は補正画像そのものの上で写真の外接矩形を画素で実測した値
+#   （ずれ: ページ中央〜ノド側の円形写真は 右へ +7.7〜+12.4mm、上半分の 3 点は 上へ 2.7〜4.9mm、下段の 3 点は 下へ 1.4〜5.0mm。各 notes）。
+#   円形写真の切り出しは正方形にならない（反りとノド側の縮みで楕円に写る）。入力前に size_mm の縦横比（1:1）へ伸縮して正円に戻してから使う
+# - Layer 1 は円形写真 6 点と切り抜き人物 1 体の 7 件。すべて人物を含む（生成人物の使用可否は【要確認】: system/rules/image-generation.md §2）。
+#   参考の人物に似せない（構図・ポーズ・服の色調・光だけを参照し、顔は架空の別人にする）
+# - 対象外にしたもの（Layer 1 にしない）:
+#   - 外周帯（淡い水色）と方眼紙の地紙: 単色の面と 3mm の細い罫線なので Layer 2（page.css の .band / .paper）。生成不要
+#   - 地図: 参考も単色の簡略シルエット（質感・写真表現なし）。Layer 2 の SVG（中立のプレースホルダ。参考の輪郭・拠点の点はなぞらない）
+#   - 雲形の吹き出し 6 個・3 色の角括弧・キラキラ・角欠きパネル・吊り下げ線・ドットリーダー・ハートのノンブル: 単純な図形（Layer 2 の SVG/CSS）
+#   - 色面ラベル・大数字・注記・人物の吹き出しの手書き風の文字: Layer 3（文字）
+#   - 見開きの右ページ（就職先一覧）の背後の線画の透かし: この BOOK の再現範囲（左ページ）の外
+#   - ロゴ・QR: このページにはない
+book: replica/b-data
+page: page_001
+reference_image: references/nagoya-iryo-hisho-it/brochure-2/page_001.jpg
+reference_prep: references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml
+status: pending
+items:
+  - id: page_001-disc-c1
+    kind: photo
+    people: true
+    optional: false
+    # .disc--c1（left 131.25mm・top 131.55mm・直径 31.5mm）。出力 PNG で x 131.3〜162.6・y 131.8〜163.3mm を確認
+    size_mm: [31.5, 31.5]
+    bleed: false
+    # 補正画像の画素の実測: x 141.5〜175.3・y 126.9〜160.1mm（33.8×33.2mm）
+    crop_mm: [141.5, 126.9, 33.8, 33.2]
+    placement: "page.html の .disc--c1 の photo-frame（ratio=\"1 / 1\"）に src=\"books/replica/b-data/backgrounds/page_001-disc-c1.png\" を追加（写真調は .jpg も可）。object-fit: cover で .disc（border-radius 50%）の円に切り抜かれる。白いフチ 0.6mm は .disc の box-shadow（Layer 2）のまま"
+    reference_usage: composition
+    mask: "入力前に、内接する円（楕円）の外側をすべて白（#ffffff）で塗る（方眼紙・上辺を横切る下のパネルの緑の枠線・右下に入り込む隣の円形写真）。円の中の右上、机の奥の白い札（小さな印刷文字あり、補正画像で x 163〜172・y 136〜143mm 付近）を周囲の淡いベージュの壁の色（#d5d2cc 前後）で塗りつぶす"
+    prompt: |
+      Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face, hands and laptop inside the central inscribed circle.
+      Composition: a waist-up shot of one young adult woman seated at an office desk, body angled slightly to camera-left, head turned toward the camera with a warm natural smile. Her face sits in the upper-left third of the frame (face centre about 35% from the left and 28% from the top; hair-to-chin about one third of the frame height). Both hands are on the keyboard of a black laptop that enters from the right edge and lower right foreground, the laptop seen from the side/back so no screen content is visible. Upper right: an out-of-focus bright office interior with a pale wall and an empty desk shelf, calm and uncluttered.
+      Subject (generic, fictional): an East Asian woman in her early twenties, dark hair tied in a low ponytail, light natural make-up, wearing a light cool-grey short-sleeve office uniform blouse with thin navy piping at the collar and a small navy bow; no name tag, no badge, no emblem.
+      Lighting: soft, even daylight from the front-left, bright and airy, gentle shadows, clean skin tones.
+      Palette: uniform cool grey #8f8d96 with navy #2d3b64 accents, background warm pale grey-beige #d5d2cc to #dddbdc, laptop near-black #141316, natural skin tones; overall light and slightly soft like a school brochure photo.
+      Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field (background softly blurred), sharp eyes, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, readable screen, sign, label, name tag, badge, emblem, printed paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
+    summary: "上段右の大きい円（直径 31.5mm）: 事務の制服の若い女性がノート PC で作業しながらカメラに笑顔。顔は左上寄り、PC は右下"
+    notes: "補正画像との差: 枠（真の幾何）x 131.25・y 131.55mm に対し、補正画像では +10.3mm 右・4.7mm 上に写り、横 33.8×縦 33.2mm に拡大されている（反り・ノド側の縮み・天地の欠け）。入力前に 1:1 へ伸縮する。顔を円の中心より上に（解析 image_crop）。顔が円の縁に近すぎたら photo-frame の position で調整する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+
+  - id: page_001-disc-c2
+    kind: photo
+    people: true
+    optional: false
+    # .disc--c2（left 136.9mm・top 167mm・直径 28mm）。出力 PNG で x 137.2〜165.2・y 167.4〜195.0mm を確認
+    size_mm: [28.0, 28.0]
+    bleed: false
+    # 補正画像の画素の実測: x 147.5〜177.5・y 164.3〜193.6mm（30.0×29.3mm）
+    crop_mm: [147.5, 164.3, 30.0, 29.3]
+    placement: "page.html の .disc--c2 の photo-frame（ratio=\"1 / 1\"）に src=\"books/replica/b-data/backgrounds/page_001-disc-c2.png\" を追加（写真調は .jpg も可）。object-fit: cover で円に切り抜かれる。白いフチは .disc の box-shadow のまま"
+    reference_usage: composition
+    mask: "入力前に、内接する円の外側をすべて白（#ffffff）で塗る（方眼紙と、右上の角に入り込む隣の円形写真）。円の中に文字はない"
+    prompt: |
+      Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face and hands inside the central inscribed circle.
+      Composition: a chest-up shot of one young adult woman at a reception counter, laughing warmly while turned three-quarters toward camera-left as if talking with someone just outside the frame on the left. Her face is slightly left of centre in the upper third (face centre about 48% from the left and 32% from the top; hair-to-chin about one third of the frame height). Her hands are together in the lower left, gesturing over the counter toward the unseen visitor. Left edge: a softly blurred counter with a small dark object, no paperwork. Background: a plain dusty pink-beige wall, smooth and calm.
+      Subject (generic, fictional): an East Asian woman in her early twenties, black hair tied back, wearing a pale blue gingham-check uniform blouse with a soft bow at the collar; no name tag, no badge, no emblem.
+      Lighting: soft, diffuse front light, bright and friendly, gentle shadows.
+      Palette: background dusty pink-beige #d0b2a4 to #c0afaf, blouse pale blue check #a9b1be with white, hair near-black #221613, natural skin tones; overall light and soft.
+      Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, badge, emblem, printed paper, brochure, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
+    summary: "中段の下の円（直径 28mm）: チェックのブラウスの制服の若い女性がカウンター越しに左の相手へ笑顔で接客。手は左下"
+    notes: "補正画像との差: 枠 x 136.9・y 167mm に対し、補正画像では +10.6mm 右・2.7mm 上、30.0×29.3mm に拡大。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+
+  - id: page_001-disc-c3
+    kind: photo
+    people: true
+    optional: false
+    # .disc--c3（left 162mm・top 150.7mm・直径 28mm）。出力 PNG で x 162.3〜190.0・y 150.9〜178.9mm を確認
+    size_mm: [28.0, 28.0]
+    bleed: false
+    # 補正画像の画素の実測: x 174.0〜202.4・y 145.8〜175.7mm（28.4×29.9mm。反りで右上がりに傾いた楕円に写る）
+    crop_mm: [174.0, 145.8, 28.4, 29.9]
+    placement: "page.html の .disc--c3 の photo-frame（ratio=\"1 / 1\"）に src=\"books/replica/b-data/backgrounds/page_001-disc-c3.png\" を追加（写真調は .jpg も可）。object-fit: cover で円に切り抜かれる。白いフチは .disc の box-shadow のまま"
+    reference_usage: composition
+    mask: "入力前に、写真の外側（傾いた楕円の外）をすべて白（#ffffff）で塗る（方眼紙、左上の角に入る隣の円形写真の縁、左下の角に入る下の円形写真の縁）。円の中に文字はない（ノート PC は背面）"
+    prompt: |
+      Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face inside the central inscribed circle.
+      Composition: a chest-up shot of one young adult woman sitting at a desk in a classroom, laughing openly and looking toward camera-right at a classmate outside the frame. Her face is slightly left of centre in the upper third (face centre about 42% from the left and 30% from the top; head a little larger than one third of the frame height). Her forearms rest on the desk at the lower left; the closed back of a black laptop fills the lower right foreground (no screen visible). Background upper right: a dim, softly blurred classroom with empty brown wooden chairs and dark furniture.
+      Subject (generic, fictional): an East Asian woman in her early twenties, dark brown shoulder-length hair, wearing a pale lavender-blue short-sleeve blouse; no name tag, no badge, no emblem.
+      Lighting: soft window light from camera-left on the face and blouse, background darker for depth.
+      Palette: blouse pale lavender-blue #aeb4ca, background dark warm grey-brown #2d282d to #756454, laptop near-black #1b191e, hair very dark brown #160d0c, natural skin tones.
+      Style: photorealistic candid editorial photo, 50mm lens, slightly above eye-level, shallow depth of field, sharp eyes, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, readable screen, blackboard writing, sign, label, name tag, badge, emblem, printed paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
+    summary: "中段の右の円（直径 28mm）: 教室の机でノート PC を前に、右の相手と談笑する若い女性。背景は暗めの椅子"
+    notes: "補正画像との差: 枠 x 162・y 150.7mm に対し、補正画像では +12.0mm 右・4.9mm 上、28.4×29.9mm（紙の反りで右上がりに傾いた楕円）。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+
+  - id: page_001-disc-c4
+    kind: photo
+    people: true
+    optional: false
+    # .disc--c4（left 90mm・top 202.9mm・直径 25mm）。出力 PNG で x 90.0〜115.0・y 203.1〜228.1mm を確認
+    size_mm: [25.0, 25.0]
+    bleed: false
+    # 補正画像の画素の実測: x 97.7〜122.9・y 204.3〜230.8mm（25.2×26.5mm）
+    crop_mm: [97.7, 204.3, 25.2, 26.5]
+    placement: "page.html の .disc--c4 の photo-frame（ratio=\"1 / 1\"）に src=\"books/replica/b-data/backgrounds/page_001-disc-c4.png\" を追加（写真調は .jpg も可）。object-fit: cover で円に切り抜かれる。白いフチは .disc の box-shadow のまま（求人データのラベルの右端と縦の区切り線の上に重なる）"
+    reference_usage: composition
+    mask: "入力前に、内接する円の外側をすべて白（#ffffff）で塗る（左の山吹色のラベルと吊り下げ線・丸点、上下に見える縦の区切り線、方眼紙）。円の中の左、カウンターの白い紙（補正画像で x 98〜105・y 217〜225mm 付近）に印刷の跡があれば無地の白に塗る"
+    prompt: |
+      Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face and hands inside the central inscribed circle.
+      Composition: a waist-up shot of one young adult woman seated behind a reception desk, turned slightly to camera-left and smiling toward a visitor just outside the frame on the left. Her face is right of centre near the top (face centre about 60% from the left and 25% from the top; hair-to-chin about one third of the frame height); her hands rest together on the desk in the lower centre. Left side: a blank white sheet standing upright on the counter and a softly blurred interior. Background: a warm wooden interior with blurred shelves, calm and uncluttered.
+      Subject (generic, fictional): an East Asian woman in her early twenties, dark hair tied back, wearing a light blue-grey short-sleeve office uniform with a plain dark navy neck strap (no card attached); no name tag, no badge, no emblem.
+      Lighting: soft warm indoor light, even on the face, gentle shadows.
+      Palette: uniform light blue-grey #9096ab, background warm beige wood #bdb499 to #948b75, strap navy #2d3b64, natural skin tones; light and soft overall.
+      Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, ID card, badge, emblem, printed paper, document text, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
+    summary: "下段左の小さい円（直径 25mm）: 受付カウンターで左の来客に笑顔を向ける制服の若い女性。顔は右上寄り"
+    notes: "補正画像との差: 枠 x 90・y 202.9mm に対し、補正画像では +7.7mm 右・1.4mm 下、25.2×26.5mm。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+
+  - id: page_001-disc-c5
+    kind: photo
+    people: true
+    optional: false
+    # .disc--c5（left 169.7mm・top 232.9mm・直径 28mm）。出力 PNG で x 170.1〜197.8・y 233.2〜261.0mm を確認
+    size_mm: [28.0, 28.0]
+    bleed: false
+    # 補正画像の画素の実測: x 182.1〜208.1・y 234.7〜266.3mm（26.0×31.6mm。ノド側の縮みで縦長の楕円に写る）
+    crop_mm: [182.1, 234.7, 26.0, 31.6]
+    placement: "page.html の .disc--c5 の photo-frame（ratio=\"1 / 1\"）に src=\"books/replica/b-data/backgrounds/page_001-disc-c5.png\" を追加（写真調は .jpg も可）。object-fit: cover で円に切り抜かれる。白いフチは .disc の box-shadow のまま"
+    reference_usage: composition
+    mask: "入力前に、縦長の楕円の外側をすべて白（#ffffff）で塗る（右のパネルの緑の枠線、下に接する次の円形写真、方眼紙）。円の中、女性が体の前に持つ白い紙の印刷部分（写真と文字。補正画像で x 191〜203・y 254〜264mm 付近）を紙の地の淡い色（#e8e0da 前後）で無地に塗る"
+    prompt: |
+      Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face and hands inside the central inscribed circle.
+      Composition: a waist-up shot of one young adult woman standing in a bright room, smiling broadly and looking up toward camera-right. Her face is just left of centre in the upper third (face centre about 45% from the left and 28% from the top; hair-to-chin about one third of the frame height). With one hand she holds a plain, completely blank white sheet of paper in front of her body in the lower centre; her other hand is raised open at the right edge of the frame, mid-gesture as if explaining something. Background: a bright, softly blurred warm wooden interior with horizontal shelf lines, calm.
+      Subject (generic, fictional): an East Asian woman in her early twenties, dark hair with soft bangs, tied back, wearing a dark navy dress uniform with a thin white piped round collar; no name tag, no badge, no emblem.
+      Lighting: bright soft daylight from camera-right, airy, gentle shadows.
+      Palette: uniform dark navy #282635 with white piping, paper off-white #e8e0da, background warm wood beige #bb9178 to #b89f87, natural skin tones.
+      Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, badge, emblem, printed paper, printed brochure, document text, photos on paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
+    summary: "下段右の上の円（直径 28mm）: 紺のワンピースの制服の若い女性が白い紙を体の前に持ち、もう一方の手を上げて説明しながら右上を見て笑顔"
+    notes: "補正画像との差: 枠 x 169.7・y 232.9mm に対し、補正画像では +12.4mm 右・1.8mm 下、26.0×31.6mm の縦長の楕円（ノド寄りの横の縮みと縦の引き伸ばし）。入力前に横 ×1.22 で 1:1 に伸縮して正円に戻す。持っている紙は無地にする（参考の印刷物を写さない）。生成人物の使用可否は【要確認】、参考の人物に似せない"
+
+  - id: page_001-disc-c6
+    kind: photo
+    people: true
+    optional: false
+    # .disc--c6（left 160.6mm・top 261.4mm・直径 24mm）。出力 PNG で x 160.8〜184.6・y 261.7〜285.5mm を確認（下のパネルの下辺 276.9mm の外の地紙へはみ出す。仕上がり線・塗り足しにはかからない）
+    size_mm: [24.0, 24.0]
+    bleed: false
+    # 補正画像の画素の実測: x 172.6〜197.4・y 266.4〜292.3mm（24.8×25.9mm）
+    crop_mm: [172.6, 266.4, 24.8, 25.9]
+    placement: "page.html の .disc--c6 の photo-frame（ratio=\"1 / 1\"）に src=\"books/replica/b-data/backgrounds/page_001-disc-c6.png\" を追加（写真調は .jpg も可）。object-fit: cover で円に切り抜かれる。白いフチは .disc の box-shadow のまま"
+    reference_usage: composition
+    mask: "入力前に、内接する円の外側をすべて白（#ffffff）で塗る（左上の角に入る大数字の単位の文字、左右に見える下のパネルの緑の枠線、上に接する円形写真、方眼紙）。円の中に文字はない"
+    prompt: |
+      Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face and hands inside the central inscribed circle.
+      Composition: a waist-up shot of one young adult woman facing the camera with a friendly smile, eyes slightly to camera-right. Her face is centred horizontally in the upper third (face centre about 48% from the left and 28% from the top; hair-to-chin about one third of the frame height). Her camera-left arm in a white sleeve is relaxed at the lower left; at the lower right she holds a plain light green translucent document folder (empty, nothing printed) diagonally in front of her. Background: a smooth, saturated warm orange wall on the left and top, turning to a pale khaki-cream area on the right, with a dark out-of-focus shape at the far right edge; simple and calm.
+      Subject (generic, fictional): an East Asian woman in her early twenties, dark hair tied back with bangs, wearing a white collared shirt under a black V-neck vest (service uniform); no name tag, no badge, no emblem.
+      Lighting: soft frontal light, clean whites without clipping, gentle shadows.
+      Palette: background warm orange #c8743f to #c17754 and pale khaki #cabe8b, vest black #242525, shirt white #f2f0ee, folder light green #b9cf7a, natural skin tones.
+      Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field, sharp eyes, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, sign, label, name tag, badge, emblem, printed paper, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face"
+    summary: "下段右の下の円（直径 24mm）: 白シャツに黒いベストの制服の若い女性が淡い緑の無地のクリアファイルを持って笑顔。背景は鮮やかなオレンジ"
+    notes: "補正画像との差: 枠 x 160.6・y 261.4mm に対し、補正画像では +12.0mm 右・5.0mm 下、24.8×25.9mm。入力前に 1:1 へ伸縮する。生成人物の使用可否は【要確認】、参考の人物に似せない"
+
+  - id: page_001-person
+    kind: cutout
+    people: true
+    optional: false
+    # 置き換え先の箱 = 参考の人物（袖・指差しの手・靴を含む）の外接矩形を「真の幾何」に直した値: x 18.2〜40.7・y 209.7〜278.0mm。
+    # 今の灰色のシルエット（page.html の <g class="silhouette">）は簡略形で、出力 PNG では x 22.1〜38.2・y 212.6〜278.6mm（16.5×66.1mm）。
+    # 参考の人物は袖がふくらんで幅が広く、髪の分だけ頭が高いので、シルエットの外接矩形ではなく参考の人物に合わせた
+    size_mm: [22.5, 68.3]
+    bleed: false
+    # 補正画像の画素の実測: 人物 x 20.6〜44.0・y 212.7〜284.1mm（23.4×71.4mm）。上下左右に 0.3mm ほど余白を足した範囲
+    crop_mm: [20.3, 212.3, 24.0, 72.2]
+    placement: "page.html の背面 SVG（.backdrop、viewBox はページの mm）の <g class=\"silhouette\"> を、<image href=\"{{asset \"books/replica/b-data/backgrounds/page_001-person.png\"}}\" x=\"18.2\" y=\"209.7\" width=\"22.5\" height=\"68.3\" preserveAspectRatio=\"xMidYMax meet\"/> に置き換える（同じ描画順＝パネルの枠線より手前・HTML のラベルより奥）。背景を透過した PNG を人物の外接矩形で切り詰めて置く。足元（y 278.0mm）が下のパネルの下辺（276.9mm）を 1mm またぎ、左の袖がパネルの左辺（19.8mm）の外へ 1.6mm 出る（参考どおり、枠をまたいで立つ）"
+    reference_usage: composition
+    mask: "入力前に、人物以外をすべて白（#ffffff）で塗る: 頭の左上の吹き出し（輪郭と手書き風の文字）と、そのしっぽ、人物の後ろを通る下のパネルの緑の枠線（左の縦線・左下の角・下辺）、右の山吹色のラベルの角と吊り下げ線・丸点、データ行の丸、方眼紙"
+    prompt: |
+      Full-length studio photograph of one person standing, isolated on a plain pure white seamless background (#ffffff), framed head to toe in a tall narrow portrait (about 1:3, width:height = 22.5:68.3) with a small even margin, to be cut out to a transparent PNG.
+      Pose: standing upright facing the camera, feet together, natural relaxed posture, friendly closed-mouth smile at the camera. Her left hand (on camera-right) is raised to shoulder height with the index finger pointing up and outward toward camera-right, as if pointing at something beside her; her right forearm (camera-left) is folded across her waist, supporting the raised elbow. The pointing hand and the full puff sleeves must stay inside the frame; nothing touches the edges.
+      Subject (generic, fictional): an East Asian woman in her early twenties, dark brown hair (#3c2f2c) tied back with see-through bangs, light natural make-up; wearing a loose lavender-grey long-sleeve blouse (#aca8b6) with full puff sleeves and a square neckline, a thin delicate necklace, high-waisted light-wash wide straight-leg jeans (#939bad), and plain white sneakers (#f2f0f0). No bag, no props, no visible brand marks on clothes or shoes.
+      Lighting: soft, even, shadowless studio lighting from the front, crisp clean silhouette edges and hair edges for easy masking, at most a very faint contact shadow under the shoes.
+      Style: photorealistic fashion catalogue photo, 85mm lens, camera at chest height to avoid perspective distortion, whole body in sharp focus, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand mark on clothes or shoes, signage, screen text, name tag, badge, emblem, props, bag, background scenery, floor texture, strong shadow, cropped feet, cropped hands, real person likeness, celebrity, extra fingers, deformed hands, distorted face, multiple people"
+    summary: "下段左の全身の切り抜き人物（約 22.5×68.3mm）: ラベンダーグレーのブラウスとワイドジーンズの若い女性が右の見出しを指差して立つ。白背景で生成して透過 PNG に切り抜く"
+    notes: "補正画像との差: 置き換え先の箱（真の幾何）x 18.2・y 209.7mm に対し、補正画像では +2.4mm 右・3.0mm 下、23.4×71.4mm（縦に 約 4.5%・横に 約 4% 拡大）。真の幾何への換算は、同じ高さの基準線（レール y 199.9mm = 補正 202.5、パネルの下辺 276.9mm = 補正 283.0、パネルの左辺 19.8mm = 補正 22.3、ラベルの左端 40.3mm = 補正 43.6）で補正画像を区分線形に直した（review.md の換算式では頭の位置が 約 2mm ずれるため、近くの線で合わせた）。指差しの手は参考ではラベルの左端に 0.4mm かかる（背面 SVG に置くのでラベルの下に隠れる）。白背景で生成して切り抜き、透過 PNG で保存する（切り抜き後の外接矩形で切り詰める）。生成人物の使用可否は【要確認】、参考の人物に似せない"

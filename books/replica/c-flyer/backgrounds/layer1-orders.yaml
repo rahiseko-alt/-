@@ -1,0 +1,205 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 座標・寸法は仕上がり（.trim、A4 縦 210×297mm、左上原点）の mm。塗り足しは片側 3mm（出力 PNG は 150dpi で 1276×1789px = 216×303mm）
+# - size_mm は出力した枠の実寸（Playwright で .media / .photo-bottom の外接矩形を測り、150dpi の出力 PNG で確認）
+# - crop_mm は補正後の参考ページ（reference_prep を npm run ref:prep で補正した .cache/ref-prep/ 以下の page_002.png、
+#   1414×2000px、1mm = 6.733px）上の範囲。レプリカは参考に合わせてあるので枠の位置と同じ。切り出して該当の写真・イラストが
+#   入っていることを目視で確認した（切り抜き・イラストは参考の画素の外接矩形とも 0.5mm 以内で一致）
+# - 入力画像の切り出しは npm run gen:inputs -- --book replica/c-flyer（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
+# - 生成画像は books/replica/c-flyer/backgrounds/<id>.png（写真調は .jpg 可）+ <id>.prompt.yaml。page.html の文字・構造は変えない
+# - 透過 PNG で置く素材（cutout・illustration・decoration）は、page.css に次の 1 行を足して枠の中で縦横比を保つ:
+#     .media--cutout .photo-frame__img, .media--illust .photo-frame__img { object-fit: contain; }
+# - 対象外にしたもの（Layer 1 にしない）:
+#   - タイトル帯・細帯 2 段・フッター帯・番号の円・ピル型バッジ: 単色の色面と単純な図形（Layer 2）
+#   - 補足ボックスの地（参考は縁がわずかに濃い生成りのグラデーション）: 本文量で大きさが変わる枠なので Layer 2（CSS の
+#     radial-gradient や inset の box-shadow で足す）。画像にしない
+#   - 特長 4 のイラストに添えられた手書き風の英字（建物の左上）: 文字なので生成しない（必要なら Layer 3）
+#   - 白地に透けている表面の文字: 撮影・印刷の裏写りでデザインではない（再現対象外）
+#   - 全面背景: なし（参考は白の平らな地）。ロゴ・QR はこのページにない（フッターは文字とバッジだけ）
+book: replica/c-flyer
+page: page_001
+reference_image: references/kokusai-igaku-gijutsu/flyers/page_002.jpg
+reference_prep: references/kokusai-igaku-gijutsu/flyers/prep/page_002.yaml
+status: pending
+items:
+  - id: page_001-bottom-photo
+    kind: photo
+    people: true
+    optional: false
+    # .photo-bottom（top 206mm・高さ 77.3mm、bleed-left / bleed-right で x -3〜213mm）。下端 283.3mm でフッター帯に接する（下は塗り足しにかからない）
+    size_mm: [216.0, 77.3]
+    bleed: true
+    # 参考の全幅写真（左右裁ち落とし）。ページ外の左右 3mm は gen:inputs で白になる
+    crop_mm: [-3.0, 206.0, 216.0, 77.3]
+    placement: 'page.html の .photo-bottom の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-bottom-photo.jpg"}} にする（枠は 216×77.3mm、縦横比 2.794:1。object-fit: cover・中央。左右 3mm は仕上がりで切れる）'
+    reference_usage: composition
+    mask: "入力前に、左右 3mm のページ外の白帯は塗り足しとして生成で延ばす（outpaint）。参考の白衣の胸の名札・刺繍の文字、右奥の掲示板と黒板（x≈148〜210mm、y≈206〜225mm）の文字状の汚れを周囲の色で塗りつぶし、写っている人物の顔はぼかす（実在の学生・教員に似せないため。構図と人物の配置だけを参照する）"
+    prompt: |
+      Wide panoramic photograph, aspect ratio 2.79:1, of a bright physical-therapy training room in a vocational school, eye-level camera at about 1.4 m, 28 mm lens, everything in sharp focus. The frame is a full-bleed band; nothing is overlaid on the photo, but keep faces and key hands at least 4% away from the left and right edges (they are trimmed) and keep the bottom edge on floor and furniture (it meets a solid plum band #93296a).
+      Composition from left to right: far left (0-27% of the width) a short wooden training staircase with grey carpeted treads and stainless-steel handrails on both sides, one student in a white short-sleeved medical scrub top and black trousers coming down the steps on forearm crutches while a second student in the same uniform walks beside her holding the rail; centre-left background (25-50%) a pair of light natural-wood parallel bars on adjustable metal posts, two students in white scrubs standing between them practising gait support, large black-framed windows with soft daylight behind them; centre (50-88%) a low treatment plinth with a vivid royal-blue vinyl mat on a light wooden frame in the foreground, one student lying on her back on the mat in white scrubs, a second student kneeling on the mat raising and stretching her leg, and an instructor in black scrubs leaning in to guide his hands; right (78-96%) a student pushing a rolling walking frame with an orange forearm rest, observed by an older male instructor in a grey shirt; right background a plain off-white wall with a blank beige panel, a folded wheelchair and some chairs.
+      Mood: natural, friendly, focused practice; people are young adults of East Asian appearance, generic and not identifiable, mid-action rather than posing.
+      Lighting: even overhead fluorescent light mixed with soft window daylight from the left, neutral white balance, gentle shadows, no harsh highlights.
+      Palette: floor pale warm grey #e7e1da, walls off-white #f4f6f6, scrubs white #f2f2f4 with black trousers #1f1e24, mat royal blue #4a4fa3, wood #c8a46a, stair risers #987747, walker accent orange #e08a3c.
+      Style: realistic documentary school photography, high resolution, sRGB, no text anywhere (blank name badges, blank boards, no posters or signage).
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, name badge text, embroidered lettering, brand, signage, poster, chalkboard writing, whiteboard writing, screen text, clock numerals, celebrity, identifiable real person, distorted hands, extra limbs, blurry"
+    summary: "下部の全幅写真。明るいリハビリ実習室で、階段・平行棒・青いマットのベッド・歩行器を使って白衣の学生が練習する群像（左右裁ち落とし）"
+    notes: "人物を含む【要確認: 生成人物の使用可否の方針】。必要画素 1276×456px（150dpi）、印刷なら 2976×1065px（350dpi）。参考の人物の顔立ち・体格を引き継がないよう img2img ではなく構図参照にし、強さは低めにする。Phase 8 では自社写真（company-data/photos）に差し替える前提の代用。review.md の「216×80.3mm」は誤り（実寸は 216×77.3mm。下はフッター帯で止まり塗り足しにかからない）"
+
+  - id: page_001-feat1-reformer
+    kind: cutout
+    people: false
+    optional: false
+    # 特長 1 の .media--cutout-1（段の top 34.9mm + -3.4mm、left 161mm）。右端 203mm は版面の外だが仕上がりの内側
+    size_mm: [42.0, 26.5]
+    bleed: false
+    crop_mm: [161.0, 31.5, 42.0, 26.5]
+    placement: 'page.html 特長 1 の .media--cutout-1（left 161mm・top 31.5mm・42×26.5mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat1-reformer.png"}} にする。透過 PNG（冒頭の object-fit: contain の 1 行を page.css に足す）。下の page_001-feat1-barrel と 3mm 重なるので両方とも透過にする'
+    reference_usage: composition
+    mask: "入力前に、下端に写り込んでいる隣の器具の上部（x≈175〜197mm、y≈55〜58mm）と、木枠の前面の小さな銘板・ロゴ（x≈168〜175mm、y≈50〜52mm）を白で塗りつぶす"
+    prompt: |
+      Product cut-out photo, aspect ratio 1.58:1, of a single generic unbranded Pilates reformer machine isolated on a plain pure white background #ffffff, seen from a three-quarter front-left angle slightly above, the whole machine filling the frame edge to edge with a small even margin.
+      Subject: a long low frame of light natural maple wood #d2bfa3 on four short legs, a black upholstered sliding carriage with a square black headrest and shoulder blocks #2e2d30, a padded foot bar and thin steel springs at the near end, and a tall black upholstered box standing on the far right end; clean chrome fittings.
+      Lighting: soft even studio light, no cast shadow on the background (it will be cut out to a transparent PNG), crisp clean outline.
+      Style: catalogue product photography, sharp focus, high resolution, sRGB, no logos or labels on any surface.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, label, nameplate, person, hands, background scenery, floor, cast shadow, reflection, second machine"
+    summary: "特長 1 の切り抜き写真（上）。木枠と黒い台のピラティス用の器具（リフォーマー）1 台を白地で生成し、透過 PNG に切り抜く"
+    notes: "人物なし。白地で生成 → 輪郭で切り抜いて透過 PNG。必要画素 248×156px（150dpi）、350dpi で 579×365px。参考の器具のメーカー名・形をそのまま写さず一般的な形にする"
+
+  - id: page_001-feat1-barrel
+    kind: cutout
+    people: false
+    optional: false
+    # 特長 1 の .media--cutout-2（段の top 34.9mm + 20.1mm、left 176mm）。下部が補足ボックス 1（y 69.6mm〜）に重なる（参考も同じ）
+    size_mm: [20.0, 19.0]
+    bleed: false
+    crop_mm: [176.0, 55.0, 20.0, 19.0]
+    placement: 'page.html 特長 1 の .media--cutout-2（left 176mm・top 55mm・20×19mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat1-barrel.png"}} にする。透過 PNG（補足ボックスの上に重ねて置くため、背景が残ると箱の地が白く抜ける）'
+    reference_usage: composition
+    mask: "入力前に、器具の下部の背後に写っている補足ボックスの生成り色の地と影（y≈69.6mm より下）を白で塗りつぶし、側板の小さなロゴ（x≈176.5〜179mm、y≈68〜69mm）も白で塗る"
+    prompt: |
+      Product cut-out photo, nearly square aspect ratio 1.05:1, of a single generic unbranded Pilates ladder barrel isolated on a plain pure white background #ffffff, three-quarter front-left view, slightly above, filling the frame with a small even margin.
+      Subject: on the left a padded half-round barrel upholstered in black #1a1a1e mounted on two arched cream-coloured side panels #e3dfc2, on the right a light natural maple wood ladder #d9c7a8 with five round rungs, joined at the base by a wooden sliding rail.
+      Lighting: soft even studio light, no cast shadow on the background (it will be cut out to a transparent PNG), crisp outline.
+      Style: catalogue product photography, sharp focus, high resolution, sRGB, no logos or labels.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, label, person, background scenery, floor, cast shadow, beige box, card, frame"
+    summary: "特長 1 の切り抜き写真（下）。黒い半円の台と木のはしごを組み合わせたピラティス用の器具（ラダーバレル）1 台を白地で生成して透過に切り抜く"
+    notes: "人物なし。白地で生成 → 透過 PNG。必要画素 118×112px（150dpi）、350dpi で 276×262px。下部は補足ボックス（Layer 2）の上に重なるので、輪郭の内側だけを残す"
+
+  - id: page_001-feat2-vr
+    kind: cutout
+    people: false
+    optional: false
+    # 特長 2 の .media--cutout-vr（段の top 89.85mm + -1.35mm、left 163mm）
+    size_mm: [38.0, 19.5]
+    bleed: false
+    crop_mm: [163.0, 88.5, 38.0, 19.5]
+    placement: 'page.html 特長 2 の .media--cutout-vr（left 163mm・top 88.5mm・38×19.5mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat2-vr.png"}} にする。透過 PNG（足もとの柔らかい影は半透明で残してよい）'
+    reference_usage: composition
+    mask: "入力前に、ヘッドセット前面の製品ロゴ（x≈179〜183mm、y≈97〜99mm）とコントローラー・センサーの刻印を周囲の濃紺で塗りつぶす"
+    prompt: |
+      Product cut-out photo, aspect ratio 1.95:1, of a generic unbranded virtual-reality kit arranged as one symmetrical group on a plain pure white background #ffffff, straight front view at eye level.
+      Composition: in the centre a VR headset seen from the front with its head strap rising behind it, in deep navy indigo #3a3e62 with a few small dark sensor dots; on the far left and far right a ring-shaped hand controller #181a2e standing upright; behind the headset on each side a small black cube-shaped tracking sensor #25242a on a short stand, slightly higher than the headset; a very soft light-grey contact shadow under each object.
+      Lighting: soft even studio light, gentle highlights on the plastic, no reflections of surroundings.
+      Style: clean e-commerce product photography, sharp focus, high resolution, sRGB, absolutely no logos, brand marks or printed labels (it will be cut out to a transparent PNG).
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, trademark, label, screen content, person, hands, background scenery, table, cables clutter"
+    summary: "特長 2 の切り抜き写真。濃紺の VR ヘッドセットを中央に、左右にリング型コントローラーと小さな黒いセンサーを並べた一式（白地で生成して透過に切り抜く）"
+    notes: "人物なし。必要画素 224×115px（150dpi）、350dpi で 524×269px。参考は実在メーカーの製品なので、形をそのまま写さず一般的な無印の機器にする（商標に似せない）"
+
+  - id: page_001-feat3-illust
+    kind: illustration
+    people: true
+    optional: false
+    # 特長 3 の .media--illust-3（段の top 130.8mm + -4.3mm、left 131mm）。見出しの 1 行目の右・写真の左。下の本文 1 行目（y≈147.8mm〜）と接する
+    size_mm: [29.0, 20.5]
+    bleed: false
+    crop_mm: [131.0, 126.5, 29.0, 20.5]
+    placement: 'page.html 特長 3 の .media--illust-3（left 131mm・top 126.5mm・29×20.5mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat3-illust.png"}} にする。白地を抜いた透過 PNG にする（本文と接するため）'
+    reference_usage: style
+    mask: "なし（範囲内に文字はない）"
+    prompt: |
+      Small flat vector-style illustration, aspect ratio 1.41:1, on a plain pure white background #ffffff, no outline frame: three students and a teacher around a small dark-brown wooden table, seen from the front at a slight high angle, filling the frame.
+      Composition: a student with a black bob haircut sits on a wooden chair at the left, a teacher in a white shirt stands behind the table in the centre leaning forward, a student with long black hair sits at the right; on the table an open notebook, a few pencils and a small green item; no writing visible.
+      Style: simple friendly flat illustration with minimal shading, slightly rounded shapes, simple dot-and-line faces, no outlines heavier than the shapes, generic characters (not any known mascot or stock character).
+      Palette: uniforms deep navy #37437f, shirt white #fefefe, hair black #272728, table and chairs dark brown #5a4436, small accents yellow-green #a8b84a, skin light beige #f1d6c2.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, speech bubble, writing on paper, background scenery, photo, 3d render, gradient background, frame, border"
+    summary: "特長 3 の小さなフラットイラスト。机を囲んで勉強する学生 2 人と、そばで教える先生（白地、透過に抜く）"
+    notes: "イラストの人物を含む（実在の人物と誤認されにくいが、方針は【要確認: 生成人物の使用可否の方針】）。必要画素 171×121px（150dpi）、350dpi で 400×282px。参考のイラストを img2img で写さず、画風と配置だけを参照する"
+
+  - id: page_001-feat3-photo
+    kind: photo
+    people: true
+    optional: false
+    # 特長 3 の .media--photo-3（段の top 130.8mm + 0.25mm、left 164.6mm）。角は直角・枠なし
+    size_mm: [35.2, 29.85]
+    bleed: false
+    crop_mm: [164.6, 131.05, 35.2, 29.85]
+    placement: 'page.html 特長 3 の .media--photo-3（left 164.6mm・top 131.05mm・35.2×29.85mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat3-photo.jpg"}} にする（object-fit: cover・中央）'
+    reference_usage: composition
+    mask: "入力前に、中央下のタブレットの画面を無地の暗いグレーで塗り、右の学生の胸のプリント文字を白で塗る。人物の顔はぼかす（構図と人物の配置だけを参照する）"
+    prompt: |
+      Close-up classroom photograph, aspect ratio 1.18:1, slightly high angle, 35 mm lens: a small group study session around a desk. Nothing is overlaid on the photo.
+      Composition: in the left foreground two students seen from behind and the side, in dark knit sweaters #2b292e, leaning over a desk; in the centre-top a young male teacher in a black sweater standing and leaning forward, pointing at a tablet that lies flat on the desk in the lower centre; on the right a student in a plain white sweatshirt sitting and looking down at the tablet; background softly out of focus with a light grey wall #bbbcc0 and other students at desks.
+      Lighting: indoor fluorescent light, soft and even, slightly cool and desaturated, natural skin tones.
+      Palette: mostly dark charcoal clothing #2b292e and #1f1e24, light grey wall #bbbcc0, white sweatshirt #ececee.
+      Style: candid documentary school photo, realistic, generic young adults of East Asian appearance, not identifiable; the tablet screen shows only a blurred dark interface with no readable content.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen, user interface text, printed sweatshirt, brand, signage, poster, celebrity, identifiable real person, distorted hands, extra fingers"
+    summary: "特長 3 の写真。机のタブレットを先生が指さし、濃い色のセーターの学生たちが囲んで学ぶ教室のスナップ"
+    notes: "人物を含む【要確認: 生成人物の使用可否の方針】。必要画素 208×176px（150dpi）、350dpi で 485×411px。画面・服に文字が出たら作り直す"
+
+  - id: page_001-feat4-illust
+    kind: illustration
+    people: false
+    optional: false
+    # 特長 4 の .media--illust-4（段の top 170mm + -6.5mm、left 104mm）。見出しの右
+    size_mm: [21.5, 16.5]
+    bleed: false
+    crop_mm: [104.0, 163.5, 21.5, 16.5]
+    placement: 'page.html 特長 4 の .media--illust-4（left 104mm・top 163.5mm・21.5×16.5mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat4-illust.png"}} にする。白地を抜いた透過 PNG'
+    reference_usage: style
+    mask: "入力前に、建物の左上の手書き風の英字（x≈105〜115mm、y≈165〜168.5mm）を白で塗りつぶす"
+    prompt: |
+      Small flat vector-style illustration, aspect ratio 1.30:1, on a plain pure white background #ffffff, no outline frame: two mid-rise apartment buildings side by side, seen straight from the front, standing on the lower edge of the frame, with a rounded green shrub at each side of their base; the upper-left quarter of the frame stays plain white and empty.
+      Details: the left building slightly narrower with a darker grey facade #6f7380, horizontal balconies and a dark brown entrance #3e3634; the right building a little taller with a lighter blue-grey facade #8f95a5 and an even grid of square windows #c8d0dc; shrubs dark green #3c533b.
+      Style: simple flat illustration with minimal shading, clean geometric shapes, no outlines, no people.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, sign, signboard, lettering, speech bubble, people, sky, clouds, background scenery, photo, 3d render, frame, border"
+    summary: "特長 4 の小さなフラットイラスト。並んだ 2 棟のマンションと両脇の植え込み（左上は空白、白地を透過に抜く）"
+    notes: "人物なし。必要画素 127×97px（150dpi）、350dpi で 296×227px。参考の手書き風の英字は再現しない（文字は生成しない）。左上が空いて見えるのは参考どおり"
+
+  - id: page_001-feat4-photo
+    kind: photo
+    people: true
+    optional: false
+    # 特長 4 の .media--photo-4（段の top 170mm + 0.3mm、left 164.6mm）。角は直角・枠なし
+    size_mm: [35.2, 29.6]
+    bleed: false
+    crop_mm: [164.6, 170.3, 35.2, 29.6]
+    placement: 'page.html 特長 4 の .media--photo-4（left 164.6mm・top 170.3mm・35.2×29.6mm）の {{> photo-frame}} を {{> photo-frame src="books/replica/c-flyer/backgrounds/page_001-feat4-photo.jpg"}} にする（object-fit: cover・中央）'
+    reference_usage: composition
+    mask: "入力前に、白衣の胸ポケットの黒い縁取りにある小さな刺繍文字・名札を無地の黒・白で塗り、二人の顔はぼかす（構図と人物の配置だけを参照する）"
+    prompt: |
+      Outdoor portrait photograph, aspect ratio 1.19:1, eye level, 50 mm lens, of two young adults of East Asian appearance standing side by side and smiling naturally, cropped at the waist. Nothing is overlaid on the photo.
+      Composition: a young woman with short dark hair on the left, slightly shorter and a little in front; a young man with short dark hair on the right; both wearing plain white short-sleeved medical scrub tops #e0e3f0 with a thin black trim on the chest pocket and V-neck; behind them a pale overcast sky #d3d5d9 and soft out-of-focus city buildings #eaeaeb on a rooftop terrace.
+      Lighting: bright soft daylight, high-key, low contrast, gentle and airy.
+      Palette: mostly white and pale grey, black hair and trim accents #1f1e24, natural skin tones.
+      Style: realistic friendly school-brochure portrait, shallow depth of field, generic and not identifiable people, plain uniforms with no badges or lettering.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, name badge, embroidered lettering, brand, signage, billboard, celebrity, identifiable real person, distorted hands, extra fingers"
+    summary: "特長 4 の写真。屋上の明るい曇り空を背景に、白い半袖の実習着で並んで笑う若い男女 2 人"
+    notes: "人物を含む【要確認: 生成人物の使用可否の方針】。必要画素 208×175px（150dpi）、350dpi で 485×408px。背景のビルに看板・文字が出たら作り直す"
+
+  - id: page_001-title-deco
+    kind: decoration
+    people: false
+    optional: false
+    # 枠はまだない（review.md「タイトル帯の飾りは未配置」）。参考の飾りの画素の外接矩形（x 189.65〜201.53、y 4.90〜12.03mm）に約 0.5mm の余白を足した範囲
+    size_mm: [13.5, 9.0]
+    bleed: false
+    crop_mm: [189.0, 4.0, 13.5, 9.0]
+    placement: 'page.html は変えず、page.css の .title-band（x -3〜213mm・y -3〜25.9mm の帯）の背景に重ねる: `background: url("../../backgrounds/page_001-title-deco.png") 192mm 7mm / 13.5mm 9mm no-repeat, var(--rep-plum);`（帯の左上からの位置 = 仕上がりの x 189mm・y 4mm）。透過 PNG。page.css の「右上の小さな飾りイラスト」のコメントをこの指定に置き換える'
+    reference_usage: style
+    mask: "なし（範囲内に文字はない。タイトルの最後の字は x≈187mm より左）"
+    prompt: |
+      Tiny decorative flat illustration, aspect ratio 1.5:1, isolated on a plain flat solid plum background #93296a (it will be cut out to a transparent PNG and placed on a plum band): a small white dove #ffffff flying towards the left with both wings raised up and back to the right, a tiny dark eye, and just in front of its beak a single soft-pink five-petal cherry blossom #e3a9bd with a deeper pink centre #b47285, plus one small pink bud above-left of the blossom.
+      Composition: dove in the right two-thirds, blossom in the left third, both vertically centred, small even margin around them.
+      Style: simple flat vector motif with soft rounded shapes, very slight inner shading, clean edges, no outline frame, not any existing emblem or mark.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, emblem, crest, badge, seal, frame, border, gradient background, photo, 3d render, multiple birds"
+    summary: "タイトル帯右上の小さな飾り。白い鳩と淡いピンクの桜の花（プラムの単色地で生成し、透過 PNG に抜く）"
+    notes: "人物なし。必要画素 80×53px（150dpi）、350dpi で 186×124px（小さいので 4 倍程度で生成して縮小）。安全領域（天 5mm）の少し外まで出るが文字ではないため参考の位置どおりにする。参考校のマークに似せない一般的なモチーフにする。Phase 8 では自社のモチーフに合わせて差し替えを検討"

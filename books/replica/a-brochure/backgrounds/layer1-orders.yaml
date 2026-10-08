@@ -1,0 +1,41 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 座標・寸法は仕上がり（.trim、291×297mm、左上原点）の mm。crop_mm は補正後の参考ページ
+#   （npm run ref:prep の .cache/ref-prep/HAL-nagoya/brochure-1/prep/page_015-l.png、1960×2000px、1mm = 6.735px）上の範囲
+# - 入力画像の切り出しは npm run gen:inputs -- --book replica/a-brochure（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
+# - このページは写真・切り抜き人物・イラストを使わない（Layer 2/3 だけで再現済み。reviews/page_001/review.md）。
+#   Layer 1 の候補は金の称号バッジの金属質感だけで、今の CSS グラデーションでも位置・外形は一致しているため任意（optional: true）
+# - 対象外にしたもの（Layer 1 にしない）:
+#   - 上部の紺帯: 単色の色面（Layer 2）。参考の右上の白っぽい光の筋は印刷物を撮影したときの紙の反射で、デザインではない
+#   - 参考の左端（x 0〜2mm、紺帯の脇）の白い破線状の模様: 撮影時に写り込んだ紙の小口。デザインだとしても単純な縞なので Layer 2
+#   - 斜線ハッチのアイコン・枠付きラベル・＝＋の記号・表の色面と罫線: 単純な図形・色面（Layer 2）
+#   - バッジの右下の厚みと影（x 92.8〜95.0mm、y 78.9〜80.0mm）とバッジ内の横罫: Layer 2（CSS の box-shadow と .rep-badge__rule のまま）
+#   - 見開きの右ページ上部の作品コラージュ帯: この BOOK の再現範囲（左ページ）の外
+book: replica/a-brochure
+page: page_001
+reference_image: references/HAL-nagoya/brochure-1/page_015.jpg
+reference_prep: references/HAL-nagoya/brochure-1/prep/page_015-l.yaml
+status: pending
+items:
+  - id: page_001-badge-plate
+    kind: texture
+    people: false
+    optional: true
+    # .rep-badge の border-box（left 63.4mm・top 49mm・29.4×29.4mm）。出力 PNG（150dpi）で 63.4〜92.8 × 49.0〜78.4mm を確認
+    size_mm: [29.4, 29.4]
+    bleed: false
+    # 参考のプレートの表面（面取りの縁を含み、右下の厚み・影を含まない）。補正画像の画素の実測: 左端 63.3・上端 49.4・
+    # 右の縁の外側 92.8・下の縁の外側 78.9mm（その外側 95.0 / 80.0mm までが厚みと影）
+    crop_mm: [63.3, 49.4, 29.5, 29.5]
+    placement: "page.css の .rep-badge（left 63.4mm・top 49mm・29.4×29.4mm の border-box）の背景。`background: linear-gradient(...)` を `background: url(\"../../backgrounds/page_001-badge-plate.png\") border-box center / 100% 100% no-repeat;` に置き換え、縁も画像で表すので `border-color: transparent` にする（border の幅 0.7mm は文字位置を変えないため残す）。右下の厚みと影の box-shadow（Layer 2）、横罫 .rep-badge__rule（Layer 2）、白抜きの文字と text-shadow（Layer 3）はそのまま"
+    reference_usage: style
+    mask: "入力前に、プレート内の白抜き文字 4 行（横罫の上の見出し 2 行 y≈53〜65mm、下の注記 2 行 y≈69〜76mm、x≈65.5〜91mm）と中央の横罫（y≈67.6mm、x≈67.5〜90mm）を周囲の地の金色（#93630f 前後）で塗りつぶし、縁の面取りと地の金属の質感だけを残す。右下の厚みと影は crop_mm の外なので入力に含まれない"
+    prompt: |
+      Square 1:1, perfectly straight-on orthographic view of the face of a single blank metallic gold plaque that fills the entire frame edge to edge, with no background, no perspective and no visible side thickness or drop shadow (the 3D edge and shadow are drawn separately in CSS).
+      Composition: along all four edges a narrow raised bevelled rim about 3% of the width, catching a soft bright highlight on the top and left edges and slightly deeper on the bottom and right; just inside it a thin darker recessed groove, then one fine light embossed inner border line about 5% in from the edge. Everything inside that inner border is one flat, even, calm field with no ornament, no emblem, no engraving, no pattern and no centre line: bold white lettering will be placed over the whole central area later, so the field must stay mid-to-dark in tone with low contrast and no hotspots.
+      Material: satin brushed gold metal with very fine, subtle horizontal hairline brushing, a gentle warm tonal falloff from slightly lighter upper-left to slightly deeper lower-right, clean surface without scratches, dents, fingerprints or dust.
+      Lighting: soft diffuse studio light from the upper left, a soft sheen only along the rim, no specular glare or reflections of objects in the field.
+      Palette: field deep amber gold #93630f to #a8802c, rim highlight #d4b05a to #edcb6b, rim shadow and groove #7b5512, darkest accent #6a4a10.
+      Style: photorealistic product macro of a metal nameplate blank, sharp focus, high resolution, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, kanji, characters, symbols, emblem, crest, seal, engraving, ornament, pattern, centre line, divider, brand, perspective, tilted, drop shadow, side thickness, background, frame of a picture, glare, scratches, fingerprints"
+    summary: "称号バッジの下地になる、文字なしの金属（ヘアラインの金）のプレート。縁に面取りと細い内枠、中央は白抜き文字が載る落ち着いた面"
+    notes: "任意（今の CSS グラデーションで位置・外形は一致済み。金属の光沢・面の反射を上げたい場合だけ生成する）。人物なし。1024×1024px 程度で生成して 512×512px に縮小（必要画素: BOOK の png_dpi 150 で 174px 四方、350dpi で 405px 四方）。中央に明るいハイライトがあると白抜き文字が読めなくなるので、文字を載せて npm run render で可読性を確認する。参考の文字・横罫が薄く残っていたら作り直す。文字のない汎用素材なので、Phase 8 で自社の称号バッジに再利用するなら shared/generated-assets/（例 texture-gold-plate-01.png）へ移す候補（review.md の「次にやること」）"

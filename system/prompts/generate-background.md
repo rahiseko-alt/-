@@ -8,6 +8,7 @@
 - 参考にするページ（任意）: `references/.../page_NNN.png`（画像生成モデルへ直接入力してよい。構図・背景・質感・視覚密度の再現または参考に使う）
 - 文字・カードが載る領域（例: 「上 40% に見出し、下半分に 3 枚のカード」）
 - 使える生成ツール（人間が指定。ツールの利用規約・商用利用の可否を確認済みであること）
+- 生成指示 `books/<bookId>/backgrounds/layer1-orders.yaml` がある場合はそれに従う（下の「生成指示から生成する」）
 
 ## 前提ルール
 
@@ -41,6 +42,23 @@
    ```
 
 9. `npm run render -- --book <bookId> --page <pageId> --format png --dpi 150 --out <一時ディレクトリ>` で文字を載せた状態を確認する
+
+## 生成指示から生成する（layer1-orders.yaml）
+
+Phase 5 の完コピ BOOK（`books/replica/*`）などで、ページ側が素材ごとの生成指示を書いてある場合の手順。
+
+1. 対象を確認する: `npm run validate` の「Layer 1 が未生成」の警告、または `npm run gen:inputs -- --all`
+2. `npm run gen:inputs -- --book <bookId>` で、各素材の参考の切り出し（`.cache/gen-inputs/<bookId>/<素材 id>.png`）と必要な画素数を得る
+3. 素材ごとに生成する
+   - 入力: 切り出し画像を `reference_usage` の方式で入力する。`mask` に書かれた部分（参考の文字・ロゴ・QR・枠線など）は入力前に塗りつぶす
+   - プロンプト: `prompt` と `negative_prompt` をそのまま使う（ツールに合わせた言い換えは可。意味を変えたら `.prompt.yaml` の `notes` に書く）
+   - 大きさ: `size_mm` の縦横比。画素数は一覧の「必要」以上（印刷に回す素材は 350dpi の値）
+   - `kind: cutout` は単色背景で生成し、透過 PNG に切り抜く（手順を `notes` に書く）
+   - `people: true` の素材は、実在の在校生等と誤認されない表現にし、使用可否を人間に確認する【要確認: 生成人物の使用可否の方針】
+4. 保存する: `books/<bookId>/backgrounds/<素材 id>.png`（写真調は `.jpg` 可）と `<素材 id>.prompt.yaml`。`reference_inputs` に `reference_image` のパスと方式・切り出し範囲（`crop_mm`）・塗りつぶした部分を書く
+5. `placement` のとおりページから参照する（例: `{{> photo-frame src="books/<bookId>/backgrounds/page_001-hero.png" ratio="193 / 117"}}`）。`page.html` の構造・文字は変えない
+6. 全件そろったら `layer1-orders.yaml` の `status` を `generated` にする
+7. `npm run render` → `npm run compare` で比較ラウンドを 1 回追加し、`review.md` に記録する（Layer 1 を入れた後の差分）
 
 ## 書き出すファイル
 

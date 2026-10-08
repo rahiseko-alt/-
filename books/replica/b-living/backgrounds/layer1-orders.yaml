@@ -1,0 +1,136 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 座標・寸法は仕上がり（.trim、A4 縦 210×297mm、左上原点）の mm。crop_mm は補正後の参考ページ
+#   （reference_prep を npm run ref:prep で補正した .cache/ref-prep/ 以下の page_002-r.png、1414×2000px、1mm = 6.733px）上の範囲
+# - 入力画像の切り出しは npm run gen:inputs -- --book replica/b-living（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
+# - mask の座標は、切り出し範囲（crop_mm）の左上を原点とする mm
+# - size_mm は page.css の値を出力 PNG（150dpi・塗り足し 3mm 込み 1276×1789px）の灰色のプレースホルダの外接矩形で確認した（差 0.2mm 以内）。
+#   crop_mm は補正画像を切り出して目視し、写真の端の明暗の段差でも確認した（写真 A の左右端 19.6 / 101.5mm、左下の横長の写真の左右上端 17.45 / 95.45 / 222.2mm など、差 0.3mm 以内）
+# - 写真の角丸（特徴カード 1.2mm、下段の写真 1mm）は Layer 2。生成画像は角丸なしの矩形で作り、page.css で .photo-frame__img に角丸を付ける
+# - 写真に重なる要素（吹き出しタグ・無線 LAN のバッジ・下端の半透明の帯・写真の左下の暗いラベル）は Layer 2/3 のまま。生成画像には描かない
+# - 対象外にしたもの（Layer 1 にしない）:
+#   - アプリのロゴ（7.6×8.5mm の破線の枠 .app-logo）: ロゴは生成しない（正式データを受け取る。参考のロゴは使わない）
+#   - 動画サービスのロゴ: 汎用の再生アイコン（Layer 2 の SVG）に置き換え済み。ロゴは生成しない
+#   - QR 2 点: Layer 3（{{qr}}）
+#   - 星と親指のアイコン、無線 LAN・電話・かばんの線画、設備アイコンの格子 15 枚、右下のパネルの黄色の円と手とスマートフォンの線画:
+#     参考も単色の面＋線画の単純なアイコンなので Layer 2 の SVG のまま
+#   - 全面背景: 白地＋上部の薄グレーの帯＋単色のカード・ピルで、Layer 2 で再現済み（page.yaml）。
+#     参考の照明むら・紙の反り・裏写り（数字の右の淡い帯・説明文の下の反転文字）は撮影の副産物なので再現しない
+book: replica/b-living
+page: page_001
+reference_image: references/nagoya-iryo-hisho-it/guide-living/page_002.jpg
+reference_prep: references/nagoya-iryo-hisho-it/guide-living/prep/page_002-r.yaml
+status: pending
+items:
+  - id: page_001-photo-room
+    kind: photo
+    people: false
+    optional: false
+    # 特徴カード A の写真枠（.fcard--a: left 15.1・top 60mm、padding 上 3.8・左 4.6mm → x 19.7・y 63.8mm、幅 81.6mm・比率 81.6 / 62.6）
+    # 出力 PNG のプレースホルダ: x 19.86–101.31・y 63.72–（下端は半透明の帯の下）mm
+    size_mm: [81.6, 62.6]
+    bleed: false
+    # 補正画像の px: left 133・top 430・549×422px
+    crop_mm: [19.7, 63.8, 81.6, 62.6]
+    placement: 'page.html の特徴カード A（{{#> book/feature-card mod="a" ... ratio="81.6 / 62.6"}}）の写真枠。components/feature-card.hbs に任意の src パラメータを足し（{{#if src}} で photo-frame に src=src を渡す）、カード A の呼び出しに src="books/replica/b-living/backgrounds/page_001-photo-room.jpg" を渡す。page.css に .fcard__photo .photo-frame__img { border-radius: 1.2mm; } を追加。無線 LAN のバッジ・下端の半透明の帯と文字・吹き出しタグはそのまま上に重なる'
+    reference_usage: composition
+    mask: "吹き出しタグ（x 0–25・y 0–16mm）、右上の無線 LAN のバッジ（x 70–80・y 2–12mm）、下端の半透明の帯とその上の注記 2 行・電話のマーク・電話番号（y 53.5–62.6mm の全幅）を、周囲の壁・床に近い無地の灰色で塗りつぶす。エアコン・家具にメーカーのロゴ状のものがあれば同様に塗る"
+    prompt: |
+      Interior photograph of a compact, fully furnished single student-residence bedroom, horizontal frame with an aspect ratio of 81.6:62.6 (about 4:3), shot from the doorway corner at chest height looking diagonally into the room, 24mm-equivalent wide-angle lens, verticals kept straight, no people.
+      Composition, left to right: on the left third a tall window / glass balcony door filled with soft bright overcast daylight (near-white #f3f3f3), sheer white lace curtains and heavy dark mauve-grey drapes (#34292d) gathered at both sides; above the window a plain white wall-mounted air conditioner with no visible markings; a white ceiling (#d9d6d8) with a round flush-mount LED ceiling light near the top centre. On the right half an accent wall of light warm wood-grain panels (#a68d7d) above a long dark-brown wooden desk (#2b221d) with a black mesh office chair, and a low black metal open shelf with a few plain storage boxes and one small blank picture frame. In the lower-left foreground the corner of a single bed with a greige duvet (#aca19b) and a pale sage throw.
+      Areas to keep calm: the top-left area (about 30% of the width x 25% of the height) must be plain ceiling and upper wall only, because a label covers it; the top-right corner (about 13% x 18%) must be plain ceiling or wall for a small badge; the bottom 14% of the frame (floor and bed edge, #cdc8c7) must be low-contrast and simple, because a translucent white caption strip is laid over it.
+      Lighting and style: soft natural window light from the left, gentle fill, neutral-warm white balance, clean and uncluttered, realistic real-estate / interior photography, sharp focus, sRGB.
+      Do not show posters, books with titles, screens, signs or any lettering; the room must not resemble any specific real property.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, poster, book spines, label, people, person, clutter, fisheye distortion"
+    summary: "家具付きの個室の室内写真（左に窓とカーテン、右に木目の壁・机・椅子・棚、手前にベッド。人物なし）"
+    notes: "必要画素: 350dpi で 1124×863px、BOOK の png_dpi 150 で 482×370px。写真調なので JPG（sRGB）でよい（PNG なら placement の拡張子を合わせる）。参考の部屋・家具をそのまま写さない（構図と明暗の配置だけを参照し、img2img の強い参照は使わない）。生成後、下端 14% に半透明の白い帯と文字が載っても読めるか npm run render で確認する。Phase 8 では自社の写真（company-data/photos/）に差し替える前提の仮素材"
+
+  - id: page_001-photo-group
+    kind: photo
+    people: true
+    optional: false
+    # 特徴カード B の写真枠（.fcard--b: top 137.4mm、padding 上 4.2mm → x 19.7・y 141.6mm、81.6 × 46.6mm）
+    # 出力 PNG のプレースホルダ: x 19.86–101.31・y 141.61–188.35mm
+    size_mm: [81.6, 46.6]
+    bleed: false
+    # 補正画像の px: left 133・top 954・549×314px
+    crop_mm: [19.7, 141.6, 81.6, 46.6]
+    placement: 'page.html の特徴カード B（{{#> book/feature-card mod="b" ... ratio="81.6 / 46.6"}}）の写真枠。page_001-photo-room と同じく feature-card.hbs の src パラメータで src="books/replica/b-living/backgrounds/page_001-photo-group.jpg" を渡す（角丸 1.2mm は page.css の .fcard__photo .photo-frame__img）。左上に吹き出しタグが重なる'
+    reference_usage: composition
+    mask: "吹き出しタグ（x 0–25・y 0–12mm）を背景の淡い灰青色で塗りつぶす。人物の顔は入力前にぼかす（人数・立ち位置・向きだけを伝え、参考の人物の顔立ちを生成結果に写さない）"
+    prompt: |
+      Candid lifestyle photograph, horizontal frame with an aspect ratio of 81.6:46.6 (about 7:4), of a relaxed group of eight young Japanese adults around 19 to 22 years old (mixed men and women, entirely fictional people who do not resemble any real person or celebrity) standing loosely in a row in a bright, airy modern glass-walled entrance hall, eye level from chest height, 70mm lens, shallow depth of field.
+      Composition: the main subject, a young woman with long straight dark hair in a white short-sleeve blouse and a khaki pinafore dress carrying a black backpack, stands just left of centre (about 35 to 50% of the width), turned back over her shoulder and smiling toward the camera, in sharp focus. To her left a young man in a navy checked shirt (#2c2a45) looking back and smiling; at the far left edge two people partly cut off by the frame, one holding a navy tote bag. Behind her to the right, slightly out of focus, a young man in a light pink shirt and one in a light blue shirt (#818cc1); at the right a smiling young woman holding a white canvas tote and, at the far right edge, a young woman in a white blouse and a mustard-yellow pleated skirt (#ac7d4a) looking toward the main subject. Everyone is shown from about the knees or waist up, cropped by the bottom edge.
+      Background: high-key, softly blurred glass wall and columns, pale grey-blue (#dfe6ea) with vertical window mullions and soft white light, slightly darker grey-green (#98a4a0) at the far left. The top-left area (about 30% of the width x 25% of the height) must contain only calm blurred background, because a label covers it.
+      Lighting and style: soft natural daylight, airy and bright, natural skin tones, friendly, free and relaxed atmosphere, realistic editorial lifestyle photography, sRGB.
+      No logos or prints on clothing or bags, no signs or lettering anywhere.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, printed t-shirt, celebrity, real person, distorted hands, extra fingers, deformed faces, uniform"
+    summary: "明るいガラス張りのホールで振り返って笑う若者 8 人のスナップ（中央左の女性にピント、背景は白く飛んだガラス）"
+    notes: "【要確認: 生成人物の使用可否の方針】（system/rules/image-generation.md §2）。実在の在校生・卒業生と誤認されない表現にし、掲載前に人間が確認する。参考写真の人物（顔・髪型・服の柄の組み合わせ）を再現しない: img2img は使わず、構図参照は弱め（人数・立ち位置・視線の向きだけ）。手指・顔の破綻を拡大して確認する。必要画素: 350dpi で 1124×642px、150dpi で 482×275px。JPG（sRGB）可"
+
+  - id: page_001-photo-event-wide
+    kind: photo
+    people: true
+    optional: false
+    # 下段 左のカード（.tcard--l: left 14.2・top 200.1mm）の .tphoto--wide（left 3.2・top 22mm → x 17.4・y 222.1mm、78.1 × 27.3mm）
+    # 出力 PNG のプレースホルダ: x 17.49–95.38・y 222.38–249.48mm（端の 1 画素はアンチエイリアス）
+    size_mm: [78.1, 27.3]
+    bleed: false
+    # 補正画像の px: left 117・top 1496・526×184px
+    crop_mm: [17.4, 222.1, 78.1, 27.3]
+    placement: 'page.html の下段 左のカード（{{#> book/tab-card mod="l" ...}}）の .tphoto--wide の {{> photo-frame ratio="78.1 / 27.3"}} に src="books/replica/b-living/backgrounds/page_001-photo-event-wide.jpg" を追加。page.css に .tphoto .photo-frame__img { border-radius: 1mm; } を追加。左下の暗いラベル（.tphoto__label、約 13.9 × 3.6mm）はそのまま上に重なる'
+    reference_usage: composition
+    mask: "左下のラベル（x 0–14.5・y 23–27.3mm）、上辺中央の建物の看板の文字（x 19–58・y 0–10mm）、右のバスの車体の文字（x 67–78.1・y 10–13.5mm）、左のバスの車体の小さな文字（x 0–5・y 13–17mm）を、周囲の無地の色（看板は白、車体は白、路面は灰色）で塗りつぶす。ほかにも文字状のものがあれば同様に塗る。人物の顔は入力前に軽くぼかす"
+    prompt: |
+      Wide commemorative group photograph, very horizontal frame with an aspect ratio of 78.1:27.3 (about 2.9:1), of a large group of about 60 to 70 young adults (fictional people) on a day trip, posing together outdoors in a flat parking area of a roadside rest stop on an overcast summer day.
+      Composition: the crowd fills the lower 70% of the frame across almost the full width; the front row crouches or kneels, the middle and back rows stand, many make playful hand gestures (heart shapes, peace signs), casual summer clothes in white, pastel pink, light blue, grey and black, and two adults stand at the right end. Behind the group: a plain white charter coach bus at the left edge and another at the right edge (completely blank white bodies, no lettering or logos), in the upper centre a low plain building whose fascia boards are blank and unlettered, a bare utility pole, distant soft green mountains and a hazy pale blue sky (#bbcfee) in the upper-left corner.
+      Foreground: flat bluish-grey asphalt (#808ea8) along the bottom edge; the bottom-left corner (about 18% of the width x 15% of the height) must be plain asphalt only, because a caption label covers it.
+      Camera: eye level, slightly elevated, 35mm lens, everyone small in the frame, the whole group in focus.
+      Lighting and style: soft overcast daylight, natural slightly muted colours, cheerful snapshot quality, realistic, sRGB.
+      All signs, shop fronts and vehicles are completely blank: no letters, numbers, logos or route names anywhere.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, shop sign, bus company name, license plate, banner, screen text, celebrity, deformed faces"
+    summary: "休憩所の駐車場で大型バスを背に並ぶ約 60〜70 人の記念の集合写真（横長。看板・車体は無地）"
+    notes: "【要確認: 生成人物の使用可否の方針】。参考の看板・バスの社名・地名は必ずマスクし、生成結果にも文字状の模様が出ていないか拡大して確認する（出ていたら作り直すか、その部分を無地に修正して notes に記録）。人物は小さいので顔の破綻が目立ちにくいが、実在の在校生と誤認されない表現にする。必要画素: 350dpi で 1076×376px、150dpi で 461×161px。JPG（sRGB）可"
+
+  - id: page_001-photo-event-small
+    kind: photo
+    people: true
+    optional: false
+    # 下段 左のカードの .tphoto--small（left 3.2・top 50.6mm → x 17.4・y 250.7mm、37.1 × 24.2mm）
+    # 出力 PNG のプレースホルダ: x 17.49–54.40・y 251.00–275.05mm
+    size_mm: [37.1, 24.2]
+    bleed: false
+    # 補正画像の px: left 117・top 1688・250×163px
+    crop_mm: [17.4, 250.7, 37.1, 24.2]
+    placement: 'page.html の下段 左のカードの .tphoto--small の {{> photo-frame ratio="37.1 / 24.2"}} に src="books/replica/b-living/backgrounds/page_001-photo-event-small.jpg" を追加（角丸 1mm は page.css の .tphoto .photo-frame__img）。左下の暗いラベル（.tphoto__label、約 8.8 × 3.6mm）はそのまま上に重なる'
+    reference_usage: composition
+    mask: "左下のラベル（x 0–10・y 20.5–24.2mm）を床の木の色（#8f6f47）で塗りつぶす。人物の顔は入力前に軽くぼかす"
+    prompt: |
+      Indoor group photograph, horizontal frame with an aspect ratio of 37.1:24.2 (about 3:2), of about 20 young adults (fictional people) at a sports-day event in a school gymnasium, posing together in the centre of the frame: a back row standing and a front row kneeling on the floor, most wearing matching plain black athletic T-shirts and track pants, a few in white or pastel pink tops, many making heart shapes with their hands at chest height, cheerful.
+      Composition: the group occupies the middle 75% of the width and roughly 15% to 85% of the height. Background: the gym wall with olive-green padded panels (#595e3a) divided by light wooden horizontal rails and vertical posts, no banners, no scoreboard, no wall clock. Foreground: polished light wooden gym floor (#8f6f47) with dark court lines running diagonally; the bottom-left corner (about 27% of the width x 15% of the height) must be plain floor only, because a caption label covers it.
+      Camera: straight-on at standing eye level, 28 to 35mm lens. Lighting and style: even overhead gym lighting, slightly warm, natural snapshot quality, realistic, sRGB.
+      No text, numbers, logos or prints anywhere, including on the T-shirts.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, banner, scoreboard, team name, jersey number, printed t-shirt, screen text, deformed faces"
+    summary: "体育館で前列はひざをつき後列は立って手でハートを作る約 20 人の集合写真（黒の運動着、緑の壁、木の床）"
+    notes: "【要確認: 生成人物の使用可否の方針】。ゼッケン・背番号・チーム名などの文字を出さない。必要画素: 350dpi で 511×333px、150dpi で 219×143px。JPG（sRGB）可"
+
+  - id: page_001-app-screen
+    kind: illustration
+    people: false
+    optional: false
+    # 下段 右のカード（.tcard--r: left 105.45・top 200.1mm）の .phone（left 2.85・top 27.6mm）の .phone__screen（left 1.6・right 1.5・top 6.5mm・bottom 0）
+    # → x 109.9・y 234.2mm、23.5 × 38.4mm。出力 PNG の画面の面: x 110.11–133.48・y 234.24–272.84mm
+    size_mm: [23.5, 38.4]
+    bleed: false
+    # 補正画像の px: left 740・top 1577・158×259px。参考の画面の内側の実測は x 109.7–132.8・y 233.8–272.0mm（約 23.1 × 38.2mm）で、
+    # 枠との差が 0.4mm 以内のため、縦横比をそろえて枠と同じ範囲にした
+    crop_mm: [109.9, 234.2, 23.5, 38.4]
+    placement: 'page.html の下段 右のカード（{{#> book/tab-card mod="r" ...}}）の .phone__screen の {{> photo-frame ratio="23.5 / 38.4"}} に src="books/replica/b-living/backgrounds/page_001-app-screen.png" を追加（角丸なし。スマートフォンの枠・カメラ・スピーカー・下端の切れは Layer 2 の .phone のまま）'
+    reference_usage: style
+    mask: "画面全体の文字（アプリ名・日付・料理名・ボタンの文字・時刻・見出し）、ステータスバーのアイコン、アプリのロゴ、料理の写真をすべて無地の灰色の角丸ブロックで塗りつぶし、明るさ・余白・色の比率だけが伝わる状態にしてから入力する（実在のアプリの画面構成を写さない。参考画像を入力せずプロンプトだけで生成してもよい）"
+    prompt: |
+      Flat, minimal UI-style illustration of an abstract, generic smartphone app screen, portrait frame with an aspect ratio of 23.5:38.4 (about 0.61:1), filling the whole frame edge to edge with no device frame, no status bar and absolutely no text: every piece of "text" is represented only by solid rounded grey bars (greeked placeholder blocks).
+      Composition from top to bottom on a very light grey background (#e3e5e8): a thin white top bar (top 8% of the height) holding one short light-grey rounded block at the left and one tiny grey block at the right; then a white rounded card from about 10% to 55% of the height with side margins of about 4%, containing a medium-grey bar at the upper left with two small square colour chips (muted rose #c25e77 and warm beige) at the upper right, a small dark charcoal pill (#3a3a3a) centred below, a wider dark-grey bar centred below it, a wide golden-yellow rounded button bar (#f1d24c to #ca9e21) spanning most of the card width, and one thin light-grey bar under the button; then a second white rounded card from about 58% to 90% with a thin light-grey header bar and two side-by-side rounded square thumbnails filled with soft warm beige and brown abstract shapes, each with a tiny rounded chip at its lower-right corner (grey on the left, muted rose on the right); the top edge of a third white card is cut off by the bottom of the frame.
+      Style: clean flat vector-like rendering with very subtle soft shadows under the cards, crisp edges, generous white space, calm and bright, sRGB. It must not resemble any real app or brand.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, app name, screen text, icons with letters, status bar, clock, date, emoji, phone frame, device mockup, hand, photo of food"
+    summary: "スマートフォンの画面に入る、文字のない抽象的なアプリ画面の図（灰色の地に白いカード、黄色のボタンの帯、2 枚の小さなサムネイル。文字は灰色の棒だけ）"
+    notes: "実在のアプリ（参考のアプリ名・ロゴ・画面の細部）を再現しない。文字状のにじみ・数字が出たら作り直す。単純な角丸ブロックだけなので、生成の代わりに Layer 2（HTML/CSS の角丸の面）で作る選択肢もある（そのほうが修正しやすい。採用は人間が判断）。図版なので PNG。必要画素: 350dpi で 324×529px、150dpi で 139×227px（ツールの最小サイズで生成して縮小してよい）。Phase 8 で自社のアプリがあれば正式な画面の画像に差し替える"

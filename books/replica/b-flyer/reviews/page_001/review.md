@@ -87,6 +87,7 @@
 
 ## 次にやること
 
+- Layer 1 の生成指示: backgrounds/layer1-orders.yaml（19 件、人物を含む 6 件。うち任意 2 件＝行内の小さな絵。指さしのアイコンは Layer 2 として対象外）。入力の切り出しは npm run gen:inputs -- --book replica/b-flyer
 - Layer 1（生成待ち。この環境に画像生成ツールがないため未着手）: system/prompts/generate-background.md に従って文字・ロゴ・QR なしで生成し、
   `.prompt.yaml`（reference_inputs に references/nagoya-iryo-hisho-it/flyers/page_002.jpg と方式）を付けて置き、photo-frame の src に指定する。
   学校の写真は自社写真（company-data/photos）が届けば差し替える。寸法は仕上がり基準（左上原点、mm。塗り足しを含む）

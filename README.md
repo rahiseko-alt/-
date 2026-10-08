@@ -14,7 +14,7 @@ AIビジネス専門学校のパンフレット・募集要項・チラシ・ポ
 | [system/rules/](system/rules/README.md) | 制作ルール |
 | [system/prompts/](system/prompts/README.md) | 作業用プロンプト |
 
-**現在の状態**: Phase 1（基礎環境構築）、Phase 3（参考資料投入: 3 校・14 資料）、Phase 4（参考資料解析: 157 ページ）が完了。Phase 5（完コピ検証）は作業中で、各資料の第一候補 12 ページを `books/replica/` で 3 ラウンドずつ比較・修正済み（Layer 1 の画像生成は未着手）。`company-data/` は学校名以外がプレースホルダ（`TODO:`）です。
+**現在の状態**: Phase 1（基礎環境構築）、Phase 3（参考資料投入: 3 校・14 資料）、Phase 4（参考資料解析: 157 ページ）が完了。Phase 5（完コピ検証）は作業中で、各資料の第一候補 12 ページを `books/replica/` で 3 ラウンドずつ比較・修正済み。Layer 1 は生成指示（9 BOOK・64 件）まで作成済みで、画像生成は未着手（Codex が担当）。`company-data/` は学校名以外がプレースホルダ（`TODO:`）です。
 
 ## しくみの概要
 

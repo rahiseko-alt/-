@@ -1,0 +1,213 @@
+# Layer 1 生成指示（Phase 5 完コピ検証）。生成ツールは人間が指定する（system/prompts/generate-background.md）
+# - 座標・寸法は仕上がり（.trim、A4 縦 210×297mm、左上原点）の mm。塗り足しにかかる素材はない（bleed: false）
+# - crop_mm は補正後の参考ページ（npm run ref:prep の出力 .cache/ref-prep/ 以下の page_003-l.png、1414×2000px、1mm = 6.733px）上の範囲。
+#   参考の写真の外周（紙の白との境目）を輝度の断面で実測した値で、出力 PNG（150dpi・塗り足し込み 1276×1789px）で測った枠の位置とは最大 1.2mm 違う（各 notes）
+# - 入力画像の切り出しは npm run gen:inputs -- --book replica/b-web-it（.cache/gen-inputs/ に出力。mask のとおり塗ってから入力する）
+# - 8 件すべて人物を含む（people: true）。生成人物の使用可否は【要確認: 生成人物の使用可否の方針】（system/rules/image-generation.md §2）。
+#   参考の人物は実在の在校生・卒業生なので、参考画像は構図（姿勢・配置・画角）の参照だけに使い（reference_usage: composition）、
+#   顔は入力前に塗りつぶす。顔立ち・髪型を参考の人物に寄せない
+# - 画面が写る写真（memo-c1・memo-c6・memo-c7）は、画面の中身を文字のないぼけた抽象的な面にする（読める文字・コード・UI のラベルを入れない）
+# - 対象外にしたもの（Layer 1 にしない）:
+#   - 全面背景: 淡い水色の地・黄色の大きな円・白い円はすべて単色（Layer 2 の SVG）。参考の照明むら・ノド側の影は撮影によるもので再現しない
+#   - メモカードの紙・斜線の影・折れ角・画鋲、タブの斜線の影と × 型クリップ、雲形の吹き出し、軸の矢印（SVG のグラデーション）、弧のリードの帯: 単純な図形・色面（Layer 2）
+#   - 文字だけのメモカード 3 枚（c3〜c5）: 写真なし
+#   - ロゴ・QR: このページにはない
+#   - 見開きの右ページの写真（データカードの写真・働き方の図の写真・教員の切り抜き）: この BOOK の再現範囲（左ページ）の外
+book: replica/b-web-it
+page: page_001
+reference_image: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
+reference_prep: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml
+status: pending
+items:
+  - id: page_001-memo-c1
+    kind: photo
+    people: true
+    optional: false
+    # .memo--c1 の .memo__photo（紙の枠 0.3mm の内側 left 1.4mm・top 2.9mm、幅 37.5mm、ratio 37.5 / 20.5）。回転前の位置 x 51.3〜88.8・y 92.8〜113.3mm、
+    # カードごと -1.5°（中心 70.2, 108.2）。出力 PNG で外接矩形 51.0〜88.9 × 92.5〜113.6mm（回転ぶん広い）を確認
+    size_mm: [37.5, 20.5]
+    bleed: false
+    # 参考の写真の外周の実測: 左 52.5・右 87.9mm、上 93.0（x 54.5）〜91.7（x 84.5）、下 112.7（x 56）〜111.7（x 83）mm → 約 -2° 傾いた 35.4×19.9mm
+    crop_mm: [52.5, 92.3, 35.4, 19.9]
+    placement: 'page.html の 1 枚目のメモカード {{#> book/memo-card mod="c1" photo="37.5 / 20.5"}} に src="books/replica/b-web-it/backgrounds/page_001-memo-c1.jpg" を追加する。memo-card.hbs は今 src を受け取れないので、先に 16 行目を {{#if photo}}<div class="memo__photo">{{#if src}}{{> photo-frame ratio=photo src=src}}{{else}}{{> photo-frame ratio=photo}}{{/if}}</div>{{/if}} に変える（写真つきカード 4 枚に共通。1 回だけ）。photo-frame は object-fit: cover・中央。カードごと -1.5° 回転するので、画像は水平のまま作る'
+    reference_usage: composition
+    mask: '参考の写真は約 -2° 傾いて写るため、crop_mm の四隅に紙の白い楔（最大 0.6mm）が入る: 入力前に +2° 回転して水平にするか、楔を隣接色で塗る。人物の顔（x 59.5〜65.5・y 94.0〜100.5mm）を肌色のぼかしで塗る（実在の人物に似せない）。背後の壁の横縞の整理棚（x 70.0〜78.0・y 92.8〜97.0mm。文字状に見える）とモニター画面（x 80.0〜88.0・y 93.0〜106.0mm）を無地の淡い灰・青でぼかし塗りする。写真の中に読める文字・ロゴはない'
+    prompt: |
+      Landscape photo, aspect ratio 37.5:20.5 (about 1.83:1), eye-level medium shot of a bright, modern web design studio desk.
+      Composition: the subject sits in the left 45% of the frame, seen in three-quarter view from the front-left, head in the upper-left third (top of the hair about 12% below the top edge), torso and arms reaching down to the desk at the bottom edge; she looks to the right toward a large monitor that fills the right 40% of the frame from about 10% to 65% of the height, its screen angled toward her; a thin open laptop lies on the desk at the lower right; a white desk with a few blank sheets of paper runs along the bottom 20%. Behind her a plain light grey wall, with a darker grey partition or doorway strip along the far left edge. Keep the wall area between her head and the monitor calm and plain.
+      Subject: a young adult woman (around 20) with a short dark-brown bob, wearing a loose white shirt, one hand resting near her chin while thinking about a layout, natural friendly expression; a generic face that does not resemble any real person.
+      Screens: the monitor shows only soft, heavily blurred abstract blue and white layout blocks (no readable characters, no UI labels); the laptop screen faces away or is dark.
+      Lighting: soft diffused daylight from the left, bright and airy, low contrast, no harsh shadows.
+      Palette: cool light grey wall #d8dce2 and off-white desk #f4f5f6, white shirt #e8e8ec, dark-brown hair #624d4a, soft blue screen glow #70a1cf, a few near-black accents #1a1a1e.
+      Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, sharp focus on the face, realistic skin, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, user interface labels, keyboard legends, brand, brand logo on laptop or monitor, signage, poster text, calendar, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "メモカード（左上の象限）の写真: 明るいデザイン作業机で、モニターに向かって考える若い女性（画面は文字のないぼけた青い面）"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考の写真は枠より左右に狭い（参考 x 52.5〜87.9mm に対し枠は回転前 51.3〜88.8mm。左端 1.2mm・右端 0.9mm の差、縦横比も 1.78 に対し枠 1.83）。生成は size_mm の比率で、参考の構図を左右に少し広げる。必要画素（gen:inputs の一覧が正）: 150dpi で 221×121px、350dpi で 517×282px。長辺 1024px 程度で生成して縮小してよい"
+
+  - id: page_001-memo-c2
+    kind: photo
+    people: true
+    optional: false
+    # .memo--c2 の .memo__photo（紙の内側 left 3.4mm・top 2.5mm、幅 37.1mm、ratio 37.1 / 20.8）。回転前 x 113.6〜150.7・y 79.0〜99.8mm、-0.3°。
+    # 出力 PNG で 113.8〜150.7 × 78.8〜99.8mm を確認
+    size_mm: [37.1, 20.8]
+    bleed: false
+    # 参考の写真の外周の実測: 左 113.0・右 150.2・下 99.0mm。上端は白い壁と紙の白が続いて境目がほぼ見えず、x 125〜128mm のかすかな線から 79.0mm とした
+    crop_mm: [113.0, 79.0, 37.2, 20.0]
+    placement: 'page.html の 2 枚目のメモカード {{#> book/memo-card mod="c2" photo="37.1 / 20.8"}} に src="books/replica/b-web-it/backgrounds/page_001-memo-c2.jpg" を追加する（memo-card.hbs の src 対応は page_001-memo-c1 の placement のとおり。1 回だけ）。photo-frame は object-fit: cover・中央。カードごと -0.3° 回転するので画像は水平のまま作る'
+    reference_usage: composition
+    mask: '人物の顔（x 129.5〜135.5・y 80.5〜87.5mm）を肌色のぼかしで塗る（実在の人物に似せない）。ほかに塗る部分なし（モニターは背面だけで画面は写っていない。写真の中に文字・ロゴはない）'
+    prompt: |
+      Landscape photo, aspect ratio 37.1:20.8 (about 1.78:1), straight-on eye-level medium shot across a white desk in a bright, minimal office.
+      Composition: the upper 35% of the frame is a calm, plain white wall with nothing on it. The subject sits just right of centre (between about 38% and 65% of the width), head in the upper half (top of a high hair bun about 5% below the top edge), shoulders and arms down to the desk; both hands rest on a mouse and a slim keyboard on the white desk in the bottom 15%. The right 25% of the frame is the plain back of a large all-in-one monitor in a warm terracotta-orange finish, from about 15% to 85% of the height, seen from behind so no screen is visible. In the lower-left 30%, a low olive-green sofa and a white low shelf, softly out of focus.
+      Subject: a young adult woman (around 20) with dark hair in a high bun, wearing a pale yellow crew-neck T-shirt, smiling naturally and looking slightly to the left of the camera; a generic face that does not resemble any real person.
+      Lighting: soft, even, high-key daylight, almost shadowless, bright clean whites.
+      Palette: white wall #faf9f8, pale yellow T-shirt #c4bc92 to #ddd3a3, terracotta monitor back #c57a56, olive sofa #847c3e, warm skin #a17d72, dark hair #2a2224.
+      Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/4, sharp focus on the face, realistic, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo on monitor, apple logo, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "メモカード（右上の象限）の写真: 白い壁のオフィスでマウスを持って笑う、黄色い T シャツの若い女性。右にオレンジのモニターの背面"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考の写真は枠より 0.8mm 低い（参考の下端 99.0mm、枠 99.8mm）。上 1/3 は白い壁のまま（参考も紙の白と境目がないほど明るい）。必要画素: 150dpi で 219×123px、350dpi で 511×287px"
+
+  - id: page_001-memo-c6
+    kind: photo
+    people: true
+    optional: false
+    # .memo--c6 の .memo__photo（紙の内側 left 3.3mm・top 2.8mm、幅 36.9mm、ratio 36.9 / 19.5）。回転前 x 140.7〜177.6・y 156.1〜175.6mm、+0.6°。
+    # 出力 PNG で 140.7〜178.0 × 156.3〜175.8mm を確認
+    size_mm: [36.9, 19.5]
+    bleed: false
+    # 参考の写真の外周の実測: 左 140.1・右 177.5mm、上 155.6（左寄り）〜156.7（右寄り）、下 175.7（x 145）〜176.3（x 172.5）mm → 約 +1.2° 傾いた 37.4×19.9mm
+    crop_mm: [140.1, 156.1, 37.4, 19.9]
+    placement: 'page.html の 6 枚目のメモカード {{#> book/memo-card mod="c6" photo="36.9 / 19.5"}} に src="books/replica/b-web-it/backgrounds/page_001-memo-c6.jpg" を追加する（memo-card.hbs の src 対応は page_001-memo-c1 の placement のとおり。1 回だけ）。photo-frame は object-fit: cover・中央。カードごと +0.6° 回転するので画像は水平のまま作る'
+    reference_usage: composition
+    mask: '左のノート PC の画面（x 140.1〜151.5・y 162.5〜173.0mm。コード状の横線が写っている）を暗い灰 #232020 のぼかしで塗る。人物の顔（x 159.5〜166.0・y 156.5〜164.5mm）を肌色のぼかしで塗る（実在の人物に似せない）。約 +1.2° の傾きで四隅に紙の白い楔（最大 0.4mm）が入るので、-1.2° 回転して水平にするか隣接色で塗る'
+    prompt: |
+      Landscape photo, aspect ratio 36.9:19.5 (about 1.89:1), eye-level medium shot of a programmer at a desk in a bright white office.
+      Composition: in the left 30% of the frame, an open dark laptop or small monitor seen at an angle from about 30% to 90% of the height, its screen showing only a dark, heavily blurred glow (no readable code, no characters), with a muted magenta-pink base along its bottom edge. The subject is in the centre-right (between about 38% and 70% of the width), head in the upper third (top of the hair about 3% below the top edge), looking down to the right at a plain white monitor seen from its back-left side, which fills the right 30% of the frame from about 35% to 85% of the height. A clear glass of water and a light wooden tray on the desk at the bottom centre. Background: bright white shelves with soft, blurred neutral objects along the top 15%, a small mustard-yellow object behind the subject's shoulder on the left.
+      Subject: a young adult man (early 20s) with short dark hair and thin-framed glasses, wearing a plain black crew-neck T-shirt, focused expression, typing; a generic face that does not resemble any real person.
+      Lighting: soft high-key daylight from the right, gentle shadows, clean whites.
+      Palette: off-white walls #f0ece6 / #ebe7e2, black T-shirt #0b0a0e, white monitor #dad8d5, dark screen #232020, mustard accent #dac15f, magenta accent #7d4461, warm tray tone #9d8a7d.
+      Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, sharp focus on the face, realistic, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, code lines, terminal, user interface labels, keyboard legends, brand, brand logo on laptop or monitor, apple logo, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "メモカード（右の象限・中）の写真: 白い明るいオフィスで白いモニターに向かう、眼鏡に黒い T シャツの若い男性（左の画面は文字のない暗いぼかし）"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考と枠の差は 0.7mm 以内。参考の左の画面にはコード状の横線が写っているため、生成結果に文字・コードの模様が出たら作り直す（拡大して確認）。必要画素: 150dpi で 218×115px、350dpi で 508×269px"
+
+  - id: page_001-memo-c7
+    kind: photo
+    people: true
+    optional: false
+    # .memo--c7 の .memo__photo（紙の内側 left 3.5mm・top 3.1mm、幅 36.9mm、ratio 36.9 / 19.7）。x 140.7〜177.6・y 198.2〜217.9mm、回転なし。
+    # 出力 PNG で 140.9〜177.5 × 198.3〜217.9mm を確認
+    size_mm: [36.9, 19.7]
+    bleed: false
+    # 参考の写真の外周の実測: 左 139.9・右 177.5mm、上 198.6（左寄り）〜197.6（右寄り）、下 217.6〜217.7mm（上辺だけ紙の反りで傾く）
+    crop_mm: [139.9, 198.1, 37.6, 19.6]
+    placement: 'page.html の 7 枚目のメモカード {{#> book/memo-card mod="c7" photo="36.9 / 19.7"}} に src="books/replica/b-web-it/backgrounds/page_001-memo-c7.jpg" を追加する（memo-card.hbs の src 対応は page_001-memo-c1 の placement のとおり。1 回だけ）。photo-frame は object-fit: cover・中央。このカードは回転なし'
+    reference_usage: composition
+    mask: '人物の顔（x 155.5〜161.5・y 198.1〜205.5mm）を肌色のぼかしで塗る（実在の人物に似せない）。上辺の左寄り（x 139.9〜150・y 198.1〜198.6mm）の紙の白い楔を隣接色で塗る。ノート PC は天板の裏側、右のモニターは暗い画面で、写真の中に読める文字・ロゴはない'
+    prompt: |
+      Landscape photo, aspect ratio 36.9:19.7 (about 1.87:1), eye-level medium shot across a desk in a dim, modern office in the evening.
+      Composition: the subject sits in the centre (between about 32% and 70% of the width), head in the upper third (top of the hair about 3% below the top edge), facing the camera. In front of him, at left-centre (about 15% to 50% of the width, from 45% to 85% of the height), the plain dark-navy back of an open laptop lid with no logo. On the right 30%, a large dark monitor seen from the side with only a faint cool-blue reflection, and his hand on a mouse at the lower right. A dark navy mug on the desk at the far left. A warm grey-brown desk edge runs across the bottom 12%. Background: softly blurred office interior, brighter window light with a dark vertical frame in the left 20%, dark grey walls behind him.
+      Subject: a young adult man (around 20) with short dark hair, wearing a light blue-grey chambray shirt, plain white over-ear headphones resting around his neck, calm slight smile; a generic face that does not resemble any real person.
+      Lighting: low-key ambient office light, soft light on the face from the front-left, moderate contrast.
+      Palette: dark greys #302e35 / #514a4c, navy laptop lid #13152d, blue-grey shirt #4d546d to #8a93a8, window light #aaa59d, desk #685655, navy mug #2d2f44.
+      Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, realistic, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, user interface labels, keyboard legends, brand, brand logo on laptop lid or headphones, apple logo, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "メモカード（右下の象限）の写真: 夕方の暗めのオフィスで、紺のノート PC の向こうに座るヘッドホンを首にかけた若い男性"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。参考と枠の差は 0.8mm 以内。ページの中で最も暗い写真（平均 #625d61）なので、明るくしすぎない。必要画素: 150dpi で 218×116px、350dpi で 508×271px"
+
+  - id: page_001-grad-l
+    kind: photo
+    people: true
+    optional: false
+    # 左の卒業生ボックス section.grad--l の .grad__photo（枠 0.35mm の内側 left 4.3mm・top 5.1mm、幅 28.8mm、ratio 28.8 / 33）= x 18.55〜47.35・y 246.35〜279.35mm。
+    # 出力 PNG で 18.5〜47.3 × 246.35〜279.4mm を確認
+    size_mm: [28.8, 33.0]
+    bleed: false
+    # 参考の写真の外周の実測: 左 18.1・右 47.5・上 246.1・下 279.0mm
+    crop_mm: [18.1, 246.1, 29.4, 32.9]
+    placement: 'page.html の左の卒業生ボックス（section.grad--l）の {{> photo-frame ratio="28.8 / 33"}} に src="books/replica/b-web-it/backgrounds/page_001-grad-l.jpg" を追加する。photo-frame は object-fit: cover・中央'
+    reference_usage: composition
+    mask: '人物の顔（x 33.5〜40.0・y 250.5〜259.0mm）を肌色のぼかしで塗る（実在の人物に似せない）。ほかに塗る部分なし（キーボードの刻印は判読できない大きさ。写真の外の名前・所属・本文は crop_mm に入らない）'
+    prompt: |
+      Portrait-format photo, aspect ratio 28.8:33 (about 0.87:1), three-quarter side view of a young professional typing at a desk in a dark studio office.
+      Composition: the subject occupies the right 55% of the frame, seated and facing toward the left, head in the upper third (top of the hair about 10% below the top edge, face around 55% of the width); her forearms and hands reach to a black keyboard on the desk in the lower-left quarter. The left 45% and the top are a calm, dark, low-detail background: a charcoal wall with a slightly lighter vertical panel, and a small plain white desk object at the left edge around 60% of the height. The work screen is out of frame.
+      Subject: a young adult woman (early 20s) with short dark hair, wearing a plain white short-sleeve T-shirt, gentle focused smile while typing; a generic face that does not resemble any real person.
+      Lighting: soft key light from the front-left illuminating the face and T-shirt against the dark background, low-key, moderate contrast.
+      Palette: charcoal background #342e32 / #453d46, plain white T-shirt #dbd6d9, warm skin #b88f83, dark desk #5f5456, near-black keyboard #1f1a1d.
+      Style: natural editorial workplace portrait, 50mm lens, f/2.8, realistic, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo, printed T-shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "左の卒業生ボックスの写真（縦長）: 暗い背景の前で、白い T シャツでキーボードを打つ若い女性の斜め横顔"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。卒業生（実在の人物の紹介）の枠なので、Phase 8 では自社の卒業生の実写真（company-data/photos/）に置き換える前提。完コピ検証の生成画像を自社の卒業生として使わない。参考と枠の差は 0.5mm 以内。必要画素: 150dpi で 170×195px、350dpi で 397×455px"
+
+  - id: page_001-grad-r
+    kind: photo
+    people: true
+    optional: false
+    # 右の卒業生ボックス section.grad--r の .grad__photo（枠 0.35mm の内側 left 5mm・top 5.1mm、幅 33.5mm、ratio 1 / 1）= x 110.35〜143.85・y 246.35〜279.85mm。
+    # 出力 PNG で 110.4〜143.8 × 246.35〜279.9mm を確認
+    size_mm: [33.5, 33.5]
+    bleed: false
+    # 参考の写真の外周の実測: 左 110.1・右 143.2・上 245.5（白い壁で境目が薄い）・下 279.4mm
+    crop_mm: [110.1, 245.5, 33.1, 33.9]
+    placement: 'page.html の右の卒業生ボックス（section.grad--r）の {{> photo-frame ratio="1 / 1"}} に src="books/replica/b-web-it/backgrounds/page_001-grad-r.jpg" を追加する。photo-frame は object-fit: cover・中央'
+    reference_usage: composition
+    mask: '人物の顔（x 120.0〜127.5・y 250.5〜259.5mm）を肌色のぼかしで塗る（実在の人物に似せない）。ほかに塗る部分なし（写真の中に文字・ロゴはない）'
+    prompt: |
+      Square photo, aspect ratio 1:1, eye-level three-quarter view of a young professional working at a desk against a plain white wall.
+      Composition: the subject sits left of centre (between about 10% and 75% of the width) in a black mesh office chair whose backrest shows along the left edge; head in the upper-centre (top of the hair about 6% below the top edge, face between about 30% and 52% of the width), turned slightly to the right; both hands on a black keyboard and mouse on a light wooden desk in the lower-right quarter; the edge of a black PC tower runs along the right edge from about 30% to 80% of the height. The upper right is a calm, plain white wall.
+      Subject: a young adult woman (early 20s) with dark hair tied back and straight bangs, wearing a plain black polo shirt, slight smile, looking at an unseen screen to the right; a generic face that does not resemble any real person.
+      Lighting: bright, soft, even office light, high-key white wall, mild shadows.
+      Palette: white wall #f6f5f1, black polo #1d161e, chair and tower near-black #0e090d, light wood desk #ccb097, warm skin #c3a094.
+      Style: natural editorial workplace photograph, 35mm lens, f/4, realistic, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo on PC or chair, embroidered logo on polo shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "右の卒業生ボックスの写真（正方形）: 白い壁の前、黒いメッシュチェアでキーボードとマウスを操作する黒いポロシャツの若い女性"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。卒業生（実在の人物の紹介）の枠なので、Phase 8 では自社の卒業生の実写真に置き換える前提。参考の写真は 33.1×33.9mm でわずかに縦長（枠は正方形。差 0.9mm 以内）。ポロシャツの胸の刺繍ロゴ状の模様を入れない。必要画素: 150dpi で 198×198px、350dpi で 462×462px"
+
+  - id: page_001-cutout-tr
+    kind: cutout
+    people: true
+    optional: false
+    # 置き場所の箱 = 参考の人物の外接矩形（下の crop_mm と同じ）。今の灰色のシルエット（.backdrop の 1 つ目の g.silhouette）は
+    # 出力 PNG で x 179.5〜193.9・y 53.9〜112.0mm（14.4×58.1mm）で、参考の人物より細い（review.md ラウンド 1）ため、シルエットではなく参考に合わせた
+    size_mm: [21.5, 59.0]
+    bleed: false
+    # 参考の人物の実測: 頭頂 53.5〜53.6・左端（上げた拳）177.5・右端（踏み出した靴）199.0・靴底 112.5mm
+    crop_mm: [177.5, 53.5, 21.5, 59.0]
+    placement: 'page.html の背面 SVG（svg.backdrop。viewBox はページの mm 座標）の右上の <g class="silhouette">（頭の円 cx="187" cy="57.6"）を <image href="{{asset "books/replica/b-web-it/backgrounds/page_001-cutout-tr.png"}}" x="177.5" y="53.5" width="21.5" height="59" preserveAspectRatio="xMidYMax meet"/> に置き換える（透過 PNG。重なり順は今のシルエットと同じ: 地・円・軸の上、HTML の文字・カードの下）。2 体とも置き換えたら page.css の .silhouette と --rep-silhouette は削除してよい'
+    reference_usage: composition
+    mask: '人物の外側（淡い水色の地 #e2ecf6 と黄色の円 #fcf49c の一部）を白 #ffffff で塗る。顔（x 184.5〜189.5・y 54.5〜62.5mm）を肌色のぼかしで塗る（実在の人物に似せない）。crop_mm の中に文字はない（吹き出しのしっぽと人物名は左の外）'
+    prompt: |
+      Full-body cut-out photo of a single standing person, isolated on a plain pure white background (#ffffff), to be cut out to a transparent PNG. Portrait aspect ratio 21.5:59 (about 0.36:1); the figure fills the frame from the top of the head to the soles of the shoes with minimal margin.
+      Pose: standing, body turned slightly to the viewer's left, weight on one leg, the other foot stepping out to the viewer's right so the shoes reach the right edge at the bottom; the arm on the viewer's left is raised with a light, cheerful fist beside the shoulder (the fist touches the left edge about 12% from the top); the other arm hangs relaxed at her side, partly behind the skirt.
+      Subject: a young adult woman (around 20) with long straight dark hair falling past her shoulders, a plain white short-sleeve T-shirt tucked into a long black maxi skirt with a slight mermaid flare, chunky black sport sandals with pale straps; friendly smile toward the camera; a generic face that does not resemble any real person.
+      Lighting: soft, even studio light from the front-left, no cast shadow on the background (at most a very faint contact shadow under the shoes), crisp edges and separated hair strands for clean masking.
+      Palette: white T-shirt #f0eeea, black skirt and sandals #161413 to #272526, dark hair #2c2828, natural skin tones.
+      Style: realistic full-length fashion catalogue photograph, 70mm lens, camera at waist height, no perspective distortion, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand logo on sandals, printed slogan on clothing, name tag, lanyard, background scenery, floor texture, props, second person, cropped feet, cropped head, harsh shadow, white halo, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "右上の切り抜き人物（全身）: 拳を軽く上げて立つ、白い T シャツと黒いロングスカートの若い女性。白背景で生成し透過 PNG に切り抜く"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。白背景で生成 → 人物だけを切り抜いて透過 PNG（髪の毛先・指先に白いふちを残さない。置く先の地は淡い水色 #e2ecf6 と黄 #fcf49c）→ 人物の外接矩形で余白を詰め、縦横比 21.5:59 に透明の余白で合わせる（足元を下端に）。必要画素: 150dpi で 127×348px、350dpi で 296×813px。縦長の比率で生成できないツールでは 9:16 などで生成してから切り詰める"
+
+  - id: page_001-cutout-bl
+    kind: cutout
+    people: true
+    optional: false
+    # 置き場所の箱 = 参考の人物の外接矩形（下の crop_mm と同じ）。今の灰色のシルエット（.backdrop の 2 つ目の g.silhouette）は
+    # 出力 PNG で x 13.4〜30.4・y 170.9〜223.0mm（16.9×52.1mm）で、参考より細く頭の位置も 3mm 低いため、参考に合わせた
+    size_mm: [20.2, 55.0]
+    bleed: false
+    # 参考の人物の実測: 頭頂 168.0・左端（腰に当てた腕の肘）10.0・右端（立てた人差し指）30.2・指先の上端 175.6・靴底 223.0mm
+    crop_mm: [10.0, 168.0, 20.2, 55.0]
+    placement: 'page.html の背面 SVG（svg.backdrop）の左下の <g class="silhouette">（頭の円 cx="19.6" cy="174.6"）を <image href="{{asset "books/replica/b-web-it/backgrounds/page_001-cutout-bl.png"}}" x="10" y="168" width="20.2" height="55" preserveAspectRatio="xMidYMax meet"/> に置き換える（透過 PNG。重なり順は今のシルエットと同じ）。右の本文（left 34mm）・人物名（left 34mm・top 212.3mm）とは重ならない'
+    reference_usage: composition
+    mask: '人物の外側（淡い水色の地 #e2ecf6 と黄色の円 #fcf49c の一部）を白 #ffffff で塗る。顔（x 18.0〜23.5・y 170.0〜177.0mm）を肌色のぼかしで塗る（実在の人物に似せない）。crop_mm の中に文字はない（本文・人物名は右の外）'
+    prompt: |
+      Full-body cut-out photo of a single standing person, isolated on a plain pure white background (#ffffff), to be cut out to a transparent PNG. Portrait aspect ratio 20.2:55 (about 0.37:1); the figure fills the frame from the top of the head to the soles of the shoes with minimal margin.
+      Pose: standing straight and facing the camera, feet together; the hand on the viewer's left rests on the hip with the elbow pointing out to the left edge (about 30% from the top); the hand on the viewer's right is raised beside the head with the index finger pointing straight up (the fingertip at the right edge, about 14% from the top), as if pointing at something beside her.
+      Subject: a young adult woman (around 20) with a dark shoulder-length bob with bangs, a white short-sleeve blouse with a thin black ribbon line under the chest, loose white wide-leg trousers with a sparse small dark-grey dot print and a dark fabric sash tie hanging at the hip on the viewer's left, simple dark sandals; cheerful smile; a generic face that does not resemble any real person.
+      Lighting: soft, even, bright studio light, no cast shadow on the background (at most a very faint contact shadow under the shoes), crisp edges for clean masking.
+      Palette: white blouse #f8f5f6, off-white trousers #dfd5d0 with dark grey dots #4a4a55, dark hair #3d322c, warm skin #d9b9a0.
+      Style: realistic full-length fashion catalogue photograph, 70mm lens, camera at waist height, no perspective distortion, sRGB.
+    negative_prompt: "text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand logo on sandals, printed slogan on clothing, name tag, lanyard, background scenery, floor texture, props, second person, cropped feet, cropped head, harsh shadow, white halo, celebrity, real person likeness, extra fingers, distorted hands, frame, border"
+    summary: "左下の切り抜き人物（全身）: 片手を腰に、もう片手で上を指さして立つ、白いブラウスとドット柄の白いワイドパンツの若い女性。白背景で生成し透過 PNG に切り抜く"
+    notes: "人物あり【要確認: 生成人物の使用可否の方針】。白背景で生成 → 人物だけを切り抜いて透過 PNG（白い服が白背景と溶けやすいので、服の輪郭を丁寧に残す。置く先の地は淡い水色 #e2ecf6、指先の後ろは黄 #fcf49c）→ 人物の外接矩形で余白を詰め、縦横比 20.2:55 に透明の余白で合わせる（足元を下端に）。必要画素: 150dpi で 119×325px、350dpi で 278×758px。ドット柄の色 #4a4a55 は撮影画像からの目測"
