@@ -17,6 +17,7 @@
   --rep-gold-hi: #d4b05a;      /* バッジ: 明部 */
   --rep-gold: #a8802c;         /* バッジ: 中間 */
   --rep-gold-lo: #7b5512;      /* バッジ: 暗部・縁 */
+  --rep-gold-edge: #6a4a10;    /* バッジ: 右下の厚み */
   --rep-paper: #ffffff;
 
   /* 学部ごとの色: 学部セル / 4 年次 / 1〜3 年次の淡色 / 淡色セルの文字 */
@@ -42,16 +43,15 @@
 /* ---- Layer 3: 小見出し・大見出し（白抜き。参考は斜体なので skewX で傾ける） ---- */
 .rep-head {
   position: absolute;
-  top: 15.5mm;
+  top: 14.5mm;
   left: var(--margin-left);
   color: var(--rep-paper);
 }
 
 .rep-kicker {
-  font-size: 11pt;
+  font-size: 11.3pt;
   font-weight: 700;
   line-height: 1;
-  font-feature-settings: 'palt' 1;
   letter-spacing: 0;
   white-space: nowrap;
   transform: skewX(-12deg);
@@ -60,12 +60,13 @@
 
 .rep-title {
   margin-top: 2.4mm;
-  font-size: 49pt;
-  font-weight: 900;
+  margin-left: -2.3mm;
+  font-size: 50pt;
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   white-space: nowrap;
-  transform: skewX(-8deg);
+  transform: skewX(-6deg);
   transform-origin: left bottom;
 }
 
@@ -84,11 +85,11 @@
   display: block;
   width: 3.7mm;
   height: 6.4mm;
-  background: repeating-linear-gradient(-55deg, var(--rep-navy) 0 0.75mm, transparent 0.75mm 1.5mm);
+  background: repeating-linear-gradient(55deg, var(--rep-navy) 0 0.75mm, transparent 0.75mm 1.5mm);
 }
 
 .rep-system__label {
-  font-size: 11.5pt;
+  font-size: 12.5pt;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -105,7 +106,7 @@
   padding-top: 3.6mm;
   border: 0.7mm solid var(--rep-gold-lo);
   background: linear-gradient(160deg, var(--rep-gold-hi) 0%, var(--rep-gold) 45%, var(--rep-gold-lo) 100%);
-  box-shadow: 1mm 1mm 0 rgb(0 0 0 / 0.35);
+  box-shadow: 0.9mm 0.9mm 0 var(--rep-gold-edge), 1.6mm 1.6mm 0.8mm rgb(0 0 0 / 0.3);
   color: var(--rep-paper);
   text-align: center;
   font-weight: 700;
@@ -130,14 +131,14 @@
   display: block;
   width: 22.6mm;
   height: 0.3mm;
-  margin: 2.2mm auto 0;
+  margin: 1.6mm auto 0;
   background: var(--rep-gold-hi);
 }
 
 .rep-badge__note {
-  margin-top: 1.4mm;
+  margin-top: 0.8mm;
   font-size: 8.5pt;
-  line-height: 1.3;
+  line-height: 1.15;
 }
 
 /* ---- Layer 3: ＝ と ＋ ---- */
@@ -155,9 +156,9 @@
 }
 
 .rep-op--plus {
-  top: 54.2mm;
-  left: 136.2mm;
-  font-size: 23pt;
+  top: 52.4mm;
+  left: 135.3mm;
+  font-size: 28pt;
 }
 
 /* ---- Layer 2 + 3: 枠付きラベル ---- */
@@ -175,7 +176,6 @@
   font-size: 18.5pt;
   font-weight: 700;
   line-height: 1;
-  font-feature-settings: 'palt' 1;
   white-space: nowrap;
 }
 
@@ -192,7 +192,7 @@
 /* ---- Layer 3: 説明文（3 行・改行位置は参考どおり） ---- */
 .rep-desc {
   position: absolute;
-  top: 65.4mm;
+  top: 65.2mm;
   left: 102.5mm;
   font-size: 8.4pt;
   line-height: 1.45;
@@ -230,7 +230,6 @@
 .rep-th--dept,
 .rep-th--course {
   font-size: 10pt;
-  font-feature-settings: 'palt' 1;
 }
 
 .rep-th--dept { grid-column: 1; }
@@ -292,6 +291,7 @@
   display: flex;
   align-items: center;
   padding-left: 3.3mm;
+  padding-bottom: 1.9mm;   /* 参考は学部名がセルの中央より 1mm 上 */
   background: var(--dept);
   color: var(--rep-paper);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 4mm 100%, 0 calc(100% - 4mm));
@@ -331,7 +331,7 @@
 }
 
 .rep-dept__label--small {
-  font-size: 7pt;
+  font-size: 7.5pt;
 }
 
 /* 学科・コース名＋参照ページ（参照ページは 1 行目にそろえる） */
@@ -355,7 +355,6 @@
   font-weight: 500;
   line-height: 1.12;
   text-align: left;
-  font-feature-settings: 'palt' 1;
 }
 
 .rep-course__ref {
@@ -364,16 +363,17 @@
   line-height: 1.12;
 }
 
-/* 1〜3 年次（淡色 → 濃色） */
+/* 1〜3 年次（淡色 → 濃色）。文字は参考どおりセルの中央より 1.3mm 上（下に余白） */
 .rep-cell {
   display: flex;
   align-items: center;
   padding-left: var(--rep-cell-pad);
-  font-size: 8.5pt;
+  padding-bottom: 2.6mm;
+  white-space: nowrap;
+  font-size: 8.3pt;
   font-weight: 700;
   line-height: 1.2;
   text-align: left;
-  font-feature-settings: 'palt' 1;
   color: var(--dept-ink);
 }
 
@@ -400,12 +400,11 @@
   flex: 1 1 0;
   display: flex;
   align-items: center;
-  padding-left: var(--rep-cell-pad);
+  padding-left: 3.4mm;
   font-size: 8.8pt;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
-  font-feature-settings: 'palt' 1;
 }
 
 .rep-majors li + li {
@@ -415,7 +414,7 @@
 /* ---- Layer 3: ノンブル（小口 = 左下） ---- */
 .rep-folio {
   position: absolute;
-  top: 289.3mm;
+  top: 288.8mm;
   left: 12.3mm;
   font-size: 10pt;
   font-weight: 700;

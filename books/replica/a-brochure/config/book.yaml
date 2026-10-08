@@ -17,9 +17,9 @@ format:
   orientation: portrait
   bleed_mm: 3                   # 塗り足し（片側）
   safe_mm: 5                    # 仕上がり線から内側の安全領域（文字・ロゴ・QR・ノンブルはこの内側）
-  # 参考ページの実測（補正画像で 1mm = 6.73px）: 表の左端 24mm（小口）、表の右端 288mm（ノドまで 3mm）、
+  # 参考ページの実測（補正画像で 1mm = 6.73px）: 表の左端 24mm（小口）、表の右端 289mm（ノドまで 2mm）、
   # 上部の小見出しの上端 約 16mm、表の下端 285mm
-  margins_mm: { top: 15, bottom: 12, inside: 3, outside: 24 }   # 版面のマージン（inside = ノド、outside = 小口）
+  margins_mm: { top: 15, bottom: 12, inside: 2, outside: 24 }   # 版面のマージン（inside = ノド、outside = 小口）
   columns: 12                   # 段組の段数
   gutter_mm: 4                  # 段間
   # right にしているのは 1 ページ目を「左ページ（ノド = 右）」にするため。参考の冊子は見開きの左が奇数ノンブル
