@@ -3,6 +3,7 @@
   この BOOK 専用（完コピ検証）。他の BOOK でも使うことになったら shared/components/ への移動を検討する（review.md「次にやること」）
   パラメータ:
     mod   必須  位置・大きさ・傾き・文字色を決める page.css の修飾子（.memo--<mod>）
+    src   任意  Layer 1画像のリポジトリルート相対パス
     photo 任意  写真枠の縦横比（例 "37 / 20"）。指定すると上部に photo-frame のプレースホルダを置く
   中身（職種名・説明）はブロックで渡す:
     {{#> book/memo-card mod="c1" photo="37.5 / 20.5"}}
@@ -13,7 +14,7 @@
 <div class="memo memo--{{mod}}">
   <div class="memo__hatch" aria-hidden="true"></div>
   <div class="memo__paper">
-    {{#if photo}}<div class="memo__photo">{{> photo-frame ratio=photo}}</div>{{/if}}
+    {{#if photo}}<div class="memo__photo">{{#if src}}{{> photo-frame ratio=photo src=src}}{{else}}{{> photo-frame ratio=photo}}{{/if}}</div>{{/if}}
     {{> @partial-block}}
   </div>
   <svg class="memo__fold" viewBox="0 0 3.6 3.6" aria-hidden="true"><path d="M0 3.6 L3.6 0 L0.8 0.8 Z"/></svg>

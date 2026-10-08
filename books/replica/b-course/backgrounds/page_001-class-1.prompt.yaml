@@ -1,0 +1,32 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Horizontal photograph, aspect ratio 59.5:38.7 (about 3:2).
+  COMPOSITION: two young adult women stand side by side, cropped at mid-thigh, filling the frame: the left person at about 8-45% of the width, the right person at about 57-100%; their heads at about 15-55% from the top, both tilted playfully toward each other.
+  Each holds a pair of plain white paper cut-out goggles (a simple card band with two round eye holes and a small nose notch, no printing) in front of her eyes with both hands, so the eyes are hidden; cheerful smiles below.
+  Left person: olive-mustard long-sleeve top (#948337) under a pale yellow gingham apron (#f4e67c). Right person: oversized light grey hoodie (#cdcdd6) with pale pink bottoms (#b08991).
+  BACKGROUND: a flat sage-green painted wall (#9db591, shadows #84967a) with large soft pale-blue painted circles (#c5d1e4): one in the top-left corner (0-25% width, 0-20% height) and one behind the right person's head (62-92% width, 0-40% height); a small pale yellow ball (#eee5a4) between them at mid-height and a pale pink ball at the lower left.
+  LIGHT: soft even indoor light, slightly warm, low contrast.
+  STYLE: candid classroom snapshot, eye-level, 35mm-equivalent lens, moderate depth of field, natural colors with the slight softness of a printed brochure photo. Faces largely hidden behind the paper goggles (not identifiable).
+
+  The supplied reference has deliberately masked facial features and printed content. Use it only for layout, poses, colour and illumination. Invent distinct fictional people. Reconstruct blanked patches naturally; never reproduce the original people or branding. Match the exact requested aspect ratio. Extend any blank white bleed at the right naturally.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, character mascot, badge, printed pattern with letters, celebrity likeness, extra fingers, deformed hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, character mascot, badge, printed pattern with letters, celebrity likeness, extra fingers, deformed hands, frame, border
+seed: null
+size: 820x533
+created: 2026-10-08T13:33:32.934Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
+    usage: composition
+    crop_mm:
+      - 17
+      - 208
+      - 59.5
+      - 38.7
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。注文書指定の文字・ラベル・図・名札・ワッペン・印刷物を周囲色で覆い、顔の内側を肌色の四角で完全に覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1554×1012pxからsharpのLanczos3で820×533pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

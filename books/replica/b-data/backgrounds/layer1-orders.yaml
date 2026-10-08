@@ -20,7 +20,7 @@ book: replica/b-data
 page: page_001
 reference_image: references/nagoya-iryo-hisho-it/brochure-2/page_001.jpg
 reference_prep: references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml
-status: pending
+status: generated
 items:
   - id: page_001-disc-c1
     kind: photo

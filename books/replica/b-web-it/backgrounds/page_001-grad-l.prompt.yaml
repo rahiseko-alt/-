@@ -1,0 +1,31 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Portrait-format photo, aspect ratio 28.8:33 (about 0.87:1), three-quarter side view of a young professional typing at a desk in a dark studio office.
+  Composition: the subject occupies the right 55% of the frame, seated and facing toward the left, head in the upper third (top of the hair about 10% below the top edge, face around 55% of the width); her forearms and hands reach to a black keyboard on the desk in the lower-left quarter. The left 45% and the top are a calm, dark, low-detail background: a charcoal wall with a slightly lighter vertical panel, and a small plain white desk object at the left edge around 60% of the height. The work screen is out of frame.
+  Subject: a young adult woman (early 20s) with short dark hair, wearing a plain white short-sleeve T-shirt, gentle focused smile while typing; a generic face that does not resemble any real person.
+  Lighting: soft key light from the front-left illuminating the face and T-shirt against the dark background, low-key, moderate contrast.
+  Palette: charcoal background #342e32 / #453d46, plain white T-shirt #dbd6d9, warm skin #b88f83, dark desk #5f5456, near-black keyboard #1f1a1d.
+  Style: natural editorial workplace portrait, 50mm lens, f/2.8, realistic, sRGB.
+
+  Use the supplied masked reference only for composition of spatial arrangement, poses, light and colour. Invent distinct fictional people and original generic objects. Do not copy the identities, brands, school-specific features or exact original artwork. Reconstruct blanked patches naturally. Match the exact requested aspect ratio and extend any white bleed strips with the surrounding scene.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo, printed T-shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo, printed T-shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+seed: null
+size: 397x455
+created: 2026-10-08T13:43:52.618Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
+    usage: composition
+    crop_mm:
+      - 18.1
+      - 246.1
+      - 29.4
+      - 32.9
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml
+    note: 'ref:prep → gen:inputsの切り出しに加工。参考の顔内側を肌色で完全に覆った。 実施した入力マスク: {"mm":[[33.5,250.5,6.5,8.5]],"note":"参考の顔内側を肌色で完全に覆った。"} 入力は構図・明暗だけに使う。'
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1172×1342pxからsharpのLanczos3で397×455pxへ縮小し、枠の縦横比と350dpi必要画素に合わせた。中央トリミング、sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

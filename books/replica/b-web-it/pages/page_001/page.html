@@ -5,7 +5,7 @@
   解析: references/nagoya-iryo-hisho-it/brochure-web-it/analysis/page_003.yaml
 
   3 層構造（system/rules/page-layers.md）
-    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、写真・切り抜き人物はすべてプレースホルダ。地・円・軸は単色なので Layer 2）
+    Layer 1 BASE VISUAL : 生成写真6点と透過の架空人物2点。地・円・軸はLayer 2
     Layer 2 STRUCTURE   : 地、大きな黄色の円、白い円、弧を描くリードの帯、雲形の吹き出し、縦横の軸矢印（SVG のグラデーション）、
                           軸ラベルの色面、メモカード（book/memo-card）、本文、タブラベル、卒業生ボックス、ノンブルの円
     Layer 3 CONTENT     : すべてダミーテキスト（参考資料の文字・職種名・人名・数値は書き写さない）。ノンブルは page.number
@@ -81,17 +81,9 @@
   <polygon class="axis-v"
     points="102.7,64 111.5,74.1 105.7,74.1 105.7,201.8 111.5,201.8 102.7,211.8 93.9,201.8 99.7,201.8 99.7,74.1 93.9,74.1"/>
 
-  {{!-- 切り抜き人物のプレースホルダ（灰色のシルエット。Layer 1 の自社写真待ち） --}}
-  <g class="silhouette">
-    <circle cx="187" cy="57.6" r="3.7"/>
-    <path d="M182.3 65.5 Q182.3 61.8 186 61.8 H188.6 Q192.3 61.8 192.3 65.5 L192.6 80 L194 104 L193.6 110.5 Q193.4 112 191.8 112 H181.5 Q179.8 112 180.2 110.4 L181 104 L182 80 Z"/>
-    <path d="M183 66.5 L179.7 61 Q179 59.7 180 59.2 Q181 58.8 181.6 60 L184.6 65 Z"/>
-  </g>
-  <g class="silhouette">
-    <circle cx="19.6" cy="174.6" r="3.8"/>
-    <path d="M14.2 182.5 Q14.2 179 17.6 179 H21.8 Q25.2 179 25.2 182.5 L25.6 200 L26 220.5 Q26 223 24 223 H15.4 Q13.4 223 13.4 220.5 L13.8 200 Z"/>
-    <path d="M24.4 183 L28.5 172.6 Q29.1 171.4 30 172 Q30.7 172.6 30.3 173.7 L26.6 184.6 Z"/>
-  </g>
+  {{!-- Phase 5の構成検証用に生成した切り抜き人物（自校の実写真ではない） --}}
+  <image href="{{asset 'books/replica/b-web-it/backgrounds/page_001-cutout-tr.png'}}" x="177.5" y="53.5" width="21.5" height="59" preserveAspectRatio="xMidYMax meet"/>
+  <image href="{{asset 'books/replica/b-web-it/backgrounds/page_001-cutout-bl.png'}}" x="10" y="168" width="20.2" height="55" preserveAspectRatio="xMidYMax meet"/>
 </svg>
 
 {{!-- Layer 3: 大見出し（3 行。1 行目は青、2〜3 行目は大きく茶） --}}
@@ -115,12 +107,12 @@
 <div class="axis-label axis-label--right">ラベル・ダミー</div>
 
 {{!-- Layer 2 + 3: 職種のメモカード 7 枚（写真つき 4 枚・文字だけ 3 枚） --}}
-{{#> book/memo-card mod="c1" photo="37.5 / 20.5"}}
+{{#> book/memo-card mod="c1" src="books/replica/b-web-it/backgrounds/page_001-memo-c1.jpg" photo="37.5 / 20.5"}}
   <h3 class="memo__title">ABC職種ダミー</h3>
   <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストダミーです。</p>
 {{/book/memo-card}}
 
-{{#> book/memo-card mod="c2" photo="37.1 / 20.8"}}
+{{#> book/memo-card mod="c2" src="books/replica/b-web-it/backgrounds/page_001-memo-c2.jpg" photo="37.1 / 20.8"}}
   <h3 class="memo__title">職種名ダミーダミー</h3>
   <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストがダミーです。</p>
 {{/book/memo-card}}
@@ -140,12 +132,12 @@
   <p class="memo__text">ダミーテキストダミ<br>ーテキストダミーテ<br>キストダミーテキス<br>トダミーテキストダ<br>ダミーです。</p>
 {{/book/memo-card}}
 
-{{#> book/memo-card mod="c6" photo="36.9 / 19.5"}}
+{{#> book/memo-card mod="c6" src="books/replica/b-web-it/backgrounds/page_001-memo-c6.jpg" photo="36.9 / 19.5"}}
   <h3 class="memo__title">職種名ダミー</h3>
   <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストをダミーします。</p>
 {{/book/memo-card}}
 
-{{#> book/memo-card mod="c7" photo="36.9 / 19.7"}}
+{{#> book/memo-card mod="c7" src="books/replica/b-web-it/backgrounds/page_001-memo-c7.jpg" photo="36.9 / 19.7"}}
   <h3 class="memo__title">職種名ダミーダミー</h3>
   <p class="memo__text">ダミーテキストダミーテキストダミ<br>ーテキストダミーテキストダミーテ<br>キストダミーです。</p>
 {{/book/memo-card}}
@@ -160,7 +152,7 @@
 
 {{!-- Layer 2 + 3: 卒業生ボックス 2 つ（白地 + 細枠、左に写真、右に名前・所属・本文） --}}
 <section class="grad grad--l">
-  <div class="grad__photo">{{> photo-frame ratio="28.8 / 33"}}</div>
+  <div class="grad__photo">{{> photo-frame ratio="28.8 / 33" src="books/replica/b-web-it/backgrounds/page_001-grad-l.jpg"}}</div>
   <div class="grad__text">
     <p class="grad__name">氏名 ダミ<small>さん</small><span class="grad__aff">（ダミーダミーダミー）</span></p>
     <p class="grad__org">ABダミーダミーダミー企業名</p>
@@ -168,7 +160,7 @@
   </div>
 </section>
 <section class="grad grad--r">
-  <div class="grad__photo">{{> photo-frame ratio="1 / 1"}}</div>
+  <div class="grad__photo">{{> photo-frame ratio="1 / 1" src="books/replica/b-web-it/backgrounds/page_001-grad-r.jpg"}}</div>
   <div class="grad__text">
     <p class="grad__name">氏名 ダミ<small>さん</small><span class="grad__aff">（ダミーダミー）</span></p>
     <p class="grad__org">ダミーダミー企業名ダミー</p>

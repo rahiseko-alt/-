@@ -21,8 +21,8 @@ main `4048897` を作業ブランチへ取り込んだ。学校の正本を独�
 
 ## 現在の制作状況
 
-生成指示9 BOOK・64件のうち、a-brochure 1点・a-course 7点、計8点を生成・配置済み。両BOOKの生成指示statusはgenerated。残り56点・7 BOOKはpending。
-全64件の参考切り出しを準備。2 BOOKのHTTPプレビューと追加比較を確認済み。ただし指定版Chromiumが未取得のため、正式な出力・比較は未完了。
+生成指示9 BOOK・64件のうち、a-brochure 1点・a-course 7点・b-course 5点・b-web-it 8点・b-data 7点、計28点を生成・配置済み。5 BOOKの生成指示statusはgenerated。残り36点・4 BOOKはpending。
+全64件の参考切り出しを準備。5 BOOKのHTTPプレビューと追加比較を確認済み。ただし指定版Chromiumが未取得のため、正式な出力・比較は未完了。
 制作の詳細は `books/replica/a-brochure/reviews/page_001/layer1-progress.md` に残す。
 人物40件の許可はPhase 5の構成検証に限定して扱い、自校の在校生像・教育内容・設備を推定する根拠にはしない。
 

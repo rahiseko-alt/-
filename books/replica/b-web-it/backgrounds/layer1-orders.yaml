@@ -17,7 +17,7 @@ book: replica/b-web-it
 page: page_001
 reference_image: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
 reference_prep: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml
-status: pending
+status: generated
 items:
   - id: page_001-memo-c1
     kind: photo

@@ -1,0 +1,32 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Landscape photo, aspect ratio 37.5:20.5 (about 1.83:1), eye-level medium shot of a bright, modern web design studio desk.
+  Composition: the subject sits in the left 45% of the frame, seen in three-quarter view from the front-left, head in the upper-left third (top of the hair about 12% below the top edge), torso and arms reaching down to the desk at the bottom edge; she looks to the right toward a large monitor that fills the right 40% of the frame from about 10% to 65% of the height, its screen angled toward her; a thin open laptop lies on the desk at the lower right; a white desk with a few blank sheets of paper runs along the bottom 20%. Behind her a plain light grey wall, with a darker grey partition or doorway strip along the far left edge. Keep the wall area between her head and the monitor calm and plain.
+  Subject: a young adult woman (around 20) with a short dark-brown bob, wearing a loose white shirt, one hand resting near her chin while thinking about a layout, natural friendly expression; a generic face that does not resemble any real person.
+  Screens: the monitor shows only soft, heavily blurred abstract blue and white layout blocks (no readable characters, no UI labels); the laptop screen faces away or is dark.
+  Lighting: soft diffused daylight from the left, bright and airy, low contrast, no harsh shadows.
+  Palette: cool light grey wall #d8dce2 and off-white desk #f4f5f6, white shirt #e8e8ec, dark-brown hair #624d4a, soft blue screen glow #70a1cf, a few near-black accents #1a1a1e.
+  Style: natural editorial photograph for a vocational school brochure, 35mm lens, f/2.8, shallow depth of field, sharp focus on the face, realistic skin, sRGB.
+
+  Use the supplied masked reference only for composition of spatial arrangement, poses, light and colour. Invent distinct fictional people and original generic objects. Do not copy the identities, brands, school-specific features or exact original artwork. Reconstruct blanked patches naturally. Match the exact requested aspect ratio and extend any white bleed strips with the surrounding scene.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, user interface labels, keyboard legends, brand, brand logo on laptop or monitor, signage, poster text, calendar, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, source code, user interface labels, keyboard legends, brand, brand logo on laptop or monitor, signage, poster text, calendar, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+seed: null
+size: 517x282
+created: 2026-10-08T13:43:52.442Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
+    usage: composition
+    crop_mm:
+      - 52.5
+      - 92.3
+      - 35.4
+      - 19.9
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml
+    note: 'ref:prep → gen:inputsの切り出しに加工。顔・棚の文字状の横縞・画面を指定範囲で覆い、傾きで入る四隅の紙の楔を周囲の淡色で覆った。 実施した入力マスク: {"mm":[[59.5,94,6,6.5],[70,92.8,8,4.2,"#d8dce2"],[80,93,8,13,"#b1cbdc"]],"edge":0.025,"note":"顔・棚の文字状の横縞・画面を指定範囲で覆い、傾きで入る四隅の紙の楔を周囲の淡色で覆った。"} 入力は構図・明暗だけに使う。'
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1695×928pxからsharpのLanczos3で517×282pxへ縮小し、枠の縦横比と350dpi必要画素に合わせた。中央トリミング、sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

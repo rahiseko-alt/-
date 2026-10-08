@@ -1,0 +1,33 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Horizontal photograph, aspect ratio 59.5:38.7 (about 3:2). High-angle view, camera looking down at about 45 degrees.
+  COMPOSITION: five young adult students kneel on a light grey floor (#dcdbdd) around two baby-sized CPR training manikins, practicing chest compressions.
+  Foreground left (0-35% of the width, full height): a student seen from the side and slightly behind in a navy jacket (#3d4a6b) with an orange-tan shoulder panel (#c1692c), reaching toward a manikin dressed in pale pink (#d8aac5) lying at the lower center (35-50% width, 60-100% height).
+  Center: a second manikin in a pale blue suit (50-65% width, 45-85% height); a student in a black long-sleeve top with a light-brown ponytail (55-75% width, upper half) pressing on it; behind, a student in a plain grey sweatshirt wearing a white face mask (35-50% width, upper half).
+  Foreground right (65-100% width, 40-100% height): the back of a dark-haired head, out of focus.
+  A blank white sheet of paper lies on the floor at the center; a small red carry case without any markings sits at the bottom center; a few blurred people and bags in the upper-right background.
+  LIGHT: bright overhead fluorescent light, cool neutral tones, low contrast.
+  STYLE: candid documentary snapshot, 28mm-equivalent lens, natural colors, slight softness. Faces turned away or partially hidden; no identifiable people.
+
+  The supplied reference has deliberately masked facial features and printed content. Use it only for layout, poses, colour and illumination. Invent distinct fictional people. Reconstruct blanked patches naturally; never reproduce the original people or branding. Match the exact requested aspect ratio. Extend any blank white bleed at the right naturally.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, printed handout, clothing print, screen text, celebrity likeness, extra fingers, deformed hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, printed handout, clothing print, screen text, celebrity likeness, extra fingers, deformed hands, frame, border
+seed: null
+size: 820x533
+created: 2026-10-08T13:33:32.980Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
+    usage: composition
+    crop_mm:
+      - 80.4
+      - 208
+      - 59.5
+      - 38.7
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。注文書指定の文字・ラベル・図・名札・ワッペン・印刷物を周囲色で覆い、顔の内側を肌色の四角で完全に覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1554×1012pxからsharpのLanczos3で820×533pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

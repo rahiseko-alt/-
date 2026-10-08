@@ -11,7 +11,7 @@ book: replica/b-course
 page: page_001
 reference_image: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
 reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
-status: pending
+status: generated
 items:
   - id: page_001-hero
     kind: photo

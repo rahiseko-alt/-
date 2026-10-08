@@ -1,0 +1,31 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Square 1:1 photograph that will be shown through a circular mask (the four corners are cut away), so keep the face, hands and laptop inside the central inscribed circle.
+  Composition: a waist-up shot of one young adult woman seated at an office desk, body angled slightly to camera-left, head turned toward the camera with a warm natural smile. Her face sits in the upper-left third of the frame (face centre about 35% from the left and 28% from the top; hair-to-chin about one third of the frame height). Both hands are on the keyboard of a black laptop that enters from the right edge and lower right foreground, the laptop seen from the side/back so no screen content is visible. Upper right: an out-of-focus bright office interior with a pale wall and an empty desk shelf, calm and uncluttered.
+  Subject (generic, fictional): an East Asian woman in her early twenties, dark hair tied in a low ponytail, light natural make-up, wearing a light cool-grey short-sleeve office uniform blouse with thin navy piping at the collar and a small navy bow; no name tag, no badge, no emblem.
+  Lighting: soft, even daylight from the front-left, bright and airy, gentle shadows, clean skin tones.
+  Palette: uniform cool grey #8f8d96 with navy #2d3b64 accents, background warm pale grey-beige #d5d2cc to #dddbdc, laptop near-black #141316, natural skin tones; overall light and slightly soft like a school brochure photo.
+  Style: photorealistic candid editorial photo, 50mm lens, eye-level, shallow depth of field (background softly blurred), sharp eyes, sRGB.
+
+  Use the supplied masked reference only for composition of spatial arrangement, poses, light and colour. Invent distinct fictional people and original generic objects. Do not copy the identities, brands, school-specific features or exact original artwork. Reconstruct blanked patches naturally. Match the exact requested aspect ratio and extend any white bleed strips with the surrounding scene.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, readable screen, sign, label, name tag, badge, emblem, printed paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, screen text, readable screen, sign, label, name tag, badge, emblem, printed paper, book spines, poster, real person likeness, celebrity, circular frame, border, vignette, extra fingers, deformed hands, distorted face
+seed: null
+size: 434x434
+created: 2026-10-08T13:57:33.679Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 141.5
+      - 126.9
+      - 33.8
+      - 33.2
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml
+    note: 'ref:prep → gen:inputsの切り出しに加工。円外・隣接写真・緑枠を白にし、顔と机奥の札を完全に伏せた。 実施した入力マスク: {"circle":true,"normalized":[[0.2,0.09,0.27,0.32]],"mm":[[163,136,9,7,"#d5d2cc"]],"note":"円外・隣接写真・緑枠を白にし、顔と机奥の札を完全に伏せた。"} 入力は構図・明暗だけに使う。'
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1254×1254pxからsharpのLanczos3で434×434pxへ縮小し、枠の縦横比と350dpi必要画素に合わせた。中央トリミング、sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

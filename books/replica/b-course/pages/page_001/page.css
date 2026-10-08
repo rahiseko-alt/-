@@ -483,3 +483,7 @@
   line-height: 1;
   color: #fff;
 }
+
+/* 生成画像にも既存プレースホルダと同じ上辺の角丸を適用 */
+.hero .photo-frame__img { border-radius: 4mm 0 0 0; }
+.class-card__photo .photo-frame__img { border-radius: 1.2mm 1.2mm 0 0; }

@@ -1,0 +1,31 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Horizontal photograph, aspect ratio 59.5:38.7 (about 3:2). Bright classroom with white vertical blinds and curtains (#fafbfb) filling the background.
+  COMPOSITION: foreground left (5-45% of the width, 25-100% of the height): a young adult woman with long straight dark hair, seen in three-quarter view from behind, wearing a plain white T-shirt (#f4f8fb) and a white disposable face mask, facing right.
+  Center-right (55-100% width, 15-95% height): a young adult woman with dark hair in a low ponytail and bangs, wearing a white disposable face mask and a black short-sleeve blouse with a white round floral polka pattern (#191919 base), seated at a white desk (#e5e8ef) with her hands resting on it, smiling eyes, facing the first woman in conversation.
+  Background left (0-30% width, upper half): two more students seated at desks, softly out of focus.
+  LIGHT: soft, bright, diffuse daylight through the blinds, high-key, low contrast, black and white clothing as the main tonal contrast.
+  STYLE: candid group-work snapshot, eye-level, 50mm-equivalent lens, shallow depth of field, natural colors. No papers, notebooks or screens with visible writing.
+
+  The supplied reference has deliberately masked facial features and printed content. Use it only for layout, poses, colour and illumination. Invent distinct fictional people. Reconstruct blanked patches naturally; never reproduce the original people or branding. Match the exact requested aspect ratio. Extend any blank white bleed at the right naturally.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, notebook writing, screen text, celebrity likeness, extra fingers, deformed hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, notebook writing, screen text, celebrity likeness, extra fingers, deformed hands, frame, border
+seed: null
+size: 820x533
+created: 2026-10-08T13:33:33.022Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
+    usage: composition
+    crop_mm:
+      - 143.8
+      - 208
+      - 59.5
+      - 38.7
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。注文書指定の文字・ラベル・図・名札・ワッペン・印刷物を周囲色で覆い、顔の内側を肌色の四角で完全に覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1554×1012pxからsharpのLanczos3で820×533pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

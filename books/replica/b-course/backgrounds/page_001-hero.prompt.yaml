@@ -1,0 +1,35 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Horizontal photograph, aspect ratio 196:117 (about 5:3), bright high-key indoor scene in a childcare training room.
+  COMPOSITION: one young adult woman in her early twenties (generic person, not resembling any real individual) stands slightly right of center, shown from the waist up. The top of her head almost touches the upper edge; her face is at about 52% from the left and 25% from the top, smiling warmly with her eyes turned down toward the board she holds. Her torso occupies about 37-70% of the width and is cut off by the bottom edge.
+  She holds a plain white square picture board with both hands, arms extended to the right; the board sits at about 67-89% of the width and 48-75% from the top, tilted slightly toward the viewer, its face completely blank except for one soft pale lavender circle (#c9cbe6).
+  LEFT 35%: two thick pale-blue painted vertical posts (#b9d5eb) at about 4-8% and 13-20% of the width, running the full height, in front of a row of thin white vertical crib slats (22-44% of the width) with a beige wall (#e8dbc9) behind them.
+  RIGHT BACKGROUND: a white crib headboard with pale mint vertical slats (#bcd0d0) spans 42-88% of the width, its top rail at 18-33% from the top; above it a white wall and a white sheer curtain. The right-most 10% is a plain white wall with a pale yellow-green panel (#fafcd5).
+  Keep the right 8% (it runs into the binding and the trim bleed) simple, plain and free of faces, hands or important detail. Keep the top-left corner plain wall (it is clipped by a rounded corner).
+  BOTTOM: soft white and pale blue bedding (#e5e8f0) along the bottom edge; an empty crib with a folded pale blanket at the lower left. No child, no baby.
+  WARDROBE: a red short-sleeve zip-neck polo-style work shirt (#be2e38, shadow tones #9c463f) with a plain chest pocket; no name tag, no badge, no patch, no print. Dark hair tied back with bangs.
+  LIGHT: soft diffuse daylight from the front-left, high-key, low contrast, airy pastel palette of white, pale blue, mint and beige with the red shirt as the single strong accent; natural warm skin tones.
+  STYLE: natural candid documentary photograph for a school brochure, eye-level, 35mm-equivalent lens, f/2.8, sharp focus on the face, background slightly soft, realistic color, no heavy retouching.
+
+  The supplied reference has deliberately masked facial features and printed content. Use it only for layout, poses, colour and illumination. Invent distinct fictional people. Reconstruct blanked patches naturally; never reproduce the original people or branding. Match the exact requested aspect ratio. Extend any blank white bleed at the right naturally.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, labels, stickers, name tag, badge, printed board, screen text, child, baby, celebrity likeness, extra fingers, deformed hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, signage, labels, stickers, name tag, badge, printed board, screen text, child, baby, celebrity likeness, extra fingers, deformed hands, frame, border
+seed: null
+size: 2701x1612
+created: 2026-10-08T13:33:32.884Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
+    usage: composition
+    crop_mm:
+      - 17
+      - 41.7
+      - 196
+      - 117
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。注文書指定の文字・ラベル・図・名札・ワッペン・印刷物を周囲色で覆い、顔の内側を肌色の四角で完全に覆った。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1623×969pxからsharpのLanczos3で2701×1612pxへ拡大・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

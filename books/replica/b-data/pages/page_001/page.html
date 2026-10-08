@@ -5,7 +5,7 @@
   解析: references/nagoya-iryo-hisho-it/brochure-2/analysis/page_001.yaml
 
   3 層構造（system/rules/page-layers.md）
-    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、円形写真 6 点・切り抜き人物 1 体はプレースホルダ。
+    Layer 1 BASE VISUAL : 円形写真6点・透過全身人物1点（Phase 5用の架空の人物）。
                           外周帯・方眼紙の地は単色と細い罫線なので Layer 2 の CSS で作る）
     Layer 2 STRUCTURE   : 外周帯・方眼紙の地紙、角欠きパネル 2 枚、吊り下げ線と丸点、色面ラベル 4 枚、3 色の角括弧、キラキラ記号、
                           地図の簡略シルエット（中立のプレースホルダ。参考の拠点の点は写さない）、雲形の吹き出し 6 個、
@@ -153,12 +153,8 @@
     </g>
   </g>
 
-  {{!-- 切り抜き人物のプレースホルダ（灰色のシルエット。Layer 1 の自社写真待ち） --}}
-  <g class="silhouette">
-    <circle cx="27.6" cy="216.4" r="3.9"/>
-    <path d="M22.2 225.6 Q22.2 221.6 26 221.6 H29.6 Q33.4 221.6 33.4 225.6 L33.6 245 L32.8 276.4 Q32.7 278.6 30.6 278.6 H25 Q22.9 278.6 22.8 276.4 L22 245 Z"/>
-    <path d="M32.2 226.8 L36.4 217.6 Q37 216.4 37.9 217 Q38.6 217.6 38.2 218.7 L34.6 228.2 Z"/>
-  </g>
+  {{!-- Phase 5用の透過全身人物（架空。自校の在校生の実写真ではない） --}}
+  <image href="{{asset 'books/replica/b-data/backgrounds/page_001-person.png'}}" x="18.2" y="209.7" width="22.5" height="68.3" preserveAspectRatio="xMidYMax meet"/>
 
   {{!-- ノンブルのハート（白い点線の円の上） --}}
   <circle class="folio-ring" cx="16.6" cy="284.6" r="2.75"/>
@@ -231,13 +227,13 @@
 <p class="total"><span class="total__num">00,000</span><span class="total__unit">人</span><span class="total__suffix">以上</span></p>
 <p class="total-source">(0000年0月ダミーの出典記録)</p>
 
-{{!-- 円形の写真（Layer 1 の自社写真待ち。枠は白いフチの円） --}}
-<div class="disc disc--c1">{{> photo-frame ratio="1 / 1"}}</div>
-<div class="disc disc--c2">{{> photo-frame ratio="1 / 1"}}</div>
-<div class="disc disc--c3">{{> photo-frame ratio="1 / 1"}}</div>
-<div class="disc disc--c4">{{> photo-frame ratio="1 / 1"}}</div>
-<div class="disc disc--c5">{{> photo-frame ratio="1 / 1"}}</div>
-<div class="disc disc--c6">{{> photo-frame ratio="1 / 1"}}</div>
+{{!-- 円形の生成写真（Phase 5用の架空の人物。枠は白いフチの円） --}}
+<div class="disc disc--c1">{{> photo-frame ratio="1 / 1" src="books/replica/b-data/backgrounds/page_001-disc-c1.jpg"}}</div>
+<div class="disc disc--c2">{{> photo-frame ratio="1 / 1" src="books/replica/b-data/backgrounds/page_001-disc-c2.jpg"}}</div>
+<div class="disc disc--c3">{{> photo-frame ratio="1 / 1" src="books/replica/b-data/backgrounds/page_001-disc-c3.jpg"}}</div>
+<div class="disc disc--c4">{{> photo-frame ratio="1 / 1" src="books/replica/b-data/backgrounds/page_001-disc-c4.jpg"}}</div>
+<div class="disc disc--c5">{{> photo-frame ratio="1 / 1" src="books/replica/b-data/backgrounds/page_001-disc-c5.jpg"}}</div>
+<div class="disc disc--c6">{{> photo-frame ratio="1 / 1" src="books/replica/b-data/backgrounds/page_001-disc-c6.jpg"}}</div>
 
 {{!-- Layer 3: ノンブル（ハートの中の白抜き数字） --}}
 <p class="folio-num">{{page.number}}</p>

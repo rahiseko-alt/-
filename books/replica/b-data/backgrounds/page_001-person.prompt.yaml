@@ -1,0 +1,30 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Full-length studio photograph of one person standing, isolated on a plain pure white seamless background (#ffffff), framed head to toe in a tall narrow portrait (about 1:3, width:height = 22.5:68.3) with a small even margin, to be cut out to a transparent PNG.
+  Pose: standing upright facing the camera, feet together, natural relaxed posture, friendly closed-mouth smile at the camera. Her left hand (on camera-right) is raised to shoulder height with the index finger pointing up and outward toward camera-right, as if pointing at something beside her; her right forearm (camera-left) is folded across her waist, supporting the raised elbow. The pointing hand and the full puff sleeves must stay inside the frame; nothing touches the edges.
+  Subject (generic, fictional): an East Asian woman in her early twenties, dark brown hair (#3c2f2c) tied back with see-through bangs, light natural make-up; wearing a loose lavender-grey long-sleeve blouse (#aca8b6) with full puff sleeves and a square neckline, a thin delicate necklace, high-waisted light-wash wide straight-leg jeans (#939bad), and plain white sneakers (#f2f0f0). No bag, no props, no visible brand marks on clothes or shoes.
+  Lighting: soft, even, shadowless studio lighting from the front, crisp clean silhouette edges and hair edges for easy masking, at most a very faint contact shadow under the shoes.
+  Style: photorealistic fashion catalogue photo, 85mm lens, camera at chest height to avoid perspective distortion, whole body in sharp focus, sRGB.
+
+  Use the supplied masked reference only for composition of spatial arrangement, poses, light and colour. Invent distinct fictional people and original generic objects. Do not copy the identities, brands, school-specific features or exact original artwork. Reconstruct blanked patches naturally. Match the exact requested aspect ratio and extend any white bleed strips with the surrounding scene. Deliver a clean transparent-background PNG cut-out, keeping all limbs, hair, fingers and feet intact.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand mark on clothes or shoes, signage, screen text, name tag, badge, emblem, props, bag, background scenery, floor texture, strong shadow, cropped feet, cropped hands, real person likeness, celebrity, extra fingers, deformed hands, distorted face, multiple people
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand mark on clothes or shoes, signage, screen text, name tag, badge, emblem, props, bag, background scenery, floor texture, strong shadow, cropped feet, cropped hands, real person likeness, celebrity, extra fingers, deformed hands, distorted face, multiple people
+seed: null
+size: 310x941
+created: 2026-10-08T13:57:34.182Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-2/page_001.jpg
+    usage: composition
+    crop_mm:
+      - 20.3
+      - 212.3
+      - 24
+      - 72.2
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml
+    note: 'ref:prep → gen:inputsの切り出しに加工。顔を肌色で完全に伏せ、人物外の吹き出し・緑枠・ラベル・方眼紙を白くした。 実施した入力マスク: {"outline":[[0.28,0.01],[0.59,0.01],[0.65,0.17],[0.88,0.19],[0.99,0.14],[0.99,0.4],[0.82,0.46],[0.86,0.73],[0.67,0.98],[0.42,1],[0.15,0.99],[0.12,0.86],[0.12,0.49],[0.01,0.38],[0.03,0.22],[0.25,0.17]],"normalized":[[0.25,0.07,0.38,0.1]],"note":"顔を肌色で完全に伏せ、人物外の吹き出し・緑枠・ラベル・方眼紙を白くした。"} 入力は構図・明暗だけに使う。'
+params:
+  transparent_background: true
+source_refs: []
+notes: "生成出力724×2171pxからsharpのLanczos3で310×941pxへ縮小し、枠の縦横比と350dpi必要画素に合わせた。ツールの透過背景生成を使用し、白地からの手動切り抜きは行っていない。切り抜き人物はアルファ外周の余白をtrim(threshold 5)で詰め、contain・下端揃え・透明余白で全身を収めた。イラストは余白を維持してcontain。PNGのアルファを保持。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

@@ -1,0 +1,31 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Full-body cut-out photo of a single standing person, isolated on a plain pure white background (#ffffff), to be cut out to a transparent PNG. Portrait aspect ratio 20.2:55 (about 0.37:1); the figure fills the frame from the top of the head to the soles of the shoes with minimal margin.
+  Pose: standing straight and facing the camera, feet together; the hand on the viewer's left rests on the hip with the elbow pointing out to the left edge (about 30% from the top); the hand on the viewer's right is raised beside the head with the index finger pointing straight up (the fingertip at the right edge, about 14% from the top), as if pointing at something beside her.
+  Subject: a young adult woman (around 20) with a dark shoulder-length bob with bangs, a white short-sleeve blouse with a thin black ribbon line under the chest, loose white wide-leg trousers with a sparse small dark-grey dot print and a dark fabric sash tie hanging at the hip on the viewer's left, simple dark sandals; cheerful smile; a generic face that does not resemble any real person.
+  Lighting: soft, even, bright studio light, no cast shadow on the background (at most a very faint contact shadow under the shoes), crisp edges for clean masking.
+  Palette: white blouse #f8f5f6, off-white trousers #dfd5d0 with dark grey dots #4a4a55, dark hair #3d322c, warm skin #d9b9a0.
+  Style: realistic full-length fashion catalogue photograph, 70mm lens, camera at waist height, no perspective distortion, sRGB.
+
+  Use the supplied masked reference only for composition of spatial arrangement, poses, light and colour. Invent distinct fictional people and original generic objects. Do not copy the identities, brands, school-specific features or exact original artwork. Reconstruct blanked patches naturally. Match the exact requested aspect ratio and extend any white bleed strips with the surrounding scene. Deliver a clean transparent-background PNG cut-out, keeping all limbs, hair, fingers and feet intact.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand logo on sandals, printed slogan on clothing, name tag, lanyard, background scenery, floor texture, props, second person, cropped feet, cropped head, harsh shadow, white halo, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, brand, brand logo on sandals, printed slogan on clothing, name tag, lanyard, background scenery, floor texture, props, second person, cropped feet, cropped head, harsh shadow, white halo, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+seed: null
+size: 278x758
+created: 2026-10-08T13:43:53.271Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
+    usage: composition
+    crop_mm:
+      - 10
+      - 168
+      - 20.2
+      - 55
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml
+    note: 'ref:prep → gen:inputsの切り出しに加工。参考の顔内側を覆い、人物の外側の水色・黄色の地を白に置換した。 実施した入力マスク: {"mm":[[18,170,5.5,7]],"cutoutGround":true,"note":"参考の顔内側を覆い、人物の外側の水色・黄色の地を白に置換した。"} 入力は構図・明暗だけに使う。'
+params:
+  transparent_background: true
+source_refs: []
+notes: "生成出力760×2068pxからsharpのLanczos3で278×758pxへ縮小し、枠の縦横比と350dpi必要画素に合わせた。ツールの透過背景生成を使用し、白地からの手動切り抜きは行っていない。切り抜き人物はアルファ外周の余白をtrim(threshold 5)で詰め、contain・下端揃え・透明余白で全身を収めた。イラストは余白を維持してcontain。PNGのアルファを保持。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

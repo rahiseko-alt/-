@@ -5,7 +5,7 @@
   解析: references/nagoya-iryo-hisho-it/brochure-1/analysis/page_016.yaml
 
   3 層構造（system/rules/page-layers.md）
-    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、大写真・授業写真 3 点はプレースホルダ。地・帯・面は単色かグラデーションなので Layer 2）
+    Layer 1 BASE VISUAL : 大写真・授業写真3点・蝶の透過イラスト（生成記録はbackgrounds）。地・帯・面はLayer 2
     Layer 2 STRUCTURE   : 外周の帯（地色）、角丸の白パネル、天から下がるタブ、アイコンの円と線画（SVG）、円バッジ、
                           大写真の枠（小口側の上角だけ角丸）、情報ボックスの淡色面（ノドまで）、ピル 2 種と紐飾り、箇条書きの点、
                           見出しのマーカー、授業カード（book/class-card）、ノンブルのハート
@@ -30,26 +30,12 @@
 {{!-- Layer 3: サブコピー（参考は小口側を軸にわずかに右上がり） --}}
 <p class="subcopy heading">ダミーテキストのサブコピーを文字数どおりに入れたダミー！</p>
 
-{{!-- Layer 2: アイコンの淡色の円と線画（蝶 2 匹。単純な線画なので SVG） --}}
+{{!-- Layer 2の淡色円にLayer 1の蝶2匹の透過イラストを重ねる --}}
 <svg class="icon" viewBox="0 0 20 20" aria-hidden="true">
   <circle class="icon__disc" cx="10" cy="10" r="9.9"/>
-  <g class="icon__fly icon__fly--a" transform="translate(12.7 7.0) rotate(-18) scale(1.15)">
-    <path class="icon__wing" d="M0 0 C-1.2 -2.8 -3.9 -3.4 -3.9 -1.6 C-3.9 -0.4 -2.2 0.2 0 0 Z"/>
-    <path class="icon__wing" d="M0 0 C1.2 -2.8 3.9 -3.4 3.9 -1.6 C3.9 -0.4 2.2 0.2 0 0 Z"/>
-    <path class="icon__wing" d="M0 0 C-2.2 0.2 -3.6 1.4 -3 2.6 C-2.4 3.6 -0.8 2.4 0 0 Z"/>
-    <path class="icon__wing" d="M0 0 C2.2 0.2 3.6 1.4 3 2.6 C2.4 3.6 0.8 2.4 0 0 Z"/>
-    <path class="icon__line" d="M0 -0.6 L0 1.6 M0 -0.6 L-0.7 -2.6 M0 -0.6 L0.7 -2.6"/>
-    <circle class="icon__dot" cx="-2.6" cy="-1.6" r="0.28"/><circle class="icon__dot" cx="2.6" cy="-1.6" r="0.28"/>
-    <circle class="icon__dot" cx="-2" cy="1.8" r="0.25"/><circle class="icon__dot" cx="2" cy="1.8" r="0.25"/>
-  </g>
-  <g class="icon__fly icon__fly--b" transform="translate(7.4 13.9) rotate(-14) scale(0.72)">
-    <path class="icon__wing" d="M0 0 C-1.2 -2.8 -3.9 -3.4 -3.9 -1.6 C-3.9 -0.4 -2.2 0.2 0 0 Z"/>
-    <path class="icon__wing" d="M0 0 C1.2 -2.8 3.9 -3.4 3.9 -1.6 C3.9 -0.4 2.2 0.2 0 0 Z"/>
-    <path class="icon__wing" d="M0 0 C-2.2 0.2 -3.6 1.4 -3 2.6 C-2.4 3.6 -0.8 2.4 0 0 Z"/>
-    <path class="icon__wing" d="M0 0 C2.2 0.2 3.6 1.4 3 2.6 C2.4 3.6 0.8 2.4 0 0 Z"/>
-    <path class="icon__line" d="M0 -0.6 L0 1.6 M0 -0.6 L-0.7 -2.6 M0 -0.6 L0.7 -2.6"/>
-    <circle class="icon__dot" cx="-2.6" cy="-1.6" r="0.3"/><circle class="icon__dot" cx="2.6" cy="-1.6" r="0.3"/>
-  </g>
+  <image href="{{asset 'books/replica/b-course/backgrounds/page_001-butterflies.png'}}" x="0" y="0" width="20" height="20"/>
+
+
 </svg>
 
 {{!-- Layer 3: コース名（参考は太い丸ゴシック。Noto Sans JP で近似） --}}
@@ -60,8 +46,8 @@
   <p class="badge__text heading">ダミーの文字・<br>バッジの要約を<br>ここに入れる<br>ダミーテキスト文<br>行長そろえる</p>
 </div>
 
-{{!-- Layer 1（写真待ち）+ Layer 2: 大写真の枠（ノド側・塗り足しまで裁ち落とし。小口側の上角だけ角丸） --}}
-<div class="hero">{{> photo-frame}}</div>
+{{!-- Layer 1（生成素材）+ Layer 2: 大写真の枠（ノド側・塗り足しまで裁ち落とし。小口側の上角だけ角丸） --}}
+<div class="hero">{{> photo-frame src="books/replica/b-course/backgrounds/page_001-hero.jpg"}}</div>
 
 {{!-- Layer 2: 情報ボックスの淡色面（写真の下辺に接してノドまで） --}}
 <div class="info" aria-hidden="true"></div>
@@ -85,11 +71,11 @@
 <div class="marker" aria-hidden="true"></div>
 <h2 class="section-head">ここにはダミーの<span class="section-head__em">強調</span></h2>
 
-{{!-- Layer 1（写真待ち）+ Layer 2 + 3: 授業カード 3 枚（各 2 段） --}}
+{{!-- Layer 1（生成素材）+ Layer 2 + 3: 授業カード 3 枚（各 2 段） --}}
 <div class="class-row">
-  {{> book/class-card title="授業名ダミー" sub="小見出しダミー" body="ここにダミーテキストが入ります。授業の内容を説明する本文で、文字数と行数を参考ページにそろえています。実際の文章は自社の正本資料から作成して差し替えます。" span=2}}
-  {{> book/class-card title="ダミー名" sub="小見出しのダミー文字" body="ここはダミーテキストです。授業の目的と学ぶ内容をここに書きます。文章の長さは参考ページの本文とおおよそ同じくらいにして、行数も合わせてあります。" span=2}}
-  {{> book/class-card title="授業名のダミー" sub="小見出しダミー文字" body="ダミーテキストです。この授業で身につく力をここに短く書いておきます。文字数と行数を参考ページにそろえています。" span=2}}
+  {{> book/class-card src="books/replica/b-course/backgrounds/page_001-class-1.jpg" title="授業名ダミー" sub="小見出しダミー" body="ここにダミーテキストが入ります。授業の内容を説明する本文で、文字数と行数を参考ページにそろえています。実際の文章は自社の正本資料から作成して差し替えます。" span=2}}
+  {{> book/class-card src="books/replica/b-course/backgrounds/page_001-class-2.jpg" title="ダミー名" sub="小見出しのダミー文字" body="ここはダミーテキストです。授業の目的と学ぶ内容をここに書きます。文章の長さは参考ページの本文とおおよそ同じくらいにして、行数も合わせてあります。" span=2}}
+  {{> book/class-card src="books/replica/b-course/backgrounds/page_001-class-3.jpg" title="授業名のダミー" sub="小見出しダミー文字" body="ダミーテキストです。この授業で身につく力をここに短く書いておきます。文字数と行数を参考ページにそろえています。" span=2}}
 </div>
 
 {{!-- Layer 2 + 3: ノンブル（白い円＋点線のリング＋ハートの中に数字。地の小口側） --}}

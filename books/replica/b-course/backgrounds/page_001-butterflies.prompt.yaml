@@ -1,0 +1,29 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Square illustration, 1:1, on a plain pure white background (#ffffff) for cut-out, with no circle, no frame and no shadow.
+  COMPOSITION: two small hand-drawn doodle butterflies in a cute, simple picture-book style. A larger butterfly in the upper right occupies about 45-82% of the width and 12-58% of the height, tilted slightly to the left, with two curled antennae; its wings are filled flat lemon yellow (#f3e66c) with a few tiny dark dots. A smaller butterfly in the lower left occupies about 21-53% of the width and 58-86% of the height, tilted slightly, with pale lilac-pink wings (#d4abd0) and tiny dots.
+  LINE: wobbly dark olive-brown outline (#4b4a2c), about 2% of the image width, slightly uneven like a felt-tip pen; flat fills with a faint crayon-like unevenness, no gradients, no 3D shading.
+  Keep at least 10% empty margin on every side; nothing else in the image.
+
+  The supplied reference has deliberately masked facial features and printed content. Use it only for layout, poses, colour and illumination. Invent distinct fictional people. Reconstruct blanked patches naturally; never reproduce the original people or branding. Match the exact requested aspect ratio. Extend any blank white bleed at the right naturally.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, character mascot, face on butterflies, circle background, frame, border, shadow, gradient, photorealistic
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, character mascot, face on butterflies, circle background, frame, border, shadow, gradient, photorealistic
+seed: null
+size: 273x273
+created: 2026-10-08T13:33:33.062Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-1/page_016.jpg
+    usage: style
+    crop_mm:
+      - 16.8
+      - 17.5
+      - 19.8
+      - 19.8
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-1/prep/page_016-l.yaml
+    note: ref:prep → gen:inputsの切り出しに加工。参考の淡黄の円の地をRGB閾値で白に置換し、蝶の線と濃い黄・紫の塗りだけ残した。 入力は構図・明暗だけに使う。
+params:
+  transparent_background: true
+source_refs: []
+notes: "生成出力1254×1254pxからsharpのLanczos3で273×273pxへ縮小・中央トリミングし、枠の縦横比と350dpi必要画素に合わせた。ツールの透過背景生成を使用し、白地からの手動切り抜きは行っていない。PNGのアルファを保持。 モデル名・seedはツールから未提供。原作品の図柄は流用せず、構図・色調を参考にした独自の汎用素材。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"

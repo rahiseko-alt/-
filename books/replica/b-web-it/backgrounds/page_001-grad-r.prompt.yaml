@@ -1,0 +1,31 @@
+tool: image_gen.imagegen
+model: null
+prompt: |-
+  Square photo, aspect ratio 1:1, eye-level three-quarter view of a young professional working at a desk against a plain white wall.
+  Composition: the subject sits left of centre (between about 10% and 75% of the width) in a black mesh office chair whose backrest shows along the left edge; head in the upper-centre (top of the hair about 6% below the top edge, face between about 30% and 52% of the width), turned slightly to the right; both hands on a black keyboard and mouse on a light wooden desk in the lower-right quarter; the edge of a black PC tower runs along the right edge from about 30% to 80% of the height. The upper right is a calm, plain white wall.
+  Subject: a young adult woman (early 20s) with dark hair tied back and straight bangs, wearing a plain black polo shirt, slight smile, looking at an unseen screen to the right; a generic face that does not resemble any real person.
+  Lighting: bright, soft, even office light, high-key white wall, mild shadows.
+  Palette: white wall #f6f5f1, black polo #1d161e, chair and tower near-black #0e090d, light wood desk #ccb097, warm skin #c3a094.
+  Style: natural editorial workplace photograph, 35mm lens, f/4, realistic, sRGB.
+
+  Use the supplied masked reference only for composition of spatial arrangement, poses, light and colour. Invent distinct fictional people and original generic objects. Do not copy the identities, brands, school-specific features or exact original artwork. Reconstruct blanked patches naturally. Match the exact requested aspect ratio and extend any white bleed strips with the surrounding scene.
+  Exclude: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo on PC or chair, embroidered logo on polo shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption, readable screen text, keyboard legends, brand, brand logo on PC or chair, embroidered logo on polo shirt, signage, poster, book spines, name tag, lanyard, celebrity, real person likeness, extra fingers, distorted hands, frame, border
+seed: null
+size: 462x462
+created: 2026-10-08T13:43:52.674Z
+author: codex
+reference_inputs:
+  - path: references/nagoya-iryo-hisho-it/brochure-web-it/page_003.jpg
+    usage: composition
+    crop_mm:
+      - 110.1
+      - 245.5
+      - 33.1
+      - 33.9
+    reference_prep: references/nagoya-iryo-hisho-it/brochure-web-it/prep/page_003-l.yaml
+    note: 'ref:prep → gen:inputsの切り出しに加工。参考の顔内側を肌色で完全に覆った。 実施した入力マスク: {"mm":[[120,250.5,7.5,9]],"note":"参考の顔内側を肌色で完全に覆った。"} 入力は構図・明暗だけに使う。'
+params:
+  transparent_background: false
+source_refs: []
+notes: "生成出力1254×1254pxからsharpのLanczos3で462×462pxへ縮小し、枠の縦横比と350dpi必要画素に合わせた。中央トリミング、sRGB JPEG、quality 95・4:4:4で保存。 モデル名・seedはツールから未提供。Phase 5の構成検証に限る架空の人物で、自校の学生・教員の写真としては使用しない。 生成画像を拡大して文字・ロゴの残存を確認。採用理由: 注文書の人物配置・色調・明暗に沿い、参考固有の文字やロゴを含まない。"
