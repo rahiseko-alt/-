@@ -1,0 +1,23 @@
+# kokusai-igaku-gijutsu / admissions / page_006（見開き p.6〜7。手の写り込み・ぶれあり）
+# 寸法は各片ページの幅（W）・高さ（H）に対する %。判型の実寸は不明
+# 文章・固有名詞・日付は書き写さない
+
+grid: "page_007 と同じ見開き（左 p.6 = 入試制度の説明と手順、右 p.7 = エントリーシートのフォーム）。詳細は page_007.yaml"
+margins: "page_007 と同じ。左ページの小口側が画像の端で切れている"
+gutter: null
+photo_ratios: "フォームの写真貼付欄（縦長、幅:高さ ≒ 3:4）"
+heading_hierarchy: "page_007 と同じ"
+colors: "スミ＋グレー（見出し帯）。白地"
+rules: "page_007 と同じ"
+cards: null
+density: "中〜高"
+page_type: message
+eye_flow: "page_007 と同じ"
+background: "白地"
+image_crop: null
+rhythm: "page_007 と同じ見開きの別カット"
+notes: |
+  - 向き: 反時計回りに 90° 回転した状態（ページの上が画像の左）。時計回りに 90° 回転して見る
+  - 左ページ下半分と右ページ左下を手が覆い、ぶれている。左ページの小口側も切れている
+  - 解析・比較には同じ見開きの鮮明版 page_007 を使う。Phase 5 の候補外
+  - Layer の切り分けは page_007 と同じ
