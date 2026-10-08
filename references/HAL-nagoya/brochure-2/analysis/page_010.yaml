@@ -22,7 +22,7 @@ heading_hierarchy:
   - level: "特長 01〜03"
     size: "番号 ≈0.025H ＋ 本文 ≈0.017H × 2 行"
     weight: "800、白、黒の半透明帯"
-  - level: "英字見出し（TOP RUNNER 系）"
+  - level: "英字見出し（業界人インタビュー帯）"
     size: "≈0.025H ＋ 和文サブ"
     weight: "900 コンデンス、白、下に左へ伸びる細罫"
   - level: "インタビュー見出し"

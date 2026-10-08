@@ -18,7 +18,7 @@ heading_hierarchy:
     size: "≈0.07H × 1 行 ＋ 年限"
     weight: "900 斜体ゴシック、白"
   - level: "ページ見出し（右）"
-    size: "≈0.02H、斜体の欧文＋和文（（学部名）TOPICS）"
+    size: "≈0.02H、斜体の欧文＋和文（（学部名）＋英字 1 語）"
     weight: "800、色文字"
   - level: "記事帯見出し"
     size: "≈0.016H"
