@@ -6,7 +6,7 @@ id: replica/a-brochure
 title: "完コピ検証 A 学科一覧"
 # kind: brochure | admissions | flyer | poster | guide | event | other
 kind: brochure
-description: "Phase 5 完コピ検証: 学部・学科・専攻のインデックス表（見開きの左ページ）の構造を再現する。文字はすべてダミー"
+description: "Phase 5 完コピ検証: 学科一覧の表組み（見開きの左ページ）の構造を再現する。文字はすべてダミー"
 format:
   # size: A3 | A4 | A5 | B4 | B5（JIS B 列）| custom（custom は width_mm / height_mm を追加）
   size: custom

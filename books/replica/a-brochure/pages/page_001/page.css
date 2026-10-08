@@ -1,5 +1,5 @@
 /*
- * page_001 学科一覧（インデックス表）— Phase 5 完コピ検証（compose が @scope でこのページだけに限定する）
+ * page_001 学科一覧表 — Phase 5 完コピ検証（compose が @scope でこのページだけに限定する）
  * - 寸法は mm、文字サイズは pt。位置は参考の補正画像（1960×2000px、1mm = 6.73px）からの実測
  * - 版面: 左 = 小口 24mm（var(--margin-left)）、右 = ノド 3mm（var(--margin-right)）。表は版面の左右いっぱい
  * - 表の列幅は参考が 12 段グリッドに乗っていないため、表専用の grid-template-columns（mm）で持つ
@@ -201,7 +201,7 @@
   color: var(--rep-ink-soft);
 }
 
-/* ---- Layer 2 + 3: インデックス表 ---- */
+/* ---- Layer 2 + 3: 学科一覧表 ---- */
 .rep-table {
   position: absolute;
   top: 92.4mm;
@@ -375,6 +375,12 @@
   line-height: 1.2;
   text-align: left;
   color: var(--dept-ink);
+}
+
+/* 6mm の細いセル（学部 3・4 の 3 段）は上の罫線に文字がかからないよう 0.3mm 下げる */
+.rep-dept--d3 .rep-cell,
+.rep-dept--d4 .rep-cell {
+  padding-bottom: 2mm;
 }
 
 .rep-cell--y1 { grid-column: 4; background: var(--dept-y1); }
