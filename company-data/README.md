@@ -8,7 +8,8 @@ AIビジネス専門学校の情報（学校名・住所・学科・教員・実
 
 ## 現在の状態
 
-学校名（`facts/school.yaml` の `name`）以外は、すべて `"TODO: ..."` のプレースホルダです。
+学校の基本情報（`facts/school.yaml`）・学科（`facts/courses.yaml`）・入学事務局（`facts/contacts.yaml`）・募集要項の内容（`facts/admissions.yaml`。2027 年度 4 月入学・日本人向け）は、学校の資料（募集要項 V4・願書類。2026-10-08 記入）にもとづいて記入済みです。
+それ以外（教員・実績・共通コピー・写真・ロゴ、学科の紹介文など）と、資料に書かれていなかった項目は `"TODO: ..."` のプレースホルダです。
 ブランドカラーは描画確認用の仮の値（`status: provisional`）です。
 **推測や Web 検索で埋めないでください。** 学校から受け取った資料にもとづいて記入します。
 
@@ -52,6 +53,7 @@ company-data/
 | `facts/teachers.yaml` | `teachers[]`: `id`, `name`（必須）, `name_kana`, `title`, `course_ids[]`, `profile`, `photo` |
 | `facts/results.yaml` | `metrics[]`: `id`, `label`, `value`（必須）, `unit`, `as_of`, `source`, `note` ／ `employers[]`: `name`, `note` ／ `certifications[]`: `name`, `count`, `as_of` |
 | `facts/contacts.yaml` | `contacts[]`: `id`, `label`（必須）, `tel`, `email`, `url`, `hours`, `note` ／ `sns[]`: `service`, `url` |
+| `facts/admissions.yaml`（自由形式） | `as_of`, `source`, `audience`, `departments[]`（`course_id`・課程・コース・昼夜・学級数）, `policies{admission, curriculum, diploma}`, `eligibility{lead, conditions[]}`, `exam_notes[]`, `exam_types[]`（`id`・`name`・`formal_name`・日程・選考方法）, `documents[]`, `document_notes[]`, `withdrawal_refund`, `exam_fee`, `payment_account`, `payment_notes[]`, `tuition{entrance_fee, years[], grand_total, deadlines[], notes[]}`, `important_notes[]`, `ao_entry_notes[]` |
 | `brand/colors/colors.yaml` | `colors{primary, secondary, accent, text, muted, background, surface}`（すべて必須、16 進）, `status`（`provisional` / `final`） |
 | `brand/fonts/fonts.yaml` | `families{heading, body, serif, number}`（CSS の font-family） |
 | `brand/logo/logo.yaml` | `logos[]`: `id`, `file`（必須）, `variant`, `note` |

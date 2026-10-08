@@ -3,16 +3,16 @@
 # - id は英小文字・数字・ハイフン（kebab-case）。一度 BOOK から参照したら変更しない
 # - years / capacity は数値で記入する（未確定の間は "TODO: ..." 文字列）
 # - photo を書く場合は company-data/photos/photos.yaml に存在する写真 ID を指定する
-# - 下の course-todo は記入例を兼ねたプレースホルダ。実際の学科を記入したら削除する
 # 書き方: company-data/README.md ／ ルール: system/rules/company-data.md
 
 courses:
-  - id: course-todo
-    name: "TODO: 学科名を記入"
+  # 出典（2026-10-08 記入）: 募集要項 V4「募集学科・入学定員」。課程・コース・昼夜・学級数は facts/admissions.yaml の departments
+  - id: international-business-ai
+    name: 国際ビジネスAI科
     name_en: "TODO: 学科名の英語表記を記入（なければ行ごと削除）"
-    years: "TODO: 修業年限を数値で記入"
-    capacity: "TODO: 定員を数値で記入（公表しない場合は行ごと削除）"
-    description: "TODO: 学科の紹介文を記入"
+    years: 2
+    capacity: 59
+    description: "TODO: 学科の紹介文を記入（募集要項 V4 に紹介文はない。教育方針は facts/admissions.yaml の policies）"
     tags:
       - "TODO: 分類タグを記入（なければ tags ごと削除）"
     curriculum:
