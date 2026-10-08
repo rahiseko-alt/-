@@ -140,10 +140,37 @@ describe('validate: layer1-orders.yaml', () => {
     expect(v.out).toContain(`${bg}/page_001-person.png: 切り抜き（cutout）なのに透明部分がありません`);
     expect(v.out).not.toContain('page_001-top.prompt.yaml: negative_prompt');
 
+    // アルファチャンネルがあっても全面不透明な切り抜きは警告する
+    const opaqueRgba = await sharp({ create: { width: 413, height: 413, channels: 4, background: { ...RED, alpha: 1 } } }).png().toBuffer();
+    writeFile(root, `${bg}/page_001-person.png`, opaqueRgba);
+    expect((await sharp(opaqueRgba).metadata()).hasAlpha).toBe(true);
+    expect((await run(validateCommand, ['--root', root])).out).toContain('page_001-person.png: 切り抜き（cutout）なのに透明部分がありません');
+
     // 透過した切り抜きは警告しない
     writeFile(root, `${bg}/page_001-person.png`, await solid(413, 413, true));
     const v2 = await run(validateCommand, ['--root', root]);
     expect(v2.out).not.toContain('切り抜き（cutout）なのに');
+  });
+
+  it('縦横比のずれは縦長・横長で同じ尺度。形式の誤った記録の除外語は調べない。LFS 未取得は警告', async () => {
+    const root = copyFixture();
+    await writeReference(root);
+    const sq = (id: string) => item(id, '[0, 0, 30, 30]').replace('size_mm: [50, 40]', 'size_mm: [30, 30]');
+    writeFile(root, ORDERS, orders(sq('page_001-wide') + sq('page_001-tall') + sq('page_001-lfs')));
+    const bg = 'books/smoke/backgrounds';
+    const png = (w: number, h: number) => sharp({ create: { width: w, height: h, channels: 3, background: RED } }).png().toBuffer();
+    writeFile(root, `${bg}/page_001-wide.png`, await png(600, 413));
+    writeFile(root, `${bg}/page_001-tall.png`, await png(413, 600));
+    writeFile(root, `${bg}/page_001-tall.prompt.yaml`, `prompt: |\n  tool がない記録\nnegative_prompt: "${NEGATIVE}"\n`);
+    writeFile(root, `${bg}/page_001-lfs.png`, 'version https://git-lfs.github.com/spec/v1\noid sha256:0000\nsize 123\n');
+
+    const v = await run(validateCommand, ['--root', root]);
+    expect(v.out).toContain(`${bg}/page_001-wide.png: 縦横比が枠と違います（枠 30×30mm、画像 600×413px、横に 45.3% 長い）`);
+    expect(v.out).toContain(`${bg}/page_001-tall.png: 縦横比が枠と違います（枠 30×30mm、画像 413×600px、縦に 45.3% 長い）`);
+    expect(v.out).toContain('page_001-tall.prompt.yaml の形式が正しくありません');
+    expect(v.out).not.toContain('page_001-tall.prompt.yaml: negative_prompt に');
+    expect(v.out).toContain(`${bg}/page_001-lfs.png: Git LFS の実体が未取得です（git lfs pull）`);
+    expect(v.out).not.toContain('page_001-lfs.png: 画像を読めません');
   });
 
   it('形式の誤り・BOOK の不一致・参照先の欠落はエラー', async () => {

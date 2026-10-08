@@ -494,6 +494,22 @@ async function checkBackgrounds(root: string, bookIds: string[], s: CheckSection
   if (orders > 0) s.info.push(`Layer 1 の生成指示 ${orders} 件`);
 }
 
+/** Git LFS のポインタ（実体が未取得）のファイルか */
+function isLfsPointer(file: string): boolean {
+  try {
+    const fd = fs.openSync(file, 'r');
+    try {
+      const buf = Buffer.alloc(64);
+      const n = fs.readSync(fd, buf, 0, buf.length, 0);
+      return buf.subarray(0, n).toString('utf8').startsWith('version https://git-lfs.github.com/spec/');
+    } finally {
+      fs.closeSync(fd);
+    }
+  } catch {
+    return false;
+  }
+}
+
 /** 生成画像と生成指示の縦横比の差の許容（object-fit で切れる・伸びるのが目立たない範囲） */
 const LAYER1_RATIO_TOLERANCE = 0.02;
 
@@ -502,16 +518,22 @@ async function checkLayer1Image(root: string, file: string, item: Layer1OrderIte
   const imgRel = relFromRoot(root, file);
   let width: number;
   let height: number;
-  let hasAlpha: boolean;
+  let transparent: boolean;
   try {
     const meta = await sharp(file).metadata();
     // EXIF の向きで縦横が入れ替わるもの（5〜8）は、表示される向きで比べる
     const swap = (meta.orientation ?? 1) >= 5;
     width = (swap ? meta.height : meta.width) ?? 0;
     height = (swap ? meta.width : meta.height) ?? 0;
-    hasAlpha = meta.hasAlpha ?? false;
+    // アルファチャンネルがあっても全面不透明なら透明部分はない（切り抜きのときだけ画素を調べる）
+    transparent = (meta.hasAlpha ?? false) && (item.kind !== 'cutout' || !(await sharp(file).stats()).isOpaque);
   } catch (err) {
-    push(s.errors, `${imgRel}: 画像を読めません（${errorMessage(err).split('\n')[0]}）`);
+    if (isLfsPointer(file)) {
+      // 画像がないのではなく、Git LFS の実体を取得していないだけ（render も表示できない）
+      push(s.warnings, `${imgRel}: Git LFS の実体が未取得です（git lfs pull）。画像の大きさ・透過は調べていません`);
+    } else {
+      push(s.errors, `${imgRel}: 画像を読めません（${errorMessage(err).split('\n')[0]}）`);
+    }
     return;
   }
   const [wMm, hMm] = item.size_mm;
@@ -521,14 +543,16 @@ async function checkLayer1Image(root: string, file: string, item: Layer1OrderIte
       push(s.warnings, `${imgRel}: 解像度が足りません（${wMm}×${hMm}mm を ${dpi}dpi で出すには ${need[0]}×${need[1]}px 必要、画像は ${width}×${height}px）`);
     }
   }
-  const diff = width / height / (wMm / hMm) - 1;
-  if (Math.abs(diff) > LAYER1_RATIO_TOLERANCE) {
+  // 縦長・横長のずれを同じ尺度で比べる（枠と同じ幅にそろえたとき、高さが何 % 違うか。逆も同じ）
+  const ratio = width / height / (wMm / hMm);
+  const deviation = Math.max(ratio, 1 / ratio) - 1;
+  if (deviation > LAYER1_RATIO_TOLERANCE) {
     push(
       s.warnings,
-      `${imgRel}: 縦横比が枠と違います（枠 ${wMm}×${hMm}mm、画像 ${width}×${height}px、${diff > 0 ? '横' : '縦'}に ${Math.round(Math.abs(diff) * 1000) / 10}% 長い）。枠に合わせて切れるか伸びます`,
+      `${imgRel}: 縦横比が枠と違います（枠 ${wMm}×${hMm}mm、画像 ${width}×${height}px、${ratio > 1 ? '横' : '縦'}に ${Math.round(deviation * 1000) / 10}% 長い）。枠に合わせて切れるか伸びます`,
     );
   }
-  if (item.kind === 'cutout' && !hasAlpha) {
+  if (item.kind === 'cutout' && !transparent) {
     push(s.warnings, `${imgRel}: 切り抜き（cutout）なのに透明部分がありません。背景を透過した PNG か WebP で保存してください`);
   }
 }
@@ -569,11 +593,11 @@ async function checkLayer1Orders(root: string, bookId: string, dir: string, name
     for (const name of files) await checkLayer1Image(root, path.join(dir, name), item, dpi, s);
     const recordFile = path.join(dir, `${item.id}.prompt.yaml`);
     if (fs.existsSync(recordFile)) {
-      let negative = '';
+      let negative: string;
       try {
         negative = loadYamlWithSchema(recordFile, BackgroundPromptSchema, relFromRoot(root, recordFile)).negative_prompt ?? '';
       } catch {
-        // 形式の誤りは上でエラーにしている
+        continue; // 形式の誤りは上でエラーにしている（読めない記録の除外語は調べない）
       }
       const missing = REQUIRED_NEGATIVE_TERMS.filter((t) => !negative.toLowerCase().includes(t.toLowerCase()));
       if (missing.length > 0) {
