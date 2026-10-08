@@ -1,45 +1,243 @@
 {{!--
-  page_001「表紙」（雛形から 2026-10-08 に作成）
+  page_001「データページ（完コピ検証）」— Phase 5 完コピ検証
+
+  参考（レイアウト）: references/nagoya-iryo-hisho-it/brochure-2/prep/page_001-l.yaml（見開きの左ページを補正したもの）
+  解析: references/nagoya-iryo-hisho-it/brochure-2/analysis/page_001.yaml
 
   3 層構造（system/rules/page-layers.md）
-    Layer 1 BASE VISUAL : page.yaml の background（books/replica/b-data/backgrounds/page_001.png と同名の .prompt.yaml）
-    Layer 2 STRUCTURE   : 色面・枠・罫線・パネル（このファイルの要素 + page.css）。文章量で大きさが変わる枠は画像にしない
-    Layer 3 CONTENT     : 見出し・本文・数字・ページ番号。事実（学校名・数字・連絡先など）は必ず {{facts...}} で参照する
+    Layer 1 BASE VISUAL : なし（画像生成ツールがないため、円形写真 6 点・切り抜き人物 1 体はプレースホルダ。
+                          外周帯・方眼紙の地は単色と細い罫線なので Layer 2 の CSS で作る）
+    Layer 2 STRUCTURE   : 外周帯・方眼紙の地紙、角欠きパネル 2 枚、吊り下げ線と丸点、色面ラベル 4 枚、3 色の角括弧、キラキラ記号、
+                          地図の簡略シルエット（中立のプレースホルダ。参考の拠点の点は写さない）、雲形の吹き出し 6 個、
+                          ドットリーダー、区切り線、写真の円枠、ノンブルのハート
+    Layer 3 CONTENT     : すべてダミーテキスト（参考資料の文字・数値・校名・病院名・人名は書き写さない。数字は 0）。ノンブルは page.number
 
-  - 座標は .trim（仕上がり線の左上が原点、mm）。仕上がり線まで届く面は .bleed-top などで塗り足しまで伸ばす
-  - 厳格モード: 存在しないキーを参照するとエラー。任意項目は {{#if ...}} で囲む
-  - "TODO" を含む仮テキストが残っていると npm run render -- --release が失敗する（入稿前に置き換える）
-  - 確認: npm run dev → /preview/replica/b-data/page_001?guides=1
+  座標は .trim 基準の mm（実測値。page.css に集約）。色は page.css 冒頭の --rep-*（Phase 8 でブランドカラーへ置き換える）
 --}}
 
-{{!-- Layer 2: 上部の色面（上・左・右は塗り足しまで伸ばす） --}}
-<div class="band bleed-top bleed-left bleed-right" aria-hidden="true"></div>
+{{!-- Layer 2: 外周帯（塗り足しまで）と方眼紙の地紙（ノド側は見開きの右ページへ続くので塗り足しまで） --}}
+<div class="band bleed" aria-hidden="true"></div>
+<div class="paper" aria-hidden="true"></div>
 
-{{!-- Layer 3: 見出し（学校名は company-data の正本から） --}}
-<header class="head">
-  <p class="head__school">{{facts.school.name}}</p>
-  <h1 class="head__title">{{page.title}}</h1>
-</header>
+{{!-- Layer 2: 背面の図形（viewBox はページの mm 座標そのまま） --}}
+<svg class="backdrop" viewBox="0 0 210 297" aria-hidden="true">
+  <defs>
+    <linearGradient id="bd-bracket" gradientUnits="userSpaceOnUse" x1="0" y1="19.2" x2="0" y2="42.2">
+      <stop offset="0.24" class="stop-bracket-pink"/>
+      <stop offset="0.36" class="stop-bracket-blue"/>
+      <stop offset="0.62" class="stop-bracket-blue"/>
+      <stop offset="0.74" class="stop-bracket-green"/>
+    </linearGradient>
+    {{!-- 4 方向のキラキラ（中心 0,0・半径 1。use で拡大して置く） --}}
+    <path id="bd-spark" d="M0 -1 Q0.12 -0.12 1 0 Q0.12 0.12 0 1 Q-0.12 0.12 -1 0 Q-0.12 -0.12 0 -1 Z"/>
+  </defs>
 
-<div class="body">
-  {{!-- Layer 3: リード文（仮テキスト） --}}
-  <p class="lead">TODO: リード文を入力する</p>
+  {{!-- 見出しの下の淡いリボンの影 --}}
+  <path class="lead-ribbon" d="M62 26.9 C85 25.4 112 23.9 150 24.3"/>
 
-  {{!-- Layer 2 + 3: パネル（枠と色面は CSS、文字は HTML。文章量に合わせて枠が伸びる） --}}
-  <div class="cards">
-    <section class="card">
-      <h2 class="card__title">TODO: 見出しテキスト</h2>
-      <p class="card__text">TODO: 本文テキストを入力する。学校名・数字・連絡先などの事実は直接書かず、company-data の値を参照する。</p>
-    </section>
-    <section class="card">
-      <h2 class="card__title">TODO: 見出しテキスト</h2>
-      <p class="card__text">TODO: 本文テキストを入力する。</p>
-    </section>
-  </div>
+  {{!-- 3 色の角括弧（左・右） --}}
+  <path class="bracket" d="M41.5 20.5 H35.9 V40.9 H41.5"/>
+  <path class="bracket" d="M168.9 20.5 H175.6 V40.9 H168.9"/>
+
+  {{!-- キラキラ（見出し・大数字・輩出数） --}}
+  <g class="spark">
+    <use href="#bd-spark" transform="translate(64.5 21.8) scale(1.0 1.45)"/>
+    <use href="#bd-spark" transform="translate(66.1 23.7) scale(0.45 0.65)"/>
+    <use href="#bd-spark" transform="translate(143.9 20.9) scale(1.0 1.45)"/>
+    <use href="#bd-spark" transform="translate(142.2 22.6) scale(0.45 0.65)"/>
+  </g>
+  <g class="spark spark--rose">
+    <use href="#bd-spark" transform="translate(28.5 82.3) scale(1.3 2.0)"/>
+    <use href="#bd-spark" transform="translate(31.8 85.4) scale(0.6 0.9)"/>
+    <use href="#bd-spark" transform="translate(29.1 88.4) scale(0.8 1.2)"/>
+    <use href="#bd-spark" transform="translate(102.8 96.8) scale(1.3 2.0)"/>
+    <use href="#bd-spark" transform="translate(100.8 100.3) scale(0.6 0.9)"/>
+    <use href="#bd-spark" transform="translate(157.5 252.6) scale(1.1 1.7)"/>
+    <use href="#bd-spark" transform="translate(155.3 254.4) scale(0.4 0.6)"/>
+    <use href="#bd-spark" transform="translate(157.9 256.2) scale(0.4 0.6)"/>
+    <use href="#bd-spark" transform="translate(113.8 259.5) scale(0.9 1.4)"/>
+    <use href="#bd-spark" transform="translate(115.6 262.1) scale(0.4 0.6)"/>
+  </g>
+
+  {{!-- 角欠きパネル（上: 実績の数値と地図 / 下: ランキングと求人データ）。角は段状に欠く（a = b = 3.8mm、r = 1.3mm） --}}
+  <path class="panel panel--rose" d="M24.9 48 L188.3 48 A1.3 1.3 0 0 1 189.6 49.3 L189.6 50.5 A1.3 1.3 0 0 0 190.9 51.8 L192.1 51.8 A1.3 1.3 0 0 1 193.4 53.1 L193.4 124.3 A1.3 1.3 0 0 1 192.1 125.6 L190.9 125.6 A1.3 1.3 0 0 0 189.6 126.9 L189.6 128.1 A1.3 1.3 0 0 1 188.3 129.4 L24.9 129.4 A1.3 1.3 0 0 1 23.6 128.1 L23.6 126.9 A1.3 1.3 0 0 0 22.3 125.6 L21.1 125.6 A1.3 1.3 0 0 1 19.8 124.3 L19.8 53.1 A1.3 1.3 0 0 1 21.1 51.8 L22.3 51.8 A1.3 1.3 0 0 0 23.6 50.5 L23.6 49.3 A1.3 1.3 0 0 1 24.9 48 Z"/>
+  <path class="panel panel--green" d="M24.9 135.4 L188.3 135.4 A1.3 1.3 0 0 1 189.6 136.7 L189.6 137.9 A1.3 1.3 0 0 0 190.9 139.2 L192.1 139.2 A1.3 1.3 0 0 1 193.4 140.5 L193.4 271.8 A1.3 1.3 0 0 1 192.1 273.1 L190.9 273.1 A1.3 1.3 0 0 0 189.6 274.4 L189.6 275.6 A1.3 1.3 0 0 1 188.3 276.9 L24.9 276.9 A1.3 1.3 0 0 1 23.6 275.6 L23.6 274.4 A1.3 1.3 0 0 0 22.3 273.1 L21.1 273.1 A1.3 1.3 0 0 1 19.8 271.8 L19.8 140.5 A1.3 1.3 0 0 1 21.1 139.2 L22.3 139.2 A1.3 1.3 0 0 0 23.6 137.9 L23.6 136.7 A1.3 1.3 0 0 1 24.9 135.4 Z"/>
+
+  {{!-- 吊り下げ線と丸点（パネル上辺・下段のレールからラベルを吊る） --}}
+  <g class="hook hook--rose">
+    <path d="M26.5 48 V55.6 M104.5 48 V55.2"/>
+    <circle cx="26.5" cy="55.6" r="0.55"/><circle cx="104.5" cy="55.2" r="0.55"/>
+  </g>
+  <g class="hook hook--green">
+    <path d="M27.5 135.4 V142.9 M122.6 135.4 V142.5"/>
+    <circle cx="27.5" cy="142.9" r="0.55"/><circle cx="122.6" cy="142.5" r="0.55"/>
+  </g>
+  <path class="rail" d="M37.3 199.9 H188.6 M109.9 199.9 V268.8"/>
+  <g class="hook hook--orange">
+    <path d="M42 199.9 V207 M91 199.9 V207"/>
+    <circle cx="42" cy="207" r="0.55"/><circle cx="91" cy="207" r="0.55"/>
+  </g>
+  <g class="hook hook--rose">
+    <path d="M117.5 199.9 V207.2 M187.1 199.9 V207.6"/>
+    <circle cx="117.5" cy="207.2" r="0.55"/><circle cx="187.1" cy="207.6" r="0.55"/>
+  </g>
+
+  {{!-- 地図: 中立の簡略シルエット（プレースホルダ。参考の地図の輪郭・拠点の点はなぞらない） --}}
+  <g class="map">
+    <path d="M157 66.5 L159.3 60.5 L163.2 57.4 L166.4 59.6 L170.6 62.2 L176.2 63.4 L177.4 67.2 L172.6 69.6 L167.6 72.2 L163.4 71 L160.2 73 L157.2 72 Z"/>
+    <path d="M155.2 75.4 L159.4 74.6 L162.2 80.4 L162.2 86.4 L160.2 92.4 L158 97 L154.6 99.4 L149.8 100.2 L144.2 101.2 L139.2 103.2 L133.8 104 L128.2 104.2 L123.2 105.8 L120.4 104.2 L122.8 100.4 L128.2 98.2 L134 97 L139 94.2 L143 92 L146.2 89.6 L149.4 86 L152 81.8 L153.2 77.8 Z"/>
+    <path d="M129.4 106.4 L136.8 105.4 L140 108 L134.4 110.2 L128.6 109.2 Z"/>
+    <path d="M118.4 105.4 L123.8 104.6 L127 108.2 L126 113.8 L122.2 116.8 L118.4 114.4 L117.2 109.4 Z"/>
+    <path d="M115.4 96.4 L117.8 94.6 L119 97 L116.4 98.2 Z"/>
+  </g>
+
+  {{!-- 雲形の吹き出し: 輪郭（太い線）→ 塗り（線なし）の 2 回描きで、しっぽと本体の境目を消す --}}
+  <g class="cloud cloud--peach">
+    <g class="cloud__line">
+      <path d="M141.35 48.86 A5.93 5.93 0 0 1 149.63 50.68 A4.90 4.90 0 0 1 154.75 55.45 A4.13 4.13 0 0 1 154.75 61.35 A4.90 4.90 0 0 1 149.63 66.12 A5.93 5.93 0 0 1 141.35 67.94 A5.93 5.93 0 0 1 133.07 66.12 A4.90 4.90 0 0 1 127.95 61.35 A4.13 4.13 0 0 1 127.95 55.45 A4.90 4.90 0 0 1 133.07 50.68 A5.93 5.93 0 0 1 141.35 48.86 Z"/>
+      <path d="M144.6 67 L148.4 70.2 L148 66.2 Z"/>
+    </g>
+    <g class="cloud__fill">
+      <path d="M141.35 48.86 A5.93 5.93 0 0 1 149.63 50.68 A4.90 4.90 0 0 1 154.75 55.45 A4.13 4.13 0 0 1 154.75 61.35 A4.90 4.90 0 0 1 149.63 66.12 A5.93 5.93 0 0 1 141.35 67.94 A5.93 5.93 0 0 1 133.07 66.12 A4.90 4.90 0 0 1 127.95 61.35 A4.13 4.13 0 0 1 127.95 55.45 A4.90 4.90 0 0 1 133.07 50.68 A5.93 5.93 0 0 1 141.35 48.86 Z"/>
+      <path d="M144.6 67 L148.4 70.2 L148 66.2 Z"/>
+    </g>
+  </g>
+  <g class="cloud cloud--blue">
+    <g class="cloud__line">
+      <path d="M126.90 70.39 A4.72 4.72 0 0 1 133.46 71.97 A3.72 3.72 0 0 1 136.95 75.98 A3.30 3.30 0 0 1 135.73 80.53 A4.28 4.28 0 0 1 130.39 83.50 A4.88 4.88 0 0 1 123.41 83.50 A4.28 4.28 0 0 1 118.07 80.53 A3.30 3.30 0 0 1 116.85 75.98 A3.72 3.72 0 0 1 120.34 71.97 A4.72 4.72 0 0 1 126.90 70.39 Z"/>
+      <path d="M128.6 82.8 L131.8 85.8 L132 81.8 Z"/>
+    </g>
+    <g class="cloud__fill">
+      <path d="M126.90 70.39 A4.72 4.72 0 0 1 133.46 71.97 A3.72 3.72 0 0 1 136.95 75.98 A3.30 3.30 0 0 1 135.73 80.53 A4.28 4.28 0 0 1 130.39 83.50 A4.88 4.88 0 0 1 123.41 83.50 A4.28 4.28 0 0 1 118.07 80.53 A3.30 3.30 0 0 1 116.85 75.98 A3.72 3.72 0 0 1 120.34 71.97 A4.72 4.72 0 0 1 126.90 70.39 Z"/>
+      <path d="M128.6 82.8 L131.8 85.8 L132 81.8 Z"/>
+    </g>
+  </g>
+  <g class="cloud cloud--sky" transform="rotate(7 181.5 91.6)">
+    <g class="cloud__line">
+      <path d="M181.50 82.17 A5.60 5.60 0 0 1 189.35 83.67 A4.69 4.69 0 0 1 194.71 87.68 A3.77 3.77 0 0 1 195.88 92.94 A4.14 4.14 0 0 1 192.48 97.77 A5.22 5.22 0 0 1 185.59 100.65 A5.73 5.73 0 0 1 177.41 100.65 A5.22 5.22 0 0 1 170.52 97.77 A4.14 4.14 0 0 1 167.12 92.94 A3.77 3.77 0 0 1 168.29 87.68 A4.69 4.69 0 0 1 173.65 83.67 A5.60 5.60 0 0 1 181.50 82.17 Z"/>
+      <path d="M173.2 98.4 L174.4 103.2 L177.6 99.6 Z"/>
+    </g>
+    <g class="cloud__fill">
+      <path d="M181.50 82.17 A5.60 5.60 0 0 1 189.35 83.67 A4.69 4.69 0 0 1 194.71 87.68 A3.77 3.77 0 0 1 195.88 92.94 A4.14 4.14 0 0 1 192.48 97.77 A5.22 5.22 0 0 1 185.59 100.65 A5.73 5.73 0 0 1 177.41 100.65 A5.22 5.22 0 0 1 170.52 97.77 A4.14 4.14 0 0 1 167.12 92.94 A3.77 3.77 0 0 1 168.29 87.68 A4.69 4.69 0 0 1 173.65 83.67 A5.60 5.60 0 0 1 181.50 82.17 Z"/>
+      <path d="M173.2 98.4 L174.4 103.2 L177.6 99.6 Z"/>
+    </g>
+  </g>
+  <g class="cloud cloud--lavender">
+    <g class="cloud__line">
+      <path d="M145.25 108.79 A5.11 5.11 0 0 1 152.36 110.43 A3.93 3.93 0 0 1 156.15 114.58 A3.43 3.43 0 0 1 154.83 119.31 A4.60 4.60 0 0 1 149.03 122.39 A5.30 5.30 0 0 1 141.47 122.39 A4.60 4.60 0 0 1 135.67 119.31 A3.43 3.43 0 0 1 134.35 114.58 A3.93 3.93 0 0 1 138.14 110.43 A5.11 5.11 0 0 1 145.25 108.79 Z"/>
+      <path d="M138.8 110.6 L139.8 106.6 L142.4 109.6 Z"/>
+    </g>
+    <g class="cloud__fill">
+      <path d="M145.25 108.79 A5.11 5.11 0 0 1 152.36 110.43 A3.93 3.93 0 0 1 156.15 114.58 A3.43 3.43 0 0 1 154.83 119.31 A4.60 4.60 0 0 1 149.03 122.39 A5.30 5.30 0 0 1 141.47 122.39 A4.60 4.60 0 0 1 135.67 119.31 A3.43 3.43 0 0 1 134.35 114.58 A3.93 3.93 0 0 1 138.14 110.43 A5.11 5.11 0 0 1 145.25 108.79 Z"/>
+      <path d="M138.8 110.6 L139.8 106.6 L142.4 109.6 Z"/>
+    </g>
+  </g>
+  <g class="cloud cloud--pink" transform="rotate(4 171.4 111.7)">
+    <g class="cloud__line">
+      <path d="M171.40 104.48 A5.11 5.11 0 0 1 178.51 106.17 A4.00 4.00 0 0 1 182.29 110.45 A3.52 3.52 0 0 1 180.98 115.31 A4.63 4.63 0 0 1 175.18 118.48 A5.30 5.30 0 0 1 167.62 118.48 A4.63 4.63 0 0 1 161.82 115.31 A3.52 3.52 0 0 1 160.51 110.45 A4.00 4.00 0 0 1 164.29 106.17 A5.11 5.11 0 0 1 171.40 104.48 Z"/>
+      <path d="M165 106.6 L166.2 102.6 L168.6 105.4 Z"/>
+    </g>
+    <g class="cloud__fill">
+      <path d="M171.40 104.48 A5.11 5.11 0 0 1 178.51 106.17 A4.00 4.00 0 0 1 182.29 110.45 A3.52 3.52 0 0 1 180.98 115.31 A4.63 4.63 0 0 1 175.18 118.48 A5.30 5.30 0 0 1 167.62 118.48 A4.63 4.63 0 0 1 161.82 115.31 A3.52 3.52 0 0 1 160.51 110.45 A4.00 4.00 0 0 1 164.29 106.17 A5.11 5.11 0 0 1 171.40 104.48 Z"/>
+      <path d="M165 106.6 L166.2 102.6 L168.6 105.4 Z"/>
+    </g>
+  </g>
+  <g class="cloud cloud--white">
+    <g class="cloud__line">
+      <path d="M24.10 192.08 A4.64 4.64 0 0 1 30.63 193.17 A3.94 3.94 0 0 1 35.42 196.14 A3.10 3.10 0 0 1 37.17 200.20 A3.10 3.10 0 0 1 35.42 204.26 A3.94 3.94 0 0 1 30.64 207.23 A4.64 4.64 0 0 1 24.10 208.32 A4.64 4.64 0 0 1 17.57 207.23 A3.94 3.94 0 0 1 12.78 204.26 A3.10 3.10 0 0 1 11.03 200.20 A3.10 3.10 0 0 1 12.78 196.14 A3.94 3.94 0 0 1 17.56 193.17 A4.64 4.64 0 0 1 24.10 192.08 Z"/>
+      <path d="M19.6 207 L22.3 211.4 L23.6 207.4 Z"/>
+    </g>
+    <g class="cloud__fill">
+      <path d="M24.10 192.08 A4.64 4.64 0 0 1 30.63 193.17 A3.94 3.94 0 0 1 35.42 196.14 A3.10 3.10 0 0 1 37.17 200.20 A3.10 3.10 0 0 1 35.42 204.26 A3.94 3.94 0 0 1 30.64 207.23 A4.64 4.64 0 0 1 24.10 208.32 A4.64 4.64 0 0 1 17.57 207.23 A3.94 3.94 0 0 1 12.78 204.26 A3.10 3.10 0 0 1 11.03 200.20 A3.10 3.10 0 0 1 12.78 196.14 A3.94 3.94 0 0 1 17.56 193.17 A4.64 4.64 0 0 1 24.10 192.08 Z"/>
+      <path d="M19.6 207 L22.3 211.4 L23.6 207.4 Z"/>
+    </g>
+  </g>
+
+  {{!-- 切り抜き人物のプレースホルダ（灰色のシルエット。Layer 1 の自社写真待ち） --}}
+  <g class="silhouette">
+    <circle cx="27.6" cy="216.4" r="3.9"/>
+    <path d="M22.2 225.6 Q22.2 221.6 26 221.6 H29.6 Q33.4 221.6 33.4 225.6 L33.6 245 L32.8 276.4 Q32.7 278.6 30.6 278.6 H25 Q22.9 278.6 22.8 276.4 L22 245 Z"/>
+    <path d="M32.2 226.8 L36.4 217.6 Q37 216.4 37.9 217 Q38.6 217.6 38.2 218.7 L34.6 228.2 Z"/>
+  </g>
+
+  {{!-- ノンブルのハート（白い点線の円の上） --}}
+  <circle class="folio-ring" cx="16.6" cy="284.6" r="2.75"/>
+  <path class="folio-heart" d="M16.6 286.6 C14.3 285 13.9 283.9 14.2 283.1 C14.6 282.1 16 282 16.6 283.1 C17.2 282 18.6 282.1 19 283.1 C19.3 283.9 18.9 285 16.6 286.6 Z"/>
+</svg>
+
+{{!-- Layer 3: 見出し（小リード＋3 色の括弧の中の 2 色の大見出し） --}}
+<p class="lead-line">ここにダミーのリード文、見出しの上に一行入る</p>
+<h1 class="headline"><span class="hl-navy">大見</span><span class="hl-small">出し</span><span class="hl-cream">ダミー</span><span class="hl-small">の</span><span class="hl-cream">文字</span></h1>
+
+{{!-- 上のパネル: 色面ラベル（2 行）→ 大数字 → 補足 → 注記 --}}
+<div class="label label--pink">
+  <p class="label-pink__l1">ダミーテキストダミーテキストの</p>
+  <p class="label-pink__l2"><span class="ol-cream">0000年見出し</span><span class="ol-cream label-pink__small">は</span></p>
+</div>
+<p class="hero"><span class="hero__int">00</span><span class="hero__dec">.0%</span></p>
+<p class="hero-sub">(ダミー項目 000名、ダミー項目 000名)<span class="hero-sub__mark">※</span></p>
+<div class="notes">
+  <p>※ダミーの注記です。ここに補足の説明が一行入ります。</p>
+  <p class="notes__indent">ダミーの注記の二行目です。年月や条件などの補足を書きます。</p>
+  <p class="notes__indent">また、ダミーの注記の三行目です。条件の説明を続けます。</p>
+  <p class="notes__group">※ダミーの注記です。別の条件を書きます。</p>
+  <p class="notes__indent">ダミーの注記の続きです。補足をここに書きます。</p>
 </div>
 
-{{!-- Layer 3: ノンブル（ページ番号は book.yaml の pages の並び順から自動で決まる） --}}
-<footer class="page-folio" data-side="{{page.side}}">
-  <span class="page-folio__number num">{{page.number}}</span>
-  <span class="page-folio__school">{{facts.school.name}}</span>
-</footer>
+{{!-- 地図の周りの吹き出しの文字（雲の形は上の SVG） --}}
+<p class="cloud-text cloud-text--peach">ダミーの文字<br>テキストダミー<br>ダミーのテキストです!!</p>
+<p class="cloud-text cloud-text--blue">ダミーのテキスト<br>ダミー文字!</p>
+<p class="cloud-text cloud-text--sky">ダミー<br>ダミーテキストが入ります<br>ダミーの文字<br>ダミーのテキスト!</p>
+<p class="cloud-text cloud-text--lavender">ダミーの<br>テキストです!</p>
+<p class="cloud-text cloud-text--pink">ダミー00文字<br>ダミー!</p>
+
+{{!-- 下のパネル（上段）: 色面ラベル → ドットリーダー付きのランキング 6 行 → 注記 --}}
+<div class="label label--green">
+  <p class="label-green__text"><span class="ol-olive">見出し語・語句</span><span class="label-green__small">への</span><span class="ol-olive">見出</span><span class="label-green__small">にも</span><span class="ol-olive">語句!!</span></p>
+</div>
+<ol class="rank">
+  <li class="rank__row"><span class="rank__name">ダミーテキストダミー項目<small>(地域名)</small></span><span class="rank__leader"></span><span class="rank__num">00<small>人</small></span></li>
+  <li class="rank__row"><span class="rank__name">ダミー項目テキス<small>(地域名)</small></span><span class="rank__leader"></span><span class="rank__num">00<small>人</small></span></li>
+  <li class="rank__row"><span class="rank__name">ダミーの項目<small>(地域名)</small></span><span class="rank__leader"></span><span class="rank__num">00<small>人</small></span></li>
+  <li class="rank__row"><span class="rank__name">ダミー項目テキ<small>(地域名)</small></span><span class="rank__leader"></span><span class="rank__num">00<small>人</small></span></li>
+  <li class="rank__row"><span class="rank__name">ダミーの項目<small>(地域名)</small></span><span class="rank__leader"></span><span class="rank__num">0<small>人</small></span></li>
+  <li class="rank__row"><span class="rank__name">ダミー項目テキス<small>(地域名)</small></span><span class="rank__leader"></span><span class="rank__num">0<small>人</small></span></li>
+</ol>
+<p class="rank-note">※ダミーの注記文</p>
+
+{{!-- 下のパネル（左下）: 吹き出し・人物・色面ラベル → データ 4 行 → 出典・人物名 --}}
+<p class="balloon-text">ダミーの文字と<br>ダミーテキストで、<br>ダミーの文字列が<br>入っています。</p>
+<div class="label label--orange">
+  <p class="label-orange__l1"><span class="ol-gold">語句数</span><span class="label-orange__small">が</span><span class="ol-gold">見出</span><span class="label-orange__small">で</span></p>
+  <p class="label-orange__l2"><span class="label-orange__kana">ここから</span><span class="ol-gold">語句す!!</span></p>
+</div>
+<ul class="data">
+  <li class="data__row"><span class="data__name">ダミー項</span><span class="data__leader"></span><span class="data__num">0,000<small>件</small></span></li>
+  <li class="data__row"><span class="data__name">ダミーの項目</span><span class="data__leader"></span><span class="data__num">00,000<small>人</small></span></li>
+  <li class="data__row"><span class="data__name">ダミーの項目</span><span class="data__leader"></span><span class="data__num">0,000<small>人</small></span></li>
+  <li class="data__row"><span class="data__name">ダミーの項目テキス</span><span class="data__leader"></span><span class="data__num">00.0<small>件</small></span></li>
+</ul>
+<p class="data-source">(0000年0月ダミー出典テキスト)</p>
+<p class="person-dept">ダミー学科</p>
+<p class="person-name">氏名 氏名<small>さん</small><span class="person-name__from">(ダミー県立ダミー高校出身)</span></p>
+
+{{!-- 下のパネル（右下）: 色面ラベル（3 行）→ リード 2 行 → 大数字 → 出典 --}}
+<div class="label label--rose">
+  <p class="label-rose__line"><span class="label-rose__small">ここにある</span><span class="ol-rose">見出し</span><span class="label-rose__small">が</span></p>
+  <p class="label-rose__line"><span class="ol-rose">見出語句</span><span class="label-rose__small">の</span><span class="ol-rose">ダミー語</span><span class="label-rose__small">で</span></p>
+  <p class="label-rose__line"><span class="ol-rose">見出し!!</span></p>
+</div>
+<p class="total-lead">ダミーでは<br>ダミーテキストは</p>
+<p class="total"><span class="total__num">00,000</span><span class="total__unit">人</span><span class="total__suffix">以上</span></p>
+<p class="total-source">(0000年0月ダミーの出典)</p>
+
+{{!-- 円形の写真（Layer 1 の自社写真待ち。枠は白いフチの円） --}}
+<div class="disc disc--c1">{{> photo-frame ratio="1 / 1"}}</div>
+<div class="disc disc--c2">{{> photo-frame ratio="1 / 1"}}</div>
+<div class="disc disc--c3">{{> photo-frame ratio="1 / 1"}}</div>
+<div class="disc disc--c4">{{> photo-frame ratio="1 / 1"}}</div>
+<div class="disc disc--c5">{{> photo-frame ratio="1 / 1"}}</div>
+<div class="disc disc--c6">{{> photo-frame ratio="1 / 1"}}</div>
+
+{{!-- Layer 3: ノンブル（ハートの中の白抜き数字） --}}
+<p class="folio">{{page.number}}</p>

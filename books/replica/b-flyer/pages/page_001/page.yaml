@@ -4,5 +4,18 @@ title: "イベント告知（完コピ検証）"
 # type: cover | toc | message | course | interview | data | access | back-cover | other
 type: other
 # Layer 1（BASE VISUAL）: 全面背景はなし（参考は白地）。写真・切り抜きの人物・イラストは page.html のプレースホルダ
-status: draft              # draft | review | approved
-notes: ""
+status: review             # draft | review | approved
+notes: |
+  - Phase 5 完コピ検証（3 ラウンド。reviews/page_001/review.md）。参考 references/nagoya-iryo-hisho-it/flyers/page_002.jpg
+    （比較は prep/page_002.yaml で 90° 回転・台形補正）。A4 縦・塗り足し 3mm
+  - グリッド: 段組なし（中央軸の帯状の構成。すべて .trim 基準の絶対配置）。ヒーロー 0〜139mm（写真の行の境界 47.5／93.2mm、
+    左の写真 〜59.2mm（下段 〜60.7）、中央の縦帯、右の写真 150.5mm〜（下段 151〜））→ リード 143〜159mm → 左に補足・右に時刻と日付の囲み 2 つ
+    （94.9〜145.1／150.4〜200.9 × 181.9〜218.2mm）→ 特典 226〜261mm → フッター帯 266.5mm〜。文字の左右端は 8mm 以上内側
+  - Layer 1: Layer 1 生成待ち。写真のコラージュ 6 点・イラスト 11 点（飲み物・菓子・ティーカップ・建物 2・ボトル・カード 3・行内の小さな絵 2）は
+    photo-frame のプレースホルダ（参考の各領域の平均の明るさの灰色）。切り抜きの人物 2 名は SVG の仮の輪郭（無彩色）。寸法は review.md「次にやること」
+  - Layer 2: 中央の縦帯・日付の囲み（斜線の地紋 repeating-linear-gradient・白の細罫・曜日の丸囲み）・フッター帯・QR の白地・手描きの波線と 2 本線（SVG）
+  - Layer 3: 文字はすべてダミー（参考と同じ字数・改行位置。数字は 0）。イベント名は帯と独立した絶対配置で、フチは text-shadow を円周上に並べた丸いフチ。
+    QR は company-data の URL（TODO）から {{qr}} で生成
+  - 重なり順: 写真・帯 → イベント名（z 2）→ フッター帯（z 1。別の重なり文脈）→ 切り抜きの人物（z 3。フッター帯より手前）
+  - 色: 参考の実測色を page.css 冒頭の --rep-* に集約（Phase 8 でブランドカラーに置き換える）。書体は Noto Sans JP（参考の太い丸ゴシックの代用）
+  - 残差と次の作業: review.md の「ラウンド 3」と「次にやること」
