@@ -284,9 +284,11 @@ created: 2026-10-07T14:30:12+09:00
 ## 5. ページの合成（design-engine）
 
 ```ts
-composePage({ root, bookId, pageId, mode: 'render' | 'preview', guides?: boolean }) // → { html, warnings }
-composeBook({ root, bookId, pageIds?, mode, guides? })                           // → { html, warnings, pageIds }
+composePage({ root, bookId, pageId, mode: 'render' | 'preview', guides?: boolean, baseUrl?: string }) // → { html, warnings }
+composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                                    // → { html, warnings, pageIds }
 ```
+
+`baseUrl` は render だけで使う HTTP 配信のルート URL（`http(s)://<ホスト>/` の形。ほかの形・preview との組み合わせは `StudioError`）。`npm run render` は studio-server の URL を渡す。省略すると `<base href>` とエンジンアセットは `file://`。
 
 `composeBook` は全ページ（または指定ページ）を `book.yaml` の順に 1 つの HTML にまとめ、CSS の改ページで区切ります（PDF 用）。
 
@@ -341,7 +343,7 @@ composeBook({ root, bookId, pageIds?, mode, guides? })                          
 
 | コマンド | 引数 | 動作 |
 | --- | --- | --- |
-| `render` | `--book <id>` `[--page <id> ...]` `[--format png\|pdf\|both]`（既定 both） `[--dpi N]`（既定 `png_dpi`） `[--guides]` `[--release]` `[--out <dir>]`（既定 `books/<id>/output`） | 合成した HTML を 127.0.0.1 の HTTP サーバー経由で開く（`file://` を禁止したブラウザでも同じ出力。HTTP 404 も読み込み失敗として警告）。Chromium は Playwright 指定版。取得できない環境では環境変数 `STUDIO_CHROMIUM_PATH` に手元の Chromium を指定できる（警告つき。版が違うと字形・行送りがわずかに変わるため `--release` では失敗）。PNG: Playwright Chromium、ビューポート = ページボックス（CSS px）、`deviceScaleFactor = dpi / 96`（CSS px の丸めの分だけ微調整。§7）、フォントと画像の読み込み完了を待つ。PNG の画素数 = `round((W + 2b) / 25.4 × dpi)`。PDF: `composeBook` → `page.pdf`（塗り足し込みの mm、`printBackground`、`preferCSSPageSize`）。`--release` は TODO・ガイド・指定版以外の Chromium があると失敗。書き出したファイルを表示 |
+| `render` | `--book <id>` `[--page <id> ...]` `[--format png\|pdf\|both]`（既定 both） `[--dpi N]`（既定 `png_dpi`） `[--guides]` `[--release]` `[--out <dir>]`（既定 `books/<id>/output`） | 合成した HTML を 127.0.0.1 の HTTP サーバー経由で開く（`file://` を禁止したブラウザでも同じ出力。HTTP 404 も読み込み失敗として警告）。Chromium は Playwright 指定版。取得できない環境では環境変数 `STUDIO_CHROMIUM_PATH` に手元の Chromium を指定できる（警告つき。版が違うと字形・行送りがわずかに変わるため `--release` では失敗）。PNG: Playwright Chromium、ビューポート = ページボックス（CSS px）、`deviceScaleFactor = dpi / 96`（CSS px の丸めの分だけ微調整。§7）、フォントと画像の読み込み完了を待つ。PNG の画素数 = `round((W + 2b) / 25.4 × dpi)`。PDF: `composeBook` → `page.pdf`（塗り足し込みの mm、`printBackground`、`preferCSSPageSize`）。`--release` は TODO・ガイド・印刷に向かない文字（§5 の印刷チェック）・指定版以外の Chromium があると失敗。書き出したファイルを表示 |
 | `compare` | `--book <id>` `--page <id>` `[--reference <path>]` `[--rendered <png>]` `[--crop-bleed]`（既定 有効） `[--threshold 0.1]` | 参考画像（既定 `references.yaml` の `layout_reference[0]`）と出力 PNG（既定 `output/png/<page>.png`）を比較。出力の塗り足しを切り落とし、参考画像を同じ大きさに変形（fill）して pixelmatch。`diff.png` `side-by-side.png` `overlay.png` `report.yaml` を `books/<id>/reviews/<page>/compare-<YYYYMMDD-HHmmss>/` に出力（比較画像は参考ページの画素を含むため `.gitignore` 済み。コミットするのは `report.yaml`） |
 | `validate` | `[--strict]` | 下表。エラーがあれば終了コード 1 |
 | `new:book` | `<bookId>` `[--kind brochure]` `[--title "..."]` `[--size A4]` `[--orientation portrait]` `[--pages 4]` | `system/templates/book/` から BOOK を作り、ページを `system/templates/page/` から作る。既存なら拒否。置換: `__BOOK_ID__` `__TITLE__` `__KIND__` `__SIZE__` `__ORIENTATION__` `__PAGE_ID__` `__PAGE_TYPE__` `__PAGE_TITLE__` `__DATE__` |

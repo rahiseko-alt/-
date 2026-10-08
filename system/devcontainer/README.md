@@ -66,7 +66,7 @@ Linux ホストでは、コンテナ内の `pwuser` の UID がホストのユ�
 
 ## 指定版の Chromium を取得できない環境
 
-Playwright 指定版の Chromium（`npx playwright install chromium`）を通信制限などで取得できない環境では、手元の Chromium の実行ファイルを環境変数 `STUDIO_CHROMIUM_PATH` に指定すると `render` / `doctor` / `setup.sh` がそれを使います。
+Playwright 指定版の Chromium（`npx playwright install chromium`。既定の headless 起動で使う headless shell）を通信制限などで取得できない環境では、手元の Chromium の実行ファイルを環境変数 `STUDIO_CHROMIUM_PATH` に指定すると `render` / `doctor` / `setup.sh` がそれを使います。
 
 ```bash
 export STUDIO_CHROMIUM_PATH=/usr/bin/chromium
@@ -74,6 +74,7 @@ npm run doctor   # 「Chromium 起動」が WARN（指定版ではない）に�
 ```
 
 - 版が違うと字形・行送りがわずかに変わることがあるため、`render` は警告を出し、`--release`（入稿・公開用）は失敗します。正式な出力は指定版で行います
+- 指定版とみなすのは headless shell（そのシンボリックリンクを含む）だけです。同じビルドのフル版（`chrome`）も、描画がわずかに違うことがあるため指定版としては扱いません
 - `render` は Chromium に `file://` を読ませない（127.0.0.1 の HTTP 配信）ので、`file://` を禁止したブラウザでも出力できます
 - テスト（`npm run test`）は指定版の Chromium を前提にしています
 

@@ -9,7 +9,7 @@
  * 環境が壊れていても診断できるよう、他のプロジェクト内モジュールには依存しない。
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
 import type { AddressInfo } from 'node:net';
@@ -205,15 +205,19 @@ async function checkChromium(): Promise<{ result: CheckResult; browser: Browser 
     `取得できない環境では、手元の Chromium の実行ファイルを ${CHROMIUM_PATH_ENV} に指定できます`;
   try {
     const { chromium } = await import('playwright');
-    const value = process.env[CHROMIUM_PATH_ENV]?.trim();
-    let bundled = '';
+    // 指定があれば必ずそれで起動し、Playwright 指定版（既定で起動する headless shell）かを実体のパスで比べる
+    // （system/scripts/lib/browser.ts の chromiumOverride と同じ判定。同じビルドのフル版は描画がわずかに違うことがあるので含めない）
+    const value = process.env[CHROMIUM_PATH_ENV]?.trim() || null;
+    const real = (f: string) => (existsSync(f) ? realpathSync(f) : resolve(f));
+    let shell: string | null = null;
     try {
-      bundled = chromium.executablePath();
+      const found = require('playwright-core/lib/server').registry.findExecutable('chromium-headless-shell')?.executablePath('javascript');
+      shell = found ? real(found) : null;
     } catch {
-      // 指定版の場所が分からなくても、指定された実行ファイルで起動を試す
+      // 内部 API が変わったときは、どれも指定版とみなさない
     }
-    const override = value && resolve(value) !== (bundled && resolve(bundled)) ? value : null;
-    const launch = chromium.launch(override ? { timeout: 60_000, executablePath: override } : { timeout: 60_000 });
+    const override = value && real(value) !== shell ? value : null;
+    const launch = chromium.launch(value ? { timeout: 60_000, executablePath: value } : { timeout: 60_000 });
     const browser = await withTimeout(launch, 90_000, 'Chromium の起動');
     if (override) {
       return {

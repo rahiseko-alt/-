@@ -78,7 +78,7 @@ export function resolveEngineRequest(urlPath: string): string | null {
     sub = rest.slice('assets/'.length);
   } else if (rest.startsWith('fonts/')) {
     const [pkg, ...tail] = rest.slice('fonts/'.length).split('/');
-    if (!pkg || !(pkg in FONT_PACKAGES) || tail.length === 0) return null;
+    if (!pkg || !Object.hasOwn(FONT_PACKAGES, pkg) || tail.length === 0) return null;
     base = fontsourceDir(pkg);
     sub = tail.join('/');
   } else {

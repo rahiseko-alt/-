@@ -1,32 +1,62 @@
 // Playwright（Chromium）で合成済み HTML を開き、フォント・画像の読み込みを待つ
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
-import { chromium, type Browser, type BrowserContext, type CDPSession, type Page } from 'playwright';
+import { chromium, type Browser, type BrowserContext, type CDPSession, type Page, type Request } from 'playwright';
+import { isReferencePath } from '../../design-engine/src/index.ts';
 import { CliError, firstLine } from './cli.ts';
 import type { StudioServer } from './studio-server.ts';
+
+const require = createRequire(import.meta.url);
 
 /** Playwright 指定版の代わりに使う Chromium の実行ファイルを指定する環境変数 */
 export const CHROMIUM_PATH_ENV = 'STUDIO_CHROMIUM_PATH';
 
+function realPath(file: string): string {
+  try {
+    return fs.realpathSync(file);
+  } catch {
+    return path.resolve(file);
+  }
+}
+
 /**
- * 環境変数で指定された Chromium（Playwright 指定版と同じなら null）。
+ * Playwright 指定版の実行ファイル（既定の headless 起動が使う headless shell）。
+ * 同じビルドのフル版（chromium.executablePath()）は描画がわずかに違うことがあるので指定版に含めない。
+ * headless shell の場所は Playwright の内部 API でしか分からないので、取れなければ null（どれも指定版とみなさない）
+ */
+function defaultChromiumPath(): string | null {
+  try {
+    const { registry } = require('playwright-core/lib/server') as {
+      registry: { findExecutable(name: string): { executablePath(sdk: string): string | undefined } | undefined };
+    };
+    const shell = registry.findExecutable('chromium-headless-shell')?.executablePath('javascript');
+    return shell ? realPath(shell) : null;
+  } catch {
+    return null;
+  }
+}
+
+export interface ChromiumOverride {
+  /** 環境変数で指定された実行ファイル */
+  path: string;
+  /** Playwright 指定版（既定で起動する headless shell。シンボリックリンクも含む）か */
+  bundled: boolean;
+}
+
+/**
+ * 環境変数で指定された Chromium（指定がなければ null）。指定があれば必ずそれで起動する。
  * 指定版を取得できない環境の代替。版が違うと字形・行送りがわずかに変わることがある
  */
-export function chromiumOverride(): string | null {
+export function chromiumOverride(): ChromiumOverride | null {
   const value = process.env[CHROMIUM_PATH_ENV]?.trim();
   if (!value) return null;
-  let bundled = '';
-  try {
-    bundled = chromium.executablePath();
-  } catch {
-    // 指定版の場所を調べられなくても、指定された実行ファイルは使う
-  }
-  return path.resolve(value) === (bundled && path.resolve(bundled)) ? null : value;
+  return { path: value, bundled: realPath(value) === defaultChromiumPath() };
 }
 
 /** Chromium を起動する（失敗時は対処つきのエラー） */
 export async function launchBrowser(): Promise<Browser> {
-  const executablePath = chromiumOverride() ?? undefined;
+  const executablePath = chromiumOverride()?.path;
   if (executablePath && !fs.existsSync(executablePath)) {
     throw new CliError(`${CHROMIUM_PATH_ENV} の Chromium が見つかりません: ${executablePath}`, `${CHROMIUM_PATH_ENV} を正しい実行ファイルにするか、外してください`);
   }
@@ -44,8 +74,8 @@ export async function launchBrowser(): Promise<Browser> {
 /** 指定版ではない Chromium で描画しているときの説明（指定版なら null） */
 export function chromiumOverrideNote(browser: Browser): string | null {
   const override = chromiumOverride();
-  if (!override) return null;
-  return `Playwright 指定版ではない Chromium（${CHROMIUM_PATH_ENV}=${override}、${browser.version()}）で描画しています。字形・行送りが指定版とわずかに違うことがあります`;
+  if (!override || override.bundled) return null;
+  return `Playwright 指定版ではない Chromium（${CHROMIUM_PATH_ENV}=${override.path}、${browser.version()}）で描画しています。字形・行送りが指定版とわずかに違うことがあります`;
 }
 
 export interface OpenedDocument {
@@ -87,17 +117,25 @@ export async function openComposed(
   const page = await context.newPage();
   const problems: string[] = [];
   const referenceRequests: string[] = [];
-  // 合成時の検査（design-engine の reference-guard）をすり抜けた参照も、実際の読み込みで捕まえる
-  const refsPrefix = `${server.baseUrl}references/`.toLowerCase();
+  // 合成時の検査（design-engine の reference-guard）をすり抜けた参照も、実際の読み込みで捕まえる。
+  // URL はエンコードされたまま届く（references%2F... など）ので、デコードしたルート相対パスで判定する
   page.on('request', (req) => {
-    if (req.url().toLowerCase().startsWith(refsPrefix)) referenceRequests.push(server.displayPath(req.url()));
+    const url = req.url();
+    if (!url.startsWith(server.baseUrl)) return;
+    const rel = server.displayPath(url.replace(/[?#].*$/, ''));
+    if (isReferencePath(rel)) referenceRequests.push(rel);
+  });
+  // HTTP では存在しないファイルも「失敗」にならず 404 の応答になるので、応答の状態で調べる。
+  // CSS・フォントは 404 のあと読み込みが中止（requestfailed）にもなるので、二重に報告しない
+  const httpFailed = new WeakSet<Request>();
+  page.on('response', (res) => {
+    if (res.status() < 400) return;
+    httpFailed.add(res.request());
+    problems.push(`${label}: 読み込みに失敗しました: ${server.displayPath(res.url())}（HTTP ${res.status()}）`);
   });
   page.on('requestfailed', (req) => {
+    if (httpFailed.has(req)) return;
     problems.push(`${label}: 読み込みに失敗しました: ${server.displayPath(req.url())}（${req.failure()?.errorText ?? '不明'}）`);
-  });
-  // HTTP では存在しないファイルも「失敗」にならず 404 の応答になるので、応答の状態で調べる
-  page.on('response', (res) => {
-    if (res.status() >= 400) problems.push(`${label}: 読み込みに失敗しました: ${server.displayPath(res.url())}（HTTP ${res.status()}）`);
   });
   page.on('pageerror', (err) => problems.push(`${label}: ページ内でエラー: ${firstLine(err)}`));
   try {
