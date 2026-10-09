@@ -25,7 +25,7 @@
 | 用途 | 解像度 | 指定 |
 | --- | --- | --- |
 | 印刷用 PNG | 350dpi（`output.png_dpi`） | 既定（`--dpi` 省略時） |
-| 作業確認 | 150dpi（`output.preview_dpi` は目安） | `--dpi 150 --out <一時ディレクトリ>` を明示する（`output/` に置かない） |
+| 作業確認 | 150dpi（`output.preview_dpi` は目安） | `--dpi 150 --out <一時ディレクトリ>` を明示する（`output/` に置かない。`png_dpi` 未満で `--out` を省くと失敗する。§4） |
 | 動作確認（フィクスチャのスモークレンダリングなど） | 72dpi | `--dpi 72 --out <一時ディレクトリ>` |
 
 - PNG のピクセル数: `round((仕上がり mm + 2 × 塗り足し mm) / 25.4 × dpi)`
@@ -54,10 +54,10 @@ npm run render -- --book brochure --release
 | `--book <id>` | 対象 BOOK（必須） |
 | `--page <id>` | 対象ページ（複数可。省略時は全ページ） |
 | `--format png\|pdf\|both` | 出力形式（既定 `both`） |
-| `--dpi N` | PNG の解像度（既定 `book.yaml` の `output.png_dpi`） |
-| `--guides` | 仕上がり線・塗り足し・安全領域・マージン・段組のガイドを重ねる |
+| `--dpi N` | PNG の解像度（既定 `book.yaml` の `output.png_dpi`。それより低い確認用の PNG は `--out` が必要。§4） |
+| `--guides` | 仕上がり線・塗り足し・安全領域・マージン・段組のガイドを重ねる（確認用。`--out` が必要。§4） |
 | `--release` | 描画結果に `TODO` が含まれる、6.5pt 未満（白抜きは 7pt 未満、12pt 未満でウェイト 500 未満）や安全領域の外の文字がある、またはガイドが有効なら失敗する（通常の出力ではどれも警告） |
-| `--out <dir>` | 出力先（既定 `books/<id>/output`） |
+| `--out <dir>` | 出力先（既定 `books/<id>/output`）。確認用の出力（`--guides`、または `png_dpi` 未満の `--dpi` の PNG）では必須（§4） |
 | `--root <dir>` | スタジオのルート（既定 リポジトリルート。テストは `system/fixtures/studio`） |
 
 ## 4. 出力先
@@ -68,6 +68,8 @@ npm run render -- --book brochure --release
 | PDF | `books/<id>/output/pdf/<BOOK ID の / を - に置換>.pdf`（全ページを 1 ファイル。ページ順は `book.yaml` の `pages`） |
 
 - 出力物はリポジトリに含める（Git LFS）。ガイド付き・低解像度の確認用出力は `--out` で一時ディレクトリに出し、`output/` に置かない
+  - `npm run render` は、`--out` を省いた確認用の出力（`--guides`、または PNG を `book.yaml` の `output.png_dpi` より低い `--dpi` で出す）を、何も書き出さずにエラーにする（対処として `--out /tmp/<BOOK ID の / を - に置換>-check` を表示）。PDF だけ（`--format pdf`）なら `--dpi` は出力に関係しないので対象外
+  - 意図して `png_dpi` 未満の PNG を `output/` に置く場合は、`--out books/<id>/output` と明示すれば出力できる（ガイド付きの出力は `output/` に置かない）
 - 出力の前に `npm run validate` を通す
 
 ## 5. PDF の性質と制限

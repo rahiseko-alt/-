@@ -70,7 +70,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | BOOK のソース（yaml / html / css / hbs）、背景画像と `.prompt.yaml` | `node_modules/`、`.cache/`、`.vite/`、ログ |
 | 参考資料（画像・PDF・source.yaml・analysis） | 不採用の生成画像、作業用の一時ファイル |
 | レビュー記録（`reviews/<pageId>/review.md`）と比較の数値（`compare-*/report.yaml`） | 比較画像（`compare-*/` の `side-by-side.png`・`overlay.png`・`diff.png`。参考ページの画素を含むため `.gitignore` 済み） |
-| | ガイド付き・低解像度の確認用出力（`--out` で一時ディレクトリに出す） |
+| | ガイド付き・低解像度の確認用出力（`--out` で一時ディレクトリに出す。`--out` を省くと `npm run render` が失敗する） |
 | 出力物（`output/png`、`output/pdf`） | 認証情報・API キー・個人情報を含むメモ |
 
 `system/fixtures/**/output/` と `reviews/` はテストが毎回作るので `.gitignore` 済み。
