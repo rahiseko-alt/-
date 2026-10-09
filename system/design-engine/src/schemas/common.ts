@@ -42,8 +42,31 @@ export const BookId = z.string().regex(BOOK_ID_RE, {
   message: 'BOOK ID は books/ からの相対パス（英数字・-・_ を / で連結）で指定してください',
 });
 
-/** 数値またはテキスト（"TODO: ..." プレースホルダを許容する数値項目用） */
+/** 数値またはテキスト（任意の文字列を許容する。company-data の数値項目には NumOrTodo を使う） */
 export const NumOrText = z.union([z.number(), z.string()]);
+
+/** 未記入のプレースホルダ（"TODO" で始まる文字列）か */
+export function isTodoPlaceholder(v: unknown): v is string {
+  return typeof v === 'string' && v.startsWith('TODO');
+}
+
+/** 記入済みの値か（数値、または空でなく "TODO" を含まない文字列）。基準日・出典の必須チェック用 */
+export function isFilled(v: unknown): boolean {
+  if (typeof v === 'number') return true;
+  return typeof v === 'string' && v.trim() !== '' && !TODO_RE.test(v);
+}
+
+/**
+ * company-data の数値項目（修業年限・定員・実績の値・合格者数・設立年）: 数値、または未記入の "TODO: ..."。
+ * "2年" "40名" のような単位つきの文字列は {{num}} が桁区切りできず、そのまま紙面に出るので拒否する
+ */
+export const NumOrTodo = z.union([z.number(), z.string()]).superRefine((v, ctx) => {
+  if (typeof v === 'number' || isTodoPlaceholder(v)) return;
+  ctx.addIssue({
+    code: 'custom',
+    message: `"${v}" は数値ではありません。数値だけを書いてください（"2年" ではなく 2。単位は unit やページ側で付ける。未確定なら "TODO: ..."）`,
+  });
+});
 
 export const NonEmpty = z.string().min(1);
 

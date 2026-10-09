@@ -9,9 +9,12 @@ metrics:
     label: 卒業生数
     value: 12345
     unit: 名
+    as_of: "2026-03"
+    source: 架空の集計
 employers:
   - name: 架空株式会社
 certifications:
   - name: 架空情報技術検定
     count: 87
     as_of: "2026-03"
+    source: 架空の集計

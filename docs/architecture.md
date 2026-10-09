@@ -68,6 +68,8 @@ company-data と解析結果は未知のキーを許容、`book.yaml` / `page.ya
 
 `facts/*.yaml` はすべて読み込まれ、ファイル名（拡張子なし）で `facts.<名前>` になります。`copy/*.yaml` も同様に `copy.<名前>` です。
 文字列項目と数値項目は、未確定の間 `"TODO: ..."` を許容します（`validate` で警告、`--strict` でエラー）。
+数値項目（`years` `capacity` `value` `count` `established`）は数値か `"TODO: ..."` だけで、`"2年"` `"40名"` のような文字列はスキーマ違反です（`{{num}}` が桁区切りできず、そのまま紙面に出るため）。
+実績の数値（`metrics[].value`・`certifications[].count`）を記入したら、`as_of`（基準日・年度）と `source`（出典）も `TODO` 以外の値で必須です。
 
 ```yaml
 # facts/school.yaml
@@ -75,7 +77,7 @@ name: AIビジネス専門学校           # 必須
 name_en: "TODO: ..."
 short_name: "TODO: ..."
 corporation: "TODO: ..."
-established: "TODO: ..."           # 数値 または TODO
+established: "TODO: ..."           # 設立年（西暦の数値） または TODO
 address: { postal_code: "TODO: ...", prefecture: "TODO: ...", city: "TODO: ...", line1: "TODO: ...", line2: "TODO: ..." }
 tel: "TODO: ..."
 fax: "TODO: ..."
@@ -105,7 +107,7 @@ courses:
 | ファイル | 形 |
 | --- | --- |
 | `facts/teachers.yaml` | `teachers: [{ id, name, name_kana?, title?, course_ids?[], profile?, photo? }]` |
-| `facts/results.yaml` | `metrics: [{ id, label, value, unit?, as_of?, source?, note? }]`、`employers?: [{ name, note? }]`、`certifications?: [{ name, count?, as_of? }]` |
+| `facts/results.yaml` | `metrics: [{ id, label, value, unit?, as_of?, source?, note? }]`、`employers?: [{ name, note? }]`、`certifications?: [{ name, count?, as_of?, source? }]`（`value`・`count` が数値なら `as_of`・`source` は必須） |
 | `facts/contacts.yaml` | `contacts: [{ id, label, tel?, email?, url?, hours?, note? }]`、`sns?: [{ service, url }]` |
 | `brand/colors/colors.yaml` | `colors: { primary, secondary, accent, text, muted, background, surface }`（16 進、必須）、`status?: provisional \| final` |
 | `brand/fonts/fonts.yaml` | `families: { heading, body, serif, number }`（CSS font-family。既定 Noto Sans JP / Noto Serif JP） |
@@ -361,7 +363,7 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 
 | # | 検査 | 結果 |
 | --- | --- | --- |
-| 1 | company-data のスキーマ（`facts/admissions.yaml` の学費の合計を含む）。`TODO` プレースホルダ | スキーマ違反・合計の食い違いはエラー。TODO は警告（`--strict` でエラー） |
+| 1 | company-data のスキーマ（数値項目 `years` `capacity` `value` `count` `established` が数値か `TODO`、実績の数値 `metrics[].value`・`certifications[].count` を記入したときの `as_of`・`source`、`facts/admissions.yaml` の学費の合計を含む）。`TODO` プレースホルダ | スキーマ違反（`"2年"` のような数値項目の文字列、出典・基準日のない実績の数値を含む）・合計の食い違いはエラー。TODO は警告（`--strict` でエラー） |
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |

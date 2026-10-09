@@ -309,3 +309,56 @@ describe('admissions.yaml: 学費の合計', () => {
     expect(issuesOf(AdmissionsFileSchema, todo)).toEqual([]);
   });
 });
+
+describe('company-data: 数値項目と実績の出典', () => {
+  const metric = (extra: Record<string, unknown>) => ({ metrics: [{ id: 'employment-rate', label: '就職率', ...extra }] });
+
+  it('正本（company-data/facts/）の school・courses・teachers・results は通る', () => {
+    const cases: Array<[string, z.ZodType]> = [
+      ['company-data/facts/school.yaml', SchoolSchema],
+      ['company-data/facts/courses.yaml', CoursesFileSchema],
+      ['company-data/facts/teachers.yaml', TeachersFileSchema],
+      ['company-data/facts/results.yaml', ResultsFileSchema],
+    ];
+    for (const [rel, schema] of cases) expect(issuesOf(schema, readYamlFile(path.join(REPO_ROOT, rel), rel)), rel).toEqual([]);
+  });
+
+  it('数値項目（years・capacity・value・count・established）は数値か "TODO: ..."。"2年" "59名" はエラー', () => {
+    const course = { id: 'a', name: 'A', description: '' };
+    expect(issuesOf(CoursesFileSchema, { courses: [{ ...course, years: 2, capacity: 59 }] })).toEqual([]);
+    const courses = issuesOf(CoursesFileSchema, { courses: [{ ...course, years: '2年', capacity: '59名' }] }).join('\n');
+    expect(courses).toContain('courses.0.years: "2年" は数値ではありません');
+    expect(courses).toContain('courses.0.capacity: "59名" は数値ではありません');
+    expect(issuesOf(SchoolSchema, { name: 'x', established: 2025 })).toEqual([]);
+    expect(issuesOf(SchoolSchema, { name: 'x', established: '2025年4月' }).join('\n')).toContain('established: "2025年4月" は数値ではありません');
+    expect(issuesOf(ResultsFileSchema, metric({ value: '98.5%', as_of: '2026年3月', source: '学校の集計' })).join('\n')).toContain(
+      'metrics.0.value: "98.5%" は数値ではありません',
+    );
+    const certs = issuesOf(ResultsFileSchema, { metrics: [], certifications: [{ name: '検定', count: '87名', as_of: 2026, source: '学校の集計' }] });
+    expect(certs.join('\n')).toContain('certifications.0.count: "87名" は数値ではありません');
+  });
+
+  it('実績の数値を記入したら as_of と source も必須（"TODO" は不可）', () => {
+    expect(issuesOf(ResultsFileSchema, metric({ value: 98.5, unit: '%', as_of: '2026年3月卒業生', source: '学校の集計' }))).toEqual([]);
+
+    const none = issuesOf(ResultsFileSchema, metric({ value: 98.5 })).join('\n');
+    expect(none).toContain('metrics.0.as_of: value を記入したら as_of（基準日・年度）も書いてください');
+    expect(none).toContain('metrics.0.source: value を記入したら source（出典）も書いてください');
+
+    const todo = issuesOf(ResultsFileSchema, metric({ value: 98.5, as_of: 'TODO: 基準日を記入', source: '  ' })).join('\n');
+    expect(todo).toContain('metrics.0.as_of');
+    expect(todo).toContain('metrics.0.source');
+
+    // 資格の合格者数: source を書けるようにし、count があれば as_of・source を求める
+    const ok = { metrics: [], certifications: [{ name: '検定', count: 87, as_of: 2026, source: '学校の集計' }] };
+    expect(issuesOf(ResultsFileSchema, ok)).toEqual([]);
+    expect(parseData(ResultsFileSchema, ok, 'results.yaml').certifications?.[0]?.source).toBe('学校の集計');
+    const cert = issuesOf(ResultsFileSchema, { metrics: [], certifications: [{ name: '検定', count: 87, as_of: 2026 }] });
+    expect(cert).toEqual([expect.stringContaining('certifications.0.source: count を記入したら source（出典）も書いてください')]);
+  });
+
+  it('値が "TODO: ..." の間・count のない資格は as_of・source を問わない', () => {
+    expect(issuesOf(ResultsFileSchema, metric({ value: 'TODO: 値を数値で記入', as_of: 'TODO: 基準日' }))).toEqual([]);
+    expect(issuesOf(ResultsFileSchema, { metrics: [], certifications: [{ name: '検定' }, { name: '検定2', count: 'TODO: 合格者数' }] })).toEqual([]);
+  });
+});

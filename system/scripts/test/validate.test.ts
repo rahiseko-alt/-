@@ -153,6 +153,17 @@ describe('validate', () => {
     expect(r.out).toContain('company-data/brand/colors/colors.yaml: colors.primary');
   });
 
+  it('実績の数値に出典がない・数値項目に単位つきの文字列を書くとエラー', async () => {
+    const root = copyFixture();
+    edit(root, 'company-data/facts/results.yaml', (s) => s.replace('    as_of: "2026-03"\n    source: 架空の集計\n  - id: graduates', '  - id: graduates'));
+    edit(root, 'company-data/facts/courses.yaml', (s) => s.replace('capacity: 40', 'capacity: 40名'));
+    const r = await run(validateCommand, ['--root', root]);
+    expect(r.code).toBe(1);
+    expect(r.out).toContain('[エラー] company-data/facts/results.yaml: metrics.0.as_of: value を記入したら as_of（基準日・年度）も書いてください');
+    expect(r.out).toContain('[エラー] company-data/facts/results.yaml: metrics.0.source: value を記入したら source（出典）も書いてください');
+    expect(r.out).toContain('[エラー] company-data/facts/courses.yaml: courses.0.capacity: "40名" は数値ではありません');
+  });
+
   it('テンプレートの存在しないキーは試し合成でエラー（BOOK・ページ・キー名つき）', async () => {
     const root = copyFixture();
     appendFile(root, 'books/smoke/pages/page_002/page.html', '\n<p>{{facts.school.nope}}</p>\n');

@@ -2,7 +2,8 @@
 # - BOOK からは {{#each facts.results.metrics}} ... {{num value}}{{unit}} ... {{/each}} のように参照する
 # - 数値は必ず as_of（基準日・年度）と source（出典: 学校の公表資料名など）を記入する
 #   出典を示せない数値は掲載しない（推測・概算・他校の数値の流用は禁止）
-# - value は数値で記入する（未確定の間は "TODO: ..." 文字列）。桁区切りは {{num}} ヘルパーが付ける
+#   value・count を数値で記入して as_of・source がない（TODO のまま）と npm run validate のエラーになる
+# - value・count は数値で記入する（未確定の間は "TODO: ..." 文字列。単位を付けた文字列はエラー。単位は unit に書く）。桁区切りは {{num}} ヘルパーが付ける
 # - 下の *-todo は記入例を兼ねたプレースホルダ。実際の値を記入したら削除する
 # 書き方: company-data/README.md ／ ルール: system/rules/company-data.md
 
@@ -25,3 +26,4 @@ certifications:
   - name: "TODO: 資格名を記入"
     count: "TODO: 合格者数を数値で記入"
     as_of: "TODO: 基準日・年度を記入"
+    source: "TODO: 出典を記入"
