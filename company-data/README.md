@@ -63,6 +63,8 @@ company-data/
 `facts/admissions.yaml` の学費（`tuition`）は、金額がすべて数値のときに合計を検査します（`npm run validate` のエラー）。検査するのは、各期の `total` = `tuition` + `expenses`、年次の `total` = 各期の `total` の和（1 年次は入学金 `entrance_fee` を含める）、`grand_total` = 年次の `total` の和です。募集要項の金額を一部だけ直して、合計を直し忘れるのを防ぎます。
 
 `file` などのパスはすべてリポジトリルート相対（`/` 区切り、先頭スラッシュなし）で書きます。例: `company-data/photos/campus-exterior.jpg`。
+
+写真は `npm run photo:add -- --file <画像> --id <写真ID> --rights "<使用条件・肖像の同意>"` で登録します。向きを補正し、EXIF（撮影位置・機種・日時など）を消して `company-data/photos/` に書き出し、`photos.yaml` に追記します。権利と、写っている人の掲載同意が確認できた写真だけを登録します（`--rights` は必須で、`TODO` は不可）。HEIC は先に JPEG へ書き出してください。
 スキーマの定義: `system/design-engine/src/schemas/company.ts`。
 
 ## BOOK からの参照

@@ -91,6 +91,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | `npm run new:page -- --book <id> [--after <pageId>] [--type other] [--title "..."]` | ページを追加 |
 | `npm run ref:ingest -- --source <name> --kind <kind> (--pdf <file> \| --images <dir>) [--dpi 150] [--format jpg\|png]` | 参考資料を取り込み（PDF のページ画像は既定 JPEG） |
 | `npm run ref:prep -- (--spec <references/.../prep/<name>.yaml> \| --all)` | 写真・スキャンの参考ページを比較用に正立・単ページ・台形補正（`.cache/ref-prep/` に出力。`compare` の参照に指定ファイルを書けば自動で行う） |
+| `npm run photo:add -- --file <画像> --id <写真ID> --rights "<使用条件・肖像の同意>" [--caption ...] [--tags a,b]` | 学校の写真を `company-data/photos/` に取り込み `photos.yaml` に登録（向きの補正・EXIF（撮影位置など）の除去・長辺 6000px まで。権利・同意が確認できた写真だけ） |
 | `npm run gen:inputs -- (--book <id> ... \| --all)` | Layer 1 の生成指示（`backgrounds/layer1-orders.yaml`）から、生成モデルへ入力する参考ページの切り出し（`.cache/gen-inputs/`）と必要な画素数の一覧を作る |
 | `npm run render -- --book <id> [--page <id> ...] [--format png\|pdf\|both] [--dpi N] [--guides] [--release] [--out <dir>]` | PNG / PDF 出力 |
 | `npm run compare -- --book <id> --page <id> [--reference <path>] [--rendered <png>] [--threshold 0.1]` | 参考ページとの比較（diff / side-by-side / overlay / report.yaml） |
