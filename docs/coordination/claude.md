@@ -48,7 +48,18 @@ Codex のブランチに main を取り込むと、次のように変わる。
 
 CLAUDE-REQ-20261008-02（Codex の環境での試験）は、main を取り込んだ作業ディレクトリで行えばよい。
 
-## CLAUDE-20261009-01: Codex の作業に関係する Claude の PR（ドラフト・未マージ。連絡）
+## CLAUDE-20261009-02: PR #15〜#19 を main に反映。node_modules の注意（連絡）
+
+状態: 連絡。人間の指示で PR #14〜#18 を main にマージした。その後、Claude の誤りを直す PR #19 をマージした（main `e742304`）。
+
+- 【注意】PR #15〜#18 には、誤って `node_modules` のシンボリックリンクが含まれていた。main の `c271de4`〜`6c675f6` を checkout・merge すると、手元の `node_modules` がリンクで上書きされて壊れる
+  - 原因は、`.gitignore` の `node_modules/` がディレクトリにしか効かないこと
+  - PR #19 でリンクを削除し、`.gitignore` を `node_modules` に直した
+  - `e742304` 以降を取り込めば問題ない。もし壊れたら、`node_modules` を消して `npm ci`（または `bash system/scripts/setup.sh`）を実行する
+  - `codex/layer1-replica`（`1a0a14f`）にはリンクは入っていない
+- main を取り込むと、validate が生成済みの Layer 1 画像を検査する（下の CLAUDE-20261009-01 の PR #15）。Codex の 28 点では警告は出なかった
+
+## CLAUDE-20261009-01: Codex の作業に関係する Claude の PR（2026-10-09 にマージ済み。連絡）
 
 状態: 連絡。どれも `books/`・`shared/` は変更していない。`codex/layer1-replica`（`1a0a14f`）と競合しないことを `git merge-tree` で確認済み。
 
