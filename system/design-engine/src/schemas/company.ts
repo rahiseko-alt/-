@@ -1,6 +1,6 @@
 // company-data/ のスキーマ（未知キーは許容 = loose）
 import { z } from 'zod';
-import { HEX_COLOR_RE, NonEmpty, NumOrText, RelPath, isSafeCssValue, listOf, requiredListOf, uniqueBy } from './common.ts';
+import { HEX_COLOR_RE, NonEmpty, NumOrText, NumOrTodo, RelPath, isFilled, isSafeCssValue, isTodoPlaceholder, listOf, requiredListOf, uniqueBy } from './common.ts';
 
 const Str = z.string();
 /** 文字列または構造化データ（カリキュラム等の自由記述項目） */
@@ -20,7 +20,8 @@ export const SchoolSchema = z.looseObject({
   name_en: Str.optional(),
   short_name: Str.optional(),
   corporation: Str.optional(),
-  established: NumOrText.optional(),
+  /** 設立年（西暦の数値） */
+  established: NumOrTodo.optional(),
   address: AddressSchema.optional(),
   tel: Str.optional(),
   fax: Str.optional(),
@@ -35,8 +36,8 @@ export const CourseSchema = z.looseObject({
   id: NonEmpty,
   name: NonEmpty,
   name_en: Str.optional(),
-  years: NumOrText,
-  capacity: NumOrText.optional(),
+  years: NumOrTodo,
+  capacity: NumOrTodo.optional(),
   description: Str,
   tags: z.array(Str).optional(),
   curriculum: z.array(StrOrRecord).optional(),
@@ -69,23 +70,50 @@ export const TeachersFileSchema = z.looseObject({
 export type TeachersFile = z.output<typeof TeachersFileSchema>;
 
 // ---- facts/results.yaml ----
-export const MetricSchema = z.looseObject({
-  id: NonEmpty,
-  label: NonEmpty,
-  value: NumOrText,
-  unit: Str.optional(),
-  as_of: NumOrText.optional(),
-  source: Str.optional(),
-  note: Str.optional(),
-});
+/**
+ * 実績の数値（metrics の value・certifications の count）を記入したら、as_of（基準日・年度）と source（出典）も必須。
+ * 出典を示せない数値は掲載しない（system/rules/company-data.md §2）。値が "TODO: ..." の間は問わない
+ */
+function requireBasis(valueKey: 'value' | 'count') {
+  return (item: Record<string, unknown>, ctx: z.RefinementCtx) => {
+    const value = item[valueKey];
+    if (value == null || isTodoPlaceholder(value)) return;
+    for (const [key, label] of [
+      ['as_of', '基準日・年度'],
+      ['source', '出典'],
+    ] as const) {
+      if (isFilled(item[key])) continue;
+      ctx.addIssue({
+        code: 'custom',
+        path: [key],
+        message: `${valueKey} を記入したら ${key}（${label}）も書いてください（"TODO" は不可）。出典を示せない数値は掲載しない（system/rules/company-data.md §2）`,
+      });
+    }
+  };
+}
+
+export const MetricSchema = z
+  .looseObject({
+    id: NonEmpty,
+    label: NonEmpty,
+    value: NumOrTodo,
+    unit: Str.optional(),
+    as_of: NumOrText.optional(),
+    source: Str.optional(),
+    note: Str.optional(),
+  })
+  .superRefine(requireBasis('value'));
 export type Metric = z.output<typeof MetricSchema>;
 
 export const EmployerSchema = z.looseObject({ name: NonEmpty, note: Str.optional() });
-export const CertificationSchema = z.looseObject({
-  name: NonEmpty,
-  count: NumOrText.optional(),
-  as_of: NumOrText.optional(),
-});
+export const CertificationSchema = z
+  .looseObject({
+    name: NonEmpty,
+    count: NumOrTodo.optional(),
+    as_of: NumOrText.optional(),
+    source: Str.optional(),
+  })
+  .superRefine(requireBasis('count'));
 
 export const ResultsFileSchema = z.looseObject({
   metrics: requiredListOf(MetricSchema).superRefine(uniqueBy((m: Metric) => m.id)),

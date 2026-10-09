@@ -36,11 +36,13 @@ company-data/
 1. 学校から受け取った資料（パンフレット原稿、公式サイト、学校担当者の確認済みメモなど）を手元に用意する
 2. 該当する YAML の `"TODO: ..."` を実際の値に置き換える
    - 該当しない任意項目は行ごと削除する（空文字にしない）
-   - 数値項目（`years` `capacity` `value` `count` `established`）は数値で書く（`2` であって `"2年"` ではない。単位は `unit` やページ側で付ける）
-   - 実績の数値には `as_of`（基準日・年度）と `source`（出典）を必ず書く
+   - 数値項目（`years` `capacity` `value` `count` `established`）は数値で書く（`2` であって `"2年"` ではない。単位は `unit` やページ側で付ける。`established` は設立年を西暦の数値で）。数値と `"TODO: ..."` 以外の文字列は `npm run validate` のエラー
+   - 実績の数値（`metrics` の `value`・`certifications` の `count`）には `as_of`（基準日・年度）と `source`（出典）を必ず書く。数値を記入して `as_of`・`source` がない（`TODO` のまま）と `npm run validate` のエラー
    - `id` は英小文字・数字・ハイフン（例の形式: `course-a`）。BOOK から参照し始めたら変更しない
 3. 記入例を兼ねたプレースホルダ（`course-todo` など）は、実データを入れたら削除する
 4. `npm run validate` で形式を確認する（`TODO` は警告。`--strict` ではエラー）
+   - ID の参照も確かめる: 教員の `course_ids`・`facts/admissions.yaml` の `departments[].course_id` は `facts/courses.yaml` の `id`、学科・教員の `photo` は `photos/photos.yaml` の `id`。存在しない ID はエラー、記入例のプレースホルダ（`course-todo` などの `*-todo`）を指したままだと警告（`--strict` ではエラー）
+   - 英数字は半角で書く（`【様式1】` であって `【様式１】` ではない）。全角英数字は警告。原本の表記を残したいときはコメントに書く。原本どおりでよいのは資料のファイル名・パスを書く位置（各ファイルのトップレベルの `source`、写真・ロゴの `file`）だけで、紙面に出る実績の出典（`metrics` の `source`・`certifications` の `source`）は半角にする
 5. 影響する BOOK を再出力して確認する（`npm run render -- --book <id>`）
 6. コミットメッセージに出典（どの資料の何ページか、誰の確認か）を書く
 
@@ -51,7 +53,7 @@ company-data/
 | `facts/school.yaml` | `name`（必須）, `name_en`, `short_name`, `corporation`, `established`, `address{postal_code, prefecture, city, line1, line2}`, `tel`, `fax`, `email`, `url`, `access[]` |
 | `facts/courses.yaml` | `courses[]`: `id`, `name`, `years`, `description`（以上必須）, `name_en`, `capacity`, `tags[]`, `curriculum[]`, `qualifications[]`, `careers[]`, `photo`（写真 ID） |
 | `facts/teachers.yaml` | `teachers[]`: `id`, `name`（必須）, `name_kana`, `title`, `course_ids[]`, `profile`, `photo` |
-| `facts/results.yaml` | `metrics[]`: `id`, `label`, `value`（必須）, `unit`, `as_of`, `source`, `note` ／ `employers[]`: `name`, `note` ／ `certifications[]`: `name`, `count`, `as_of` |
+| `facts/results.yaml` | `metrics[]`: `id`, `label`, `value`（必須）, `unit`, `as_of`, `source`, `note` ／ `employers[]`: `name`, `note` ／ `certifications[]`: `name`, `count`, `as_of`, `source` |
 | `facts/contacts.yaml` | `contacts[]`: `id`, `label`（必須）, `tel`, `email`, `url`, `hours`, `note` ／ `sns[]`: `service`, `url` |
 | `facts/admissions.yaml`（学費の合計だけ検査し、ほかは自由形式） | `as_of`, `source`, `audience`, `departments[]`（`course_id`・課程・コース・昼夜・学級数）, `policies{admission, curriculum, diploma}`, `eligibility{lead, conditions[]}`, `exam_notes[]`, `exam_types[]`（`id`・`name`・`formal_name`・日程・選考方法）, `documents[]`, `document_notes[]`, `withdrawal_refund`, `exam_fee`, `payment_account`, `payment_notes[]`, `tuition{entrance_fee, years[], grand_total, deadlines[], notes[]}`, `important_notes[]`, `ao_entry_notes[]` |
 | `brand/colors/colors.yaml` | `colors{primary, secondary, accent, text, muted, background, surface}`（すべて必須、16 進）, `status`（`provisional` / `final`） |
