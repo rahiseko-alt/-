@@ -22,6 +22,25 @@ function setPngDpi(studio: string, dpi: number): void {
   fs.writeFileSync(file, yaml.replace('png_dpi: 350', `png_dpi: ${dpi}`));
 }
 
+/** npm run を別のディレクトリで実行した場合を再現する（--out・--root などのパスは INIT_CWD 基準で解決される） */
+async function withInitCwd<T>(dir: string, fn: () => Promise<T>): Promise<T> {
+  const saved = process.env.INIT_CWD;
+  process.env.INIT_CWD = dir;
+  try {
+    return await fn();
+  } finally {
+    if (saved === undefined) delete process.env.INIT_CWD;
+    else process.env.INIT_CWD = saved;
+  }
+}
+
+/** 確認用の出力のエラーが「意図して output/ に置く場合」に案内する --out の値 */
+function explicitOutHint(err: string): string {
+  const m = /--out (\S+) と明示/.exec(err);
+  expect(m, err).not.toBeNull();
+  return m?.[1] ?? '';
+}
+
 describe('render（smoke BOOK）', () => {
   it('PNG と PDF を既定の出力先（books/<id>/output）に book.yaml の png_dpi で書き出す（72dpi: 612×859px、PDF は 216×303mm・2 ページ）', async () => {
     // --out なしで png_dpi 未満の --dpi は確認用として止まるので、コピーの png_dpi を 72 にして --dpi を省く
@@ -120,11 +139,12 @@ describe('render（smoke BOOK）', () => {
     const r2 = copyFixture();
     setPngDpi(r2, 72);
     const output = path.join(r2, 'books/smoke/output');
-    const low = await run(renderCommand, ['--book', 'smoke', '--page', 'page_001', '--dpi', '36', '--root', r2]);
+    // スタジオのルートで実行した場合（npm run の通常の使い方）
+    const low = await withInitCwd(r2, () => run(renderCommand, ['--book', 'smoke', '--page', 'page_001', '--dpi', '36', '--root', r2]));
     expect(low.code, low.text).toBe(1);
     expect(low.err).toContain('確認用の出力（PNG が 36dpi で book.yaml の output.png_dpi 72 未満）は既定の出力先 books/smoke/output/ に書き出しません');
     expect(low.err).toContain('--out /tmp/smoke-check');
-    expect(low.err).toContain('--out books/smoke/output');
+    expect(explicitOutHint(low.err)).toBe('books/smoke/output');
     expect(fs.existsSync(output)).toBe(false);
 
     // PDF だけなら dpi は出力に関係しない
@@ -139,6 +159,37 @@ describe('render（smoke BOOK）', () => {
     const explicit = await run(renderCommand, ['--book', 'smoke', '--page', 'page_001', '--format', 'png', '--dpi', '36', '--out', output, '--root', r2]);
     expect(explicit.code, explicit.text).toBe(0);
     expect((await sharp(path.join(output, 'png/page_001.png')).metadata()).width).toBe(Math.round((216 / 25.4) * 36));
+  });
+
+  it('案内する --out のパスは実行ディレクトリ基準で、そのまま --out に渡すと既定の出力先に書ける（ルートの下位・外で実行した場合）', async () => {
+    const r2 = copyFixture();
+    setPngDpi(r2, 72);
+    const output = path.join(r2, 'books/smoke/output');
+    const outside = tempDir();
+    // [実行ディレクトリ, 案内されるパス]（下位なら実行ディレクトリからの相対パス、ルートの外なら絶対パス）
+    const cases: Array<[string, string]> = [
+      [path.join(r2, 'books/smoke'), 'output'],
+      [path.join(r2, 'books'), 'smoke/output'],
+      [outside, output],
+    ];
+    for (const [cwd, expected] of cases) {
+      fs.rmSync(output, { recursive: true, force: true });
+      await withInitCwd(cwd, async () => {
+        const low = await run(renderCommand, ['--book', 'smoke', '--page', 'page_001', '--format', 'png', '--dpi', '36', '--root', r2]);
+        expect(low.code, low.text).toBe(1);
+        const hint = explicitOutHint(low.err);
+        expect(hint, cwd).toBe(expected);
+        expect(fs.existsSync(output)).toBe(false);
+
+        const explicit = await run(renderCommand, ['--book', 'smoke', '--page', 'page_001', '--format', 'png', '--dpi', '36', '--out', hint, '--root', r2]);
+        expect(explicit.code, explicit.text).toBe(0);
+        expect(fs.readdirSync(path.join(output, 'png')), cwd).toEqual(['page_001.png']);
+      });
+      // 実行ディレクトリの下に入れ子の books/ や output/ を作らない
+      expect(fs.existsSync(path.join(r2, 'books/smoke/books')), cwd).toBe(false);
+      expect(fs.existsSync(path.join(r2, 'books/books')), cwd).toBe(false);
+      expect(fs.readdirSync(outside), cwd).toEqual([]);
+    }
   });
 
   it('--release は TODO がなければ成功する', async () => {

@@ -69,7 +69,7 @@ npm run render -- --book brochure --release
 
 - 出力物はリポジトリに含める（Git LFS）。ガイド付き・低解像度の確認用出力は `--out` で一時ディレクトリに出し、`output/` に置かない
   - `npm run render` は、`--out` を省いた確認用の出力（`--guides`、または PNG を `book.yaml` の `output.png_dpi` より低い `--dpi` で出す）を、何も書き出さずにエラーにする（対処として `--out /tmp/<BOOK ID の / を - に置換>-check` を表示）。PDF だけ（`--format pdf`）なら `--dpi` は出力に関係しないので対象外
-  - 意図して `png_dpi` 未満の PNG を `output/` に置く場合は、`--out books/<id>/output` と明示すれば出力できる（ガイド付きの出力は `output/` に置かない）
+  - 意図して `png_dpi` 未満の PNG を `output/` に置く場合は、`--out books/<id>/output` と明示すれば出力できる（ガイド付きの出力は `output/` に置かない）。`--out` の相対パスは `npm run` を実行したディレクトリ基準なので、ルート以外（BOOK のディレクトリなど）で実行したときは、エラーが案内するパス（実行ディレクトリからの相対パス、外なら絶対パス）をそのまま使う
 - 出力の前に `npm run validate` を通す
 
 ## 5. PDF の性質と制限

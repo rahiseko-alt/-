@@ -20,6 +20,7 @@ import { startStudioServer, type StudioServer } from './studio-server.ts';
 import {
   CliError,
   UsageError,
+  argPath,
   consoleIo,
   elapsed,
   parseChoice,
@@ -44,7 +45,7 @@ export const RENDER_USAGE = `使い方: npm run render -- --book <id> [オプシ
   --guides                ガイド（仕上がり線・塗り足し・安全領域・マージン・段組）を重ねる（確認用。--out が必要）
   --release               入稿・公開用。描画結果に "TODO" が残っている、6.5pt 未満（白抜きは 7pt 未満）や安全領域の外の文字がある、
                           ガイドが有効、または STUDIO_CHROMIUM_PATH で指定版以外の Chromium を使っていると失敗する（通常の出力では警告）
-  --out <dir>             出力先（既定: books/<id>/output。その下に png/ と pdf/ を作る）。
+  --out <dir>             出力先（既定: books/<id>/output。その下に png/ と pdf/ を作る。相対パスは実行したディレクトリ基準）。
                           確認用（--guides、または png_dpi 未満の --dpi の PNG）は --out で一時ディレクトリを指定する
                           （省略すると既定の出力先に書かずに失敗する。意図して output/ に置くなら --out books/<id>/output と明示）
   --root <dir>            スタジオのルート（既定: リポジトリルート）
@@ -173,13 +174,13 @@ function assertNotCheckOutput(
   if (!o.guides && !lowDpi) return;
   const reasons = [...(o.guides ? ['ガイド付き'] : []), ...(lowDpi ? [`PNG が ${o.dpi}dpi で book.yaml の output.png_dpi ${o.pngDpi} 未満`] : [])];
   const tmp = `--out /tmp/${bookFileName(bookId)}-check`;
-  const output = show(root, defaultOutDir);
   throw new CliError(
-    `確認用の出力（${reasons.join('、')}）は既定の出力先 ${output}/ に書き出しません（output/ はコミットする正式な出力の置き場所。system/rules/output.md §4）`,
+    `確認用の出力（${reasons.join('、')}）は既定の出力先 ${show(root, defaultOutDir)}/ に書き出しません（output/ はコミットする正式な出力の置き場所。system/rules/output.md §4）`,
     o.guides
       ? `${tmp} を付けて一時ディレクトリに出してください（ガイド付きの出力は output/ に置かない）`
       : `${tmp} を付けて一時ディレクトリに出すか、--dpi を外して png_dpi（${o.pngDpi}dpi）で出力してください。` +
-          `意図して ${o.pngDpi}dpi 未満の PNG を output/ に置く場合は --out ${output} と明示してください`,
+          // --out は実行ディレクトリ基準で解決するので、ルート相対の show() ではなく argPath() で示す
+          `意図して ${o.pngDpi}dpi 未満の PNG を output/ に置く場合は --out ${argPath(defaultOutDir)} と明示してください`,
   );
 }
 

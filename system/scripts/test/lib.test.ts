@@ -2,10 +2,12 @@
 import { describe, expect, it } from 'vitest';
 import { insertIntoList, removeFromList, setBlockList } from '../lib/book-yaml.ts';
 import { parseUnicodeRange } from '../lib/browser.ts';
-import { UsageError, formatIsoLocal, formatStamp, naturalCompare, parseCli, splitList } from '../lib/cli.ts';
+import { UsageError, argPath, formatIsoLocal, formatStamp, naturalCompare, parseCli, splitList, userPath } from '../lib/cli.ts';
 import { fillTemplate, leftoverPlaceholders, raw, yamlString } from '../lib/templates.ts';
 import { htmlBodyText, stripHandlebars, todoSnippets } from '../lib/text.ts';
 import { parseArgs } from 'node:util';
+import path from 'node:path';
+import { REPO_ROOT } from './helpers.ts';
 
 describe('book-yaml', () => {
   it('フロー形式の pages はその場で書き換える（他の行・コメントはそのまま）', () => {
@@ -97,6 +99,25 @@ describe('cli', () => {
     expect(iso).toMatch(/^2026-10-07T14:30:12[+-]\d{2}:\d{2}$/);
     expect(formatStamp(d)).toBe('20261007-143012');
     expect(new Date(iso).getTime()).toBe(d.getTime());
+  });
+
+  it('argPath は実行ディレクトリ（INIT_CWD）基準で、そのままコマンドラインに渡せるパスにする（userPath の逆）', () => {
+    const saved = process.env.INIT_CWD;
+    process.env.INIT_CWD = path.join(REPO_ROOT, 'books');
+    try {
+      // 実行ディレクトリの中は相対パス、外（上位を含む）は絶対パス
+      expect(argPath(path.join(REPO_ROOT, 'books/replica/a-brochure/output'))).toBe('replica/a-brochure/output');
+      expect(argPath(path.join(REPO_ROOT, 'books'))).toBe('.');
+      expect(argPath(path.join(REPO_ROOT, 'shared/x'))).toBe(path.join(REPO_ROOT, 'shared/x'));
+      expect(argPath('/tmp/x-check')).toBe('/tmp/x-check');
+      for (const abs of [path.join(REPO_ROOT, 'books/a/output'), REPO_ROOT, '/tmp/x-check']) expect(userPath(argPath(abs))).toBe(abs);
+      // 空白・引用符などはシェルでそのまま渡せるように単引用符で囲む
+      expect(argPath(path.join(REPO_ROOT, 'books/a b/output'))).toBe("'a b/output'");
+      expect(argPath("/tmp/it's")).toBe(`'/tmp/it'\\''s'`);
+    } finally {
+      if (saved === undefined) delete process.env.INIT_CWD;
+      else process.env.INIT_CWD = saved;
+    }
   });
 });
 
