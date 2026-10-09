@@ -90,6 +90,16 @@ export function runScript(script: string, args: string[]): RunResult {
   return { code: r.status ?? -1, out, err, text: `${out}\n${err}` };
 }
 
+/**
+ * 一時リポジトリで git を動かすための環境変数。利用者の全体設定・システム設定を読まず、
+ * 親の git（フックなど）から渡る GIT_DIR・GIT_INDEX_FILE なども引き継がない
+ * （既定の除外ファイル ~/.config/git/ignore は設定がなくても読まれるので、core.excludesFile も別に空にすること）
+ */
+export function isolatedGitEnv(): NodeJS.ProcessEnv {
+  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
+  return { ...env, GIT_CONFIG_GLOBAL: os.devNull, GIT_CONFIG_NOSYSTEM: '1' };
+}
+
 /** pdfinfo の出力（ページ数・ページサイズ pt） */
 export function pdfInfo(file: string): { pages: number; width: number; height: number } {
   const r = spawnSync('pdfinfo', [file], { encoding: 'utf8' });
