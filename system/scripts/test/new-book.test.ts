@@ -8,7 +8,7 @@ import { loadBook, loadPage } from '../../design-engine/src/index.ts';
 import { newBookCommand } from '../lib/new-book.ts';
 import { renderCommand } from '../lib/render.ts';
 import { validateCommand } from '../lib/validate.ts';
-import { cleanupTemp, copyFixture, copyRealStudio, readFile, run } from './helpers.ts';
+import { cleanupTemp, copyFixture, copyRealStudio, readFile, run, tempDir } from './helpers.ts';
 
 afterAll(() => cleanupTemp());
 
@@ -66,9 +66,11 @@ describe('new:book', () => {
     const strict = await run(validateCommand, ['--strict', '--root', root]);
     expect(strict.code).toBe(1);
 
-    const out = await run(renderCommand, ['--book', 'demo', '--format', 'png', '--dpi', '36', '--root', root]);
+    // 36dpi は png_dpi（350）未満の確認用なので、一時ディレクトリに出す（system/rules/output.md §4）
+    const check = tempDir();
+    const out = await run(renderCommand, ['--book', 'demo', '--format', 'png', '--dpi', '36', '--out', check, '--root', root]);
     expect(out.code, out.text).toBe(0);
-    const meta = await sharp(path.join(root, 'books/demo/output/png/page_002.png')).metadata();
+    const meta = await sharp(path.join(check, 'png/page_002.png')).metadata();
     expect([meta.width, meta.height]).toEqual([Math.round((216 / 25.4) * 36), Math.round((303 / 25.4) * 36)]);
   });
 

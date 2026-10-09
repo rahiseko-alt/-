@@ -20,6 +20,7 @@ import { startStudioServer, type StudioServer } from './studio-server.ts';
 import {
   CliError,
   UsageError,
+  argPath,
   consoleIo,
   elapsed,
   parseChoice,
@@ -40,11 +41,13 @@ export const RENDER_USAGE = `使い方: npm run render -- --book <id> [オプシ
   --book <id>             対象 BOOK（必須。例: brochure, flyers/open-campus）
   --page <id>             対象ページ（複数指定・カンマ区切り可。省略時は全ページ）
   --format png|pdf|both   出力形式（既定: both）
-  --dpi <N>               PNG の解像度（既定: book.yaml の output.png_dpi）
-  --guides                ガイド（仕上がり線・塗り足し・安全領域・マージン・段組）を重ねる
+  --dpi <N>               PNG の解像度（既定: book.yaml の output.png_dpi。それより低い確認用の PNG は --out が必要）
+  --guides                ガイド（仕上がり線・塗り足し・安全領域・マージン・段組）を重ねる（確認用。--out が必要）
   --release               入稿・公開用。描画結果に "TODO" が残っている、6.5pt 未満（白抜きは 7pt 未満）や安全領域の外の文字がある、
                           ガイドが有効、または STUDIO_CHROMIUM_PATH で指定版以外の Chromium を使っていると失敗する（通常の出力では警告）
-  --out <dir>             出力先（既定: books/<id>/output。その下に png/ と pdf/ を作る）
+  --out <dir>             出力先（既定: books/<id>/output。その下に png/ と pdf/ を作る。相対パスは実行したディレクトリ基準）。
+                          確認用（--guides、または png_dpi 未満の --dpi の PNG）は --out で一時ディレクトリを指定する
+                          （省略すると既定の出力先に書かずに失敗する。意図して output/ に置くなら --out books/<id>/output と明示）
   --root <dir>            スタジオのルート（既定: リポジトリルート）
 例:
   npm run render -- --book brochure
@@ -75,7 +78,7 @@ export interface RenderOptions {
   dpi?: number;
   guides?: boolean;
   release?: boolean;
-  /** 出力先（絶対パス。省略時は books/<id>/output） */
+  /** 出力先（絶対パス。省略時は books/<id>/output。確認用の出力（guides、または png_dpi 未満の PNG）では省略するとエラー） */
   outDir?: string;
 }
 
@@ -138,7 +141,9 @@ export async function renderBook(opts: RenderOptions, io: Io = consoleIo): Promi
       );
     }
   }
-  const outDir = opts.outDir ?? path.join(book.dir, 'output');
+  const defaultOutDir = path.join(book.dir, 'output');
+  if (opts.outDir == null) assertNotCheckOutput(root, opts.bookId, defaultOutDir, { guides: opts.guides ?? false, wantPng, dpi, pngDpi: book.config.output.png_dpi });
+  const outDir = opts.outDir ?? defaultOutDir;
   const wantPdf = opts.format === 'pdf' || opts.format === 'both';
   const warnings: string[] = [];
   const addWarnings = (list: string[]) => {
@@ -152,6 +157,31 @@ export async function renderBook(opts: RenderOptions, io: Io = consoleIo): Promi
   } finally {
     await server.close();
   }
+}
+
+/**
+ * 確認用の出力（ガイド付き、または book.yaml の png_dpi 未満の PNG）を、--out なしで既定の出力先（books/<id>/output。
+ * Git LFS でコミットする正式な出力の置き場所）に書き出させない（system/rules/output.md §4）。
+ * 意図して output/ に置くときは --out で明示すれば通る（呼び出し側は outDir を渡したときはこれを呼ばない）
+ */
+function assertNotCheckOutput(
+  root: string,
+  bookId: string,
+  defaultOutDir: string,
+  o: { guides: boolean; wantPng: boolean; dpi: number; pngDpi: number },
+): void {
+  const lowDpi = o.wantPng && o.dpi < o.pngDpi;
+  if (!o.guides && !lowDpi) return;
+  const reasons = [...(o.guides ? ['ガイド付き'] : []), ...(lowDpi ? [`PNG が ${o.dpi}dpi で book.yaml の output.png_dpi ${o.pngDpi} 未満`] : [])];
+  const tmp = `--out /tmp/${bookFileName(bookId)}-check`;
+  throw new CliError(
+    `確認用の出力（${reasons.join('、')}）は既定の出力先 ${show(root, defaultOutDir)}/ に書き出しません（output/ はコミットする正式な出力の置き場所。system/rules/output.md §4）`,
+    o.guides
+      ? `${tmp} を付けて一時ディレクトリに出してください（ガイド付きの出力は output/ に置かない）`
+      : `${tmp} を付けて一時ディレクトリに出すか、--dpi を外して png_dpi（${o.pngDpi}dpi）で出力してください。` +
+          // --out は実行ディレクトリ基準で解決するので、ルート相対の show() ではなく argPath() で示す
+          `意図して ${o.pngDpi}dpi 未満の PNG を output/ に置く場合は --out ${argPath(defaultOutDir)} と明示してください`,
+  );
 }
 
 interface RenderPlan {

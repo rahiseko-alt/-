@@ -110,6 +110,17 @@ export function userPath(p: string): string {
   return path.resolve(invocationCwd(), p);
 }
 
+/**
+ * 案内に書くパスを、そのままコマンドラインの引数に渡せる形にする（userPath の逆）。
+ * 実行ディレクトリの中なら相対パス、外（上位を含む）なら絶対パス。空白などを含めば単引用符で囲む。
+ * show() はルート相対の表示用なので、ルート以外で実行すると引数としては別の場所を指す
+ */
+export function argPath(abs: string): string {
+  const cwd = invocationCwd();
+  const p = isInside(cwd, abs) ? path.relative(cwd, abs) || '.' : abs;
+  return /^[\w@%+=:,./-]+$/.test(p) ? p : `'${p.replaceAll("'", `'\\''`)}'`;
+}
+
 /** --root（省略時はリポジトリルート）を絶対パスに解決する */
 export function resolveRoot(rootArg?: string): string {
   return resolveStudioRoot(rootArg ? userPath(rootArg) : undefined);
