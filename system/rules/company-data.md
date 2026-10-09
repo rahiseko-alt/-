@@ -18,6 +18,7 @@
 - 不明な値は `"TODO: <何を記入するか>"` のまま残す。AI が TODO を勝手に埋めてはいけない
 - 実績（`facts/results.yaml`）の数値には `as_of`（基準日・年度）と `source`（出典）を必ず書く。出典を示せない数値は掲載しない（`metrics` の `value`・`certifications` の `count` を数値で記入して `as_of`・`source` がない・`TODO` のままだと、`npm run validate` がエラーにする）
 - 記入・変更したコミットのメッセージに出典（資料名・ページ、確認者）を書く
+- 英数字は半角で書く（system/rules/typography-ja.md §7）。資料の原本が全角（`【様式１】` など）でも値は半角にし、原本の表記はコメントに残す。`npm run validate` は全角英数字を警告する（資料のファイル名を書く `source`・`file` は原本どおりでよい）
 - 教員・人物は掲載の同意が取れている人だけ、写真は権利・肖像の同意が確認できるものだけを登録する（`photos.yaml` の `rights` に条件を書く）
 - 写真は `npm run photo:add` で登録する（EXIF の撮影位置などを消し、向きを補正する。手でコピーすると位置情報が残る）。写り込んだ他社のロゴ・看板・番地・第三者の顔は、使う前にトリミングかぼかしで外す
 
@@ -29,6 +30,7 @@
 - `npm run validate` は TODO を警告、`npm run validate -- --strict` はエラーにする
 - `npm run render -- --book <id> --release` は、描画結果に `TODO` が残っていると失敗する
 - 該当しない任意項目は TODO を残さず行ごと削除する
+- 記入例のプレースホルダ（`course-todo` などの `*-todo`。system/rules/naming.md §6）は、実データを入れたら削除し、それを指していた参照（教員の `course_ids`、`facts/admissions.yaml` の `departments[].course_id`、学科・教員の `photo`）も実際の ID に直す。`npm run validate` は、存在しない ID の参照をエラー、`*-todo` を指したままの参照を警告（`--strict` ではエラー）にする
 
 ## 4. 参照のしかた（厳格モード）
 

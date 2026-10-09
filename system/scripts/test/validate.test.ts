@@ -164,6 +164,56 @@ describe('validate', () => {
     expect(r.out).toContain('[エラー] company-data/facts/courses.yaml: courses.0.capacity: "40名" は数値ではありません');
   });
 
+  it('company-data の ID の参照: 存在しない学科・写真 ID はエラー、*-todo は警告（--strict ではエラー）', async () => {
+    const root = copyFixture();
+    edit(root, 'company-data/facts/teachers.yaml', (s) => s.replace('course_ids: [ai-system]', 'course_ids: [ai-system, ai-sytem]\n    photo: teacher-yamada'));
+    edit(root, 'company-data/facts/courses.yaml', (s) => s.replace('photo: campus', 'photo: campus-01'));
+    writeFile(root, 'company-data/facts/admissions.yaml', 'departments:\n  - course_id: data-business\n  - course_id: data-busines\n  - program: 課程だけ\n');
+    const r = await run(validateCommand, ['--root', root]);
+    expect(r.code).toBe(1);
+    expect(r.out).toContain('[エラー] company-data/facts/teachers.yaml: teachers.0.course_ids.1: 学科 ID "ai-sytem" が company-data/facts/courses.yaml にありません（登録済み: ai-system, data-business）');
+    expect(r.out).toContain('[エラー] company-data/facts/teachers.yaml: teachers.0.photo: 写真 ID "teacher-yamada" が company-data/photos/photos.yaml にありません（登録済み: campus。写真は npm run photo:add で登録する）');
+    expect(r.out).toContain('[エラー] company-data/facts/courses.yaml: courses.0.photo: 写真 ID "campus-01"');
+    expect(r.out).toContain('[エラー] company-data/facts/admissions.yaml: departments.1.course_id: 学科 ID "data-busines"');
+    const report = await validateStudio(root);
+    const s1 = report.sections.find((s) => s.no === 1)!;
+    expect(s1.errors.filter((e) => e.includes('ID "'))).toHaveLength(4); // 正しい参照（ai-system・data-business）は報告しない
+
+    // 記入例のプレースホルダ（*-todo）は警告、--strict ではエラー。"TODO: ..." の値は TODO として数える
+    const root2 = copyFixture();
+    edit(root2, 'company-data/facts/teachers.yaml', (s) => s.replace('course_ids: [ai-system]', 'course_ids: [course-todo]\n    photo: "TODO: 写真 ID を記入"'));
+    const ok = await run(validateCommand, ['--root', root2]);
+    expect(ok.code, ok.text).toBe(0);
+    expect(ok.out).toContain('[警告] company-data/facts/teachers.yaml: teachers.0.course_ids.0: 記入例のプレースホルダ "course-todo" を指しています');
+    expect(ok.out).not.toContain('teachers.0.photo: 写真 ID');
+    const strict = await run(validateCommand, ['--strict', '--root', root2]);
+    expect(strict.code).toBe(1);
+    expect(strict.out).toContain('[エラー] company-data/facts/teachers.yaml: teachers.0.course_ids.0: 記入例のプレースホルダ "course-todo"');
+  });
+
+  it('ID の参照（course_id）は事実の直書きの照合に使わない', async () => {
+    const root = copyFixture();
+    writeFile(root, 'company-data/facts/admissions.yaml', 'departments:\n  - course_id: data-business\n');
+    appendFile(root, 'books/smoke/pages/page_002/page.html', '\n<div class="data-business"></div>\n');
+    const r = await run(validateCommand, ['--root', root]);
+    expect(r.code, r.text).toBe(0);
+    expect(r.out).not.toContain('事実「data-business」');
+  });
+
+  it('company-data の全角英数字は警告（コメント・source・file は対象外）', async () => {
+    const root = copyFixture();
+    edit(root, 'company-data/facts/courses.yaml', (s) => s.replace('- Python基礎', '- Ｐｙｔｈｏｎ基礎\n      - ２年次の演習'));
+    appendFile(root, 'company-data/copy/brochure.yaml', '# 原本の表記: 【様式１】\nform: 入学願書【様式１】\nsource: 原稿＿Ｖ４.docx\n');
+    appendFile(root, 'company-data/facts/results.yaml', '# 原本: ＡＢＣ\n');
+    const r = await run(validateCommand, ['--root', root]);
+    expect(r.code, r.text).toBe(0);
+    expect(r.out).toContain(
+      '[警告] company-data/facts/courses.yaml: 全角英数字が 2 か所にあります（courses.0.curriculum.0 の「Ｐｙｔｈｏｎ」、courses.0.curriculum.1 の「２」）。英数字は半角で書いてください',
+    );
+    expect(r.out).toContain('[警告] company-data/copy/brochure.yaml: 全角英数字が 1 か所にあります（form の「１」）');
+    expect(r.out).not.toContain('company-data/facts/results.yaml: 全角英数字');
+  });
+
   it('テンプレートの存在しないキーは試し合成でエラー（BOOK・ページ・キー名つき）', async () => {
     const root = copyFixture();
     appendFile(root, 'books/smoke/pages/page_002/page.html', '\n<p>{{facts.school.nope}}</p>\n');

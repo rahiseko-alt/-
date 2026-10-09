@@ -44,7 +44,7 @@ export const VALIDATE_USAGE = `使い方: npm run validate -- [--strict] [--root
   --strict      TODO（未記入のプレースホルダ）を警告ではなくエラーにする（入稿・公開前に使う）
   --root <dir>  スタジオのルート（既定: リポジトリルート）
 チェック:
-  1. company-data のスキーマと TODO
+  1. company-data のスキーマと TODO、ID の参照（学科・写真）、全角英数字
   2. BOOK の設定（book.yaml・ページ・背景・styles・references.yaml）
   3. 参考資料（references/*/*/source.yaml・analysis）
   4. 全ページの試し合成（テンプレートの厳格モード・アセットの存在）
@@ -77,8 +77,14 @@ const BACKGROUND_IMAGE_RE = /\.(png|jpe?g|webp)$/i;
 /** Layer 1 の生成指示（books/<bookId>/backgrounds/ に置く） */
 export const LAYER1_ORDERS_FILE = 'layer1-orders.yaml';
 /** 事実の直書きチェックで対象外にするキー（ID・ファイルパス等） */
-const NON_FACT_KEYS = new Set(['id', 'photo', 'course_ids', 'file', 'logo', 'variant']);
+const NON_FACT_KEYS = new Set(['id', 'photo', 'course_ids', 'course_id', 'file', 'logo', 'variant']);
 const MIN_FACT_LENGTH = 4;
+/** 記入例を兼ねたプレースホルダの ID（system/rules/naming.md §6 の `*-todo`） */
+const PLACEHOLDER_ID_RE = /-todo$/;
+/** 全角英数字（U+FF10〜FF19・FF21〜FF3A・FF41〜FF5A）。company-data にも入れない（system/rules/typography-ja.md §7） */
+const FULLWIDTH_ALNUM_RE = /[\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]/g;
+/** 全角英数字の検査で対象外にするキー（資料のファイル名・パスを原本どおりに書く） */
+const FILENAME_KEYS = new Set(['source', 'file']);
 
 function section(no: number, title: string): CheckSection {
   return { no, title, errors: [], warnings: [], info: [] };
@@ -142,6 +148,7 @@ function checkCompanyData(root: string, strict: boolean, s: CheckSection): Compa
     } catch {
       continue; // 構文エラーは loadCompanyData 側で報告済み
     }
+    checkFullwidthAlnum(rel, data, s);
     const todos = collectTodos(data);
     if (todos.length === 0) continue;
     total += todos.length;
@@ -153,8 +160,83 @@ function checkCompanyData(root: string, strict: boolean, s: CheckSection): Compa
   if (company?.brand.color_status === 'provisional') {
     push(s.warnings, 'company-data/brand/colors/colors.yaml: ブランドカラーは暫定（status: provisional）です');
   }
-  if (company) s.info.push(`${company.files.length} ファイル`);
+  if (company) {
+    checkCompanyRefs(company, strict, s);
+    s.info.push(`${company.files.length} ファイル`);
+  }
   return company;
+}
+
+/**
+ * YAML の文字列の値（コメント・キー名は対象外）にある全角英数字を「<キーのパス> の「<文字>」」の形で列挙する。
+ * source・file（資料のファイル名・パス）は原本どおりに書くので除く
+ */
+export function fullwidthAlnumHits(data: unknown): string[] {
+  const hits: string[] = [];
+  for (const hit of walkStrings(data)) {
+    const keys = hit.path.split('.').filter((k) => !/^\d+$/.test(k));
+    if (FILENAME_KEYS.has(keys[keys.length - 1] ?? '')) continue;
+    const chars = [...new Set(hit.value.match(FULLWIDTH_ALNUM_RE) ?? [])];
+    if (chars.length > 0) hits.push(`${hit.path || '(値)'} の「${chars.join('')}」`);
+  }
+  return hits;
+}
+
+/** company-data の全角英数字。紙面では半角の「2027年」と同じ行に混ざるので警告する */
+function checkFullwidthAlnum(rel: string, data: unknown, s: CheckSection): void {
+  const hits = fullwidthAlnumHits(data);
+  if (hits.length === 0) return;
+  const shown = hits.slice(0, 6);
+  const more = hits.length > shown.length ? ` 他 ${hits.length - shown.length} 件` : '';
+  push(
+    s.warnings,
+    `${rel}: 全角英数字が ${hits.length} か所にあります（${shown.join('、')}${more}）。英数字は半角で書いてください（原本の表記はコメントに残す。system/rules/typography-ja.md §7）`,
+  );
+}
+
+/**
+ * company-data の中の ID の参照: 教員の course_ids・募集要項の departments[].course_id → facts/courses.yaml の id、
+ * 学科・教員の photo → photos/photos.yaml の id。存在しない ID はエラー、記入例のプレースホルダ（*-todo）を指すものは
+ * 警告（--strict ではエラー）。"TODO: ..." の値は TODO として数えているので対象外
+ */
+function checkCompanyRefs(company: CompanyData, strict: boolean, s: CheckSection): void {
+  const courses = company.facts.courses?.courses ?? [];
+  const teachers = company.facts.teachers?.teachers ?? [];
+  const courseIds = new Set(courses.map((c) => c.id));
+  const photoIds = new Set(Object.keys(company.photos));
+  const refs: Array<{ at: string; id: unknown; kind: 'course' | 'photo' }> = [];
+  courses.forEach((c, i) => refs.push({ at: `company-data/facts/courses.yaml: courses.${i}.photo`, id: c.photo, kind: 'photo' }));
+  teachers.forEach((t, i) => {
+    (t.course_ids ?? []).forEach((id, j) => refs.push({ at: `company-data/facts/teachers.yaml: teachers.${i}.course_ids.${j}`, id, kind: 'course' }));
+    refs.push({ at: `company-data/facts/teachers.yaml: teachers.${i}.photo`, id: t.photo, kind: 'photo' });
+  });
+  // admissions.yaml は自由形式なので、departments[].course_id だけを見る
+  const departments = (company.facts.admissions as { departments?: unknown } | undefined)?.departments;
+  if (Array.isArray(departments)) {
+    departments.forEach((d, i) => {
+      if (d && typeof d === 'object' && 'course_id' in d) {
+        refs.push({ at: `company-data/facts/admissions.yaml: departments.${i}.course_id`, id: (d as { course_id: unknown }).course_id, kind: 'course' });
+      }
+    });
+  }
+  for (const { at, id, kind } of refs) {
+    if (id === undefined || (typeof id === 'string' && id.includes('TODO'))) continue;
+    const [label, target, known] =
+      kind === 'course' ? (['学科 ID', 'facts/courses.yaml', courseIds] as const) : (['写真 ID', 'photos/photos.yaml', photoIds] as const);
+    if (typeof id !== 'string' || id.trim() === '') {
+      push(s.errors, `${at}: ${label}を文字列で書いてください（company-data/${target} の id）`);
+    } else if (PLACEHOLDER_ID_RE.test(id)) {
+      push(
+        strict ? s.errors : s.warnings,
+        `${at}: 記入例のプレースホルダ "${id}" を指しています。company-data/${target} の実際の id に置き換えるか、記入例ごと削除してください（system/rules/naming.md §6）`,
+      );
+    } else if (!known.has(id)) {
+      const list = [...known].filter((k) => !PLACEHOLDER_ID_RE.test(k));
+      const shown = list.length > 8 ? `${list.slice(0, 8).join(', ')} 他 ${list.length - 8} 件` : list.join(', ') || 'なし';
+      const hint = kind === 'photo' ? '。写真は npm run photo:add で登録する' : '';
+      push(s.errors, `${at}: ${label} "${id}" が company-data/${target} にありません（登録済み: ${shown}${hint}）`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -612,7 +694,7 @@ async function checkLayer1Orders(root: string, bookId: string, dir: string, name
 
 export async function validateStudio(root: string, opts: { strict?: boolean } = {}): Promise<ValidateReport> {
   const strict = opts.strict ?? false;
-  const s1 = section(1, 'company-data（スキーマ・TODO）');
+  const s1 = section(1, 'company-data（スキーマ・TODO・ID の参照・全角英数字）');
   const s2 = section(2, 'BOOK の設定（book.yaml・ページ・背景・styles・references.yaml）');
   const s3 = section(3, '参考資料（source.yaml・analysis）');
   const s4 = section(4, 'ページの試し合成（テンプレート・アセット）');

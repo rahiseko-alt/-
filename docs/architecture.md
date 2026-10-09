@@ -364,11 +364,13 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | # | 検査 | 結果 |
 | --- | --- | --- |
 | 1 | company-data のスキーマ（数値項目 `years` `capacity` `value` `count` `established` が数値か `TODO`、実績の数値 `metrics[].value`・`certifications[].count` を記入したときの `as_of`・`source`、`facts/admissions.yaml` の学費の合計を含む）。`TODO` プレースホルダ | スキーマ違反（`"2年"` のような数値項目の文字列、出典・基準日のない実績の数値を含む）・合計の食い違いはエラー。TODO は警告（`--strict` でエラー） |
+| 1 | company-data の中の ID の参照: 教員の `course_ids`・`facts/admissions.yaml` の `departments[].course_id` → `facts/courses.yaml` の `id`、学科・教員の `photo` → `photos/photos.yaml` の `id`（`"TODO: ..."` の値は TODO として数える） | 存在しない ID はエラー。記入例のプレースホルダ（`*-todo`）を指すものは警告（`--strict` でエラー） |
+| 1 | company-data の全角英数字（U+FF10〜FF19・FF21〜FF3A・FF41〜FF5A）: すべての YAML の文字列の値（コメント・キー名と、資料のファイル名・パスを書く `source`・`file` は対象外） | 警告（半角に直し、原本の表記はコメントに残す） |
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |
 | 4 | `page.css` が、BOOK の `styles`（共通 CSS）と同じクラス名を、`page.html`・BOOK 固有の部品の `class` 属性に直接書いた要素に使って装飾している（共通パーシャルが出力する要素の上書きだけなら対象外） | 警告 |
-| 5 | 事実の直書き: company-data の文字列（4 文字以上、TODO 以外）が `books/**/page.html` やパーシャルにそのまま書かれている | 警告（`{{facts...}}` を使う） |
+| 5 | 事実の直書き: company-data の文字列（4 文字以上、TODO 以外。ID・パスのキー `id` `photo` `course_ids` `course_id` `file` `logo` `variant` は除く）が `books/**/page.html` やパーシャルにそのまま書かれている | 警告（`{{facts...}}` を使う） |
 | 6 | 禁止語: いずれかの `source.yaml` の `forbidden_terms` が `books/**`・`company-data/**`・`shared/**` のテキストファイルに出現 | エラー |
 | 7 | `backgrounds/*.{png,jpg,jpeg,webp}` に同じベース名の `.prompt.yaml` がない | 警告 |
 | 7 | `backgrounds/layer1-orders.yaml` の形式・`book` の不一致・参照先の欠落 | エラー |
