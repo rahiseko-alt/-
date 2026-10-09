@@ -1,0 +1,14 @@
+references:
+  - references/user-neon/campaign/source.yaml
+page_001:
+  visual_reference:
+    - references/user-neon/campaign/page_002.png
+  layout_reference: []
+  information_reference: []
+  notes: ユーザーが表紙に指定。
+page_002:
+  visual_reference:
+    - references/user-neon/campaign/page_001.png
+    - references/user-neon/campaign/page_004.png
+  layout_reference: []
+  information_reference: []

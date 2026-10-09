@@ -1,0 +1,146 @@
+date: 2026-10-09
+authority: ユーザーの添付と直接指示
+cover_reference: references/user-neon/campaign/page_002.png
+format: A4 portrait / one image per page
+palette:
+  - black
+  - cobalt
+  - cyan
+  - crimson
+  - magenta
+  - chrome white
+invariants:
+  - 2枚目の顔・装甲・ネオンの密度を表紙の基準にする
+  - 全ページ縦長
+  - 1ページ1画像。全冊を1枚にまとめない
+  - 人物の顔・肌・髪・金属・粒子の細部を維持
+  - 他の支給アートを全冊の背景に散らす
+  - 文字はコードで独立配置
+  - 同じ構図を全ページで繰り返さない
+assets:
+  - name: cover-armor
+    sources:
+      - 2
+    mode: imagegen-edit
+  - name: blue-armor
+    sources:
+      - 4
+      - 1
+    mode: imagegen-edit
+  - name: blue-city
+    sources:
+      - 3
+    mode: user-supplied-exact
+  - name: blue-lab
+    sources:
+      - 5
+    mode: user-supplied-exact
+  - name: neon-energy
+    sources:
+      - 6
+    mode: user-supplied-exact
+  - name: red-circuit
+    sources:
+      - 7
+    mode: user-supplied-exact
+page_layouts:
+  - page: 1
+    title: 表紙
+    background: cover-armor
+    layout: cover
+  - page: 2
+    title: コンセプト
+    background: blue-armor
+    layout: manifesto
+  - page: 3
+    title: AIでできること
+    background: neon-energy
+    layout: possibilities
+  - page: 4
+    title: 制作できる成果物
+    background: red-circuit
+    layout: showcase
+  - page: 5
+    title: 日本語に不安がある方へ
+    background: blue-lab
+    layout: language
+  - page: 6
+    title: 多様な背景と学ぶ
+    background: blue-city
+    layout: global
+  - page: 7
+    title: 成長のステップ
+    background: neon-energy
+    layout: journey
+  - page: 8
+    title: 将来につながる力
+    background: blue-city
+    layout: future
+  - page: 9
+    title: 学科・教育の全体像
+    background: red-circuit
+    layout: overview
+  - page: 10
+    title: AI活用の学び
+    background: neon-energy
+    layout: ai-flow
+  - page: 11
+    title: ビジネスの学び
+    background: red-circuit
+    layout: business
+  - page: 12
+    title: IT・デジタル基礎
+    background: blue-lab
+    layout: digital
+  - page: 13
+    title: マーケティング・発信
+    background: neon-energy
+    layout: marketing
+  - page: 14
+    title: 言葉とキャリア
+    background: blue-lab
+    layout: career-language
+  - page: 15
+    title: 授業スタイル
+    background: red-circuit
+    layout: learning-cycle
+  - page: 16
+    title: 学校生活・多文化環境
+    background: blue-city
+    layout: community
+  - page: 17
+    title: 教員・支援体制
+    background: blue-lab
+    layout: support
+  - page: 18
+    title: 進路・就職支援
+    background: blue-armor
+    layout: career
+  - page: 19
+    title: 保護者の方へ
+    background: blue-lab
+    layout: parents
+  - page: 20
+    title: 学費のご案内
+    background: red-circuit
+    layout: tuition
+  - page: 21
+    title: 納入時期・AO入試
+    background: neon-energy
+    layout: payment
+  - page: 22
+    title: 入試・出願方法
+    background: red-circuit
+    layout: admissions
+  - page: 23
+    title: 相談・アクセス
+    background: blue-city
+    layout: access
+  - page: 24
+    title: 裏表紙
+    background: neon-energy
+    layout: back
+pending:
+  - 具体的な授業科目・日本語支援・教員紹介・キャリア支援・学校行事の事実確認
+  - AO特典と諸経費の納入時期の確認
+  - 原寸画像の解像度確認。印刷入稿の判断は未実施

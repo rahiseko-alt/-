@@ -1,0 +1,14 @@
+id: page_021
+title: 納入時期・AO入試
+type: data
+background:
+  image: books/prospectus-neon-2027/backgrounds/neon-energy.png
+  fit: cover
+  position: center
+  opacity: 1
+status: review
+notes: 2026-10-09
+  ユーザー指定のネオン基準で制作。A4縦、1ページ1画像。レイアウト=payment。背景=neon-energy。期限文言は正本tuition.deadlinesの内容を参照する設計。別途諸経費の納入時期・AO特典は未確定。
+  コピーの新規部分は制作案。授業詳細・支援・写真・特典など未確定の事実は断定せず、確認中の表記または相談事項にしている。
+  facts.admissions.documents[1]は正本の入学検定料の名称を選ぶために使用。書類配列を並べ替えるときは参照を再確認する。
+  tuition.deadlines[0]/[1]は正本の入学金/1年次授業料の納入期限。配列順を変えるときは参照を再確認する。

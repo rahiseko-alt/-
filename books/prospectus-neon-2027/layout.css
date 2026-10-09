@@ -1,0 +1,257 @@
+/* BOOK限定。色はbook.yamlのthemeで定義。背景原画は変形せずcoverで配置する。 */
+.neon { position: relative; width: 210mm; height: 297mm; color: var(--color-text); font-family: var(--font-body); isolation: isolate; }
+.neon *, .neon *::before, .neon *::after { box-sizing: border-box; }
+.neon h1, .neon h2, .neon p { margin: 0; }
+.neon p { font-size: 10.5pt; font-weight: 500; line-height: 1.8; text-align: left; }
+.neon h1, .neon h2 { font-family: var(--font-heading); font-feature-settings: 'palt' 1; text-wrap: balance; }
+.neon .readability-shade { position: absolute; inset: -3mm; z-index: -1; background: linear-gradient(180deg, color-mix(in srgb,var(--color-background) 82%,transparent),color-mix(in srgb,var(--color-background) 20%,transparent) 38%,color-mix(in srgb,var(--color-background) 85%,transparent) 80%); }
+.neon .section-head { position: absolute; top: 18mm; left: 16mm; right: 16mm; }
+.neon .eyebrow { font-size: 8.5pt; line-height: 1.45; font-weight: 700; letter-spacing: .15em; color: var(--color-primary); text-align: left; }
+.neon .section-head h1 { font-size: 32pt; line-height: 1.2; font-weight: 900; letter-spacing: .015em; margin-top: 6mm; text-shadow: 0 1mm 5mm var(--color-background); }
+.neon .section-head .lead { margin-top: 6mm; font-size: 11.5pt; line-height: 1.7; color: var(--color-text); }
+.neon .info-card { position: relative; padding: 6mm; background: color-mix(in srgb,var(--color-surface) 88%,transparent); border-top: .5mm solid var(--color-primary); }
+.neon .index { display: block; color: var(--color-primary); font-weight: 900; font-size: 9pt; line-height: 1.3; letter-spacing: .08em; }
+.neon .info-card h2 { font-size: 16pt; font-weight: 700; line-height: 1.4; margin: 3mm 0 2mm; }
+.neon .info-card p { color: var(--color-muted); }
+.neon .folio { position: absolute; left: 16mm; right: 16mm; bottom: 9mm; display:flex; align-items: center; justify-content: space-between; border-top: .2mm solid color-mix(in srgb,var(--color-text) 36%,transparent); padding-top: 3mm; font-size: 7.5pt; font-weight: 700; letter-spacing: .06em; }
+.neon .folio-number { color:var(--color-primary); font-size: 9pt; }
+.neon .production-note { position:absolute; left:16mm; right:16mm; bottom:22mm; font-size:7.5pt; font-weight:500; line-height:1.65; color:var(--color-muted); }
+.neon .bottom-shade { position:absolute; inset: -3mm; z-index:-1; background:linear-gradient(180deg,transparent 33%,color-mix(in srgb,var(--color-background) 35%,transparent) 48%,var(--color-background) 97%); }
+.neon .side-shade { position:absolute; inset:-3mm; z-index:-1; background:linear-gradient(90deg,color-mix(in srgb,var(--color-background) 90%,transparent),transparent 110%); }
+.neon .top-label { position:absolute; top:17mm; left:16mm; }
+
+/* 01: 選択された表紙。目・顔を覆わず原画の迫力を維持。 */
+.neon.cover .readability-shade { display:none; }
+.neon .cover-vignette { position:absolute; inset:-3mm; z-index:-1; background:linear-gradient(180deg,color-mix(in srgb,var(--color-background) 35%,transparent),transparent 17%,transparent 56%,color-mix(in srgb,var(--color-background) 85%,transparent) 100%); }
+.neon .cover-top { position:absolute; top:12mm; left:14mm; right:14mm; display:flex; justify-content:space-between; font-size:8.5pt; font-weight:700; letter-spacing:.16em; text-shadow:0 .5mm 2mm var(--color-background); }
+.neon .cover-type { position:absolute; left:14mm; right:14mm; bottom:13mm; }
+.neon .pro-mark { height:58mm; display:flex; justify-content:center; align-items:center; gap:4mm; }
+.neon .pro-mark span { display:block; font-size:154pt; font-weight:900; line-height:1; letter-spacing:-.055em; }
+.neon .pro-mark i { display:block; width:22mm; height:41mm; background:var(--color-neutral); clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%); }
+.neon .cover-disciplines { text-align:center; font-size:9pt; letter-spacing:.11em; font-weight:700; margin-top:1mm; }
+.neon .cover-type h1 { font-size:30pt; font-weight:900; line-height:1.35; text-align:center; margin-top:3mm; letter-spacing:.015em; }
+.neon .cover-english { font-size:9pt; font-weight:700; letter-spacing:.09em; text-align:center; margin-top:1mm; }
+.neon .cover-bottom { display:flex; justify-content:space-between; border-top:.2mm solid color-mix(in srgb,var(--color-text) 65%,transparent); margin-top:6mm; padding-top:3mm; font-size:7.5pt; font-weight:700; letter-spacing:.1em; }
+
+/* 02: 大きな人物と下部のマニフェスト。 */
+.neon.manifesto .readability-shade { display:none; }
+.neon .manifesto-type { position:absolute; top:173mm; left:16mm; right:16mm; }
+.neon .line-label { color:var(--color-primary); font-size:12pt; font-weight:700; }
+.neon .manifesto-type h1 { font-size:31pt; font-weight:900; line-height:1.25; margin-top:5mm; }
+.neon .manifesto-rule { width:38mm; height:.7mm; background:var(--color-primary); margin:7mm 0 5mm; }
+.neon .manifesto-copy { width:162mm; font-size:11pt; line-height:1.75; }
+.neon .school-sign { margin-top:5mm; font-size:9pt; color:var(--color-primary); }
+
+/* 03: 横長のアウトラインを段差で展開。 */
+.neon .possibility-list { position:absolute; top:97mm; left:16mm; right:16mm; display:grid; gap:4mm; }
+.neon .possibility-list .info-card { min-height:33mm; padding:5mm 7mm 5mm 37mm; border-left:.6mm solid var(--color-primary); border-top:none; }
+.neon .possibility-list .index { position:absolute; top:7mm; left:6mm; width:26mm; font-size:10pt; }
+.neon .possibility-list h2 { font-size:17pt; margin:0 0 2mm; }
+.neon .possibility-list .info-card:nth-child(even) { margin-left:12mm; border-left-color:var(--color-accent); }
+.neon .possibility-list .info-card:nth-child(even) .index { color:var(--color-accent); }
+
+/* 04: Web、ビジュアル、資料、ポスターの異なる制作例。 */
+.neon .work-gallery { position:absolute; top:94mm; left:16mm; right:16mm; display:grid; grid-template-columns:1.1fr 1fr; gap:6mm; }
+.neon .work { position:relative; min-height:71mm; overflow:hidden; border:.3mm solid color-mix(in srgb,var(--color-text) 45%,transparent); background:var(--color-surface); }
+.neon .work h2 { position:absolute; bottom:0; left:0; right:0; padding:4mm; font-size:12pt; background:var(--color-background); }
+.neon .fake-toolbar { height:7mm; background:color-mix(in srgb,var(--color-neutral) 15%,var(--color-background)); display:flex; gap:1.4mm; align-items:center; padding-left:3mm; }
+.neon .fake-toolbar i { width:1.7mm; height:1.7mm; background:var(--color-muted); border-radius:50%; }
+.neon .sample-web { padding:5mm; border-left:7mm solid var(--color-accent); }
+.neon .sample-web strong { font-size:26pt; font-weight:900; line-height:1; display:block; }
+.neon .sample-web span { display:block; font-size:8pt; margin-top:3mm; font-weight:700; }
+.neon .visual-work img { width:100%; height:60mm; object-fit:cover; }
+.neon .slide-work { padding:9mm 5mm; }
+.neon .sample-label { font-size:8pt; font-weight:700; color:var(--color-primary); }
+.neon .sample-bars { display:flex; align-items:flex-end; gap:4mm; height:30mm; padding:5mm; }
+.neon .sample-bars i { display:block; width:12mm; height:13mm; background:var(--color-primary); }
+.neon .sample-bars i:nth-child(2) { height:20mm; background:var(--color-accent); }
+.neon .sample-bars i:nth-child(3) { height:28mm; }
+.neon .poster-work { padding:9mm 5mm; color:var(--color-text); background:var(--color-secondary); }
+.neon .poster-work strong { display:block; font-size:28pt; line-height:1.15; font-weight:900; }
+
+/* 05: 顔を上部の背景に残し、言葉の順序を下部へ。 */
+.neon.language .readability-shade { background:linear-gradient(180deg,color-mix(in srgb,var(--color-background) 72%,transparent),color-mix(in srgb,var(--color-background) 35%,transparent) 35%,var(--color-background)); }
+.neon .language-large { position:absolute; top:105mm; left:19mm; right:19mm; padding-left:7mm; border-left:1mm solid var(--color-primary); }
+.neon .thin-label { font-size:9pt; letter-spacing:.12em; font-weight:700; color:var(--color-primary); }
+.neon .language-large h2 { font-size:28pt; line-height:1.3; font-weight:900; margin-top:5mm; }
+.neon .language-large p { margin-top:7mm; }
+.neon .three-inline { position:absolute; top:208mm; left:16mm; right:16mm; display:grid; grid-template-columns:repeat(3,1fr); gap:4mm; }
+.neon .three-inline .info-card { min-height:49mm; padding:5mm; }
+.neon .three-inline h2 { font-size:18pt; }
+.neon .three-inline p { font-size:9pt; }
+
+/* 06 / 08: 人物の方向を活かした、余白と強い英字。 */
+.neon.global .readability-shade { opacity:.25; }
+.neon .global-lines { position:absolute; top:121mm; left:16mm; display:flex; flex-direction:column; gap:3mm; }
+.neon .global-lines span { font-size:23pt; line-height:1.2; font-weight:900; letter-spacing:-.01em; text-shadow:0 1mm 4mm var(--color-background); }
+.neon .global-lines span:nth-child(2) { color:var(--color-primary); }
+.neon .quote-box { position:absolute; top:219mm; left:16mm; right:16mm; padding:6mm; background:color-mix(in srgb,var(--color-background) 92%,transparent); border-left:.7mm solid var(--color-primary); }
+.neon .quote-box p+p { margin-top:3mm; font-size:10pt; }
+.neon.future .readability-shade { background:linear-gradient(90deg,color-mix(in srgb,var(--color-background) 65%,transparent),transparent 80%); }
+.neon .future-keywords { position:absolute; left:16mm; top:95mm; display:flex; flex-direction:column; }
+.neon .future-keywords span { font-size:53pt; line-height:1.05; font-weight:900; color:var(--color-primary); text-shadow:0 1mm 5mm var(--color-background); }
+.neon .future-keywords span:nth-child(2) { color:var(--color-text); }
+.neon .future-copy { position:absolute; left:16mm; right:16mm; top:187mm; padding:7mm; background:color-mix(in srgb,var(--color-background) 89%,transparent); }
+.neon .future-copy h2 { font-size:19pt; line-height:1.45; font-weight:900; }
+.neon .future-copy p { margin-top:5mm; }
+
+/* 07: 成長の一本線と大きな修業年数。 */
+.neon .journey-rail { position:absolute; top:103mm; left:24mm; right:16mm; border-left:.6mm solid var(--color-primary); }
+.neon .journey-rail section { position:relative; padding:0 0 8mm 10mm; }
+.neon .journey-rail section::before { content:''; position:absolute; width:3mm; height:3mm; border: .7mm solid var(--color-primary); background:var(--color-background); border-radius:50%; left:-1.8mm; top:1mm; }
+.neon .journey-rail span { color:var(--color-primary); font-size:9pt; font-weight:700; letter-spacing:.14em; }
+.neon .journey-rail h2 { font-size:21pt; font-weight:900; margin:3mm 0; }
+.neon .journey-rail p { font-size:10pt; }
+.neon .duration { position:absolute; top:237mm; left:135mm; right:16mm; display:flex; align-items:center; gap:4mm; }
+.neon .duration strong { font-size:49pt; font-weight:900; color:var(--color-primary); }
+.neon .duration span { font-size:8.5pt; line-height:1.7; font-weight:700; }
+
+/* 09: 教育の地図。 */
+.neon .department-title { position:absolute; top:83mm; left:16mm; right:16mm; }
+.neon .department-title h2 { font-size:24pt; font-weight:900; }
+.neon .department-title p { margin-top:3mm; color:var(--color-muted); }
+.neon .orbit { position:absolute; width:134mm; height:116mm; top:119mm; left:38mm; border:.3mm solid color-mix(in srgb,var(--color-primary) 55%,transparent); border-radius:50%; }
+.neon .orbit::before { content:''; position:absolute; inset:15mm; border:.2mm dashed color-mix(in srgb,var(--color-primary) 55%,transparent); border-radius:50%; }
+.neon .orbit-center { position:absolute; width:59mm; height:59mm; top:28mm; left:37mm; display:grid; place-content:center; text-align:center; font-weight:900; font-size:26pt; line-height:1.05; background:var(--color-background); border:.8mm solid var(--color-primary); border-radius:50%; box-shadow:0 0 12mm color-mix(in srgb,var(--color-primary) 35%,transparent); }
+.neon .orbit-node { position:absolute; width:51mm; height:16mm; display:grid; place-items:center; font-size:17pt; font-weight:700; background:var(--color-surface); border:.4mm solid var(--color-primary); }
+.neon .node-a { top:-5mm; left:42mm; }.neon .node-b { top:47mm; left:-15mm; }.neon .node-c { top:47mm; right:-15mm; }.neon .node-d { bottom:-5mm; left:42mm; }
+.neon .overview-policy { position:absolute; top:251mm; left:16mm; right:16mm; font-size:10pt; line-height:1.7; }
+
+/* 10: 入力・思考・出力。 */
+.neon .flow-canvas { position:absolute; top:101mm; left:28mm; right:28mm; }
+.neon .flow-canvas section { padding:5mm 7mm; border:.3mm solid var(--color-primary); background:color-mix(in srgb,var(--color-background) 89%,transparent); }
+.neon .flow-canvas section>span { font-size:10pt; font-weight:900; color:var(--color-primary); letter-spacing:.14em; }
+.neon .flow-canvas h2 { font-size:23pt; font-weight:900; margin:2mm 0; }
+.neon .flow-link { height:10mm; width:.6mm; background:var(--color-primary); margin:0 auto; position:relative; }
+.neon .flow-link::after { content:''; position:absolute; bottom:0; left:-2mm; width:4.6mm; height:3mm; background:var(--color-primary); clip-path:polygon(0 0,100% 0,50% 100%); }
+
+/* 11: 英字と提案の大きな段差。 */
+.neon .business-poster { position:absolute; top:102mm; left:16mm; right:16mm; display:grid; grid-template-columns:65mm 1fr; gap:8mm; }
+.neon .business-poster>strong { font-size:42pt; font-weight:900; line-height:1.1; letter-spacing:-.05em; color:var(--color-text); }
+.neon .business-steps { display:grid; gap:5mm; }
+.neon .business-steps .info-card { padding:6mm; border-top-color:var(--color-secondary); }
+.neon .business-steps .index { color:var(--color-secondary); }
+.neon .business-steps h2 { font-size:16pt; }
+.neon .business-steps p { font-size:10pt; }
+
+/* 12: システム画面を想起させる文章の整列。 */
+.neon .digital-console { position:absolute; top:103mm; left:16mm; right:16mm; border:.4mm solid var(--color-primary); background:color-mix(in srgb,var(--color-surface) 86%,transparent); }
+.neon .console-head { display:flex; justify-content:space-between; align-items:center; padding:5mm; border-bottom:.3mm solid var(--color-primary); font-size:8pt; font-weight:700; letter-spacing:.06em; color:var(--color-primary); }
+.neon .console-head i { width:2mm; height:2mm; border-radius:50%; background:var(--color-primary); }
+.neon .digital-console section { padding:8mm; border-bottom:.2mm solid color-mix(in srgb,var(--color-primary) 35%,transparent); }
+.neon .digital-console section:last-child { border-bottom:none; }
+.neon .digital-console section>span { font-size:8.5pt; font-weight:700; color:var(--color-primary); letter-spacing:.12em; }
+.neon .digital-console h2 { font-size:19pt; font-weight:700; margin:3mm 0; }
+
+/* 13: ポスター型のリズム。 */
+.neon .marketing-hero { position:absolute; top:89mm; left:16mm; right:16mm; }
+.neon .marketing-hero strong { font-size:58pt; line-height:1.02; font-weight:900; letter-spacing:-.04em; text-shadow:0 1mm 7mm var(--color-background); }
+.neon .marketing-strip { position:absolute; top:210mm; left:16mm; right:16mm; display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; }
+.neon .marketing-strip section { border-top:.6mm solid var(--color-accent); padding:4mm 1mm; }
+.neon .marketing-strip span { font-weight:900; font-size:9pt; color:var(--color-accent); }
+.neon .marketing-strip h2 { font-size:17pt; font-weight:900; margin:3mm 0; }
+.neon .marketing-strip p { font-size:9pt; }
+
+/* 14: コミュニケーションを示す文字と横帯。 */
+.neon .word-display { position:absolute; top:99mm; left:16mm; display:flex; flex-direction:column; gap:2mm; }
+.neon .word-display span { font-size:26pt; line-height:1.05; font-weight:900; color:var(--color-primary); letter-spacing:-.02em; }
+.neon .language-pairs { position:absolute; top:150mm; left:16mm; right:16mm; display:grid; gap:4mm; }
+.neon .language-pairs .info-card { padding:5mm 6mm 5mm 39mm; min-height:30mm; border-top:none; border-left:.6mm solid var(--color-primary); }
+.neon .language-pairs .index { position:absolute; top:6mm; left:5mm; font-size:8pt; }
+.neon .language-pairs h2 { margin:0 0 2mm; font-size:16pt; }
+.neon .language-pairs p { font-size:10pt; }
+
+/* 15: 四段階を異なる幅で見せる。 */
+.neon .cycle-list { position:absolute; top:94mm; left:16mm; right:16mm; display:grid; gap:5mm; }
+.neon .cycle-list .info-card { display:grid; grid-template-columns:20mm 34mm 1fr; align-items:center; min-height:31mm; padding:5mm; border-top:none; border-left:.7mm solid var(--color-secondary); }
+.neon .cycle-list .index { font-size:22pt; color:var(--color-secondary); }
+.neon .cycle-list h2 { font-size:21pt; margin:0; }
+.neon .cycle-list p { font-size:10pt; }
+.neon .cycle-list .info-card:nth-child(2) { margin-left:7mm; }.neon .cycle-list .info-card:nth-child(3) { margin-left:14mm; }.neon .cycle-list .info-card:nth-child(4) { margin-left:21mm; }
+.neon .cycle-closing { position:absolute; top:247mm; left:16mm; right:16mm; font-size:10pt; letter-spacing:.1em; font-weight:700; text-align:center; }
+
+/* 16: 画像の迫力と大きな日本語を分担。 */
+.neon.community .readability-shade { background:linear-gradient(180deg,color-mix(in srgb,var(--color-background) 55%,transparent),transparent 45%); }
+.neon .community-statement { position:absolute; left:16mm; right:16mm; top:182mm; }
+.neon .community-statement h2 { font-size:28pt; line-height:1.45; font-weight:900; }
+.neon .community-statement p { margin-top:7mm; max-width:161mm; font-size:10pt; }
+
+/* 17: 支援は未確定の制度を約束せず、相談事項として整理。 */
+.neon .support-ring { position:absolute; top:100mm; right:20mm; width:68mm; height:68mm; border:.5mm solid var(--color-primary); border-radius:50%; display:grid; place-content:center; text-align:center; }
+.neon .support-ring span { font-size:30pt; font-weight:900; line-height:1; color:var(--color-primary); }
+.neon .support-questions { position:absolute; top:110mm; left:16mm; width:114mm; display:grid; gap:5mm; }
+.neon .support-questions .info-card { padding:6mm; }
+.neon .support-questions h2 { font-size:20pt; margin:3mm 0; }
+.neon .support-questions p { font-size:10pt; }
+
+/* 18: 全面人物と下部のキャリア声明。 */
+.neon.career .readability-shade { background:linear-gradient(180deg,color-mix(in srgb,var(--color-background) 69%,transparent),transparent 37%); }
+.neon .career-statement { position:absolute; top:177mm; left:16mm; right:16mm; }
+.neon .policy-quote { font-size:12pt; line-height:1.85; font-weight:500; margin-top:5mm; }
+.neon .career-axes { margin-top:6mm; display:flex; flex-wrap:wrap; gap:2mm 4mm; color:var(--color-primary); font-size:8.5pt; font-weight:700; }
+.neon .career-statement h2 { font-size:23pt; font-weight:900; line-height:1.4; margin-top:7mm; }
+
+/* 19: 保護者ページは落ち着いた読みやすさと同じ世界観。 */
+.neon.parents .readability-shade { background:color-mix(in srgb,var(--color-background) 65%,transparent); }
+.neon.parents .section-head h1 { font-size:29pt; }
+.neon .parent-sections { position:absolute; top:99mm; left:16mm; right:16mm; display:grid; gap:6mm; }
+.neon .parent-sections section { border-top:.35mm solid var(--color-primary); padding-top:4mm; }
+.neon .parent-sections section>span { font-size:8.5pt; color:var(--color-primary); font-weight:700; }
+.neon .parent-sections h2 { font-size:16pt; font-weight:700; margin:3mm 0; }
+.neon .parent-sections p { font-size:10.5pt; line-height:1.8; }
+.neon .parent-contact { position:absolute; top:247mm; left:16mm; right:16mm; border-top:.5mm solid var(--color-primary); padding-top:4mm; display:grid; grid-template-columns:32mm 1fr; align-items:center; }
+.neon .parent-contact>span { font-size:9pt; font-weight:700; }.neon .parent-contact strong { font-size:22pt; font-weight:900; }.neon .parent-contact p { grid-column:2; font-size:9pt; }
+
+/* 20: 費用表。視覚の強さを残しつつ桁と内訳を揃える。 */
+.neon.tuition .readability-shade { background:color-mix(in srgb,var(--color-background) 76%,transparent); }
+.neon .tuition-total { position:absolute; top:80mm; left:16mm; right:16mm; }
+.neon .tuition-total>p { font-size:9.5pt; font-weight:700; color:var(--color-muted); }
+.neon .tuition-total>strong { display:block; font-size:47pt; line-height:1.15; font-weight:900; margin-top:4mm; letter-spacing:-.025em; }
+.neon .tuition-total small { font-size:20pt; padding-left:3mm; }
+.neon .tuition-total>span { display:block; font-size:8pt; line-height:1.6; margin-top:4mm; font-weight:500; }
+.neon .tuition-table { position:absolute; top:129mm; left:16mm; right:16mm; }
+.neon .table-row { min-height:12mm; display:flex; align-items:center; justify-content:space-between; padding:2mm 4mm; border-bottom:.2mm solid color-mix(in srgb,var(--color-text) 27%,transparent); font-size:11pt; font-weight:500; }
+.neon .table-heading { background:var(--color-secondary); font-size:9pt; font-weight:700; min-height:9mm; }
+.neon .year-row { margin-top:2mm; color:var(--color-text); background:color-mix(in srgb,var(--color-text) 12%,var(--color-background)); font-weight:700; }
+.neon .term-row { padding-left:9mm; font-size:10pt; min-height:10mm; color:var(--color-muted); }
+.neon .tuition-notes { position:absolute; top:251mm; left:16mm; right:16mm; }
+.neon .tuition-notes p { font-size:7.5pt; line-height:1.65; margin-bottom:1mm; color:var(--color-muted); }
+
+/* 21: 納入の順序とAO情報。 */
+.neon .payment-stages { position:absolute; top:88mm; left:16mm; right:16mm; display:grid; gap:4mm; }
+.neon .payment-stages section { position:relative; min-height:34mm; border-left:.7mm solid var(--color-primary); padding:4mm 6mm; background:color-mix(in srgb,var(--color-background) 90%,transparent); }
+.neon .payment-stages section>span { font-size:9pt; font-weight:700; color:var(--color-primary); }
+.neon .payment-stages h2 { font-size:17pt; font-weight:700; margin-top:2mm; }
+.neon .payment-stages strong { position:absolute; right:6mm; top:8mm; font-size:28pt; font-weight:900; line-height:1.2; }.neon .payment-stages small { font-size:11pt; }
+.neon .payment-stages .deadline { font-size:8pt; line-height:1.55; margin-top:4mm; color:var(--color-muted); }
+.neon .ao-box { position:absolute; top:206mm; left:16mm; right:16mm; padding:6mm; border:.3mm solid var(--color-primary); background:color-mix(in srgb,var(--color-surface) 90%,transparent); }
+.neon .ao-box h2 { font-size:17pt; margin:3mm 0; font-weight:700; }.neon .ao-box p:not(.eyebrow) { font-size:9pt; line-height:1.7; margin-top:2mm; }
+
+/* 22: 三つの選抜方式と資格の要約。 */
+.neon .exam-list { position:absolute; top:84mm; left:16mm; right:16mm; display:grid; gap:4mm; }
+.neon .exam-list section { padding:5mm 6mm; border-left:.7mm solid var(--color-secondary); background:color-mix(in srgb,var(--color-background) 88%,transparent); }
+.neon .exam-list h2 { font-size:21pt; line-height:1.3; margin:2mm 0; font-weight:900; }
+.neon .exam-list .eyebrow { color:var(--color-secondary); }.neon .exam-list p { font-size:9pt; line-height:1.7; }.neon .exam-date { font-weight:700; }
+.neon .eligibility { position:absolute; top:227mm; left:16mm; right:16mm; border-top:.3mm solid var(--color-text); padding-top:4mm; }
+.neon .eligibility h2 { font-size:14pt; margin-bottom:3mm; }.neon .eligibility p { font-size:8pt; line-height:1.65; }
+.neon .admissions-notes { position:absolute; left:16mm; right:16mm; top:267mm; }.neon .admissions-notes p { font-size:7pt; line-height:1.4; color:var(--color-muted); }
+
+/* 23: 訪問・相談の連絡先と読み取り可能なQR。 */
+.neon.access .readability-shade { opacity:.35; }
+.neon .access-card { position:absolute; top:117mm; left:16mm; width:130mm; padding:7mm; background:color-mix(in srgb,var(--color-background) 94%,transparent); border-left:.7mm solid var(--color-primary); }
+.neon .access-card h2 { font-size:21pt; font-weight:900; margin:4mm 0; }.neon .access-card p { font-size:10pt; line-height:1.75; }.neon .station { margin-top:4mm; color:var(--color-primary); font-weight:700; }
+.neon .access-rule { height:.3mm; background:var(--color-primary); margin:6mm 0 4mm; }.neon .contact-phone { display:block; font-size:24pt; line-height:1.4; font-weight:900; margin:2mm 0; }
+.neon .access-card .access-small { margin-top:6mm; font-size:8pt; color:var(--color-muted); }
+.neon .access-qr { position:absolute; top:227mm; right:16mm; display:flex; align-items:center; flex-direction:column; gap:3mm; }.neon .access-qr svg { width:30mm; height:30mm; background:var(--color-neutral); padding:2mm; }.neon .access-qr span { font-size:7.5pt; font-weight:700; }
+
+/* 24: 強いNEXTと簡潔な連絡先。 */
+.neon.back .readability-shade { display:none; }
+.neon .back-art { position:absolute; top:-3mm; left:-3mm; right:-3mm; height:184mm; z-index:-1; overflow:hidden; }
+.neon .back-art img { width:100%; height:100%; object-fit:cover; object-position:center 29%; }
+.neon .back-shade { position:absolute; inset:-3mm; z-index:-1; background:linear-gradient(180deg,transparent 36%,var(--color-background) 74%); }
+.neon .back-next { position:absolute; top:167mm; left:15mm; right:15mm; font-size:83pt; line-height:1.1; font-weight:900; letter-spacing:-.045em; display:flex; justify-content:space-between; align-items:center; }
+.neon .back-next span { font-size:64pt; color:var(--color-primary); }
+.neon .back-contact { position:absolute; top:215mm; left:16mm; right:16mm; }
+.neon .back-contact h2 { font-size:25pt; font-weight:900; line-height:1.4; }.neon .back-contact p { font-size:8pt; line-height:1.7; }.neon .back-english { letter-spacing:.04em; }.neon .back-rule { width:36mm; height:.6mm; background:var(--color-primary); margin:4mm 0; }
+.neon .back-contact>strong { display:block; font-size:23pt; font-weight:900; line-height:1.4; }
+.neon .back-url { display:flex; justify-content:space-between; align-items:end; margin-top:3mm; }.neon .back-url p { font-size:7pt; }.neon .back-url svg { width:23mm; height:23mm; background:var(--color-neutral); padding:1.5mm; }

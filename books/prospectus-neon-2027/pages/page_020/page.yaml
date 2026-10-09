@@ -1,0 +1,13 @@
+id: page_020
+title: 学費のご案内
+type: data
+background:
+  image: books/prospectus-neon-2027/backgrounds/red-circuit.png
+  fit: cover
+  position: center
+  opacity: 1
+status: review
+notes: 2026-10-09
+  ユーザー指定のネオン基準で制作。A4縦、1ページ1画像。レイアウト=tuition。背景=red-circuit。学費はfacts.admissionsを直接参照。grand_totalには1年次入学金が含まれる。検定料と個人実費は別。表の表示順は正本のyears/termsに従う。
+  コピーの新規部分は制作案。授業詳細・支援・写真・特典など未確定の事実は断定せず、確認中の表記または相談事項にしている。
+  facts.admissions.documents[1]は正本の入学検定料の名称を選ぶために使用。書類配列を並べ替えるときは参照を再確認する。
