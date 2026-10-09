@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
 import { appendPhotoEntry, photoAddCommand } from '../lib/photo-add.ts';
 import { validateCommand } from '../lib/validate.ts';
 import { cleanupTemp, copyFixture, readFile, run, tempDir, writeFile } from './helpers.ts';
@@ -100,12 +100,98 @@ describe('photo:add', () => {
   });
 });
 
+describe('photo:add（レビュー指摘）', () => {
+  it('16bit・ICC プロファイル付きの画像も sRGB に変換する（色がずれない。EXIF は残らない）', async () => {
+    const root = copyFixture();
+    const src = path.join(tempDir(), 'p3-16bit.png');
+    // #3366cc を P3 のプロファイル付き 16bit PNG にする（sharp は 16bit を内部で P3 として扱う）
+    await sharp({ create: { width: 20, height: 20, channels: 3, background: '#3366cc' } }).toColourspace('rgb16').withIccProfile('p3').png().toFile(src);
+    const r = await run(photoAddCommand, ['--file', src, '--id', 'color-01', '--rights', RIGHTS, '--root', root]);
+    expect(r.code, r.text).toBe(0);
+    const out = path.join(root, 'company-data/photos/color-01.jpg');
+    const { data } = await sharp(out).raw().toBuffer({ resolveWithObject: true });
+    for (const [got, want] of [[data[0], 0x33], [data[1], 0x66], [data[2], 0xcc]] as const) expect(Math.abs(got! - want)).toBeLessThanOrEqual(4);
+    const meta = await sharp(out).metadata();
+    expect(meta.exif).toBeUndefined();
+    expect(meta.xmp).toBeUndefined();
+  });
+
+  it('参考ページの派生物（.cache/・比較出力）と、リンク経由のルートでも参考資料を拒否する', async () => {
+    const root = copyFixture();
+    for (const rel of ['.cache/ref-prep/Sample/p1.jpg', '.cache/gen-inputs/smoke/bg-01.jpg', 'books/smoke/reviews/page_001/compare-20261009-0000/side-by-side.jpg']) {
+      const file = path.join(root, rel);
+      await exifJpeg(file);
+      const r = await run(photoAddCommand, ['--file', file, '--id', 'ref-01', '--rights', RIGHTS, '--root', root]);
+      expect(r.err, rel).toContain('参考資料の画像は自社の写真として登録できません');
+    }
+    // --root をシンボリックリンクで渡し、画像は実体のパスで渡す
+    const link = path.join(tempDir(), 'studio-link');
+    fs.symlinkSync(root, link);
+    const refImg = path.join(root, 'references/Sample/brochure/photo.jpg');
+    await exifJpeg(refImg);
+    const viaLink = await run(photoAddCommand, ['--file', refImg, '--id', 'ref-02', '--rights', RIGHTS, '--root', link]);
+    expect(viaLink.err).toContain('参考資料の画像は自社の写真として登録できません');
+  });
+
+  it('全面不透明の RGBA は JPEG にする。--file の相対パスは実行したディレクトリ基準', async () => {
+    const root = copyFixture();
+    const dir = tempDir();
+    await sharp({ create: { width: 30, height: 20, channels: 4, background: { r: 10, g: 200, b: 10, alpha: 1 } } }).png().toFile(path.join(dir, 'opaque.png'));
+    const saved = process.env.INIT_CWD;
+    process.env.INIT_CWD = dir;
+    try {
+      const r = await run(photoAddCommand, ['--file', 'opaque.png', '--id', 'opaque-01', '--rights', RIGHTS, '--root', root]);
+      expect(r.code, r.text).toBe(0);
+    } finally {
+      if (saved === undefined) delete process.env.INIT_CWD;
+      else process.env.INIT_CWD = saved;
+    }
+    const meta = await sharp(path.join(root, 'company-data/photos/opaque-01.jpg')).metadata();
+    expect([meta.format, meta.channels]).toEqual(['jpeg', 3]);
+    expect(fs.existsSync(path.join(root, 'company-data/photos/opaque-01.png'))).toBe(false);
+  });
+
+  it('photos.yaml の書き込みに失敗したら、画像も残さない', async () => {
+    const root = copyFixture();
+    const src = path.join(tempDir(), 'a.jpg');
+    await exifJpeg(src);
+    const yaml = readFile(root, 'company-data/photos/photos.yaml');
+    const original = fs.renameSync;
+    const spy = vi.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
+      if (String(to).endsWith('photos.yaml')) throw new Error('書き込めません（テスト）');
+      return original(from, to);
+    });
+    try {
+      const r = await run(photoAddCommand, ['--file', src, '--id', 'fail-01', '--rights', RIGHTS, '--root', root]);
+      expect(r.code).toBe(1);
+    } finally {
+      spy.mockRestore();
+    }
+    expect(readFile(root, 'company-data/photos/photos.yaml')).toBe(yaml);
+    expect(fs.readdirSync(path.join(root, 'company-data/photos')).sort()).toEqual(['campus.svg', 'photos.yaml']);
+  });
+});
+
 describe('appendPhotoEntry', () => {
   const entry = { id: 'a-01', file: 'company-data/photos/a-01.jpg', rights: 'r' };
 
   it('"photos: []" をブロック形式にし、後ろのコメントを残す', () => {
     const out = appendPhotoEntry('# 説明\n\nphotos: [] # 空\n# 末尾のコメント\n', entry, 't');
     expect(out).toBe('# 説明\n\nphotos: # 空\n  - id: a-01\n    file: company-data/photos/a-01.jpg\n    rights: r\n# 末尾のコメント\n');
+  });
+
+  it('"photos:"・"photos: ~" に足しても、後ろのコメントを残す', () => {
+    const expected = '# 説明\nphotos: # まだない\n  - id: a-01\n    file: company-data/photos/a-01.jpg\n    rights: r\n# 末尾\n';
+    expect(appendPhotoEntry('# 説明\nphotos: # まだない\n# 末尾\n', entry, 't')).toBe(expected);
+    expect(appendPhotoEntry('# 説明\nphotos: ~ # まだない\n# 末尾\n', entry, 't')).toBe(expected);
+    expect(appendPhotoEntry('photos: null\n', entry, 't')).toBe('photos:\n  - id: a-01\n    file: company-data/photos/a-01.jpg\n    rights: r\n');
+  });
+
+  it('字下げ 4・字下げなしのリストにも、同じ字下げで足す', () => {
+    const four = appendPhotoEntry('photos:\n    - id: b\n      file: company-data/photos/b.jpg\n', entry, 't');
+    expect(four).toBe('photos:\n    - id: b\n      file: company-data/photos/b.jpg\n    - id: a-01\n      file: company-data/photos/a-01.jpg\n      rights: r\n');
+    const none = appendPhotoEntry('photos:\n- id: b\n  file: company-data/photos/b.jpg\n', entry, 't');
+    expect(none).toBe('photos:\n- id: b\n  file: company-data/photos/b.jpg\n- id: a-01\n  file: company-data/photos/a-01.jpg\n  rights: r\n');
   });
 
   it('photos がなければ末尾に足す。既存のブロックの後ろに足す', () => {
