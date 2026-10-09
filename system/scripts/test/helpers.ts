@@ -90,6 +90,53 @@ export function runScript(script: string, args: string[]): RunResult {
   return { code: r.status ?? -1, out, err, text: `${out}\n${err}` };
 }
 
+/**
+ * 一時リポジトリで git を動かすための環境変数。利用者・システムの設定、除外ファイル、属性ファイルを読まず、
+ * 親の git（フックなど）から渡る GIT_DIR・GIT_INDEX_FILE なども引き継がない。
+ * - 全体設定（~/.gitconfig）・システム設定（/etc/gitconfig）: GIT_CONFIG_GLOBAL・GIT_CONFIG_NOSYSTEM
+ * - システムの属性ファイル（/etc/gitattributes）: GIT_ATTR_NOSYSTEM
+ * - 既定の除外ファイル・属性ファイル（~/.config/git/ignore・~/.config/git/attributes）: 設定がなくても読まれるので、
+ *   コマンドラインの -c と同じ扱いの GIT_CONFIG_COUNT で core.excludesFile・core.attributesFile を空にする（git 2.31 以降）
+ */
+export function isolatedGitEnv(): NodeJS.ProcessEnv {
+  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
+  return {
+    ...env,
+    GIT_CONFIG_GLOBAL: os.devNull,
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_ATTR_NOSYSTEM: '1',
+    GIT_CONFIG_COUNT: '2',
+    GIT_CONFIG_KEY_0: 'core.excludesFile',
+    GIT_CONFIG_VALUE_0: os.devNull,
+    GIT_CONFIG_KEY_1: 'core.attributesFile',
+    GIT_CONFIG_VALUE_1: os.devNull,
+  };
+}
+
+/** git が使えるか */
+export const HAS_GIT = spawnSync('git', ['--version'], { stdio: 'ignore' }).status === 0;
+
+/**
+ * リポジトリの .gitattributes で filter=lfs になる（git add で LFS に入り、checkout で実体に戻る）パス。
+ * .gitattributes だけを入れた一時リポジトリで、大文字小文字を区別する checkout（Linux。ignoreCase: true なら区別しない macOS・Windows）として判定する
+ */
+export function lfsFilteredByRepoAttributes(paths: string[], ignoreCase = false): string[] {
+  if (paths.length === 0) return [];
+  const repo = tempDir('git-attr-');
+  const git = (args: string[], input?: string): string => {
+    const r = spawnSync('git', args, { cwd: repo, env: isolatedGitEnv(), input, encoding: 'utf8' });
+    if (r.status !== 0) throw new Error(`git ${args.join(' ')} が失敗しました: ${r.stderr}`);
+    return r.stdout;
+  };
+  git(['init', '-q']);
+  fs.copyFileSync(path.join(REPO_ROOT, '.gitattributes'), path.join(repo, '.gitattributes'));
+  // 出力は "<path>\0filter\0<値>\0" の繰り返し
+  const out = git(['-c', `core.ignoreCase=${ignoreCase}`, 'check-attr', '-z', '--stdin', 'filter'], `${paths.join('\0')}\0`).split('\0');
+  const filtered: string[] = [];
+  for (let i = 0; i + 2 < out.length; i += 3) if (out[i + 2] === 'lfs') filtered.push(out[i] ?? '');
+  return filtered;
+}
+
 /** pdfinfo の出力（ページ数・ページサイズ pt） */
 export function pdfInfo(file: string): { pages: number; width: number; height: number } {
   const r = spawnSync('pdfinfo', [file], { encoding: 'utf8' });

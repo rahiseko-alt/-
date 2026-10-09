@@ -50,16 +50,18 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 
 ## 4. Git LFS（大容量ファイル）
 
-参考資料・画像・PDF は Git LFS で管理します（docs/concept.md §12）。対象は `.gitattributes` で定義済みです。
+参考資料・画像・PDF は Git LFS で管理します（docs/concept.md §12）。対象は `.gitattributes` で定義済みです（拡張子の大文字小文字を問わない。`IMG_0001.JPG`・`SCAN0001.PDF` もそのまま LFS に入る）。
 
 ```text
-*.png *.jpg *.jpeg *.pdf *.webp *.tif *.tiff *.psd *.ai
+png jpg jpeg pdf webp tif tiff psd ai
 ```
 
 - 新しい環境では `git lfs install --local` と `git lfs pull` が必要（`setup.sh` が実行する）
 - コミット前に LFS で管理されているか確認する: `git lfs ls-files`（追加した画像が一覧にあること）
+  - `npm run check` のテスト（`system/scripts/test/repo-hygiene.test.ts`）も確かめる。インデックスの LFS 対象（拡張子の大文字小文字を問わない）が LFS のポインタで入っているか、`git add -A` で入るもの（未追跡のものと、`npm run render` で更新した出力 PNG など作業ツリーで変えた追跡ファイル）が LFS に入るか（`.gitattributes` の規則に合うか・Git LFS のフィルタが設定済みか）。`git add` の前でも後でも確かめられる
 - 画像が「ポインタ（数行のテキスト）」のままだとレンダリング・比較が壊れる。`git lfs pull` を実行する
 - `.gitattributes` にない形式のバイナリ（動画・独自形式など）を追加する前に、`.gitattributes` に LFS の設定を追加する
+  - 規則は拡張子の大文字小文字を問わない形で書く（`*.[mM][pP]4 filter=lfs diff=lfs merge=lfs -text`）。`git lfs track "*.mp4"` が書く `*.mp4` の形だと、`core.ignoreCase=true`（macOS・Windows の `git init` / `git clone` の既定）の環境では `CLIP.MP4` が LFS に入り、大文字小文字を区別する Linux の checkout ではポインタのまま実体に戻らない（Linux で追加すれば LFS に入らない）。`repo-hygiene.test.ts` はどちらの設定でも同じ判定になる規則かを確かめ、合わないものを「大文字小文字が合わない」と報告する
 - フォント（`.woff` `.woff2` `.otf` `.ttf`）はバイナリ扱い。書体は `node_modules/@fontsource` から読むので、原則リポジトリに置かない
 - 規模が大きくなった場合は、将来 `references/` だけを外部ストレージへ分離することを検討する（現時点では 1 モノレポ + Git LFS）
 
@@ -68,14 +70,26 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | コミットする | コミットしない |
 | --- | --- |
 | BOOK のソース（yaml / html / css / hbs）、背景画像と `.prompt.yaml` | `node_modules/`、`.cache/`、`.vite/`、ログ |
+| | シンボリックリンク（worktree に張った `node_modules` などへのリンクを含む。下記） |
 | 参考資料（画像・PDF・source.yaml・analysis） | 不採用の生成画像、作業用の一時ファイル |
 | レビュー記録（`reviews/<pageId>/review.md`）と比較の数値（`compare-*/report.yaml`） | 比較画像（`compare-*/` の `side-by-side.png`・`overlay.png`・`diff.png`。参考ページの画素を含むため `.gitignore` 済み） |
 | | ガイド付き・低解像度の確認用出力（`--out` で一時ディレクトリに出す。`--out` を省くと `npm run render` が失敗する） |
 | 出力物（`output/png`、`output/pdf`） | 認証情報・API キー・個人情報を含むメモ |
 
 `system/fixtures/**/output/` と `reviews/` はテストが毎回作るので `.gitignore` 済み。
+
 比較画像は参考ページを縮小・合成した画像なので、BOOK の中に参考資料のコピーを残さない（docs/concept.md §5「BOOKごとに参考資料をコピーしない」）ためにコミットしません。
 必要になったら、コミット済みの出力 PNG と参考ページから `npm run compare` で作り直せます。
+
+シンボリックリンクはコミットしません。2026-10-09 に、worktree から本体の `node_modules` へ張ったリンクが `git add -A` でコミットされ（PR #15〜#18）、main を checkout した環境の `node_modules` が壊れました（PR #19 で修正）。
+
+- `.gitignore` でディレクトリを除外する規則は、末尾に `/` を付けない（`node_modules`・`.cache`・`.vite` など）。`node_modules/` のように付けるとディレクトリにしか効かず、同じ名前のリンクは除外されない
+- `npm run check` のテスト（`system/scripts/test/repo-hygiene.test.ts`）が、インデックスにシンボリックリンクがないこと・`git add -A` で追加されるリンク（除外されない未追跡のリンク、追跡中のパスをリンクに置き換えたもの、`git add -N` したリンク）がないことを確かめる。`.gitignore` の規則がリンクにも効くことは `gitignore.test.ts` が確かめる
+- テストが失敗したら
+  - インデックスにあるリンク: `git rm --cached <パス>` でインデックスから外す
+  - 追跡中のパスをリンクに置き換えたもの: `git checkout -- <パス>` で戻す（`.gitignore` は追跡中のパスには効かない）
+  - 未追跡のリンク: 消すか、作業ツリーに残すなら `.gitignore`（末尾の `/` なし）か `.git/info/exclude` に追加する
+- これらのテストは Git の作業ツリーでだけ動く（`.git` のない tarball などでは skip）。`git add` の前でも後でも `npm run check` で確かめられる
 
 ## 6. 禁止事項
 

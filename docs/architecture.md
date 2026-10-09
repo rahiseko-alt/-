@@ -414,4 +414,6 @@ Playwright のバージョン（`package.json`）と Dockerfile のベースイ�
   - レンダリング（ブラウザ）: PNG の画素数、PDF のページ数・サイズ・フォント埋め込み
   - CLI: validate の各検査（禁止語・直書き・記録漏れ）、compare の出力、new:book / new:page / ref:ingest の生成物
   - 実リポジトリ: `npm run validate` が終了コード 0
+  - リポジトリの衛生（Git の作業ツリーでのみ。`repo-hygiene.test.ts`）: インデックスにシンボリックリンクがない・`git add -A` で追加されるリンク（未追跡のリンク・追跡中のパスをリンクに置き換えたもの）がない、LFS 対象（png / jpg / pdf など。拡張子の大文字小文字を問わない）はインデックスに LFS のポインタで入っている・`git add -A` で入るもの（未追跡のもの・作業ツリーで変えた追跡ファイル）は LFS に入る。`.gitattributes` の LFS の規則は `core.ignoreCase` が true（macOS・Windows）でも false（Linux）でも同じに合うこと（system/rules/git-workflow.md §4・§5）。検査そのものは、利用者の設定・属性・除外ファイルを読まない一時リポジトリで確かめる
+  - `.gitignore`（`gitignore.test.ts`）: `node_modules`・`.cache`・`.vite` などはディレクトリもシンボリックリンクも除外され、秘密情報（`.env`・`secrets`）は除外、`.env.example` は残る。リポジトリの `.gitignore` を入れた一時リポジトリで確かめる
 - GitHub Actions の CI は使わない。テストを含む検証は各作業セッション内（ローカル / Dev Container / Claude Code / Codex）で `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視の順に行い、通ってから commit / push する
