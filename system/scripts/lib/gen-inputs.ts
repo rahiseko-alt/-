@@ -6,6 +6,7 @@ import fg from 'fast-glob';
 import sharp from 'sharp';
 import { Layer1OrdersSchema, loadBook, loadYamlWithSchema, resolveInRoot, trimSizeMm, type Layer1Orders } from '../../design-engine/src/index.ts';
 import { CliError, UsageError, consoleIo, parseCli, resolveRoot, runCommand, show, type Command, type Io } from './cli.ts';
+import { readImageMetadata } from './images.ts';
 import { prepareReference } from './prep.ts';
 import { LAYER1_ORDERS_FILE } from './validate.ts';
 
@@ -85,7 +86,7 @@ export async function makeGenInputs(root: string, bookId: string): Promise<GenIn
     source = resolveInRoot(root, orders.reference_image);
     if (!fs.existsSync(source)) throw new CliError(`${ordersRel}: reference_image のファイルがありません: ${orders.reference_image}`);
   }
-  const meta = await sharp(source).metadata();
+  const meta = await readImageMetadata(source, show(root, source));
   const W = meta.width ?? 0;
   const H = meta.height ?? 0;
   const trim = trimSizeMm(book.config.format);

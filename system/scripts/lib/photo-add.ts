@@ -4,10 +4,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import sharp, { type Metadata } from 'sharp';
+import sharp from 'sharp';
 import { isMap, isScalar, isSeq, parseDocument, stringify, type Node, type Pair } from 'yaml';
 import { PhotosFileSchema, isInside, isReferencePath, loadYamlWithSchema, toPosix } from '../../design-engine/src/index.ts';
 import { CliError, UsageError, consoleIo, parseCli, resolveRoot, runCommand, show, userPath, type Command, type Io } from './cli.ts';
+import { readImageMetadata } from './images.ts';
 
 export const PHOTO_ADD_USAGE = `使い方: npm run photo:add -- --file <画像> --id <写真ID> --rights "<使用条件・肖像の同意>" [--caption "..."] [--credit "..."] [--tags a,b] [--max-px 6000] [--root <dir>]
 
@@ -149,12 +150,8 @@ export async function addPhoto(opts: PhotoAddOptions): Promise<PhotoAddResult> {
   if (current.some((p) => p.id === opts.id)) throw new CliError(`写真 ID "${opts.id}" はすでに ${yamlRel} にあります`);
 
   const maxPx = opts.maxPx ?? DEFAULT_MAX_PX;
-  let meta: Metadata;
-  try {
-    meta = await sharp(src).metadata();
-  } catch (err) {
-    throw new CliError(`画像を読めません: ${opts.file}（${err instanceof Error ? err.message.split('\n')[0] : String(err)}）`);
-  }
+  // Git LFS のポインタ・壊れた画像は、ファイル名と対処の付いたエラーにする
+  const meta = await readImageMetadata(src, opts.file);
   // 透明な部分があるときだけ PNG（アルファチャンネルがあっても全面不透明なら JPEG）
   const transparent = (meta.hasAlpha ?? false) && !(await sharp(src).stats()).isOpaque;
   const ext = transparent ? 'png' : 'jpg';

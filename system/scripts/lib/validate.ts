@@ -38,6 +38,7 @@ import {
 } from '../../design-engine/src/index.ts';
 import { consoleIo, parseCli, resolveRoot, runCommand, type Command, type Io } from './cli.ts';
 import { pxAt } from './gen-inputs.ts';
+import { LFS_PULL_HINT, isLfsPointer, lfsPointerMessage } from './images.ts';
 import { charLength, lineAt, stripHandlebars } from './text.ts';
 
 export const VALIDATE_USAGE = `使い方: npm run validate -- [--strict] [--root <dir>]
@@ -51,6 +52,8 @@ export const VALIDATE_USAGE = `使い方: npm run validate -- [--strict] [--root
   5. 事実の直書き（company-data の値が page.html・パーシャルに直接書かれていないか）
   6. 禁止語（参考資料の forbidden_terms が books/・company-data/・shared/ に出ていないか）
   7. 背景画像の生成記録（.prompt.yaml）と Layer 1 の生成指示（layer1-orders.yaml。未生成は警告）
+  使う画像（背景・references.yaml の参考資料・補正指定の image・生成指示の reference_image・生成画像）が
+  Git LFS のポインタのまま（git lfs pull をしていない）なら 2・3・7 で警告する
 エラーがあれば終了コード 1。`;
 
 export interface CheckSection {
@@ -101,6 +104,15 @@ function push(list: string[], msg: string): void {
 function exists(root: string, rel: string): boolean {
   try {
     return fs.existsSync(resolveInRoot(root, rel));
+  } catch {
+    return false;
+  }
+}
+
+/** ルート相対パスのファイルが Git LFS のポインタ（実体が未取得）か */
+function isLfsPointerAt(root: string, rel: string): boolean {
+  try {
+    return isLfsPointer(resolveInRoot(root, rel));
   } catch {
     return false;
   }
@@ -286,6 +298,9 @@ function checkBooks(root: string, bookIds: string[], s: CheckSection): BookState
           } else if (!exists(root, bg.image)) {
             push(s.errors, `${page.relDir}/page.yaml: 背景画像がありません: ${bg.image}`);
             ok = false;
+          } else if (isLfsPointerAt(root, bg.image)) {
+            // 合成はできる（render で「画像を表示できません」になる）ので、試し合成は続ける
+            push(s.warnings, `${page.relDir}/page.yaml: 背景画像 ${lfsPointerMessage(bg.image)}。${LFS_PULL_HINT}（このままでは render で背景が表示されません）`);
           }
         }
         if (ok) state.okPages.push(pageId);
@@ -311,6 +326,9 @@ function checkBooks(root: string, bookIds: string[], s: CheckSection): BookState
         for (const p of allReferencePaths(refs)) {
           if (!exists(root, p)) push(s.errors, `${book.relDir}/references.yaml: 参考資料が見つかりません: ${p}`);
           else if (!p.startsWith('references/')) push(s.warnings, `${book.relDir}/references.yaml: references/ 以外を指しています: ${p}`);
+          if (isLfsPointerAt(root, p)) {
+            push(s.warnings, `${book.relDir}/references.yaml: 参考資料 ${lfsPointerMessage(p)}。${LFS_PULL_HINT}（compare・目視に使えません）`);
+          }
         }
         for (const key of Object.keys(refs)) {
           if (key !== 'references' && !cfg.pages.includes(key)) {
@@ -363,6 +381,7 @@ function checkReferences(root: string, s: CheckSection): Array<{ dir: string; so
         try {
           const prep = loadYamlWithSchema(path.join(prepDir, f), ReferencePrepSchema, rel);
           if (!exists(root, prep.image)) push(s.errors, `${rel}: image のファイルがありません: ${prep.image}`);
+          else if (isLfsPointerAt(root, prep.image)) push(s.warnings, `${rel}: image ${lfsPointerMessage(prep.image)}。${LFS_PULL_HINT}（ref:prep・compare・gen:inputs で使えません）`);
         } catch (err) {
           push(s.errors, errorMessage(err));
         }
@@ -580,22 +599,6 @@ async function checkBackgrounds(root: string, bookIds: string[], s: CheckSection
   if (orders > 0) s.info.push(`Layer 1 の生成指示 ${orders} 件`);
 }
 
-/** Git LFS のポインタ（実体が未取得）のファイルか */
-function isLfsPointer(file: string): boolean {
-  try {
-    const fd = fs.openSync(file, 'r');
-    try {
-      const buf = Buffer.alloc(64);
-      const n = fs.readSync(fd, buf, 0, buf.length, 0);
-      return buf.subarray(0, n).toString('utf8').startsWith('version https://git-lfs.github.com/spec/');
-    } finally {
-      fs.closeSync(fd);
-    }
-  } catch {
-    return false;
-  }
-}
-
 /** 生成画像と生成指示の縦横比の差の許容（object-fit で切れる・伸びるのが目立たない範囲） */
 const LAYER1_RATIO_TOLERANCE = 0.02;
 
@@ -616,7 +619,7 @@ async function checkLayer1Image(root: string, file: string, item: Layer1OrderIte
   } catch (err) {
     if (isLfsPointer(file)) {
       // 画像がないのではなく、Git LFS の実体を取得していないだけ（render も表示できない）
-      push(s.warnings, `${imgRel}: Git LFS の実体が未取得です（git lfs pull）。画像の大きさ・透過は調べていません`);
+      push(s.warnings, `${lfsPointerMessage(imgRel)}。${LFS_PULL_HINT}（画像の大きさ・透過は調べていません）`);
     } else {
       push(s.errors, `${imgRel}: 画像を読めません（${errorMessage(err).split('\n')[0]}）`);
     }
@@ -655,6 +658,10 @@ async function checkLayer1Orders(root: string, bookId: string, dir: string, name
   if (orders.book !== bookId) push(s.errors, `${rel}: book "${orders.book}" が BOOK ID "${bookId}" と一致しません`);
   for (const ref of [orders.reference_image, orders.reference_prep]) {
     if (ref && !fs.existsSync(path.join(root, ref))) push(s.errors, `${rel}: 参照先がありません: ${ref}`);
+  }
+  // reference_prep の image は [3] で調べる
+  if (isLfsPointerAt(root, orders.reference_image)) {
+    push(s.warnings, `${rel}: reference_image ${lfsPointerMessage(orders.reference_image)}。${LFS_PULL_HINT}（gen:inputs・画像生成の参照入力に使えません）`);
   }
   const imagesOf = (id: string) => names.filter((n) => BACKGROUND_IMAGE_RE.test(n) && n.replace(/\.[^.]+$/, '') === id).sort();
   const pending = orders.items.filter((item) => imagesOf(item.id).length === 0);

@@ -30,6 +30,11 @@ export interface StudioServer {
    * 表示用のルート相対パス。指さなければ null。サーバーはこれらを配信しない
    */
   referencePathOf(url: string): string | null;
+  /**
+   * このサーバーの URL が配信するスタジオのルートのファイル（絶対パス）。
+   * ルートのファイルでないもの（文書・エンジンアセット・ほかの URL）・配信しないもの・存在しないものは null
+   */
+  fileOf(url: string): string | null;
   close(): Promise<void>;
 }
 
@@ -138,6 +143,18 @@ export async function startStudioServer(root: string): Promise<StudioServer> {
   });
   const { port } = server.address() as AddressInfo;
   const baseUrl = `http://127.0.0.1:${port}/`;
+  /** このサーバーの URL のパス部分（先頭の / を含む。ほかの URL は null） */
+  const pathnameOf = (url: string): string | null => (url.startsWith(baseUrl) ? `/${url.slice(baseUrl.length).split(/[?#]/, 1)[0] ?? ''}` : null);
+  /** このサーバーの URL をデコードしたルート相対パスにする（ほかの URL・デコードできないものは null） */
+  const rootRelOf = (url: string): string | null => {
+    const pathname = pathnameOf(url);
+    if (pathname == null) return null;
+    try {
+      return decodeURIComponent(pathname).replace(/^\/+/, '');
+    } catch {
+      return null;
+    }
+  };
 
   return {
     root: absRoot,
@@ -157,15 +174,16 @@ export async function startStudioServer(root: string): Promise<StudioServer> {
       }
     },
     referencePathOf(url) {
-      if (!url.startsWith(baseUrl)) return null;
-      const rest = url.slice(baseUrl.length).split(/[?#]/, 1)[0] ?? '';
-      let rel: string;
-      try {
-        rel = decodeURIComponent(rest).replace(/^\/+/, '');
-      } catch {
-        return null;
-      }
-      return referencePath(absRoot, realRoot, rel);
+      const rel = rootRelOf(url);
+      return rel == null ? null : referencePath(absRoot, realRoot, rel);
+    },
+    fileOf(url) {
+      const pathname = pathnameOf(url);
+      const rel = rootRelOf(url);
+      // handle() と同じ判定: 文書・エンジンアセットはルートのファイルではない。エンコードした区切り・参考資料は配信しない
+      if (pathname == null || rel == null || /%2f|%5c/i.test(pathname)) return null;
+      if (`/${rel}`.startsWith(DOC_PREFIX) || pathname.startsWith(ENGINE_URL_PREFIX) || referencePath(absRoot, realRoot, rel)) return null;
+      return resolveRootFile(absRoot, rel);
     },
     close() {
       return new Promise<void>((resolve) => {

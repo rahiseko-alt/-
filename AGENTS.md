@@ -193,6 +193,7 @@ docs/concept.md §14 の最重要原則（詳細と具体的な行動: system/ru
 ## 10. 困ったとき
 
 - テンプレートのエラー「キー "..." がデータに存在しません」: company-data・page.yaml・book.yaml のキー名を確認。任意項目なら `{{#if}}` で囲む。値がないからといって値を作らない
-- 画像が表示されない・比較が壊れる: LFS の実体が未取得の可能性。`git lfs pull`
+- 画像が表示されない・比較が壊れる: LFS の実体が未取得の可能性。「Git LFS のポインタです（実体が未取得）」と出たら確実なので `git lfs pull`
+- 「画像を読めません」、または `render` の「画像を表示できません: <パス>」に LFS の案内が付かない: ポインタではない（ファイルが壊れている・形式が対応していないなど）。`git lfs pull` では直らないので、元の画像を確かめる
 - Chromium が起動しない・フォントがおかしい: `npm run doctor` → `bash system/scripts/setup.sh`。Playwright 指定版の Chromium を取得できない環境では、手元の Chromium を `STUDIO_CHROMIUM_PATH` に指定すれば確認用の出力はできる（`--release` は不可。system/devcontainer/README.md）
 - ルールが矛盾している・判断できない: 作業を止め、論点を `notes` / `review.md` に書いて人間に確認する

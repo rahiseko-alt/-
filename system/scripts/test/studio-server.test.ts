@@ -95,6 +95,12 @@ describe('studio-server', () => {
       'books/smoke/backgrounds/ref-link.svg（→ references/Sample/brochure/page_001.svg）',
     );
     expect(server.referencePathOf(`${server.baseUrl}books/smoke/config/book.yaml`)).toBeNull();
+    // fileOf: 配信するルートのファイルだけ（render が Git LFS のポインタを見分けるのに使う）
+    expect(server.fileOf(`${server.baseUrl}books/smoke/config/book.yaml?x=%2F`)).toBe(path.join(root, 'books/smoke/config/book.yaml'));
+    for (const p of ['books/smoke/backgrounds/ref-link.svg', 'references/Sample/brochure/page_001.svg', 'books%2Fsmoke%2Fconfig%2Fbook.yaml', '@engine/assets/base.css', 'books/missing.png', '%E0%A4%A']) {
+      expect(server.fileOf(server.baseUrl + p), p).toBeNull();
+    }
+    expect(server.fileOf('https://example.com/books/smoke/config/book.yaml')).toBeNull();
     // 先頭の "//" はホスト名ではなくパスとして扱う。不正な値・想定外の名前でもサーバーは落ちない
     expect(await rawGet('//books/smoke/config/book.yaml')).toBe(200);
     expect(await rawGet('//[x')).toBe(404);

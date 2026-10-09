@@ -359,6 +359,8 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | `dev` | （環境変数 `STUDIO_ROOT=<dir>` `PORT=<番号>`） | Vite プレビュー（既定: リポジトリルート・ポート 5173）。`--root` は使えない |
 | `typecheck` / `test` / `check` | | `tsc` / `vitest run` / typecheck → validate → test |
 
+画像・PDF を読む CLI（`compare`・`ref:prep`・`gen:inputs`・`photo:add`・`ref:ingest`）は、Git LFS のポインタのまま（`git lfs pull` をしていない）のファイルを「`<ファイル>` は Git LFS のポインタです（実体が未取得）」・対処「git lfs pull を実行してください」のエラーにして止まります。ポインタではないが sharp で開けない画像（壊れている・形式が対応していない）は「画像を読めません: `<ファイル>`（<理由>）」で止まり、LFS の案内は付けません（`git lfs pull` では直らないため）。`ref:ingest --images` は取り込むすべての画像（そのままコピーする png / jpg / svg を含む）をこの 2 つで確かめてから書き込み、変換（webp / tif / gif など → PNG）に失敗した画像も「画像を読めません」にします。いずれも既存のページ画像には触れません。`ref:ingest --pdf` で開けない PDF は「pdfinfo が失敗しました: …」です。どれもスタックトレースは出しません（`system/scripts/lib/images.ts` の `readImageMetadata` / `isLfsPointer`）。`render` は表示できなかった `<img>` の配信元がポインタなら、警告「画像を表示できません」に同じ案内を付けます（ポインタでなければパスだけ。`--release` でも警告のまま）。
+
 ### validate の検査項目
 
 | # | 検査 | 結果 |
@@ -367,13 +369,16 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | 1 | company-data の中の ID の参照: 教員の `course_ids`・`facts/admissions.yaml` の `departments[].course_id` → `facts/courses.yaml` の `id`、学科・教員の `photo` → `photos/photos.yaml` の `id`（`"TODO: ..."` の値は TODO として数える） | 存在しない ID はエラー。記入例のプレースホルダ（`*-todo`）を指すものは警告（`--strict` でエラー） |
 | 1 | company-data の全角英数字（U+FF10〜FF19・FF21〜FF3A・FF41〜FF5A）: すべての YAML の文字列の値（コメント・キー名と、資料のファイル名・パスを書く位置: 各ファイルのトップレベルの `source`、`photos[].file`・`logos[].file` は対象外。紙面に出る実績の出典 `metrics[].source`・`certifications[].source` は対象） | 警告（半角に直し、原本の表記はコメントに残す） |
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
+| 2 | 背景画像・`references.yaml` の参考資料が Git LFS のポインタのまま（実体が未取得） | 警告（`git lfs pull`） |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
+| 3 | 補正指定（`prep/*.yaml`）の `image` が Git LFS のポインタのまま | 警告（`git lfs pull`） |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |
 | 4 | `page.css` が、BOOK の `styles`（共通 CSS）と同じクラス名を、`page.html`・BOOK 固有の部品の `class` 属性に直接書いた要素に使って装飾している（共通パーシャルが出力する要素の上書きだけなら対象外） | 警告 |
 | 5 | 事実の直書き: company-data の文字列（4 文字以上、TODO 以外。ID・パスのキー `id` `photo` `course_ids` `course_id` `file` `logo` `variant` は除く）が `books/**/page.html` やパーシャルにそのまま書かれている | 警告（`{{facts...}}` を使う） |
 | 6 | 禁止語: いずれかの `source.yaml` の `forbidden_terms` が `books/**`・`company-data/**`・`shared/**` のテキストファイルに出現 | エラー |
 | 7 | `backgrounds/*.{png,jpg,jpeg,webp}` に同じベース名の `.prompt.yaml` がない | 警告 |
 | 7 | `backgrounds/layer1-orders.yaml` の形式・`book` の不一致・参照先の欠落 | エラー |
+| 7 | `backgrounds/layer1-orders.yaml` の `reference_image` が Git LFS のポインタのまま | 警告（`git lfs pull`） |
 | 7 | `backgrounds/layer1-orders.yaml` の素材のうち、同じベース名の画像がまだないもの（全件そろって `status: pending` のままなら generated を促す） | 警告 |
 | 7 | 生成済みの Layer 1 画像: BOOK の `png_dpi` で `size_mm` に足りない画素数、`size_mm` と 2% 以上違う縦横比、透明部分のない `cutout`、同じ素材 ID の画像の重複、`negative_prompt` に必須の 10 語がない記録 | 警告（画像を読めなければエラー。Git LFS の実体が未取得なら警告） |
 
@@ -413,6 +418,7 @@ Playwright のバージョン（`package.json`）と Dockerfile のベースイ�
   - 合成: DOM 構造、`<base href>`、背景、ガイド、`page.css` のスコープ
   - レンダリング（ブラウザ）: PNG の画素数、PDF のページ数・サイズ・フォント埋め込み
   - CLI: validate の各検査（禁止語・直書き・記録漏れ）、compare の出力、new:book / new:page / ref:ingest の生成物
+  - Git LFS のポインタ・読めない画像: フィクスチャのコピーにポインタ文書・壊れた画像を置き、validate の警告・各 CLI のエラー（ref:ingest が何も書き換えないこと）・render の案内を確かめる（`lfs-pointer.test.ts`）
   - 実リポジトリ: `npm run validate` が終了コード 0
   - リポジトリの衛生（Git の作業ツリーでのみ。`repo-hygiene.test.ts`）: インデックスにシンボリックリンクがない・`git add -A` で追加されるリンク（未追跡のリンク・追跡中のパスをリンクに置き換えたもの）がない、LFS 対象（png / jpg / pdf など。拡張子の大文字小文字を問わない）はインデックスに LFS のポインタで入っている・`git add -A` で入るもの（未追跡のもの・作業ツリーで変えた追跡ファイル）は LFS に入る。`.gitattributes` の LFS の規則は `core.ignoreCase` が true（macOS・Windows）でも false（Linux）でも同じに合うこと（system/rules/git-workflow.md §4・§5）。検査そのものは、利用者の設定・属性・除外ファイルを読まない一時リポジトリで確かめる
   - `.gitignore`（`gitignore.test.ts`）: `node_modules`・`.cache`・`.vite` などはディレクトリもシンボリックリンクも除外され、秘密情報（`.env`・`secrets`）は除外、`.env.example` は残る。リポジトリの `.gitignore` を入れた一時リポジトリで確かめる

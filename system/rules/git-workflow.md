@@ -60,6 +60,9 @@ png jpg jpeg pdf webp tif tiff psd ai
 - コミット前に LFS で管理されているか確認する: `git lfs ls-files`（追加した画像が一覧にあること）
   - `npm run check` のテスト（`system/scripts/test/repo-hygiene.test.ts`）も確かめる。インデックスの LFS 対象（拡張子の大文字小文字を問わない）が LFS のポインタで入っているか、`git add -A` で入るもの（未追跡のものと、`npm run render` で更新した出力 PNG など作業ツリーで変えた追跡ファイル）が LFS に入るか（`.gitattributes` の規則に合うか・Git LFS のフィルタが設定済みか）。`git add` の前でも後でも確かめられる
 - 画像が「ポインタ（数行のテキスト）」のままだとレンダリング・比較が壊れる。`git lfs pull` を実行する
+  - `npm run validate` は、使う画像（背景・`references.yaml` の参考資料・補正指定の `image`・生成指示の `reference_image`・生成画像）がポインタなら警告する
+  - `compare`・`ref:prep`・`gen:inputs`・`photo:add`・`ref:ingest` は「`<ファイル>` は Git LFS のポインタです（実体が未取得）」で止まり、`render` は「画像を表示できません」に同じ案内を付ける
+  - ポインタではない壊れた画像・対応していない形式は「画像を読めません」（`render` はパスだけ）で、LFS の案内は付かない。`git lfs pull` では直らないので、元の画像を確かめる
 - `.gitattributes` にない形式のバイナリ（動画・独自形式など）を追加する前に、`.gitattributes` に LFS の設定を追加する
   - 規則は拡張子の大文字小文字を問わない形で書く（`*.[mM][pP]4 filter=lfs diff=lfs merge=lfs -text`）。`git lfs track "*.mp4"` が書く `*.mp4` の形だと、`core.ignoreCase=true`（macOS・Windows の `git init` / `git clone` の既定）の環境では `CLIP.MP4` が LFS に入り、大文字小文字を区別する Linux の checkout ではポインタのまま実体に戻らない（Linux で追加すれば LFS に入らない）。`repo-hygiene.test.ts` はどちらの設定でも同じ判定になる規則かを確かめ、合わないものを「大文字小文字が合わない」と報告する
 - フォント（`.woff` `.woff2` `.otf` `.ttf`）はバイナリ扱い。書体は `node_modules/@fontsource` から読むので、原則リポジトリに置かない
