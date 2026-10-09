@@ -1,4 +1,5 @@
-node_modules/
+# 末尾に / を付けない（付けるとディレクトリにしか効かず、作業ツリーに張った node_modules へのシンボリックリンクがコミットされる）
+node_modules
 .cache/
 .build/
 *.log
