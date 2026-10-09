@@ -2,6 +2,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { z } from 'zod';
 import {
+  AdmissionsFileSchema,
   AnalysisSchema,
   BackgroundPromptSchema,
   BookConfigSchema,
@@ -261,5 +262,50 @@ describe('isSafeRelPath', () => {
     ['', false],
   ])('%s -> %s', (p, ok) => {
     expect(isSafeRelPath(p)).toBe(ok);
+  });
+});
+
+describe('admissions.yaml: 学費の合計', () => {
+  const term = (t: string, tuition: number | string, expenses: number | string, total: number | string) => ({ term: t, tuition, expenses, total });
+  const valid = () => ({
+    exam_fee: 20000,
+    tuition: {
+      entrance_fee: 100000,
+      years: [
+        { year: 1, terms: [term('前期', 390000, 50000, 440000), term('後期', 390000, 0, 390000)], total: 930000 },
+        { year: 2, terms: [term('前期', 390000, 50000, 440000), term('後期', 390000, 0, 390000)], total: 830000 },
+      ],
+      grand_total: 1760000,
+    },
+  });
+
+  it('正本（company-data/facts/admissions.yaml）と正しい例は通る', () => {
+    expect(issuesOf(AdmissionsFileSchema, readYamlFile(path.join(REPO_ROOT, 'company-data/facts/admissions.yaml')))).toEqual([]);
+    expect(issuesOf(AdmissionsFileSchema, valid())).toEqual([]);
+    expect(issuesOf(AdmissionsFileSchema, { departments: [] })).toEqual([]);
+  });
+
+  it('期・年次・総額の食い違いを、場所と計算つきで報告する', () => {
+    const d = valid();
+    d.tuition.years[0]!.terms[1]!.tuition = 400000; // 後期の授業料だけ直して total を直し忘れた
+    d.tuition.years[1]!.total = 840000;
+    d.tuition.grand_total = 1700000;
+    const issues = issuesOf(AdmissionsFileSchema, d).join('\n');
+    expect(issues).toContain('tuition.years.0.terms.1.total');
+    expect(issues).toContain('1 年次 後期: total 390,000 が tuition 400,000 + expenses 0 = 400,000 と一致しません');
+    expect(issues).toContain('tuition.years.1.total');
+    expect(issues).toContain('2 年次の total 840,000 が各期の合計 830,000 と一致しません');
+    expect(issues).toContain('grand_total 1,700,000 が年次の total の和 1,770,000 と一致しません');
+  });
+
+  it('1 年次の total は入学金を含める。TODO の金額は検査しない', () => {
+    const d = valid();
+    d.tuition.years[0]!.total = 830000; // 入学金を足し忘れた
+    expect(issuesOf(AdmissionsFileSchema, d).join('\n')).toContain('1 年次の total 830,000 が各期の合計 830,000 + 入学金 100,000 = 930,000 と一致しません');
+
+    const todo = valid() as unknown as { tuition: { years: Array<{ terms: Array<Record<string, unknown>> }>; grand_total: unknown } };
+    todo.tuition.years[1]!.terms[0]!.tuition = 'TODO: 2 年次の授業料';
+    todo.tuition.grand_total = 'TODO: 総額';
+    expect(issuesOf(AdmissionsFileSchema, todo)).toEqual([]);
   });
 });

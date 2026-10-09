@@ -53,12 +53,14 @@ company-data/
 | `facts/teachers.yaml` | `teachers[]`: `id`, `name`（必須）, `name_kana`, `title`, `course_ids[]`, `profile`, `photo` |
 | `facts/results.yaml` | `metrics[]`: `id`, `label`, `value`（必須）, `unit`, `as_of`, `source`, `note` ／ `employers[]`: `name`, `note` ／ `certifications[]`: `name`, `count`, `as_of` |
 | `facts/contacts.yaml` | `contacts[]`: `id`, `label`（必須）, `tel`, `email`, `url`, `hours`, `note` ／ `sns[]`: `service`, `url` |
-| `facts/admissions.yaml`（自由形式） | `as_of`, `source`, `audience`, `departments[]`（`course_id`・課程・コース・昼夜・学級数）, `policies{admission, curriculum, diploma}`, `eligibility{lead, conditions[]}`, `exam_notes[]`, `exam_types[]`（`id`・`name`・`formal_name`・日程・選考方法）, `documents[]`, `document_notes[]`, `withdrawal_refund`, `exam_fee`, `payment_account`, `payment_notes[]`, `tuition{entrance_fee, years[], grand_total, deadlines[], notes[]}`, `important_notes[]`, `ao_entry_notes[]` |
+| `facts/admissions.yaml`（学費の合計だけ検査し、ほかは自由形式） | `as_of`, `source`, `audience`, `departments[]`（`course_id`・課程・コース・昼夜・学級数）, `policies{admission, curriculum, diploma}`, `eligibility{lead, conditions[]}`, `exam_notes[]`, `exam_types[]`（`id`・`name`・`formal_name`・日程・選考方法）, `documents[]`, `document_notes[]`, `withdrawal_refund`, `exam_fee`, `payment_account`, `payment_notes[]`, `tuition{entrance_fee, years[], grand_total, deadlines[], notes[]}`, `important_notes[]`, `ao_entry_notes[]` |
 | `brand/colors/colors.yaml` | `colors{primary, secondary, accent, text, muted, background, surface}`（すべて必須、16 進）, `status`（`provisional` / `final`） |
 | `brand/fonts/fonts.yaml` | `families{heading, body, serif, number}`（CSS の font-family） |
 | `brand/logo/logo.yaml` | `logos[]`: `id`, `file`（必須）, `variant`, `note` |
 | `photos/photos.yaml` | `photos[]`: `id`, `file`（必須）, `caption`, `credit`, `rights`, `tags[]` |
 | `copy/*.yaml` | 自由なキーと値 |
+
+`facts/admissions.yaml` の学費（`tuition`）は、金額がすべて数値のときに合計を検査します（`npm run validate` のエラー）。検査するのは、各期の `total` = `tuition` + `expenses`、年次の `total` = 各期の `total` の和（1 年次は入学金 `entrance_fee` を含める）、`grand_total` = 年次の `total` の和です。募集要項の金額を一部だけ直して、合計を直し忘れるのを防ぎます。
 
 `file` などのパスはすべてリポジトリルート相対（`/` 区切り、先頭スラッシュなし）で書きます。例: `company-data/photos/campus-exterior.jpg`。
 スキーマの定義: `system/design-engine/src/schemas/company.ts`。

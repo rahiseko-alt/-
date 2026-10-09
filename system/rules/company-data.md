@@ -24,6 +24,7 @@
 
 - 文字列項目: `"TODO: 住所を記入"` の形（必ず `TODO` で始める）
 - 数値項目も未確定の間は `"TODO: ..."` 文字列でよい（`{{num}}` はそのまま出力する）
+- 学費（`facts/admissions.yaml` の `tuition`）は、期・年次・総額の合計が合っていることを `npm run validate` が検査する（1 年次の合計は入学金を含める）。金額を直すときは合計も直す
 - `npm run validate` は TODO を警告、`npm run validate -- --strict` はエラーにする
 - `npm run render -- --book <id> --release` は、描画結果に `TODO` が残っていると失敗する
 - 該当しない任意項目は TODO を残さず行ごと削除する
