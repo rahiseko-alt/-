@@ -2,19 +2,17 @@
 // 除外の規則はディレクトリだけでなくシンボリックリンクにも効くこと（末尾に / を付けた規則は、
 // 作業ツリーに張った node_modules などへのリンクを除外せず、git add -A でコミットさせてしまう。PR #15〜#19）。
 // リポジトリの .gitignore だけを入れた一時リポジトリに実際のファイル・リンクを作り、git が未追跡として数えるかで確かめる
-// （git があればよく、作業ツリーでなくても動く。利用者の全体設定・core.excludesFile の影響も受けない）
-import { execFileSync, spawnSync } from 'node:child_process';
+// （git があればよく、作業ツリーでなくても動く。利用者の全体設定・既定の除外ファイル ~/.config/git/ignore の影響も受けない）
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { isolatedGitEnv, REPO_ROOT } from './helpers.ts';
-
-const HAS_GIT = spawnSync('git', ['--version'], { stdio: 'ignore' }).status === 0;
+import { HAS_GIT, isolatedGitEnv, REPO_ROOT } from './helpers.ts';
 
 /** 利用者の設定・既定の除外ファイル（~/.config/git/ignore）・親の git の環境変数の影響を受けない git */
 function isolatedGit(cwd: string, args: string[]): string {
-  return execFileSync('git', ['-c', `core.excludesFile=${os.devNull}`, ...args], {
+  return execFileSync('git', args, {
     cwd,
     encoding: 'utf8',
     env: isolatedGitEnv(),

@@ -60,7 +60,7 @@ ID とパスは、スクリプト・テンプレート・レビュー記録か�
 | `<source>` | 発行元の通称、または中立な識別名（英数字・ハイフン。大文字可）。パス `references/<source>/...` は禁止語の照合から除外される（system/rules/references.md §2） | `HAL`、`A-school`、`school-a` |
 | `<kind>` | 資料の種別（英小文字） | `brochure`、`admissions`、`flyers` |
 | ページ画像 | `page_` + 3 桁 + 拡張子（PDF からの取り込みは既定で `.jpg`）。番号は**元資料のページ順**（1 始まり） | `page_001.jpg` |
-| 元資料 | `original/` に元のファイル名のまま（空白・日本語は置換してよい） | `original/brochure-2026.pdf` |
+| 元資料 | `original/` に元のファイル名のまま（空白・日本語は置換してよい。拡張子の大文字小文字もそのままでよい。LFS の規則は大文字小文字を問わない（git-workflow.md §4）） | `original/brochure-2026.pdf` |
 | 解析 | `analysis/book.yaml`、`analysis/page_NNN.yaml`（ページ画像と同じ番号） | `analysis/page_016.yaml` |
 | 比較用の補正指定 | `prep/page_NNN.yaml`（見開きの片側は `page_NNN-l.yaml` / `page_NNN-r.yaml`） | `prep/page_015-r.yaml` |
 

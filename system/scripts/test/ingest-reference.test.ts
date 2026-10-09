@@ -7,12 +7,34 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { loadAnalysis, loadReferenceSource } from '../../design-engine/src/index.ts';
 import { ingestCommand } from '../lib/ingest.ts';
 import { validateCommand } from '../lib/validate.ts';
-import { cleanupTemp, copyFixture, readFile, run, tempDir } from './helpers.ts';
+import { cleanupTemp, copyFixture, HAS_GIT, lfsFilteredByRepoAttributes, readFile, run, tempDir } from './helpers.ts';
 
 afterAll(() => cleanupTemp());
 
 async function solid(file: string, color: string, format: 'png' | 'jpeg' | 'webp'): Promise<void> {
   await sharp({ create: { width: 40, height: 56, channels: 3, background: color } })[format]().toFile(file);
+}
+
+/** 1 色ずつのページ（100mm × 140mm）の PDF を Chromium で作る */
+async function makePdf(file: string, colors: string[]): Promise<void> {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage();
+    const pages = colors.map((c) => `<div style="background:${c}"></div>`).join('');
+    await page.setContent(`<style>@page{size:100mm 140mm;margin:0}div{width:100mm;height:140mm;break-after:page}</style>${pages}`);
+    fs.writeFileSync(file, await page.pdf({ width: '100mm', height: '140mm', printBackground: true, preferCSSPageSize: true }));
+  } finally {
+    await browser.close();
+  }
+}
+
+/** dir の下のファイル（root からの相対パス） */
+function filesUnder(root: string, dir: string): string[] {
+  return fs
+    .readdirSync(path.join(root, dir), { recursive: true, withFileTypes: true })
+    .filter((d) => d.isFile())
+    .map((d) => path.relative(root, path.join(d.parentPath, d.name)).split(path.sep).join('/'))
+    .sort();
 }
 
 describe('ref:ingest --images', () => {
@@ -86,18 +108,8 @@ describe('ref:ingest --images', () => {
 describe('ref:ingest --pdf', () => {
   it('original/ にコピーし、pdftoppm でページごとの JPEG（既定）または PNG（--format png）にする', async () => {
     // 2 ページの PDF を Chromium で生成
-    const work = tempDir();
-    const pdf = path.join(work, 'other brochure.pdf');
-    const browser = await chromium.launch();
-    try {
-      const page = await browser.newPage();
-      await page.setContent(
-        '<style>@page{size:100mm 140mm;margin:0}div{width:100mm;height:140mm;break-after:page}</style><div style="background:#336699"></div><div style="background:#993366"></div>',
-      );
-      fs.writeFileSync(pdf, await page.pdf({ width: '100mm', height: '140mm', printBackground: true, preferCSSPageSize: true }));
-    } finally {
-      await browser.close();
-    }
+    const pdf = path.join(tempDir(), 'other brochure.pdf');
+    await makePdf(pdf, ['#336699', '#993366']);
 
     const root = copyFixture();
     const r = await run(ingestCommand, ['--source', 'Pdf-school', '--kind', 'brochure', '--pdf', pdf, '--dpi', '36', '--root', root]);
@@ -121,6 +133,24 @@ describe('ref:ingest --pdf', () => {
     expect(png.code, png.text).toBe(0);
     expect(fs.readdirSync(dir).filter((n) => n.startsWith('page_')).sort()).toEqual(['page_001.png', 'page_002.png']);
     expect((await sharp(path.join(dir, 'page_001.png')).metadata()).format).toBe('png');
+  });
+
+  // スキャナの既定名など、拡張子が大文字の PDF。.gitattributes の LFS の規則は大文字小文字を問わないので、
+  // そのまま git add しても LFS に入り、どの環境の checkout でも実体に戻る（system/rules/git-workflow.md §4）
+  it.skipIf(!HAS_GIT)('拡張子が大文字の PDF も元のファイル名のまま original/ に置き、取り込んだ画像・PDF はすべて .gitattributes で LFS に入る', async () => {
+    const pdf = path.join(tempDir(), 'SCAN0001.PDF');
+    await makePdf(pdf, ['#336699']);
+    const root = copyFixture();
+    const r = await run(ingestCommand, ['--source', 'Scan-school', '--kind', 'brochure', '--pdf', pdf, '--dpi', '36', '--root', root]);
+    expect(r.code, r.text).toBe(0);
+    const source = loadReferenceSource(root, 'references/Scan-school/brochure');
+    expect(source).toMatchObject({ pages: 1, original: 'references/Scan-school/brochure/original/SCAN0001.PDF' });
+
+    const binaries = filesUnder(root, 'references/Scan-school/brochure').filter((rel) => !rel.endsWith('.yaml'));
+    expect(binaries).toEqual(['references/Scan-school/brochure/original/SCAN0001.PDF', 'references/Scan-school/brochure/page_001.jpg']);
+    // core.ignoreCase=false（Linux）でも true（macOS・Windows の既定）でも同じ
+    expect(lfsFilteredByRepoAttributes(binaries, false).sort()).toEqual(binaries);
+    expect(lfsFilteredByRepoAttributes(binaries, true).sort()).toEqual(binaries);
   });
 
   it('--force でも、新しい PDF の変換に失敗したら既存のページ画像を消さず、壊れた PDF も残さない', async () => {
