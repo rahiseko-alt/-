@@ -365,7 +365,7 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | --- | --- | --- |
 | 1 | company-data のスキーマ（数値項目 `years` `capacity` `value` `count` `established` が数値か `TODO`、実績の数値 `metrics[].value`・`certifications[].count` を記入したときの `as_of`・`source`、`facts/admissions.yaml` の学費の合計を含む）。`TODO` プレースホルダ | スキーマ違反（`"2年"` のような数値項目の文字列、出典・基準日のない実績の数値を含む）・合計の食い違いはエラー。TODO は警告（`--strict` でエラー） |
 | 1 | company-data の中の ID の参照: 教員の `course_ids`・`facts/admissions.yaml` の `departments[].course_id` → `facts/courses.yaml` の `id`、学科・教員の `photo` → `photos/photos.yaml` の `id`（`"TODO: ..."` の値は TODO として数える） | 存在しない ID はエラー。記入例のプレースホルダ（`*-todo`）を指すものは警告（`--strict` でエラー） |
-| 1 | company-data の全角英数字（U+FF10〜FF19・FF21〜FF3A・FF41〜FF5A）: すべての YAML の文字列の値（コメント・キー名と、資料のファイル名・パスを書く `source`・`file` は対象外） | 警告（半角に直し、原本の表記はコメントに残す） |
+| 1 | company-data の全角英数字（U+FF10〜FF19・FF21〜FF3A・FF41〜FF5A）: すべての YAML の文字列の値（コメント・キー名と、資料のファイル名・パスを書く位置: 各ファイルのトップレベルの `source`、`photos[].file`・`logos[].file` は対象外。紙面に出る実績の出典 `metrics[].source`・`certifications[].source` は対象） | 警告（半角に直し、原本の表記はコメントに残す） |
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |

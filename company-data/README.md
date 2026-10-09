@@ -42,7 +42,7 @@ company-data/
 3. 記入例を兼ねたプレースホルダ（`course-todo` など）は、実データを入れたら削除する
 4. `npm run validate` で形式を確認する（`TODO` は警告。`--strict` ではエラー）
    - ID の参照も確かめる: 教員の `course_ids`・`facts/admissions.yaml` の `departments[].course_id` は `facts/courses.yaml` の `id`、学科・教員の `photo` は `photos/photos.yaml` の `id`。存在しない ID はエラー、記入例のプレースホルダ（`course-todo` などの `*-todo`）を指したままだと警告（`--strict` ではエラー）
-   - 英数字は半角で書く（`【様式1】` であって `【様式１】` ではない）。全角英数字は警告。原本の表記を残したいときはコメントに書く（`source`・`file` の資料のファイル名は原本どおりでよい）
+   - 英数字は半角で書く（`【様式1】` であって `【様式１】` ではない）。全角英数字は警告。原本の表記を残したいときはコメントに書く。原本どおりでよいのは資料のファイル名・パスを書く位置（各ファイルのトップレベルの `source`、写真・ロゴの `file`）だけで、紙面に出る実績の出典（`metrics` の `source`・`certifications` の `source`）は半角にする
 5. 影響する BOOK を再出力して確認する（`npm run render -- --book <id>`）
 6. コミットメッセージに出典（どの資料の何ページか、誰の確認か）を書く
 

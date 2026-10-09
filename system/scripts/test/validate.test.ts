@@ -3,10 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { afterAll, describe, expect, it } from 'vitest';
-import fg from 'fast-glob';
-import { readYamlFile } from '../../design-engine/src/index.ts';
 import { fullwidthAlnumHits, validateCommand, validateStudio } from '../lib/validate.ts';
-import { FIXTURE_ROOT, REPO_ROOT, appendFile, cleanupTemp, copyFixture, readFile, run, writeFile } from './helpers.ts';
+import { FIXTURE_ROOT, appendFile, cleanupTemp, copyFixture, readFile, run, writeFile } from './helpers.ts';
 
 afterAll(() => cleanupTemp());
 
@@ -202,7 +200,7 @@ describe('validate', () => {
     expect(r.out).not.toContain('事実「data-business」');
   });
 
-  it('company-data の全角英数字は警告（コメント・source・file は対象外）', async () => {
+  it('company-data の全角英数字は警告（コメントとトップレベルの source は対象外）', async () => {
     const root = copyFixture();
     edit(root, 'company-data/facts/courses.yaml', (s) => s.replace('- Python基礎', '- Ｐｙｔｈｏｎ基礎\n      - ２年次の演習'));
     appendFile(root, 'company-data/copy/brochure.yaml', '# 原本の表記: 【様式１】\nform: 入学願書【様式１】\nsource: 原稿＿Ｖ４.docx\n');
@@ -216,11 +214,28 @@ describe('validate', () => {
     expect(r.out).not.toContain('company-data/facts/results.yaml: 全角英数字');
   });
 
-  it('正本の company-data（YAML の値）に全角英数字がない（原本の全角の表記はコメントに残す）', () => {
-    const files = fg.sync('company-data/**/*.{yaml,yml}', { cwd: REPO_ROOT }).sort();
-    expect(files).toContain('company-data/facts/admissions.yaml');
-    const hits = files.flatMap((rel) => fullwidthAlnumHits(readYamlFile(path.join(REPO_ROOT, rel), rel)).map((h) => `${rel}: ${h}`));
-    expect(hits).toEqual([]);
+  it('紙面に出る実績の出典（metrics[].source・certifications[].source）の全角英数字も警告する', async () => {
+    const root = copyFixture();
+    // shared/components/stat-card.hbs は as_of と source を「2026-03／<source>」の形で紙面に出す
+    edit(root, 'company-data/facts/results.yaml', (s) =>
+      s.replace('source: 架空の集計', 'source: ２０２６年度 学校案内Ｐ１２').replace(/(certifications:[\s\S]*?source: )架空の集計/, '$1架空の集計Ｖ２'),
+    );
+    const r = await run(validateCommand, ['--root', root]);
+    expect(r.code, r.text).toBe(0);
+    expect(r.out).toContain(
+      '[警告] company-data/facts/results.yaml: 全角英数字が 2 か所にあります（metrics.0.source の「２０６Ｐ１」、certifications.0.source の「Ｖ２」）',
+    );
+  });
+
+  it('全角英数字の検査で対象外にするのは、資料のファイル名・パスを書く位置（トップレベルの source、photos[].file・logos[].file）だけ', () => {
+    const data = {
+      source: '募集要項＿Ｖ４.docx',
+      photos: [{ id: 'campus', file: 'company-data/photos/校舎１.jpg', caption: '校舎１号館' }],
+      logos: [{ id: 'logo-main', file: 'company-data/brand/logo/ロゴＡ.svg' }],
+      metrics: [{ id: 'm', source: '学校案内Ｐ１２' }],
+      exam_types: [{ id: 'ao', file: '願書【様式１】.xls' }],
+    };
+    expect(fullwidthAlnumHits(data)).toEqual(['photos.0.caption の「１」', 'metrics.0.source の「Ｐ１２」', 'exam_types.0.file の「１」']);
   });
 
   it('テンプレートの存在しないキーは試し合成でエラー（BOOK・ページ・キー名つき）', async () => {

@@ -83,8 +83,12 @@ const MIN_FACT_LENGTH = 4;
 const PLACEHOLDER_ID_RE = /-todo$/;
 /** 全角英数字（U+FF10〜FF19・FF21〜FF3A・FF41〜FF5A）。company-data にも入れない（system/rules/typography-ja.md §7） */
 const FULLWIDTH_ALNUM_RE = /[\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]/g;
-/** 全角英数字の検査で対象外にするキー（資料のファイル名・パスを原本どおりに書く） */
-const FILENAME_KEYS = new Set(['source', 'file']);
+/**
+ * 全角英数字の検査で対象外にする位置（資料のファイル名・パスを原本どおりに書く）: 各ファイルのトップレベルの source
+ * （出典の資料名。facts/admissions.yaml など）と、写真・ロゴの photos[].file・logos[].file だけ。
+ * 実績の metrics[].source・certifications[].source は紙面に出る（shared/components/stat-card.hbs）ので対象にする
+ */
+const FILENAME_PATH_RE = /^(?:source|(?:photos|logos)\.\d+\.file)$/;
 
 function section(no: number, title: string): CheckSection {
   return { no, title, errors: [], warnings: [], info: [] };
@@ -169,13 +173,13 @@ function checkCompanyData(root: string, strict: boolean, s: CheckSection): Compa
 
 /**
  * YAML の文字列の値（コメント・キー名は対象外）にある全角英数字を「<キーのパス> の「<文字>」」の形で列挙する。
- * source・file（資料のファイル名・パス）は原本どおりに書くので除く
+ * 資料のファイル名・パスを原本どおりに書く位置（トップレベルの source、photos[].file・logos[].file）は除く。
+ * data は company-data の 1 ファイル分（キーのパスはファイルのトップレベルから）
  */
 export function fullwidthAlnumHits(data: unknown): string[] {
   const hits: string[] = [];
   for (const hit of walkStrings(data)) {
-    const keys = hit.path.split('.').filter((k) => !/^\d+$/.test(k));
-    if (FILENAME_KEYS.has(keys[keys.length - 1] ?? '')) continue;
+    if (FILENAME_PATH_RE.test(hit.path)) continue;
     const chars = [...new Set(hit.value.match(FULLWIDTH_ALNUM_RE) ?? [])];
     if (chars.length > 0) hits.push(`${hit.path || '(値)'} の「${chars.join('')}」`);
   }
