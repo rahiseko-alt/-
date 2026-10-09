@@ -86,6 +86,7 @@ notes: |
 - `npm run gen:inputs -- --book <bookId>` で、各素材の参考の切り出し（`.cache/gen-inputs/`。コミットしない）と必要な画素数の一覧を作る
 - 生成した画像は `backgrounds/<素材 id>.png`（写真調は `.jpg` も可）と `<素材 id>.prompt.yaml` に置き、`placement` の枠（`photo-frame` の `src` など）から参照する。全件そろったら `status: generated` にする
 - `npm run validate` は、画像がまだない素材を「Layer 1 が未生成」として警告する（必須・任意の件数つき）
+- 生成済みの画像も `npm run validate` が確かめ、次を警告する: BOOK の `png_dpi` で `size_mm` を出すのに画素数が足りない、縦横比が `size_mm` と 2% 以上違う、`cutout` なのに透明部分がない、同じ素材 ID の画像が複数ある、`.prompt.yaml` の `negative_prompt` に §3 の 10 語がそろっていない
 
 ## 5. ファイルの置き場所と名前
 

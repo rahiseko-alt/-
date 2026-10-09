@@ -116,7 +116,7 @@ describe('validate', () => {
     expect(r.code, r.text).toBe(0);
     expect(r.out).toMatch(/books\/smoke\/pages\/page_002\/page\.html:\d+: 事実「サンプル学園」が直接書かれています。\{\{facts\.school\.name\}\} を使ってください/);
     expect(r.out).toContain('事実「00-0000-0000」');
-    const report = validateStudio(root);
+    const report = await validateStudio(root);
     const hard = report.sections.find((s) => s.no === 5)!;
     expect(hard.errors).toEqual([]);
     // コメント行（{{!-- --}}）は数えない: サンプル学園 の警告は 1 件だけ

@@ -82,6 +82,19 @@ describe('studio-server', () => {
     expect(await rawGet('/books%5csmoke%5cconfig%5cbook.yaml')).toBe(404);
     expect(await rawGet('/references/Sample/brochure/page_001.svg')).toBe(404);
     expect(await rawGet('/References/Sample/brochure/page_001.svg')).toBe(404);
+    // 参考ページの画素を含む派生物（.cache/・比較出力）と、参考資料を指すシンボリックリンクも配信しない
+    fs.mkdirSync(path.join(root, '.cache/ref-prep'), { recursive: true });
+    fs.writeFileSync(path.join(root, '.cache/ref-prep/page.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>');
+    expect(await rawGet('/.cache/ref-prep/page.svg')).toBe(404);
+    fs.mkdirSync(path.join(root, 'books/smoke/reviews/page_001/compare-1'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'books/smoke/reviews/page_001/compare-1/side-by-side.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>');
+    expect(await rawGet('/books/smoke/reviews/page_001/compare-1/side-by-side.svg')).toBe(404);
+    fs.symlinkSync('../../../references/Sample/brochure/page_001.svg', path.join(root, 'books/smoke/backgrounds/ref-link.svg'));
+    expect(await rawGet('/books/smoke/backgrounds/ref-link.svg')).toBe(404);
+    expect(server.referencePathOf(`${server.baseUrl}books/smoke/backgrounds/ref-link.svg`)).toBe(
+      'books/smoke/backgrounds/ref-link.svg（→ references/Sample/brochure/page_001.svg）',
+    );
+    expect(server.referencePathOf(`${server.baseUrl}books/smoke/config/book.yaml`)).toBeNull();
     // 先頭の "//" はホスト名ではなくパスとして扱う。不正な値・想定外の名前でもサーバーは落ちない
     expect(await rawGet('//books/smoke/config/book.yaml')).toBe(200);
     expect(await rawGet('//[x')).toBe(404);
@@ -122,11 +135,18 @@ describe('studio-server', () => {
         await doc2.close();
       }
 
-      // エンコードした区切りで書いた参考資料の読み込みも記録する（配信はしない）
-      const sneaky = html.replace('</body>', '<img src="references%2FSample%2Fbrochure%2Fpage_001.svg" alt="">\n</body>');
+      // エンコードした区切りや、参考資料を指すシンボリックリンクで書いた読み込みも記録する（配信はしない）
+      fs.symlinkSync('../../../references/Sample/brochure/page_001.svg', path.join(root, 'books/smoke/backgrounds/ref-link2.svg'));
+      const sneaky = html.replace(
+        '</body>',
+        '<img src="references%2FSample%2Fbrochure%2Fpage_001.svg" alt="">\n<img src="books/smoke/backgrounds/ref-link2.svg" alt="">\n</body>',
+      );
       const doc3 = await openComposed(server, context, sneaky, 'page_001');
       try {
-        expect(doc3.referenceRequests).toEqual(['references/Sample/brochure/page_001.svg']);
+        expect(doc3.referenceRequests.sort()).toEqual([
+          'books/smoke/backgrounds/ref-link2.svg（→ references/Sample/brochure/page_001.svg）',
+          'references/Sample/brochure/page_001.svg',
+        ]);
         expect(doc3.problems.some((p) => p.includes('画像を表示できません'))).toBe(true);
       } finally {
         await doc3.close();

@@ -370,6 +370,7 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | 7 | `backgrounds/*.{png,jpg,jpeg,webp}` に同じベース名の `.prompt.yaml` がない | 警告 |
 | 7 | `backgrounds/layer1-orders.yaml` の形式・`book` の不一致・参照先の欠落 | エラー |
 | 7 | `backgrounds/layer1-orders.yaml` の素材のうち、同じベース名の画像がまだないもの（全件そろって `status: pending` のままなら generated を促す） | 警告 |
+| 7 | 生成済みの Layer 1 画像: BOOK の `png_dpi` で `size_mm` に足りない画素数、`size_mm` と 2% 以上違う縦横比、透明部分のない `cutout`、同じ素材 ID の画像の重複、`negative_prompt` に必須の 10 語がない記録 | 警告（画像を読めなければエラー。Git LFS の実体が未取得なら警告） |
 
 実際のリポジトリ（company-data がプレースホルダ、books が空）で終了コード 0 になることが前提です。
 

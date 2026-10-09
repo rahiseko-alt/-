@@ -6,10 +6,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isInside, toPosix } from './paths.ts';
 
-/** ルート相対パスが references/ 配下か（大文字小文字は区別しない） */
+/** BOOK の比較出力（npm run compare。参考ページの画素を含む）: books/<id>/reviews/<pageId>/compare-<日時>/ */
+const COMPARE_OUTPUT_RE = /^books\/.+\/reviews\/[^/]+\/compare-[^/]*(?:\/|$)/;
+
+/**
+ * ルート相対パスが参考資料か（大文字小文字は区別しない）。references/ 配下のほか、参考ページの画素を含む派生物も含む:
+ * .cache/（ref:prep の補正画像・gen:inputs の切り出しなど）と、BOOK の比較出力（books/<id>/reviews/<pageId>/compare-<日時>/）
+ */
 export function isReferencePath(relPath: string): boolean {
   const p = path.posix.normalize(relPath.replace(/\\/g, '/')).replace(/^\.\//, '').toLowerCase();
-  return p === 'references' || p.startsWith('references/');
+  return p === 'references' || p.startsWith('references/') || p === '.cache' || p.startsWith('.cache/') || COMPARE_OUTPUT_RE.test(p);
 }
 
 const ATTR_URL_RE = /(?:^|[\s"'])(?:src|href|xlink:href|poster|data|background|action)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/gi;

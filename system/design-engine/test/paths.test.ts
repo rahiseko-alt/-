@@ -7,6 +7,7 @@ import {
   StudioError,
   bookFileName,
   findRepoRoot,
+  isReferencePath,
   isValidBookId,
   listBooks,
   listReferenceSources,
@@ -155,5 +156,24 @@ describe('プレビュー URL', () => {
     expect(resolveEngineRequest('/@engine/assets/%2e%2e/index.ts')).toBeNull();
     expect(resolveEngineRequest('/@engine/fonts/other-font/400.css')).toBeNull();
     expect(resolveEngineRequest('/@engine/fonts/noto-sans-jp/package.json/../../../package.json')).toBeNull();
+  });
+});
+
+describe('isReferencePath（参考資料と、参考ページの画素を含む派生物）', () => {
+  it.each([
+    ['references/HAL/brochure/page_001.jpg', true],
+    ['References/HAL/x.png', true],
+    ['books/../references/x.png', true],
+    ['.cache/ref-prep/HAL/page_001.png', true],
+    ['.cache/gen-inputs/replica/a/page_001-hero.png', true],
+    ['books/replica/a-brochure/reviews/page_001/compare-20261008-120000/side-by-side.png', true],
+    ['books/brochure/reviews/page_016/compare-1/diff.png', true],
+    ['books/brochure/reviews/page_016/review.md', false],
+    ['books/brochure/reviews/compare-notes.md', false],
+    ['books/brochure/backgrounds/page_001.png', false],
+    ['.cachex/a.png', false],
+    ['shared/references-like/x.png', false],
+  ])('%s → %s', (p, expected) => {
+    expect(isReferencePath(p)).toBe(expected);
   });
 });

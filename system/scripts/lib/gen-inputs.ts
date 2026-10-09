@@ -39,7 +39,8 @@ export function listOrderBooks(root: string): string[] {
     .sort();
 }
 
-function pxAt(mm: number, dpi: number): number {
+/** mm を dpi の画素数にする（validate の Layer 1 の解像度の検査と共通） */
+export function pxAt(mm: number, dpi: number): number {
   return Math.round((mm / 25.4) * dpi);
 }
 
