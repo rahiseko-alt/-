@@ -3,8 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { afterAll, describe, expect, it } from 'vitest';
-import { validateCommand, validateStudio } from '../lib/validate.ts';
-import { FIXTURE_ROOT, appendFile, cleanupTemp, copyFixture, readFile, run, writeFile } from './helpers.ts';
+import fg from 'fast-glob';
+import { readYamlFile } from '../../design-engine/src/index.ts';
+import { fullwidthAlnumHits, validateCommand, validateStudio } from '../lib/validate.ts';
+import { FIXTURE_ROOT, REPO_ROOT, appendFile, cleanupTemp, copyFixture, readFile, run, writeFile } from './helpers.ts';
 
 afterAll(() => cleanupTemp());
 
@@ -212,6 +214,13 @@ describe('validate', () => {
     );
     expect(r.out).toContain('[警告] company-data/copy/brochure.yaml: 全角英数字が 1 か所にあります（form の「１」）');
     expect(r.out).not.toContain('company-data/facts/results.yaml: 全角英数字');
+  });
+
+  it('正本の company-data（YAML の値）に全角英数字がない（原本の全角の表記はコメントに残す）', () => {
+    const files = fg.sync('company-data/**/*.{yaml,yml}', { cwd: REPO_ROOT }).sort();
+    expect(files).toContain('company-data/facts/admissions.yaml');
+    const hits = files.flatMap((rel) => fullwidthAlnumHits(readYamlFile(path.join(REPO_ROOT, rel), rel)).map((h) => `${rel}: ${h}`));
+    expect(hits).toEqual([]);
   });
 
   it('テンプレートの存在しないキーは試し合成でエラー（BOOK・ページ・キー名つき）', async () => {
