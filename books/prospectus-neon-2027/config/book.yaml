@@ -1,0 +1,63 @@
+id: prospectus-neon-2027
+title: 2027学校案内 — ネオン・サイバーパンク制作案
+kind: brochure
+description: ユーザー指定7枚を基準にした24ページの縦長パンフレット制作案。
+format:
+  size: A4
+  orientation: portrait
+  bleed_mm: 3
+  safe_mm: 5
+  margins_mm:
+    top: 16
+    bottom: 17
+    inside: 16
+    outside: 16
+  columns: 12
+  gutter_mm: 4
+  binding: left
+styles:
+  - shared/layouts/grid.css
+  - shared/layouts/typography.css
+  - books/prospectus-neon-2027/layout.css
+theme:
+  --color-primary: "#33c8ff"
+  --color-secondary: "#ff304e"
+  --color-accent: "#ff37bb"
+  --color-text: "#ffffff"
+  --color-muted: "#b7ccdf"
+  --color-background: "#020611"
+  --color-surface: "#071321"
+  --color-neutral: "#ffffff"
+  --fs-body: 10.5pt
+pages:
+  - page_001
+  - page_002
+  - page_003
+  - page_004
+  - page_005
+  - page_006
+  - page_007
+  - page_008
+  - page_009
+  - page_010
+  - page_011
+  - page_012
+  - page_013
+  - page_014
+  - page_015
+  - page_016
+  - page_017
+  - page_018
+  - page_019
+  - page_020
+  - page_021
+  - page_022
+  - page_023
+  - page_024
+output:
+  png_dpi: 350
+  preview_dpi: 150
+notes: "2026-10-09 方針:
+  ユーザー添付7枚を基準。2枚目が表紙、他の画像を背景へ振り分ける。黒・青・赤・マゼンタ・白金属をこのBOOK限定の意図的なthemeとして使用し、正式ブランドカラーは変更しない。共有会話の24ページ構成を制作案へ適用。学校事実はcom\
+  pany-data参照、未確定の授業/支援/実績/AO特典等を作らない。生成人物は未来を表すアート。既存replicaのPhase5検証とは独立した自社制作案で、baseline承認や公開は未実施。背景の原寸は約124〜177ppiで\
+  ネイティブ350ppi未達。出力350dpiは文字・構造の精細さを保つが画像の実細部を増やすものではない。"

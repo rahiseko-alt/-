@@ -1,0 +1,15 @@
+tool: ChatGPT（ユーザー支給アート）
+model: null
+prompt: 元の生成プロンプトはユーザーから未提供。2026-10-09、背景に使用するよう指示された文字なしの支給アートを、再生成・画素加工せず配置。
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption
+seed: null
+size: 1254x1254
+created: null
+author: 元の生成者未確認（ユーザー提供）
+reference_inputs: []
+params:
+  source_type: user-supplied
+  pixel_processing: none
+source_refs:
+  - references/user-neon/campaign/page_007.png
+notes: ユーザーが直接背景使用を指定した生成アート。他校の参考写真ではない。原画素をそのまま保存。表示上のトリミング・明暗調整のみHTML/CSSで行う。生成モデル・日付・プロンプトは不明。学校の実写真として扱わない。

@@ -1,0 +1,35 @@
+tool: Codex image_gen（組み込み）
+model: null
+prompt: "Use case: identity-preserve / precise-object-edit. Input 1 is the edit target, Input 2 is a supporting
+  reference of the same blue-armored character. Make ONE high-resolution TEXT-FREE portrait artwork, A4 ratio 210:297,
+  for background art on internal pages of a premium AI-business school prospectus. Reorient the female character from
+  the input so she is upright in the portrait composition. Preserve her precise original face, realistic blue eyes, hair
+  strands, skin pores and lip texture, silver and blue faceted cyber armor, saturated cobalt and cyan neon, sharp
+  reflective geometric shards, glassy globe/network sphere, distant electric-blue city architecture, rich blacks and
+  pristine whites. Original premium CGI beauty editorial quality. Face in left half to upper-left, roughly upper 60%,
+  angled diagonally as original, with dynamic shards and city dispersed behind; lower 35% should be visually darker with
+  city/armor detail to permit text overlays separately. Remove ALL lettering including AI, Japanese school name, top
+  Japanese slogan, English microtext, all numbers, typography, logos and QR shapes. Replace removed lettering naturally
+  with corresponding metal armor, neon city and glass shards. Do not leave flat white letter-removal panels. No
+  lettering at all. No multiple panels or multipage montage, no poster mockup. Preserve extreme production quality and
+  deep dimensional complexity; never reduce this into a flat vector illustration or generic cartoon. Avoid: text,
+  letters, typography, words, numbers, logo, watermark, signature, QR code, caption."
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption
+seed: null
+size: 1055x1491
+created: 2026-10-09
+author: codex
+reference_inputs:
+  - path: references/user-neon/campaign/page_004.png
+    usage: other
+    note: image_gen の編集入力。顔・装甲・質感を維持し、文字を除去して縦長に再構成。
+  - path: references/user-neon/campaign/page_001.png
+    usage: other
+    note: image_gen の編集入力。顔・装甲・質感を維持し、文字を除去して縦長に再構成。
+params:
+  source_type: image-edit
+  pixel_processing: none
+source_refs:
+  - references/user-neon/campaign/page_004.png
+  - references/user-neon/campaign/page_001.png
+notes: 元画像の文字を生成段階で除去。肌・瞳・髪・金属・光の密度と顔の類似性を目視確認。生成モデル名・seedはツールから返されなかったためnull。A4縦・350dpiへ配置時に拡大される。実画素密度は約124ppiで、印刷用ネイティブ350ppiではない。人物はキービジュアルで在校生・教員の実写真ではない。

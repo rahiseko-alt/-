@@ -1,0 +1,12 @@
+id: page_001
+title: 表紙
+type: cover
+background:
+  image: books/prospectus-neon-2027/backgrounds/cover-armor.png
+  fit: cover
+  position: center
+  opacity: 1
+status: review
+notes: 2026-10-09
+  ユーザー指定のネオン基準で制作。A4縦、1ページ1画像。レイアウト=cover。背景=cover-armor。ユーザー指定の2枚目を顔・装甲維持で縦長に編集。>PROはアートの見出しで資格等の保証を意味しない。日本語校名・英語校名・年度は正本参照。
+  コピーの新規部分は制作案。授業詳細・支援・写真・特典など未確定の事実は断定せず、確認中の表記または相談事項にしている。

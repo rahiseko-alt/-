@@ -1,0 +1,33 @@
+tool: Codex image_gen（組み込み）
+model: null
+prompt: "Use case: identity-preserve / ads-marketing. Edit target: the supplied square cyberpunk school poster, which
+  the user selected as their cover. Produce ONE portrait A4 proportion image (width:height = 210:297), high-resolution
+  premium CGI photographic print artwork, as a TEXT-FREE cover base. Preserve the SAME central woman's exact face, hair,
+  pale porcelain skin microtexture, beautiful blue eyes, expression and face proportions; preserve the spectacular white
+  chrome angular head armor with ruby-magenta center gem, black and silver faceted shoulder armor, cobalt electric blue
+  and crimson/magenta neon, sharp glass shards, luminous laser streaks, deep black atmospheric richness and extremely
+  detailed high production quality of the input. Do not redesign the character or simplify the detail. Retain the bold
+  centered symmetrical close-up framing, keep her whole head and head armor visible, eyes around upper-middle; extend
+  the existing artwork vertically at the top and bottom, with dark rich jewel-like armor and optical depth in the lower
+  30 percent where CODE will later place large cover typography. Upper 6 percent can remain darker for a small year
+  label. Remove ALL EXISTING LETTERING in the input, including >PRO, all bottom English lines, '27 and every number or
+  text shape; seamlessly replace those areas with matching shoulder armor and dark luminous environment, not blank flat
+  panels. The final page's letters will be typeset separately; do not draw lettering. This is a single full-bleed
+  portrait cover base only, no multipage montage, no book mockup, no border, no collage of pages. Avoid: text, letters,
+  typography, words, numbers, logo, watermark, signature, QR code, caption. Preserve quality and face fidelity above
+  all."
+negative_prompt: text, letters, typography, words, numbers, logo, watermark, signature, QR code, caption
+seed: null
+size: 1055x1491
+created: 2026-10-09
+author: codex
+reference_inputs:
+  - path: references/user-neon/campaign/page_002.png
+    usage: other
+    note: image_gen の編集入力。顔・装甲・質感を維持し、文字を除去して縦長に再構成。
+params:
+  source_type: image-edit
+  pixel_processing: none
+source_refs:
+  - references/user-neon/campaign/page_002.png
+notes: 元画像の文字を生成段階で除去。肌・瞳・髪・金属・光の密度と顔の類似性を目視確認。生成モデル名・seedはツールから返されなかったためnull。A4縦・350dpiへ配置時に拡大される。実画素密度は約124ppiで、印刷用ネイティブ350ppiではない。人物はキービジュアルで在校生・教員の実写真ではない。

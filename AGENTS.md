@@ -42,12 +42,13 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 | Phase 5 | 完コピ検証（代表ページを 2 ラウンド以上比較・修正） | **作業中**（各資料の第一候補 12 ページを 3 ラウンドずつ比較・修正済み。Layer 1 は生成指示を作成済み（9 BOOK・64 件）で、画像生成は Codex が担当・未着手。【要確認】の判断が残り） |
 | Phase 6 | BASELINE 確定 | 未着手 |
 | Phase 7 | 保護機構（Filesystem Permission / PreToolUse Hook / Git 差分チェック） | 計画のみ・**未導入**（system/rules/protection.md） |
-| Phase 8 | 自社版への変換 | 未着手 |
+| Phase 8 | 自社版への変換 | 基準の確定は未着手。ユーザー指定の自社制作案 `prospectus-neon-2027`（24ページ）を先行制作・レビュー待ち |
 | Phase 9 | 日常編集 | 未着手 |
 
 - `company-data/` は学校の基本情報・学科・入学事務局・募集要項（`facts/admissions.yaml`。2027 年度 4 月入学）を学校の資料から記入済み。教員・実績・共通コピー・写真・ロゴなどは `"TODO: ..."` のプレースホルダ、ブランドカラーは仮の値（`status: provisional`）
 - `references/` は 3 校分（`HAL-nagoya`・`nagoya-iryo-hisho-it`・`kokusai-igaku-gijutsu`）の PDF とページ画像（JPEG）。`source.yaml` の `forbidden_terms` 記入済み。`analysis/` は全資料の解析済み（Phase 5 の候補は references/README.md と各 `book.yaml`）
-- `books/` は Phase 5 の完コピ検証用の `books/replica/`（12 BOOK・各 1 ページ。一覧は references/README.md。文字はダミー、写真は枠のみ。状態と【要確認】は各 `review.md`）だけ。自社の BOOK はまだない
+- `books/replica/` は Phase 5 の完コピ検証用（12 BOOK・各 1 ページ。一覧は references/README.md。文字はダミー、写真は枠のみ）。別に、2026-10-09のユーザー指示で `books/prospectus-neon-2027/` にA4縦・24ページの自社制作案を追加。添付2枚目を表紙に、他の画像を背景へ分散。生成人物はキービジュアルで、実際の学生・教員ではない。学校の事実は正本を参照。状態と次にやることは `books/prospectus-neon-2027/reviews/production.md`
+- 今回の自社制作案の続きは `prospectus-neon-2027` を対象にする。ユーザーが明示的に切り替えない限り、既存の完コピ検証64素材の生成へ戻らない。正式公開・入稿、Phase 6のbaseline承認は未実施
 - Phase 5 の次の作業（Codex）: Layer 1 の生成。対象は `npm run validate` の「Layer 1 が未生成」の警告（`books/replica/*/backgrounds/layer1-orders.yaml`）。手順は system/prompts/generate-background.md「生成指示から生成する」。人物を含む素材（40 件）も全件使用可（2026-10-08 に人間が決定。system/rules/image-generation.md §2）
 - フェーズが進んだら、この表を同じコミットで更新する
 
