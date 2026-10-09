@@ -357,7 +357,7 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | `dev` | （環境変数 `STUDIO_ROOT=<dir>` `PORT=<番号>`） | Vite プレビュー（既定: リポジトリルート・ポート 5173）。`--root` は使えない |
 | `typecheck` / `test` / `check` | | `tsc` / `vitest run` / typecheck → validate → test |
 
-画像・PDF を読む CLI（`compare`・`ref:prep`・`gen:inputs`・`photo:add`・`ref:ingest`）は、Git LFS のポインタのまま（`git lfs pull` をしていない）のファイルを「`<ファイル>` は Git LFS のポインタです（実体が未取得）」・対処「git lfs pull を実行してください」のエラーにして止まります。ポインタではないが sharp で開けない画像は「画像を読めません: `<ファイル>`」。どちらもスタックトレースは出しません（`system/scripts/lib/images.ts` の `readImageMetadata` / `isLfsPointer`）。`render` は表示できなかった `<img>` の配信元がポインタなら、警告「画像を表示できません」に同じ案内を付けます（`--release` でも警告のまま）。
+画像・PDF を読む CLI（`compare`・`ref:prep`・`gen:inputs`・`photo:add`・`ref:ingest`）は、Git LFS のポインタのまま（`git lfs pull` をしていない）のファイルを「`<ファイル>` は Git LFS のポインタです（実体が未取得）」・対処「git lfs pull を実行してください」のエラーにして止まります。ポインタではないが sharp で開けない画像（壊れている・形式が対応していない）は「画像を読めません: `<ファイル>`（<理由>）」で止まり、LFS の案内は付けません（`git lfs pull` では直らないため）。`ref:ingest --images` は取り込むすべての画像（そのままコピーする png / jpg / svg を含む）をこの 2 つで確かめてから書き込み、変換（webp / tif / gif など → PNG）に失敗した画像も「画像を読めません」にします。いずれも既存のページ画像には触れません。`ref:ingest --pdf` で開けない PDF は「pdfinfo が失敗しました: …」です。どれもスタックトレースは出しません（`system/scripts/lib/images.ts` の `readImageMetadata` / `isLfsPointer`）。`render` は表示できなかった `<img>` の配信元がポインタなら、警告「画像を表示できません」に同じ案内を付けます（ポインタでなければパスだけ。`--release` でも警告のまま）。
 
 ### validate の検査項目
 
@@ -414,6 +414,6 @@ Playwright のバージョン（`package.json`）と Dockerfile のベースイ�
   - 合成: DOM 構造、`<base href>`、背景、ガイド、`page.css` のスコープ
   - レンダリング（ブラウザ）: PNG の画素数、PDF のページ数・サイズ・フォント埋め込み
   - CLI: validate の各検査（禁止語・直書き・記録漏れ）、compare の出力、new:book / new:page / ref:ingest の生成物
-  - Git LFS のポインタ: フィクスチャのコピーにポインタ文書を置き、validate の警告・各 CLI のエラー・render の案内を確かめる（`lfs-pointer.test.ts`）
+  - Git LFS のポインタ・読めない画像: フィクスチャのコピーにポインタ文書・壊れた画像を置き、validate の警告・各 CLI のエラー（ref:ingest が何も書き換えないこと）・render の案内を確かめる（`lfs-pointer.test.ts`）
   - 実リポジトリ: `npm run validate` が終了コード 0
 - GitHub Actions の CI は使わない。テストを含む検証は各作業セッション内（ローカル / Dev Container / Claude Code / Codex）で `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視の順に行い、通ってから commit / push する

@@ -10,6 +10,7 @@ import {
   CliError,
   UsageError,
   consoleIo,
+  firstLine,
   formatDate,
   naturalCompare,
   parseCli,
@@ -21,7 +22,7 @@ import {
   type Command,
   type Io,
 } from './cli.ts';
-import { LFS_PULL_HINT, assertNotLfsPointer, isLfsPointer, lfsPointerMessage } from './images.ts';
+import { LFS_PULL_HINT, assertNotLfsPointer, isLfsPointer, lfsPointerMessage, readImageMetadata } from './images.ts';
 import { fillTemplate, raw, templatePath, yamlString } from './templates.ts';
 
 const execFileAsync = promisify(execFile);
@@ -141,10 +142,12 @@ export async function ingestReference(opts: IngestOptions): Promise<IngestResult
     if (skipped.length > 0) warnings.push(`画像ではないため取り込まなかったファイル: ${skipped.join(', ')}`);
     if (inputs.length === 0) throw new CliError(`取り込める画像がありません（png / jpg / jpeg / svg / webp / tif / gif）: ${opts.images}`);
     if (inputs.length > 999) throw new CliError(`画像が多すぎます（${inputs.length} 枚。page_NNN は 999 まで）`);
-    // Git LFS のポインタをページ画像としてコピーしない
+    // Git LFS のポインタ・壊れた画像をページ画像としてコピーしない（何かを書き換える前に止める）
     const imagesDir = opts.images;
-    const pointers = inputs.map((n) => path.join(imagesDir, n)).filter((f) => isLfsPointer(f));
+    const files = inputs.map((n) => path.join(imagesDir, n));
+    const pointers = files.filter((f) => isLfsPointer(f));
     if (pointers.length > 0) throw new CliError(lfsPointerMessage(pointers.map((f) => show(root, f)).join(', ')), LFS_PULL_HINT);
+    for (const f of files) await readImageMetadata(f, show(root, f));
   }
 
   // 既存のページ画像（--force のときも、新しいページ画像の用意ができるまでは消さない）
@@ -191,7 +194,14 @@ export async function ingestReference(opts: IngestOptions): Promise<IngestResult
         const copyExt = COPY_EXT[ext];
         const name = pageName(i + 1, copyExt ?? '.png');
         if (copyExt) fs.copyFileSync(src, path.join(tmp, name));
-        else await sharp(src).png().toFile(path.join(tmp, name));
+        else {
+          // ヘッダーは読めても途中が壊れている画像は、変換で初めて失敗する（入れ替える前なので既存のページ画像はそのまま）
+          try {
+            await sharp(src).png().toFile(path.join(tmp, name));
+          } catch (err) {
+            throw new CliError(`画像を読めません: ${show(root, src)}（${firstLine(err)}）`);
+          }
+        }
         staged.push(name);
       }
     }

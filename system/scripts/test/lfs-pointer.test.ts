@@ -154,6 +154,45 @@ describe('Git LFS のポインタ: 各 CLI はファイル名と対処を示し�
     expect(fromImages.err).toContain(pointerMsg(path.join(images, 'p2.jpg')));
     expect(fs.existsSync(path.join(root, 'references/Other'))).toBe(false);
   });
+
+  it('ref:ingest --images: ポインタではないが読めない画像（そのままコピーする png も、変換する webp も）は「画像を読めません」で止まり、何も書き換えない', async () => {
+    const root = copyFixture();
+    const good = tempDir();
+    await sharp({ create: { width: 40, height: 56, channels: 3, background: '#336699' } }).png().toFile(path.join(good, 'p1.png'));
+    const first = await run(ingestCommand, ['--source', 'Other', '--kind', 'brochure', '--images', good, '--root', root]);
+    expect(first.code, first.text).toBe(0);
+    const page = fs.readFileSync(path.join(root, 'references/Other/brochure/page_001.png'));
+
+    for (const name of ['p1.png', 'p1.webp']) {
+      const images = tempDir();
+      fs.writeFileSync(path.join(images, name), 'not an image');
+      // 新規の取り込み: 何も作らない
+      const fresh = await run(ingestCommand, ['--source', 'Broken', '--kind', 'brochure', '--images', images, '--root', root]);
+      expect(fresh.code, name).toBe(1);
+      expect(fresh.err).toContain(`画像を読めません: ${path.join(images, name)}`);
+      expect(fresh.err).not.toContain('予期しないエラー');
+      expect(fresh.err).not.toContain('Git LFS');
+      expect(fs.existsSync(path.join(root, 'references/Broken'))).toBe(false);
+      // --force でも既存のページ画像を消さない
+      const forced = await run(ingestCommand, ['--source', 'Other', '--kind', 'brochure', '--images', images, '--force', '--root', root]);
+      expect(forced.code, name).toBe(1);
+      expect(forced.err).toContain(`画像を読めません: ${path.join(images, name)}`);
+      expect(fs.readdirSync(path.join(root, 'references/Other/brochure')).filter((n) => n.startsWith('page_'))).toEqual(['page_001.png']);
+      expect(fs.readFileSync(path.join(root, 'references/Other/brochure/page_001.png')).equals(page)).toBe(true);
+    }
+
+    // ヘッダーは読めるが後半が壊れた webp: 変換（PNG にする）で失敗しても同じ 1 行で止まる
+    const images = tempDir();
+    const webp = Buffer.from(await sharp({ create: { width: 200, height: 280, channels: 3, background: '#808080', noise: { type: 'gaussian', mean: 128, sigma: 30 } } }).webp().toBuffer());
+    webp.fill(0xff, Math.floor(webp.length / 2));
+    await expect(sharp(webp).metadata()).resolves.toMatchObject({ format: 'webp' });
+    fs.writeFileSync(path.join(images, 'p1.webp'), webp);
+    const corrupt = await run(ingestCommand, ['--source', 'Other', '--kind', 'brochure', '--images', images, '--force', '--root', root]);
+    expect(corrupt.code).toBe(1);
+    expect(corrupt.err).toContain(`画像を読めません: ${path.join(images, 'p1.webp')}`);
+    expect(corrupt.err).not.toContain('予期しないエラー');
+    expect(fs.readFileSync(path.join(root, 'references/Other/brochure/page_001.png')).equals(page)).toBe(true);
+  });
 });
 
 describe('Git LFS のポインタ: validate は警告し、render は案内を付ける', () => {

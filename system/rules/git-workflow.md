@@ -61,6 +61,7 @@ GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確�
 - 画像が「ポインタ（数行のテキスト）」のままだとレンダリング・比較が壊れる。`git lfs pull` を実行する
   - `npm run validate` は、使う画像（背景・`references.yaml` の参考資料・補正指定の `image`・生成指示の `reference_image`・生成画像）がポインタなら警告する
   - `compare`・`ref:prep`・`gen:inputs`・`photo:add`・`ref:ingest` は「`<ファイル>` は Git LFS のポインタです（実体が未取得）」で止まり、`render` は「画像を表示できません」に同じ案内を付ける
+  - ポインタではない壊れた画像・対応していない形式は「画像を読めません」（`render` はパスだけ）で、LFS の案内は付かない。`git lfs pull` では直らないので、元の画像を確かめる
 - `.gitattributes` にない形式のバイナリ（動画・独自形式など）を追加する前に、`.gitattributes` に LFS の設定を追加する
 - フォント（`.woff` `.woff2` `.otf` `.ttf`）はバイナリ扱い。書体は `node_modules/@fontsource` から読むので、原則リポジトリに置かない
 - 規模が大きくなった場合は、将来 `references/` だけを外部ストレージへ分離することを検討する（現時点では 1 モノレポ + Git LFS）
