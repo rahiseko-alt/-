@@ -29,6 +29,7 @@ import {
   type Command,
   type Io,
 } from './cli.ts';
+import { readImageMetadata } from './images.ts';
 import { isPrepSpec, prepareReference } from './prep.ts';
 import { fillTemplate, templatePath } from './templates.ts';
 
@@ -155,6 +156,8 @@ export async function comparePage(opts: CompareOptions): Promise<CompareResult> 
     const rel = path.relative(root, reference).split(path.sep).join('/');
     reference = (await prepareReference(root, rel)).out;
   }
+  // 参考画像を読めるか（Git LFS のポインタ・壊れた画像）を、レンダリング画像の処理より先に確かめる
+  const refMeta = await readImageMetadata(reference, show(root, reference));
 
   // レンダリング画像
   const rendered = opts.rendered ?? path.join(book.dir, 'output', 'png', `${pageId}.png`);
@@ -167,7 +170,7 @@ export async function comparePage(opts: CompareOptions): Promise<CompareResult> 
 
   // 塗り足しの切り落とし（dpi は画像の幅と判型から求める）
   const geometry = pageGeometry(book.config.format);
-  const meta = await sharp(rendered).metadata();
+  const meta = await readImageMetadata(rendered, show(root, rendered));
   const rw = meta.width ?? 0;
   const rh = meta.height ?? 0;
   if (rw === 0 || rh === 0) throw new CliError(`レンダリング画像を読み込めません: ${show(root, rendered)}`);
@@ -195,7 +198,6 @@ export async function comparePage(opts: CompareOptions): Promise<CompareResult> 
   // 参考画像を同じ大きさに引き伸ばす（ベクター画像は近い解像度でラスタライズ）
   const refExt = path.extname(reference).toLowerCase();
   const refInput = VECTOR_EXT.has(refExt) ? sharp(reference, { density: Math.max(1, Math.min(dpi, 2400)) }) : sharp(reference);
-  const refMeta = await sharp(reference).metadata();
   if (refMeta.width && refMeta.height) {
     const ra = refMeta.width / refMeta.height;
     const ta = width / height;

@@ -6,6 +6,7 @@ import fg from 'fast-glob';
 import sharp from 'sharp';
 import { ReferencePrepSchema, loadYamlWithSchema, resolveInRoot, type ReferencePrep } from '../../design-engine/src/index.ts';
 import { CliError, UsageError, consoleIo, parseCli, resolveRoot, runCommand, show, type Command, type Io } from './cli.ts';
+import { readImageMetadata } from './images.ts';
 
 export const PREP_USAGE = `使い方: npm run ref:prep -- (--spec <path> ... | --all) [--root <dir>]
   --spec <path>   指定ファイル references/<source>/<kind>/prep/<name>.yaml（複数可）
@@ -73,6 +74,8 @@ export async function prepareReference(root: string, specRel: string): Promise<P
   const spec: ReferencePrep = loadYamlWithSchema(specAbs, ReferencePrepSchema, specRel);
   const imageAbs = resolveInRoot(root, spec.image);
   if (!fs.existsSync(imageAbs)) throw new CliError(`${specRel}: image のファイルがありません: ${spec.image}`);
+  // Git LFS のポインタ・壊れた画像は、ファイル名と対処の付いたエラーにする
+  await readImageMetadata(imageAbs, spec.image);
 
   const { data, info } = await sharp(imageAbs).rotate(spec.rotate).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const W = info.width;

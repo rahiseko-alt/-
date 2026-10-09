@@ -357,19 +357,24 @@ composeBook({ root, bookId, pageIds?, mode, guides?, baseUrl? })                
 | `dev` | （環境変数 `STUDIO_ROOT=<dir>` `PORT=<番号>`） | Vite プレビュー（既定: リポジトリルート・ポート 5173）。`--root` は使えない |
 | `typecheck` / `test` / `check` | | `tsc` / `vitest run` / typecheck → validate → test |
 
+画像・PDF を読む CLI（`compare`・`ref:prep`・`gen:inputs`・`photo:add`・`ref:ingest`）は、Git LFS のポインタのまま（`git lfs pull` をしていない）のファイルを「`<ファイル>` は Git LFS のポインタです（実体が未取得）」・対処「git lfs pull を実行してください」のエラーにして止まります。ポインタではないが sharp で開けない画像は「画像を読めません: `<ファイル>`」。どちらもスタックトレースは出しません（`system/scripts/lib/images.ts` の `readImageMetadata` / `isLfsPointer`）。`render` は表示できなかった `<img>` の配信元がポインタなら、警告「画像を表示できません」に同じ案内を付けます（`--release` でも警告のまま）。
+
 ### validate の検査項目
 
 | # | 検査 | 結果 |
 | --- | --- | --- |
 | 1 | company-data のスキーマ（`facts/admissions.yaml` の学費の合計を含む）。`TODO` プレースホルダ | スキーマ違反・合計の食い違いはエラー。TODO は警告（`--strict` でエラー） |
 | 2 | 全 BOOK（BOOK ID に使えない名前のディレクトリもエラーとして報告）: `book.yaml` のスキーマ・id とパスの一致、`pages` のページの存在（`page.yaml` + `page.html`）、`page.yaml` のスキーマ・id、背景画像・`styles` の存在、`references.yaml` のスキーマと参照先の存在 | エラー |
+| 2 | 背景画像・`references.yaml` の参考資料が Git LFS のポインタのまま（実体が未取得） | 警告（`git lfs pull`） |
 | 3 | `references/*/*/source.yaml` のスキーマ | エラー |
+| 3 | 補正指定（`prep/*.yaml`）の `image` が Git LFS のポインタのまま | 警告（`git lfs pull`） |
 | 4 | 全ページの試し合成（厳格テンプレートのエラー、存在しない素材、参考資料 `references/` を指す URL: `{{asset}}`・属性の `src`/`href`/`srcset`・`style` や `page.css`・`styles` の `url()`） | エラー |
 | 4 | `page.css` が、BOOK の `styles`（共通 CSS）と同じクラス名を、`page.html`・BOOK 固有の部品の `class` 属性に直接書いた要素に使って装飾している（共通パーシャルが出力する要素の上書きだけなら対象外） | 警告 |
 | 5 | 事実の直書き: company-data の文字列（4 文字以上、TODO 以外）が `books/**/page.html` やパーシャルにそのまま書かれている | 警告（`{{facts...}}` を使う） |
 | 6 | 禁止語: いずれかの `source.yaml` の `forbidden_terms` が `books/**`・`company-data/**`・`shared/**` のテキストファイルに出現 | エラー |
 | 7 | `backgrounds/*.{png,jpg,jpeg,webp}` に同じベース名の `.prompt.yaml` がない | 警告 |
 | 7 | `backgrounds/layer1-orders.yaml` の形式・`book` の不一致・参照先の欠落 | エラー |
+| 7 | `backgrounds/layer1-orders.yaml` の `reference_image` が Git LFS のポインタのまま | 警告（`git lfs pull`） |
 | 7 | `backgrounds/layer1-orders.yaml` の素材のうち、同じベース名の画像がまだないもの（全件そろって `status: pending` のままなら generated を促す） | 警告 |
 | 7 | 生成済みの Layer 1 画像: BOOK の `png_dpi` で `size_mm` に足りない画素数、`size_mm` と 2% 以上違う縦横比、透明部分のない `cutout`、同じ素材 ID の画像の重複、`negative_prompt` に必須の 10 語がない記録 | 警告（画像を読めなければエラー。Git LFS の実体が未取得なら警告） |
 
@@ -409,5 +414,6 @@ Playwright のバージョン（`package.json`）と Dockerfile のベースイ�
   - 合成: DOM 構造、`<base href>`、背景、ガイド、`page.css` のスコープ
   - レンダリング（ブラウザ）: PNG の画素数、PDF のページ数・サイズ・フォント埋め込み
   - CLI: validate の各検査（禁止語・直書き・記録漏れ）、compare の出力、new:book / new:page / ref:ingest の生成物
+  - Git LFS のポインタ: フィクスチャのコピーにポインタ文書を置き、validate の警告・各 CLI のエラー・render の案内を確かめる（`lfs-pointer.test.ts`）
   - 実リポジトリ: `npm run validate` が終了コード 0
 - GitHub Actions の CI は使わない。テストを含む検証は各作業セッション内（ローカル / Dev Container / Claude Code / Codex）で `npm run doctor` → `npm run check` → 変更した BOOK の `npm run render` → 出力 PNG の目視の順に行い、通ってから commit / push する

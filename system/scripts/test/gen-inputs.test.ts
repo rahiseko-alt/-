@@ -169,7 +169,7 @@ describe('validate: layer1-orders.yaml', () => {
     expect(v.out).toContain(`${bg}/page_001-tall.png: 縦横比が枠と違います（枠 30×30mm、画像 413×600px、縦に 45.3% 長い）`);
     expect(v.out).toContain('page_001-tall.prompt.yaml の形式が正しくありません');
     expect(v.out).not.toContain('page_001-tall.prompt.yaml: negative_prompt に');
-    expect(v.out).toContain(`${bg}/page_001-lfs.png: Git LFS の実体が未取得です（git lfs pull）`);
+    expect(v.out).toContain(`${bg}/page_001-lfs.png は Git LFS のポインタです（実体が未取得）。git lfs pull を実行してください（画像の大きさ・透過は調べていません）`);
     expect(v.out).not.toContain('page_001-lfs.png: 画像を読めません');
   });
 

@@ -21,6 +21,7 @@ import {
   type Command,
   type Io,
 } from './cli.ts';
+import { LFS_PULL_HINT, assertNotLfsPointer, isLfsPointer, lfsPointerMessage } from './images.ts';
 import { fillTemplate, raw, templatePath, yamlString } from './templates.ts';
 
 const execFileAsync = promisify(execFile);
@@ -128,6 +129,7 @@ export async function ingestReference(opts: IngestOptions): Promise<IngestResult
   let inputs: string[] = [];
   if (opts.pdf) {
     if (!fs.existsSync(opts.pdf) || !fs.statSync(opts.pdf).isFile()) throw new CliError(`PDF が見つかりません: ${opts.pdf}`);
+    assertNotLfsPointer(opts.pdf, show(root, opts.pdf));
   } else if (opts.images) {
     if (!fs.existsSync(opts.images) || !fs.statSync(opts.images).isDirectory()) throw new CliError(`画像のディレクトリが見つかりません: ${opts.images}`);
     const all = fs
@@ -139,6 +141,10 @@ export async function ingestReference(opts: IngestOptions): Promise<IngestResult
     if (skipped.length > 0) warnings.push(`画像ではないため取り込まなかったファイル: ${skipped.join(', ')}`);
     if (inputs.length === 0) throw new CliError(`取り込める画像がありません（png / jpg / jpeg / svg / webp / tif / gif）: ${opts.images}`);
     if (inputs.length > 999) throw new CliError(`画像が多すぎます（${inputs.length} 枚。page_NNN は 999 まで）`);
+    // Git LFS のポインタをページ画像としてコピーしない
+    const imagesDir = opts.images;
+    const pointers = inputs.map((n) => path.join(imagesDir, n)).filter((f) => isLfsPointer(f));
+    if (pointers.length > 0) throw new CliError(lfsPointerMessage(pointers.map((f) => show(root, f)).join(', ')), LFS_PULL_HINT);
   }
 
   // 既存のページ画像（--force のときも、新しいページ画像の用意ができるまでは消さない）

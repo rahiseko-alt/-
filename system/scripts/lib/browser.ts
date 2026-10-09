@@ -3,7 +3,9 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { chromium, type Browser, type BrowserContext, type CDPSession, type Page, type Request } from 'playwright';
+import { relFromRoot } from '../../design-engine/src/index.ts';
 import { CliError, firstLine } from './cli.ts';
+import { LFS_PULL_HINT, isLfsPointer, lfsPointerMessage } from './images.ts';
 import type { StudioServer } from './studio-server.ts';
 
 const require = createRequire(import.meta.url);
@@ -96,7 +98,8 @@ export interface OpenOptions {
 }
 
 interface AssetStatus {
-  broken: string[];
+  /** 表示できなかった画像（src は属性の値、url は解決した URL） */
+  broken: Array<{ src: string; url: string }>;
   jaFontsLoaded: number;
   text: string;
 }
@@ -159,12 +162,20 @@ export async function openComposed(
         if (/Noto (Sans|Serif) JP/.test(f.family) && f.status === 'loaded') jaFontsLoaded++;
       });
       return {
-        broken: imgs.filter((img) => img.naturalWidth === 0).map((img) => img.getAttribute('src') ?? ''),
+        broken: imgs.filter((img) => img.naturalWidth === 0).map((img) => ({ src: img.getAttribute('src') ?? '', url: img.currentSrc || img.src })),
         jaFontsLoaded,
         text: document.body.innerText,
       };
     });
-    for (const src of status.broken) problems.push(`${label}: 画像を表示できません: ${src}`);
+    for (const { src, url } of status.broken) {
+      // git lfs pull をしていない画像は、ポインタ（テキスト）のまま配信されて表示できない
+      const file = server.fileOf(url);
+      problems.push(
+        file && isLfsPointer(file)
+          ? `${label}: 画像を表示できません: ${lfsPointerMessage(relFromRoot(server.root, file))}。${LFS_PULL_HINT}`
+          : `${label}: 画像を表示できません: ${src}`,
+      );
+    }
     if (status.jaFontsLoaded === 0 && /[぀-ヿ一-鿿]/.test(status.text)) {
       problems.push(`${label}: 日本語フォント（Noto Sans JP / Noto Serif JP）が読み込まれていません（npm run doctor で確認）`);
     }
