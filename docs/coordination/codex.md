@@ -2,7 +2,71 @@
 
 開始・終了の手順と担当確認は [AGENTS.md](../../AGENTS.md) §2・§10 を参照。Codex が直接更新し、Claude Code は読むだけ。相手の記録は [Claude Code ノート](claude.md)。
 
-## 最新の引継ぎ — 2026-10-10（日本時間）
+## 開始確認とクラウド準備の完了検証 — 2026-10-10 09:56 JST
+
+- 状態: 開始資料・最新ブランチ・現在の PR 状態の照合と、現在環境の準備・必須検証は完了。以下の結果を作業ブランチへ push 済み。ドラフト PR #29 を作成・確認済み。環境設定の下書き保存・実行・公開・新規タスクでの復元は別々に扱う。
+- 作業経路: リモート Codex。ブランチ: `codex/cloud-session-start`。基準: main `797f2ff35ba882fbcab039dfce7068c3fe6e293f`。対象: 本ノートと環境設定のみ。main へのマージは人間の指示待ち。
+- 人間の指示: 開始手順の完了、指定版・全テスト・最新ノート・GitHub保存を実証する。Dockerなし、代替ブラウザで正式出力の合格を代用しない。
+
+### 最新の照合
+
+- Git fetch 後、origin/main は `797f2ff`、Claude の最新連携ブランチは `1a44d3c`。main と同ブランチの Claude ノートは同内容。両ノートと未反映の制作ブランチを再照合済み。
+- GitHub API の取得が成功。確認時の開いている PR は #27（ドラフト、`codex/neon-prospectus-2027` / `969b9c5`）。レビュー・未確定学校情報・印刷品質等の確認待ちであり、今回は変更しない。
+- PR #28 は MERGED、マージ日時は2026-10-10 09:37 JST、マージコミット `797f2ff`。過去ノートの「未マージ」は現在状態ではない。
+- `codex/layer1-replica` は `1a0a14f` のまま main 未反映。28素材生成済み・残36素材というブランチ側の記録を確認。現在の開いている PR 一覧にこのブランチの PR はない。
+- Claude の共有ノートは2026-10-09時点。現在の開いている PR に Claude ブランチはなく、現存の Claude ブランチは main に反映済み。ただし他セッションの実行状態・既読は未確認。今回紙面・共通エンジン・Claude ノートは変更していない。
+
+### 現在環境で実行して合格した検証
+
+- 通信は実際の公式配布取得と GitHub API 応答で確認。状態ツールのネットワーク情報には古い設定が残っているため、それだけで反映を判断しない。
+- Playwright 1.56.1 の指定版 Chromium headless shell 141.0.7390.37（build1194）を公式配布先から取得。STUDIO_CHROMIUM_PATH を外して doctor 全11項目合格（WARN0 / NG0）、Noto Sans JP / Serif JP の実描画も合格。
+- 保存した install_script と同一内容を `/tmp/dtp-install-verified.sh` から実行。setup の再実行は既存依存・ブラウザ・LFSを再利用し成功。npm run check は型チェック合格、validate エラー0・既存警告28、23ファイル・353テストすべて合格（失敗0 / skip0）。ログ: `/tmp/dtp-ready-check.log`（現在環境のみ）。
+- 以前の19失敗・7skipは、指定版取得後にすべて解消。コード・テスト・lockfile・期待値は変更していない。
+- プレビュー一覧と代表ページへのHTTP応答・BOOK/テンプレート内容を確認。指定版で `replica/a-brochure` を72dpiのPNG（842×859px）と1ページPDFに出力し、PNGを目視、pdfinfoでPDFを確認。出力: `/tmp/dtp-pinned-render`。
+- 既存紙面の安全領域外3か所は警告として残る。今回の出力は確認用であり、紙面の入稿承認・Phase6承認ではない。validateの既存TODO等も準備環境の障害とは区別する。
+- install_script / start_skill と必要な通信許可は環境設定の下書きに保存済み。start_skill を実検証の成功結果と開始時照合手順へ更新。環境の公開および新規タスクの復元検証は実施していない。
+
+### GitHub 保存・次の手順
+
+- 本ノートを検証後に push し、ドラフト PR [#29](https://github.com/rahiseko-alt/DTP/pull/29) を作成。Git ls-remote と PR API で `8283b02a09285293194715d5c662687197af2a4f` の保存を照合済み。今回の追記はその確認結果を保存するもの。PR は OPEN / draft、変更ファイルは本ノートのみ。GitHub 保存済みだが main へは未マージ、相手の既読も未確認。環境設定の下書き更新とは区別する。
+- 残るユーザー操作は環境設定の確認・保存・公開。公開だけで新規タスクの復元成功や紙面の正式公開を宣言しない。PRのマージも人間の明示指示があるときだけ。
+- 相手への影響: 開始・検証記録のみ。Claudeノートや担当コードを変更せず、他制作ブランチの未完了作業は再開しない。
+
+## 初回のクラウド環境の開始確認 — 2026-10-10 09:52 JST
+
+- 状態: 開始資料と作業ブランチの照合済み。PR の現在状態・指定版 Chromium・GitHub への公開は確認待ち。
+- 作業経路: リモート Codex（クラウド環境）。
+- ブランチ: `codex/cloud-session-start`。基準コミット: main `797f2ff35ba882fbcab039dfce7068c3fe6e293f`。今回の PR は未作成。
+- 目的・変更対象: ユーザーのクラウドセットアップ依頼と「開始手順を完了させろ」の指示に基づく開始確認。このノートのみを変更。紙面制作・共通エンジンの変更は行わない。
+- 人間の指示: Docker を使わない。既存の独立クラウド checkout を使い、新しい worktree は作らない。今回、開始記録の追記を明示的に依頼されたため、セットアップ時の追跡ファイル不変更よりこの依頼を優先する。
+
+### 読み込み・照合の結果
+
+- AGENTS.md、CLAUDE.md、両担当ノート、Git 運用・共通原則・環境手順・setup.sh・依存関係を確認。開始前の checkout は `work`、未保存変更なし。Git fetch 後の HEAD と origin/main はともに `797f2ff`。
+- リモートの全作業ブランチを取得して main との祖先関係を照合。Claude の現存ブランチはすべて main 反映済み。`claude/coordination` の `1a44d3c` と main の Claude ノートは同内容。実行中の他セッションの有無・既読は未確認。
+- `codex/agent-role-alerts` の `4f10182` は main に含まれ、main のマージコミットは PR #28 の反映を記録している。従来ノートの「PR #28 未マージ」は古い記録。
+- main 未反映の `codex/layer1-replica` は `1a0a14f`。同ブランチの Codex ノートと連携手順を読み、28素材生成済み・36素材未生成・指定版での正式出力未確認という記録を確認。main の64素材未生成と区別する。
+- main 未反映の `codex/neon-prospectus-2027` は `969b9c5`。Codex ノートは存在しないため `books/prospectus-neon-2027/reviews/production.md` と BOOK 設定を確認。独立した24ページの制作案で、Windows の既存テスト失敗・画像原寸の印刷品質・QR実機読取の未確認が残る。main のノートにある PR #27 の現在状態は未確認。
+- `gh pr list`（GraphQL）・`gh api`（REST）・HTTPS 接続確認は api.github.com へのプロキシ403で失敗。Git fetch の成功は API の成功を意味しない。PR の現在状態や他方の作業終了を断定しない。
+- 今回の代表確認対象は main の `replica/a-brochure`。book.yaml、page.yaml、review.md の次の作業を確認。紙面は変更せず、Phase 6 や未完了制作を開始しない。
+
+### 現在環境の検証・保存
+
+- Node 22.23.3、npm依存、Playwrightパッケージ1.56.1、Git LFS実体183件を準備。型チェック合格、validate エラー0・警告28。
+- 指定版 Chromium build1194 は公式配布先の403「Domain forbidden」で未導入。指定版での doctor は OK8 / NG3。テストは327合格・19失敗・7skipped（353件）、ブラウザ不在による失敗とセットアップ失敗が残る。全体合格とは扱わない。ログは `/tmp/dtp-tests.log`（この環境のみ）。
+- リポジトリが対応する代替 `/usr/bin/chromium` で doctor OK10 / WARN1 / NG0。Noto Sans JP / Serif JP 描画、HTTPプレビュー、代表ページの72dpi PNG（842×859）・1ページPDF出力とPNG目視を確認。出力先は `/tmp/dtp-onboarding-render`。指定版以外・安全領域外2か所の警告あり、入稿用合格ではない。
+- 環境設定の下書きに install_script / start_skill を保存。配布先 `cdn.playwright.dev` / `playwright.download.prss.microsoft.com` と、PR照合用 `api.github.com` を追加。保存は実行・通信設定反映・公開を意味しない。
+- 本ノートのローカル記録は保存済み。指定版のテストが未合格のため、Git運用規則に従い push を保留。PR未作成、main未反映、相手への公開・既読は未確認。
+
+### 次の具体的な手順・相手への影響
+
+1. 環境設定の通信許可を確認・保存して公開し、現在環境で通信が反映されたことを確認する。
+2. 既存の認証で `gh pr list --repo rahiseko-alt/DTP --state open` を再実行し、現在の PR 状態と対象ブランチを照合する。秘密値をチャットやノートへ記録しない。
+3. 保存済みの install_script を実行し、指定版で doctor → check を合格させ、代表ページを再出力して目視する。診断済みの環境失敗を隠すためにテストや期待値を変更しない。
+4. このノートのコミットを push し、ドラフト PR を作成する。マージは人間の明示指示があるときだけ。CLAUDE-REQ-20261008-02 の完全な代替ブラウザテスト検証はまだ未実行。
+- Claude のノート・共通エンジン・company-data・紙面は変更しない。今回の変更箇所について、取得できたリモートとの差分に新たな並行変更は見つかっていないが、APIによる現在状態の照合は未完了。
+
+## 過去の引継ぎ — 2026-10-10（日本時間）
 
 - 状態: 作業中（今回のセッションはまだ終了していない）
 - 作業経路: この PC の Codex
