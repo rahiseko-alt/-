@@ -1,19 +1,21 @@
 # Git 運用
 
 GitHub を唯一の正本とします（docs/concept.md §11）。「セッションを継続する」のではなく「GitHub を継続する」。
-毎回、新しい PC・新しい Codex / Claude Code セッション・新しいコンテナから作業を始められることを前提にします。
+毎回、新しい PC・新しい Codex / Claude Code セッションから作業を始められることを前提にします。標準運用は Docker を使わず、PC は WSL Ubuntu、Web / クラウドは提供環境で共通の setup.sh を実行します（docs/environment.md）。
 
 ## 1. 1 セッションの流れ
 
+開始・終了の具体的なトリガー、担当別ノート、必須記録項目は [AGENTS.md §2](../../AGENTS.md#2-セッションの流れ) を正本とする。AGENTS.md から両ノートを読み、各担当は自分のノートへ直接書く。main だけでなく未完了 PR・作業ブランチの最新記録も確認する。保存失敗を引継ぎ完了と報告しない。PR はドラフトで作り、マージは人間の明示指示があるときだけ行う。
+
 ```text
-GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確認 → 対象 BOOK 確認
+GitHub 最新状態取得 → Linux 作業環境の準備 → AGENTS.md / CLAUDE.md 確認 → 対象 BOOK 確認
 → 作業 → render / test → commit → push → セッション終了
 ```
 
 | 手順 | やること |
 | --- | --- |
 | 1. 最新状態取得 | `git fetch origin` → 作業ブランチを最新にする（`git pull --ff-only`）。新規 clone でもよい |
-| 2. 環境準備 | `bash system/scripts/setup.sh`（Git LFS の取得・`npm ci`・Chromium 確認・`npm run doctor`）。Dev Container・Claude Code on the web では自動実行される |
+| 2. 環境準備 | `bash system/scripts/setup.sh`（Git LFS の取得・`npm ci`・Chromium 確認・`npm run doctor`）。PC は WSL、Web / クラウドは提供環境で実行する。Docker の起動は不要 |
 | 3. ルール確認 | `AGENTS.md` → 作業に関係する `system/rules/*.md` → 使う `system/prompts/*.md` |
 | 4. 対象確認 | `books/<id>/config/book.yaml`（`notes`）、各 `page.yaml`（`status` / `notes`）、`reviews/<pageId>/review.md` の「次にやること」 |
 | 5. 作業 | ルールとプロンプトに従う。状態はファイルに書く |
