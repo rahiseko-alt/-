@@ -1,7 +1,40 @@
 # Claude Code の進捗・Codex 宛の連絡
 
-更新日: 2026-10-09（セッション終了時の引継ぎを追記）。このファイルのブランチ: `claude/coordination`（`git fetch origin claude/coordination` → `git show origin/claude/coordination:docs/coordination/claude.md`）。
+更新日: 2026-10-10（Claude Code Web の環境準備と検証を追記）。今回の記録のブランチ: `claude/keen-davinci-iso4b4`（PR マージまでは `git show origin/claude/keen-davinci-iso4b4:docs/coordination/claude.md`）。以前の記録は `claude/coordination`。
 連絡の決まりは Codex の [docs/agent-coordination.md](https://github.com/rahiseko-alt/DTP/blob/codex/layer1-replica/docs/agent-coordination.md)（`codex/layer1-replica` の `c79d82c`）に従う。Codex の進捗ファイルは読むだけで、書き換えない。
+
+## Claude Code Web / クラウドの環境準備と検証 — 2026-10-10 09:59 JST
+
+- 状態: 終了（環境準備・検証・記録まで完了。制作作業には未着手）
+- 作業経路: リモート Claude Code（Claude Code on the web の提供環境。Docker なし）
+- ブランチ: `claude/keen-davinci-iso4b4`。基準コミット: main `797f2ff`（PR #28 のマージ）。PR: ドラフトで作成（マージは人間の指示待ち）
+- 目的・変更対象: このリモート経路で制作環境が使えることの確認。変更はこのノートだけ。紙面・共通エンジン・Codex ノートは変更していない
+
+### 開始時の照合
+
+- 開始時の checkout は `claude/keen-davinci-iso4b4` = main `797f2ff`、未保存変更なし。`git fetch origin` 後も main は `797f2ff`
+- 開いている PR（GitHub API で確認）: #29（ドラフト、`codex/cloud-session-start` `1de96c9`。Codex ノートのみ変更）、#27（ドラフト、`codex/neon-prospectus-2027` `969b9c5`。紙面制作）。`codex/layer1-replica` は `1a0a14f` のまま PR なし
+- Codex ノートは `codex/cloud-session-start` の最新を読んだ。リモート Codex の環境準備は指定版 Chromium で 353 件合格と記録されている
+- 今回の変更（このノートのみ）は Codex の作業範囲と重ならない。担当外の作業はない
+
+### 環境
+
+- Ubuntu 24.04.5、Node v22.22.0（`/opt/node22/bin/node`。`.nvmrc` は 22）、npm 10.9.4、git-lfs 3.4.1
+- SessionStart フックの setup.sh は成功していたが、手動で `bash system/scripts/setup.sh` を再実行して確認: LFS 未取得なし、`npm ci` は lockfile どおりで不要、`npm ls` エラーなし
+- Chromium: Playwright 1.56.1 の指定版（`/opt/pw-browsers/chromium_headless_shell-1194`、Chromium 141.0.7390.37）。`STUDIO_CHROMIUM_PATH` は未設定（代替ブラウザは使っていない）。通信設定の変更は不要だった
+- 開始時の doctor は「システム日本語フォント（Noto CJK なし）」の WARN 1 件。`apt-get update && apt-get install -y fonts-noto-cjk` で解消した。この導入はこのコンテナ限りで、setup.sh は入れない（新しいセッションでは同じ WARN が出る。描画は @fontsource を使うので制作は可能）
+
+### 検証結果
+
+- `npm run doctor`: OK 11 / WARN 0 / NG 0
+- `npm run check`: typecheck 合格、validate エラー 0・警告 28（すべて既存の「Layer 1 が未生成」）、テスト 23 ファイル・353 件合格（失敗 0・skip 0）
+- `npm run render -- --book replica/a-brochure --format both --out /tmp/claude-0/dtp-render`: 150dpi PNG（1754×1789px）と 1 ページ PDF（841.92×858.96pt）。PNG を画像として目視し、文字化け・欠落・崩れなし。既存の「安全領域の外の文字 2 か所」の警告は残る（参考の配置どおりのもの）。出力は確認用でコミットしない
+
+### 未完了・次の手順
+
+- 未完了: なし（環境準備として）。`fonts-noto-cjk` を setup.sh で自動導入するかは未決定（必要なら Claude の担当で対応できる）
+- 次の手順: 上の「引継ぎ（2026-10-09）」の「次にやること」1〜6 と「人間の確認待ち」は変わらない。制作作業は人間の指示を受けてから着手する
+- Codex への影響: なし（このノートの追記のみ）
 
 ## 引継ぎ（2026-10-09 セッション終了時点。次の Claude セッションはここから読む）
 
