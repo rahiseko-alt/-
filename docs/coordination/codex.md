@@ -2,7 +2,41 @@
 
 開始・終了の手順と担当確認は [AGENTS.md](../../AGENTS.md) §2・§10 を参照。Codex が直接更新し、Claude Code は読むだけ。相手の記録は [Claude Code ノート](claude.md)。
 
-## 最新の引継ぎ — 2026-10-10（日本時間）
+## クラウド環境の開始確認 — 2026-10-10 09:52 JST
+
+- 状態: 開始資料と作業ブランチの照合済み。PR の現在状態・指定版 Chromium・GitHub への公開は確認待ち。
+- 作業経路: リモート Codex（クラウド環境）。
+- ブランチ: `codex/cloud-session-start`。基準コミット: main `797f2ff35ba882fbcab039dfce7068c3fe6e293f`。今回の PR は未作成。
+- 目的・変更対象: ユーザーのクラウドセットアップ依頼と「開始手順を完了させろ」の指示に基づく開始確認。このノートのみを変更。紙面制作・共通エンジンの変更は行わない。
+- 人間の指示: Docker を使わない。既存の独立クラウド checkout を使い、新しい worktree は作らない。今回、開始記録の追記を明示的に依頼されたため、セットアップ時の追跡ファイル不変更よりこの依頼を優先する。
+
+### 読み込み・照合の結果
+
+- AGENTS.md、CLAUDE.md、両担当ノート、Git 運用・共通原則・環境手順・setup.sh・依存関係を確認。開始前の checkout は `work`、未保存変更なし。Git fetch 後の HEAD と origin/main はともに `797f2ff`。
+- リモートの全作業ブランチを取得して main との祖先関係を照合。Claude の現存ブランチはすべて main 反映済み。`claude/coordination` の `1a44d3c` と main の Claude ノートは同内容。実行中の他セッションの有無・既読は未確認。
+- `codex/agent-role-alerts` の `4f10182` は main に含まれ、main のマージコミットは PR #28 の反映を記録している。従来ノートの「PR #28 未マージ」は古い記録。
+- main 未反映の `codex/layer1-replica` は `1a0a14f`。同ブランチの Codex ノートと連携手順を読み、28素材生成済み・36素材未生成・指定版での正式出力未確認という記録を確認。main の64素材未生成と区別する。
+- main 未反映の `codex/neon-prospectus-2027` は `969b9c5`。Codex ノートは存在しないため `books/prospectus-neon-2027/reviews/production.md` と BOOK 設定を確認。独立した24ページの制作案で、Windows の既存テスト失敗・画像原寸の印刷品質・QR実機読取の未確認が残る。main のノートにある PR #27 の現在状態は未確認。
+- `gh pr list`（GraphQL）・`gh api`（REST）・HTTPS 接続確認は api.github.com へのプロキシ403で失敗。Git fetch の成功は API の成功を意味しない。PR の現在状態や他方の作業終了を断定しない。
+- 今回の代表確認対象は main の `replica/a-brochure`。book.yaml、page.yaml、review.md の次の作業を確認。紙面は変更せず、Phase 6 や未完了制作を開始しない。
+
+### 現在環境の検証・保存
+
+- Node 22.23.3、npm依存、Playwrightパッケージ1.56.1、Git LFS実体183件を準備。型チェック合格、validate エラー0・警告28。
+- 指定版 Chromium build1194 は公式配布先の403「Domain forbidden」で未導入。指定版での doctor は OK8 / NG3。テストは327合格・19失敗・7skipped（353件）、ブラウザ不在による失敗とセットアップ失敗が残る。全体合格とは扱わない。ログは `/tmp/dtp-tests.log`（この環境のみ）。
+- リポジトリが対応する代替 `/usr/bin/chromium` で doctor OK10 / WARN1 / NG0。Noto Sans JP / Serif JP 描画、HTTPプレビュー、代表ページの72dpi PNG（842×859）・1ページPDF出力とPNG目視を確認。出力先は `/tmp/dtp-onboarding-render`。指定版以外・安全領域外2か所の警告あり、入稿用合格ではない。
+- 環境設定の下書きに install_script / start_skill を保存。配布先 `cdn.playwright.dev` / `playwright.download.prss.microsoft.com` と、PR照合用 `api.github.com` を追加。保存は実行・通信設定反映・公開を意味しない。
+- 本ノートのローカル記録は保存済み。指定版のテストが未合格のため、Git運用規則に従い push を保留。PR未作成、main未反映、相手への公開・既読は未確認。
+
+### 次の具体的な手順・相手への影響
+
+1. 環境設定の通信許可を確認・保存して公開し、現在環境で通信が反映されたことを確認する。
+2. 既存の認証で `gh pr list --repo rahiseko-alt/DTP --state open` を再実行し、現在の PR 状態と対象ブランチを照合する。秘密値をチャットやノートへ記録しない。
+3. 保存済みの install_script を実行し、指定版で doctor → check を合格させ、代表ページを再出力して目視する。診断済みの環境失敗を隠すためにテストや期待値を変更しない。
+4. このノートのコミットを push し、ドラフト PR を作成する。マージは人間の明示指示があるときだけ。CLAUDE-REQ-20261008-02 の完全な代替ブラウザテスト検証はまだ未実行。
+- Claude のノート・共通エンジン・company-data・紙面は変更しない。今回の変更箇所について、取得できたリモートとの差分に新たな並行変更は見つかっていないが、APIによる現在状態の照合は未完了。
+
+## 過去の引継ぎ — 2026-10-10（日本時間）
 
 - 状態: 作業中（今回のセッションはまだ終了していない）
 - 作業経路: この PC の Codex
