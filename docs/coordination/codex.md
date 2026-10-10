@@ -8,7 +8,7 @@
 - 作業経路: この PC の Codex
 - ブランチ: `codex/agent-role-alerts`
 - 基準コミット: main `1e41cb9`
-- PR: 未提出。Windows の既存テスト失敗により、検証合格後のみ push する既存ルールに従いローカル保存。
+- PR: ドラフトで公開する。マージは人間の指示待ち。Linux での検証は合格したが、Windows 直接実行の問題は残る。
 - 目的・対象: 4 経路で GitHub をハブに作業するための棚卸し、環境構築、担当確認と引継ぎ手順。対象は `AGENTS.md`、`CLAUDE.md`、`system/rules/git-workflow.md`、`README.md` とこのノート。今回の運用整備は人間が Codex に依頼した担当例外。
 
 ### 完了したこと・人間の決定
@@ -25,12 +25,15 @@
 - 初回 check: typecheck 合格、validate エラー 0・警告 28。テストは 275 合格・38 失敗・40 skipped。Chromium 導入前の実行であり、Windows のシンボリックリンク権限・Git の null デバイス・パス区切りの問題も含む。導入後の再検証結果は後で追記する。
 - Docker はインストール済みだが daemon は停止していた。WSL Ubuntu は Linux の Node が未導入で、Windows npm が見えていた。4 経路の標準環境はまだ構築完了していない。
 - Chromium 導入後の再検証（今回の文書変更後）: typecheck 合格、validate エラー 0・警告 28。テスト 295 合格・25 失敗・33 skipped（23 ファイル中 11 失敗・12 合格）。Windows の Git null デバイス・シンボリックリンク・パス区切り等の失敗が残る。詳細ログはローカル `.cache/handoff-check.log`（共有されない）。文書の `git diff --check` は合格。紙面・レンダリングコードは変更していない。
-- GitHub 公開が残る。main に反映済みとは扱わない。既存の git-workflow は検証合格後のみ push を許可するため、現状はローカルに保全する。
+- その後、この PC の WSL Ubuntu の独立コピーで検証: doctor OK 11 / WARN 0 / NG 0、typecheck 合格、validate エラー 0・警告 28、23 ファイル・353 テストすべて合格（skip 0）。テストコードや制作エンジンは変更していない。Windows 直接実行の完全対応を実装したわけではない。
+- `replica/a-brochure` を 72dpi で一時出力: PNG 842×859px と PDF 1 ページの出力成功、PNG を目視して日本語・表・色面の描画を確認。既存紙面の安全領域外の文字が 3 か所という警告は残る。入稿用出力ではない。
+- Docker Desktop の通信用ファイルの起動障害を退避で解消し、API 応答を確認。制作イメージの取得は中断したので、Docker 内の制作検証は未完了。詳細は [環境の棚卸し](../environment-audit.md)。Linux の診断コピーは通常の GitHub checkout ではなく、このコピーから push しない。
+- 担当・引継ぎルールと環境診断の結果を作業ブランチへ公開する。main に反映済みとは扱わない。
 
 ### 次にすること・相手への影響
 
-1. 今回の文書を検証し、保存の可否と検証結果を追記する。
-2. 4 経路の環境構築を続ける。Windows 固有の失敗を解消するか、既存の Linux 環境を標準にするかを固める。テスト失敗を隠すために検査を弱めない。
+1. 今回のドラフト PR を確認し、人間の指示で main に反映する。別経路は main の最新ルールを取得してから作業する。
+2. 4 経路の環境構築を続ける。検証・出力は既存の Linux 環境を標準とする方向で、Docker の本番 checkout と別 PC・リモートを検証する。テスト失敗を隠すために検査を弱めない。
 3. 未完了 PR とリモートブランチの両ノートを読み、紙面の過去作業を照合してから再開する。
 
 Claude Code ノートの既存の引継ぎはその担当が更新する。今回こちらでは書き換えない。過去の Codex の画像制作記録は `origin/codex/layer1-replica:docs/coordination/codex.md` にあり、この main の制作状況と一致するとは限らない。別作業 `codex/neon-prospectus-2027` の PR #27 も開始時に最新状態を確認する。相手が今回のルールを読んだかは未確認。

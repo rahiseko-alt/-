@@ -20,6 +20,8 @@ AIビジネス専門学校のパンフレット・募集要項・チラシ・ポ
 
 セッションの開始・終了と引継ぎの入口は [AGENTS.md §2](AGENTS.md#2-セッションの流れ)。そこから Codex・Claude Code の両ノートを読み、各担当が自分のノートへ直接記録します。担当外の変更や並行作業の重複は、着手前に人間へ確認します（AGENTS.md §10）。
 
+この PC の Windows / Linux の検証結果と残る環境構築作業は [環境の棚卸し](docs/environment-audit.md) に記録しています。
+
 ```text
 company-data/（自社の正本）   references/（参考資料・解析）   shared/（共通部品・CSS・素材）
             \                         |                          /
