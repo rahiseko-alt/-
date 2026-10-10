@@ -1,5 +1,7 @@
 # 環境の棚卸し（2026-10-10）
 
+> その後、人間が Docker なしの運用を決定。現在の手順は [environment.md](environment.md)。以下の Docker の記録は過去の診断であり、Docker 構築の継続は不要。
+
 ## 運用の前提
 
 利用者は一人。PC 2 台は交互に使用し、Codex と Claude Code は並行作業する。GitHub を正本とし、開始・終了の手順と担当確認は AGENTS.md、作業状況は担当別の 2 冊のノートに残す。
@@ -36,7 +38,7 @@ npm run render -- --book replica/a-brochure --format both --dpi 72 --out .cache/
 
 ## 残る作業
 
-- Docker イメージのビルドと、Windows からの制作コマンド実行を検証する。
+- Docker は標準運用に使わない。WSL の通常の Git checkout とクラウドの共通セットアップを確認する。
 - 本番作業は通常の GitHub clone / 作業ブランチを使う。今回の診断コピーを制作の正本にしない。
 - 別 PC・リモート Codex・リモート Claude Code で共通セットアップと検証が通るか確認する。この PC の結果を他の環境の合格とみなさない。
 - Windows の直接実行も正式に対応する場合は、Git のテスト環境・シェルの引用・パス正規化・リンク権限を個別に設計して検証する。

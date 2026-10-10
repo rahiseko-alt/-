@@ -1,5 +1,7 @@
 # 開発環境（Dev Container）
 
+> 2026-10-10 の人間の指定により、標準運用は Docker を使いません。この文書と設定は過去の構成の記録です。現在の入口は [docs/environment.md](../../docs/environment.md)。以下の Docker の構築・起動は通常のセットアップに含めません。
+
 publishing-studio は「どの PC・どのセッション・どのコンテナからでも同じ手順で作業を再開できる」ことを前提にしています（docs/concept.md §11）。
 環境の正本はこのディレクトリの `Dockerfile` と、どの環境でも共通に使う `system/scripts/setup.sh` です。
 

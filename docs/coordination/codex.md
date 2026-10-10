@@ -14,6 +14,7 @@
 ### 完了したこと・人間の決定
 
 - PC 2 台は同時に使わない。Codex と Claude Code は並行する。
+- Docker なしで進める（2026-10-10 人間の指定）。リモートは Codex・Claude Code の各 Web / クラウドサービス。PC は WSL Ubuntu、Web / クラウドは提供環境で共通 setup.sh を使う。手順は [environment.md](../environment.md)。
 - Codex は画像と紙面制作、Claude Code は共通の仕組みを主に担当する。
 - 担当外の指示には「【担当領域を超えた作業になりますがどうしますか？】」と着手前に確認する。同じ箇所の並行変更も確認する。
 - 入口は AGENTS.md。別の共通ノートは作らない。両ノートを読み、自分のノートへ直接書く。
@@ -29,11 +30,14 @@
 - `replica/a-brochure` を 72dpi で一時出力: PNG 842×859px と PDF 1 ページの出力成功、PNG を目視して日本語・表・色面の描画を確認。既存紙面の安全領域外の文字が 3 か所という警告は残る。入稿用出力ではない。
 - Docker Desktop の通信用ファイルの起動障害を退避で解消し、API 応答を確認。制作イメージの取得は中断したので、Docker 内の制作検証は未完了。詳細は [環境の棚卸し](../environment-audit.md)。Linux の診断コピーは通常の GitHub checkout ではなく、このコピーから push しない。
 - 担当・引継ぎルールと環境診断の結果を作業ブランチへ公開する。main に反映済みとは扱わない。
+- Docker なしの通常 checkout をこの PC の WSL `/root/work/DTP` に準備した。元の Git 履歴、`origin`、作業ブランチ `codex/agent-role-alerts` を保持し、GitHub fetch・LFS 実体183件・Linux Node 22.23.3を確認。Git の投稿者設定とWindowsのCredential Managerを使うローカル設定を準備（認証情報をノートへ保存していない）。Windows側フォルダーとの自動同期はない。
+- 通常 checkout での再検証: setup / doctor 全11項目合格、typecheck 合格、validate エラー0・既存警告28、23ファイル・353テスト全件合格。replica/a-brochure の確認用PNG/PDF出力、PNG目視も合格。既存の安全領域警告は残る。ログはホストの `.cache/no-docker-check.log`（ローカルのみ）。
+- PR #28 に保存し、未マージ。Docker用の試作入口は公開ソースに含めず、旧Dev Container設定は過去の構成と明示した。Dockerの起動・ビルドを次の作業にしない。
 
 ### 次にすること・相手への影響
 
 1. 今回のドラフト PR を確認し、人間の指示で main に反映する。別経路は main の最新ルールを取得してから作業する。
-2. 4 経路の環境構築を続ける。検証・出力は既存の Linux 環境を標準とする方向で、Docker の本番 checkout と別 PC・リモートを検証する。テスト失敗を隠すために検査を弱めない。
+2. Docker を使わず、別 PC の WSL と Codex / Claude Code の Web / クラウドで共通 setup.sh・doctor・check を設定・検証する。こちらのアカウント設定を実際に変更済みとは扱わない。テスト失敗を隠すために検査を弱めない。
 3. 未完了 PR とリモートブランチの両ノートを読み、紙面の過去作業を照合してから再開する。
 
 Claude Code ノートの既存の引継ぎはその担当が更新する。今回こちらでは書き換えない。過去の Codex の画像制作記録は `origin/codex/layer1-replica:docs/coordination/codex.md` にあり、この main の制作状況と一致するとは限らない。別作業 `codex/neon-prospectus-2027` の PR #27 も開始時に最新状態を確認する。相手が今回のルールを読んだかは未確認。

@@ -44,18 +44,18 @@ company-data/（自社の正本）   references/（参考資料・解析）   sh
 
 ## クイックスタート
 
-必要なもの: Git、Git LFS、Node.js 22（`.nvmrc`）、poppler（`poppler-utils`: `pdfinfo` / `pdftoppm`。`npm run check` のテストと PDF の取り込みに必要。`setup.sh` が root またはパスワードなし sudo のとき自動で入れる）。Dev Container を使う場合は Docker と VS Code。
+必要なもの: Linux の作業環境、Git、Git LFS、Node.js 22（`.nvmrc`）、poppler（`poppler-utils`: `pdfinfo` / `pdftoppm`。`npm run check` のテストと PDF の取り込みに必要。`setup.sh` が root またはパスワードなし sudo のとき自動で入れる）。**Docker は使いません。** PC は WSL Ubuntu、Web / クラウドは各サービスの提供環境を使います。詳細は [4 経路の環境手順](docs/environment.md)。
 
-### A. Dev Container（推奨）
+### A. PC 2 台（WSL Ubuntu）
 
-1. リポジトリを clone して VS Code で開く
-2. コマンドパレット →「Dev Containers: Reopen in Container」
-3. 作成時に `bash system/scripts/setup.sh` が自動実行され、最後に環境診断（`npm run doctor`）の結果が表示される
-4. `npm run dev` → ブラウザで http://localhost:5173/
+1. WSL Ubuntu と Linux 用 Node.js 22 を準備する
+2. Linux のホーム配下へ GitHub リポジトリを clone する（Windows の OneDrive フォルダーをそのまま実行環境にしない）
+3. `bash system/scripts/setup.sh` → `npm run check`
+4. `npm run dev` → ブラウザで http://localhost:5173/。PC を切り替える前に GitHub に保存する
 
-GitHub Codespaces でも同じ設定で動きます。詳細: [system/devcontainer/README.md](system/devcontainer/README.md)
+旧 Dev Container 設定は過去の構成として残しますが、通常の開始手順では使いません。
 
-### B. 手元の環境・Codex cloud・Claude Code on the web
+### B. Codex cloud・Claude Code on the web
 
 ```bash
 git clone <リポジトリの URL>

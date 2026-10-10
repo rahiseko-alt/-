@@ -15,13 +15,14 @@ AIビジネス専門学校のパンフレット・募集要項・チラシ・ポ
 GitHub を唯一の正本とし、会話履歴に依存しません。「セッションを継続する」のではなく「GitHub を継続する」（docs/concept.md §11）。
 
 ```text
-GitHub 最新状態取得 → 新規コンテナ → AGENTS.md / CLAUDE.md 確認 → 対象 BOOK 確認
+GitHub 最新状態取得 → Linux 作業環境の準備 → AGENTS.md / CLAUDE.md 確認 → 対象 BOOK 確認
 → 作業 → render / test → commit → push → セッション終了
 ```
 
 1. **最新状態を取得する**: `git fetch origin` → 作業ブランチを `git pull --ff-only`（新規 clone でもよい）
 2. **環境を準備する**: `bash system/scripts/setup.sh`（冪等。Git LFS の取得・`npm ci`・Chromium 確認・poppler-utils（`pdfinfo` / `pdftoppm`。テストに必要）・`npm run doctor`）
-   - Dev Container: 作成時に自動実行／Claude Code on the web: SessionStart フックで自動実行／Codex cloud: 環境の「セットアップスクリプト」に登録
+   - **Docker は標準運用に使わない**（2026-10-10 人間の指定）。PC 2 台は WSL Ubuntu、Codex・Claude Code の Web / クラウドは各サービスの提供環境を使い、同じセットアップと検証を実行する。詳細は [docs/environment.md](docs/environment.md)。
+   - Claude Code on the web: SessionStart フックで実行／Codex cloud: 環境のインストール・セットアップ手順で実行。サービスが内部で使うコンテナの管理は利用者の作業に含めない。
    - 失敗したら `npm run doctor` の「対処」に従う
 3. **ルールを確認する**: このファイル → 作業に関係する `system/rules/*.md` → 使う `system/prompts/*.md`
 4. **対象を確認する**: `books/<id>/config/book.yaml` の `notes`、各 `page.yaml` の `status` / `notes`、`books/<id>/reviews/<pageId>/review.md` の「次にやること」。状態はすべてファイルにある
